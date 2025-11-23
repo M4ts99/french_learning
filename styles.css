@@ -1,20 +1,27 @@
 /* style.css */
 
-html, body {
-    height: 100%;
-    /* Verhindert, dass man die ganze Seite "wegziehen" kann (Bouncing) */
-    overscroll-behavior-y: none;
-    /* Verhindert Text-Auswahl beim Tippen */
-    -webkit-user-select: none;
-    user-select: none;
+/* style.css */
+html {
+    /* Fixiert die Höhe auf iOS, damit die Adressleiste nichts kaputt macht */
+    height: -webkit-fill-available;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    width: 100vw;           /* Exakt Bildschirmbreite */
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overflow-x: hidden;     /* WICHTIG: Verhindert seitliches Wackeln/Scrollen */
     background-color: #f8fafc;
-    color: #1e293b;
-    /* Wichtig für iPhones mit Notch/Home-Bar */
-    padding-bottom: env(safe-area-inset-bottom); 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    
+    /* Verhindert Gummiband-Effekt beim Scrollen am Rand */
+    overscroll-behavior-y: none;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Verhindert Zoom beim Tippen in Eingabefelder auf iPhones */
+input, textarea, select {
+    font-size: 16px !important; /* Unter 16px zoomt iOS automatisch rein */
 }
 
 /* Verhindert blaues Aufleuchten beim Tippen auf Buttons */

@@ -994,7 +994,7 @@ const renderTestConfig = () => {
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col items-center">
             {/* Main Content Area */}
             {/* pb-24 sorgt dafür, dass Inhalt nicht hinter der Leiste verschwindet */}
-            <div className={`w-full max-w-4xl p-4 md:p-8 ${!isSessionActive ? 'pb-24' : ''}`}>
+            <div className={`w-full max-w-md px-5 py-6 md:p-8 ${!isSessionActive ? 'pb-28' : ''}`}>
                 
                 {/* Wenn Session aktiv -> Session Views zeigen */}
                 {isSessionActive ? (
