@@ -25,7 +25,17 @@ const User = (p) => <Icon {...p} path={<><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 
 const Search = (p) => <Icon {...p} path={<><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></>} />;
 const HomeIcon = (p) => <Icon {...p} path={<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>} />;
 const PenTool = (p) => <Icon {...p} path={<><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-17z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></>} />;
-// --- MOCK DATA ---
+// Neue Icons für Topics
+// Neue Icons für Topics (Korrigiert mit <>)
+const Coffee = (p) => <Icon {...p} path={<><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/><path d="M14 2v2"/></>} />;
+const PawPrint = (p) => <Icon {...p} path={<><path d="M12 2c.5 0 1 .4 1 1v3h-2V3c0-.6.5-1 1-1Z"/><path d="M18.5 4c.8 0 1.5.7 1.5 1.5v2.5h-3V5.5c0-.8.7-1.5 1.5-1.5Z"/><path d="M5.5 4C4.7 4 4 4.7 4 5.5v2.5h3V5.5C7 4.7 6.3 4 5.5 4Z"/><path d="M12 10a5 5 0 0 1 5 5v3a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3v-3a5 5 0 0 1 5-5Z"/></>} />;
+const Car = (p) => <Icon {...p} path={<><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></>} />;
+const Heart = (p) => <Icon {...p} path={<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>} />;
+const Shirt = (p) => <Icon {...p} path={<path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>} />;
+const Briefcase = (p) => <Icon {...p} path={<><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></>} />;
+const Activity = (p) => <Icon {...p} path={<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>} />;
+const Box = (p) => <Icon {...p} path={<><path d="M21 16.5A2.5 2.5 0 0 1 18.5 19H5.5A2.5 2.5 0 0 1 3 16.5v-5C3 10.1 4.1 9 5.5 9H18.5c1.4 0 2.5 1.1 2.5 2.5v5z"/><path d="M7.5 9V5.5A2.5 2.5 0 0 1 10 3h4a2.5 2.5 0 0 1 2.5 2.5V9"/></>} />;
+const Palette = (p) => <Icon {...p} path={<><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></>} />;// --- MOCK DATA ---
 //const INITIAL_DATA = vocab_List;
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
@@ -60,6 +70,25 @@ const BottomNav = ({ activeTab, onTabChange }) => {
             </div>
         </div>
     );
+};
+// --- COLLECTION DATA ---
+// Du musst hier nur die "ids" Arrays mit deinen Rank-Nummern füllen
+const COLLECTIONS = {
+    grammar: [
+        { id: 'verbs', label: 'Top Verbs', sub: 'Actions & States', icon: <Activity size={20}/>, color: 'text-blue-600 bg-blue-50 border-blue-100', ids: [] },
+        { id: 'nouns', label: 'Top Nouns', sub: 'Objects & Things', icon: <Box size={20}/>, color: 'text-emerald-600 bg-emerald-50 border-emerald-100', ids: [] },
+        { id: 'adj', label: 'Adjectives', sub: 'Descriptions', icon: <Palette size={20}/>, color: 'text-purple-600 bg-purple-50 border-purple-100', ids: [] },
+        { id: 'adv', label: 'Adverbs', sub: 'Modifications', icon: <Layers size={20}/>, color: 'text-amber-600 bg-amber-50 border-amber-100', ids: [] },
+    ],
+    topics: [
+        { id: 'animals', label: 'Animals', sub: 'Nature', icon: <PawPrint size={24}/>, ids: [/* Z.B. 400, 402, 500 */] },
+        { id: 'food', label: 'Food & Drink', sub: 'Gastronomy', icon: <Coffee size={24}/>, ids: [] },
+        { id: 'body', label: 'The Body', sub: 'Anatomy', icon: <User size={24}/>, ids: [] },
+        { id: 'travel', label: 'Transport', sub: 'Travel', icon: <Car size={24}/>, ids: [] },
+        { id: 'family', label: 'Family', sub: 'People', icon: <Heart size={24}/>, ids: [] },
+        { id: 'clothes', label: 'Clothing', sub: 'Fashion', icon: <Shirt size={24}/>, ids: [] },
+        { id: 'prof', label: 'Professions', sub: 'Work', icon: <Briefcase size={24}/>, ids: [] },
+    ]
 };
 function App() {
     // --- STATE MANAGEMENT ---
@@ -183,7 +212,37 @@ function App() {
         setSessionResults({ correct: 0, wrong: 0 });
         setView('smart-session');
     };
+    const startCollectionSession = (collectionIds) => {
+        // 1. IDs prüfen
+        if (!collectionIds || collectionIds.length === 0) {
+            alert("This collection is empty or coming soon! Please add Rank IDs in the code.");
+            return;
+        }
 
+        // 2. Wörter anhand der IDs aus dem Vokabular picken
+        // Wir nutzen ein "Set" für schnellere Suche, falls die Liste lang ist
+        const idSet = new Set(collectionIds);
+        const selectedWords = vocabulary.filter(w => idSet.has(w.rank));
+
+        if (selectedWords.length === 0) {
+            alert("None of the words in this collection were found in your vocabulary file.");
+            return;
+        }
+
+        // 3. Mischen
+        let pool = [...selectedWords];
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+
+        // 4. Session starten (wie Test-Session)
+        setActiveSession(pool);
+        setCurrentIndex(0);
+        setIsFlipped(false);
+        setSessionResults({ correct: 0, wrong: 0 });
+        setView('test-session'); // Wir nutzen den Test-Modus Ansicht
+    };
     const startTestSession = () => {
         let pool = vocabulary.filter(w => w.rank >= testConfig.startRank && w.rank <= testConfig.endRank);
         for (let i = pool.length - 1; i > 0; i--) {
@@ -305,55 +364,90 @@ function App() {
 
     // --- RENDERERS ---
     const renderHome = () => (
-        <div className="space-y-6 animate-in fade-in duration-500 pt-4">
-            {/* Begrüßung & Info */}
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold text-slate-800 mb-4">Anyo Hassayo! 👋</h1>
-                
-                {/* Frequency Learning Info Box */}
-                <div className="bg-indigo-50 border border-indigo-100 p-5 rounded-2xl">
-                    <div className="flex items-center gap-2 text-indigo-700 font-bold mb-2 text-sm uppercase tracking-wide">
-                        <Info size={16} />
-                        <span>Why Frequency?</span>
+        <div className="space-y-8 animate-in fade-in duration-500 pt-4 pb-8">
+            {/* 1. HEADER & INFO */}
+            <div>
+                <h1 className="text-3xl font-bold text-slate-800 mb-4">Bonjour! 👋</h1>
+                <div className="bg-indigo-50 border border-indigo-100 p-5 rounded-2xl relative overflow-hidden">
+                    <div className="relative z-10">
+                        <div className="flex items-center gap-2 text-indigo-700 font-bold mb-1 text-xs uppercase tracking-wide">
+                            <Info size={14} /> Why Frequency?
+                        </div>
+                        <p className="text-indigo-900/80 text-sm leading-relaxed font-medium">
+                            The top <strong className="text-indigo-900">2,000 words</strong> make up <strong className="text-indigo-900">80%</strong> of French text. Master the foundation first.
+                        </p>
                     </div>
-                    <p className="text-indigo-900/80 text-sm leading-relaxed">
-                        Did you know that the top <strong className="text-indigo-900">2,000 words</strong> make up about <strong className="text-indigo-900">80%</strong> of spoken and written French? <br/>
-                        Mastering these high-frequency words first is the fastest shortcut to fluency.
-                    </p>
+                    {/* Deko im Hintergrund */}
+                    <div className="absolute -right-6 -bottom-10 opacity-10 text-indigo-900 rotate-12">
+                         <BarChart3 size={100} />
+                    </div>
                 </div>
             </div>
 
-            {/* Haupt-Aktion: Personal Training */}
-            <button onClick={() => setView('smart-config')} className="w-full group relative overflow-hidden bg-indigo-600 text-white p-8 rounded-3xl shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02]">
-                <div className="relative z-10 flex flex-col items-start gap-4">
-                    <div className="bg-white/20 p-4 rounded-2xl"><Play size={32} fill="currentColor" /></div>
-                    <div>
-                        <h2 className="text-3xl font-bold">Start Training</h2>
-                        <p className="text-indigo-100 mt-1">Continue your frequency loop.</p>
-                    </div>
-                </div>
-                <GraduationCap size={180} className="absolute -right-8 -bottom-8 opacity-10 rotate-12" />
-            </button>
-
-            {/* Sekundäre Aktionen */}
+            {/* 2. MAIN ACTIONS (Training & Test) */}
             <div className="grid grid-cols-2 gap-4">
-                <button onClick={() => setView('test-config')} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:border-indigo-100 transition-all text-left">
-                    <div className="bg-amber-100 w-fit p-3 rounded-xl text-amber-600 mb-3"><BookOpen size={24} /></div>
-                    <div className="font-bold text-slate-700">Quick Test</div>
-                    <div className="text-xs text-slate-400 mt-1">No progress saved</div>
-                </button>
-                {/* Hier könnte ein "Daily Challenge" Button hin */}
-                <div className="bg-slate-100 p-6 rounded-2xl border border-slate-200 text-left opacity-60 flex flex-col justify-between">
-                    <div className="bg-slate-200 w-fit p-3 rounded-xl text-slate-400 mb-3"><BarChart3 size={24} /></div>
+                 <button onClick={() => setView('smart-config')} className="col-span-2 bg-indigo-600 text-white p-6 rounded-3xl shadow-lg shadow-indigo-200 transition-transform active:scale-[0.98] flex flex-col items-center text-center relative overflow-hidden group">
+                    <div className="bg-white/20 p-3 rounded-full mb-3 group-hover:scale-110 transition-transform"><Play size={28} fill="currentColor" /></div>
                     <div>
-                        <div className="font-bold text-slate-500">Leaderboard</div>
-                        <div className="text-xs text-slate-400 mt-1">Coming soon</div>
+                        <div className="font-bold text-xl">Start Loop</div>
+                        <div className="text-indigo-100 text-xs mt-0.5">Personalized Training</div>
                     </div>
+                    <GraduationCap size={120} className="absolute -left-4 -bottom-4 opacity-10 rotate-[-15deg]" />
+                </button>
+
+                <button onClick={() => setView('test-config')} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-transform">
+                    <div className="bg-amber-100 w-10 h-10 flex items-center justify-center rounded-xl text-amber-600 mb-3"><BookOpen size={20} /></div>
+                    <div className="font-bold text-slate-700">Quick Test</div>
+                </button>
+                
+                <button onClick={() => setView('stats')} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-transform">
+                    <div className="bg-emerald-100 w-10 h-10 flex items-center justify-center rounded-xl text-emerald-600 mb-3"><BarChart3 size={20} /></div>
+                    <div className="font-bold text-slate-700">My Stats</div>
+                </button>
+            </div>
+
+            {/* 3. NEW: GRAMMAR TYPES (Horizontal Scroll) */}
+            <div>
+                <div className="flex items-center justify-between mb-3 px-1">
+                    <h3 className="font-bold text-slate-700 text-lg">By Type</h3>
+                </div>
+                <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+                    {COLLECTIONS.grammar.map((c) => (
+                        <button 
+                            key={c.id}
+                            onClick={() => startCollectionSession(c.ids)}
+                            className={`min-w-[140px] p-4 rounded-2xl border transition-all active:scale-95 text-left flex flex-col justify-between h-32 ${c.color}`}
+                        >
+                            <div className="bg-white/60 w-fit p-2 rounded-lg backdrop-blur-sm">{c.icon}</div>
+                            <div>
+                                <div className="font-bold leading-tight">{c.label}</div>
+                                <div className="text-[10px] opacity-70 mt-1">{c.sub}</div>
+                            </div>
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* 4. NEW: TOPICS (Horizontal Scroll) */}
+            <div>
+                <div className="flex items-center justify-between mb-3 px-1">
+                    <h3 className="font-bold text-slate-700 text-lg">By Topic</h3>
+                </div>
+                <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+                    {COLLECTIONS.topics.map((c) => (
+                        <button 
+                            key={c.id}
+                            onClick={() => startCollectionSession(c.ids)}
+                            className="min-w-[110px] bg-white p-3 rounded-2xl border border-slate-100 shadow-sm active:scale-95 transition-all text-center flex flex-col items-center gap-3 h-28 justify-center"
+                        >
+                            <div className="text-slate-400 bg-slate-50 p-3 rounded-full">{c.icon}</div>
+                            <div className="font-bold text-sm text-slate-700 leading-tight">{c.label}</div>
+                        </button>
+                    ))}
                 </div>
             </div>
         </div>
     );
-
     const renderSmartConfig = () => {
         // Definition der Bereiche für die Buttons (jetzt mit 2001-5000)
         const ranges = [
