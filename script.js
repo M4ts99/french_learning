@@ -21,10 +21,44 @@ const Save = (p) => <Icon {...p} path={<><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0
 const PieChart = (p) => <Icon {...p} path={<><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></>} />;
 const Layers = (p) => <Icon {...p} path={<><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></>} />;
 const Info = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></>} />;
-
+const User = (p) => <Icon {...p} path={<><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>} />;
+const Search = (p) => <Icon {...p} path={<><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></>} />;
+const HomeIcon = (p) => <Icon {...p} path={<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>} />;
 // --- MOCK DATA ---
 //const INITIAL_DATA = vocab_List;
+const BottomNav = ({ activeTab, onTabChange }) => {
+    const tabs = [
+        { id: 'home', label: 'Home', icon: <HomeIcon size={24} /> },
+        { id: 'library', label: 'Library', icon: <BookOpen size={24} /> },
+        { id: 'stats', label: 'Profile', icon: <User size={24} /> },
+        { id: 'settings', label: 'Settings', icon: <Settings size={24} /> },
+    ];
 
+    return (
+        /* pb-safe sorgt für Abstand zum unteren Bildschirmrand (iPhone Strich) */
+        <div className="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-slate-200 px-6 pt-3 pb-2 pb-safe shadow-[0_-5px_20px_rgba(0,0,0,0.03)] z-50 transition-transform duration-300">
+            <div className="flex justify-between items-center max-w-md mx-auto">
+                {tabs.map((tab) => {
+                    const isActive = activeTab === tab.id;
+                    return (
+                        <button
+                            key={tab.id}
+                            onClick={() => onTabChange(tab.id)}
+                            className={`flex flex-col items-center gap-1 min-w-[60px] rounded-xl transition-all duration-300 active:scale-90 ${
+                                isActive ? 'text-indigo-600 -translate-y-1' : 'text-slate-400 hover:text-slate-600'
+                            }`}
+                        >
+                            {tab.icon}
+                            <span className={`text-[10px] font-bold tracking-wide transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+                                {tab.label}
+                            </span>
+                        </button>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
 function App() {
     // --- STATE MANAGEMENT ---
     const [view, setView] = useState('home'); 
@@ -238,80 +272,51 @@ function App() {
     };
 
     // --- RENDERERS ---
-    const renderHome = () => {
-        const ranges = [100, 500, 1000, 2000, 5000];
-        return (
-            <div className="space-y-6 animate-in fade-in duration-500 pb-12">
-                <div className="text-center space-y-2 mt-4">
-                    <h1 className="text-4xl font-bold text-slate-800 tracking-tight">Anyo Hassayo! 👋</h1>
-                    <p className="text-slate-500">Your Frequency Learning Hub.</p>
-                </div>
-                <div className="bg-indigo-50 p-5 rounded-2xl border border-indigo-100 text-slate-700 space-y-2">
-                    <h3 className="font-bold text-indigo-900 flex items-center gap-2">
-                        <Info size={18} /> What is Frequency Based Learning?
-                    </h3>
-                    <p className="text-sm leading-relaxed">
-                        Did you know that the top 2000 most frequent words cover about <strong>80% of daily conversation</strong>? 
-                        This app teaches you these high-impact words first. We combine this with smart repetition to ensure you learn efficiently.
-                    </p>
-                </div>
-                <div className="grid grid-cols-1 gap-4">
-                    {/* Button 1: Personal Training */}
-                    <button onClick={() => setView('smart-config')} className="group relative overflow-hidden bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white p-6 rounded-2xl shadow-md transition-all hover:scale-[1.01] flex items-center justify-between">
-                        <div className="flex items-center gap-4 relative z-10">
-                            <div className="bg-white/20 p-3 rounded-xl"><GraduationCap size={32} /></div>
-                            <div className="text-left"><h2 className="text-xl font-bold">Personal Training</h2><p className="text-indigo-100 text-sm">Smart loop based on your progress.</p></div>
-                        </div>
-                        <ChevronRight size={24} className="text-indigo-200" />
-                        <GraduationCap size={120} className="absolute -right-6 -bottom-6 opacity-10 rotate-12" />
-                    </button>
-
-                    {/* Button 2: My Words (NEU) */}
-                    <button onClick={() => setView('learned-section')} className="bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-200 text-slate-700 p-6 rounded-2xl transition-all flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className="bg-emerald-100 p-3 rounded-xl text-emerald-600"><BookCheck size={24} /></div>
-                            <div className="text-left">
-                                <div className="font-bold text-lg">My Collection</div>
-                                <div className="text-slate-500 text-sm">Review your learned words.</div>
-                            </div>
-                        </div>
-                        <ChevronRight size={20} className="text-slate-300" />
-                    </button>
-
-                    {/* Button 3: Vocabulary Test */}
-                    <button onClick={() => setView('test-config')} className="bg-white hover:bg-slate-50 active:bg-slate-100 border border-slate-200 text-slate-700 p-6 rounded-2xl transition-all flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <div className="bg-amber-100 p-3 rounded-xl text-amber-600"><BookOpen size={24} /></div>
-                            <div className="text-left"><div className="font-bold text-lg">Vocabulary Test</div><div className="text-slate-500 text-sm">Quick check specific ranges.</div></div>
-                        </div>
-                        <ChevronRight size={20} className="text-slate-300" />
-                    </button>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                    <div className="flex items-center gap-2 mb-4 text-slate-800 font-bold text-lg"><PieChart className="text-indigo-500" size={20} /><h2>Frequency Mastery</h2></div>
-                    <div className="space-y-4">
-                        {ranges.map(range => {
-                            const percentage = getStatsForRange(range);
-                            return (
-                                <div key={range} className="space-y-1">
-                                    <div className="flex justify-between text-sm font-medium"><span className="text-slate-600">Top {range} Words</span><span className="text-indigo-600">{percentage}%</span></div>
-                                    <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden"><div className="bg-indigo-500 h-full rounded-full transition-all duration-1000" style={{ width: `${percentage}%` }}></div></div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-                <div className="flex justify-center">
-                    <button onClick={() => setView('data-mgmt')} className="text-slate-400 text-sm hover:text-slate-600 flex items-center gap-1"><Settings size={14} /> Manage Data / Import List</button>
+    const renderHome = () => (
+        <div className="space-y-6 animate-in fade-in duration-500 pt-4">
+            {/* Begrüßung */}
+            <div className="flex justify-between items-end mb-6">
+                <div>
+                    <h1 className="text-3xl font-bold text-slate-800">Bonjour! 👋</h1>
+                    <p className="text-slate-500">Ready to expand your vocabulary?</p>
                 </div>
             </div>
-        );
-    };
+
+            {/* Haupt-Aktion: Personal Training */}
+            <button onClick={() => setView('smart-config')} className="w-full group relative overflow-hidden bg-indigo-600 text-white p-8 rounded-3xl shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02]">
+                <div className="relative z-10 flex flex-col items-start gap-4">
+                    <div className="bg-white/20 p-4 rounded-2xl"><Play size={32} fill="currentColor" /></div>
+                    <div>
+                        <h2 className="text-3xl font-bold">Start Training</h2>
+                        <p className="text-indigo-100 mt-1">Continue your frequency loop.</p>
+                    </div>
+                </div>
+                <GraduationCap size={180} className="absolute -right-8 -bottom-8 opacity-10 rotate-12" />
+            </button>
+
+            {/* Sekundäre Aktionen */}
+            <div className="grid grid-cols-2 gap-4">
+                <button onClick={() => setView('test-config')} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:border-indigo-100 transition-all text-left">
+                    <div className="bg-amber-100 w-fit p-3 rounded-xl text-amber-600 mb-3"><BookOpen size={24} /></div>
+                    <div className="font-bold text-slate-700">Quick Test</div>
+                    <div className="text-xs text-slate-400 mt-1">No progress saved</div>
+                </button>
+                {/* Hier könnte ein "Daily Challenge" Button hin */}
+                <div className="bg-slate-100 p-6 rounded-2xl border border-slate-200 text-left opacity-60 flex flex-col justify-between">
+                    <div className="bg-slate-200 w-fit p-3 rounded-xl text-slate-400 mb-3"><BarChart3 size={24} /></div>
+                    <div>
+                        <div className="font-bold text-slate-500">Leaderboard</div>
+                        <div className="text-xs text-slate-400 mt-1">Coming soon</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     const renderSmartConfig = () => {
         // Definition der Bereiche für die Buttons (jetzt mit 2001-5000)
         const ranges = [
-            { label: "All Words", start: 1, end: 5000 },
+            { label: "Individuel", start: 1, end: 5000 },
             { label: "Top 100", start: 1, end: 100 },
             { label: "101 - 500", start: 101, end: 500 },
             { label: "501 - 1000", start: 501, end: 1000 },
@@ -398,10 +403,6 @@ function App() {
             </div>
         </div>
     );
-
-/* Ersetze die alte renderFlashcard Funktion hiermit: */
-
-/* Ersetze die renderFlashcard Funktion hiermit: */
     const renderFlashcard = () => {
             const isSmartMode = view === 'smart-session';
             const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
@@ -604,17 +605,79 @@ function App() {
             </div>
         );
     };
+
+
+    // Helper: Prüfen, ob wir gerade lernen (dann Menu ausblenden)
+    const isSessionActive = ['smart-session', 'test-session', 'results'].includes(view);
+
+    // Helper: Content basierend auf dem Tab rendern (wenn wir nicht in einer Session sind)
+    const renderTabContent = () => {
+        switch (view) {
+            case 'home':
+            case 'smart-config': // Config gehört logisch zum Home-Tab flow
+            case 'test-config':
+                return renderHome(); // Dein bestehendes Home, ggf. angepasst
+            
+            case 'library':
+            case 'learned-section':
+                // Hier könntest du renderLearnedSection() direkt aufrufen oder ein Untermenü bauen
+                return renderLearnedSection(); 
+            
+            case 'stats':
+                return (
+                    <div className="text-center p-10 text-slate-500">
+                        <BarChart3 size={48} className="mx-auto mb-4 opacity-50"/>
+                        <h2 className="text-xl font-bold">Statistics</h2>
+                        <p>Coming soon: Heatmaps & Detailed Graphs</p>
+                    </div>
+                );
+
+            case 'settings':
+            case 'data-mgmt':
+                return renderDataMgmt(); // Oder ein erweitertes Settings-Menü
+            
+            default:
+                return renderHome();
+        }
+    };
+
     return (
-        <div className="min-h-screen bg-slate-50 font-sans text-slate-900 p-4 md:p-8 flex flex-col items-center">
-            <div className="w-full max-w-4xl">
-                {view === 'home' && renderHome()}
-                {view === 'smart-config' && renderSmartConfig()}
-                {view === 'learned-section' && renderLearnedSection()} {/* <--- NEU */}
-                {(view === 'smart-session' || view === 'test-session') && renderFlashcard()}
-                {view === 'test-config' && renderTestConfig()}
-                {view === 'results' && renderResults()}
-                {view === 'data-mgmt' && renderDataMgmt()}
+        <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col items-center">
+            {/* Main Content Area */}
+            {/* pb-24 sorgt dafür, dass Inhalt nicht hinter der Leiste verschwindet */}
+            <div className={`w-full max-w-4xl p-4 md:p-8 ${!isSessionActive ? 'pb-24' : ''}`}>
+                
+                {/* Wenn Session aktiv -> Session Views zeigen */}
+                {isSessionActive ? (
+                    <>
+                        {(view === 'smart-session' || view === 'test-session') && renderFlashcard()}
+                        {view === 'results' && renderResults()}
+                    </>
+                ) : (
+                    /* Sonst -> Tab Content zeigen */
+                    <>
+                        {/* Sonderfall: Config Screens sind "Full Screen" overlays im Home Tab */}
+                        {view === 'smart-config' ? renderSmartConfig() : 
+                         view === 'test-config' ? renderTestConfig() :
+                         renderTabContent()}
+                    </>
+                )}
             </div>
+
+            {/* Navigation Bar - Nur anzeigen wenn KEINE Session aktiv ist */}
+            {!isSessionActive && (
+                <BottomNav 
+                    activeTab={['home', 'smart-config', 'test-config'].includes(view) ? 'home' : 
+                               ['library', 'learned-section'].includes(view) ? 'library' : 
+                               ['settings', 'data-mgmt'].includes(view) ? 'settings' : view}
+                    onTabChange={(tabId) => {
+                        // Reset auf die Hauptansicht des Tabs
+                        if(tabId === 'library') setView('learned-section');
+                        else if(tabId === 'settings') setView('data-mgmt');
+                        else setView(tabId);
+                    }} 
+                />
+            )}
         </div>
     );
 }

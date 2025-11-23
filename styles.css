@@ -1,24 +1,34 @@
-/* style.css - Clean Version ohne 3D */
+/* style.css */
 
 html, body {
     height: 100%;
-    /* Verhindert "Pull-to-Refresh" und Bouncing auf Mobile */
-    overscroll-behavior-y: none; 
+    /* Verhindert, dass man die ganze Seite "wegziehen" kann (Bouncing) */
+    overscroll-behavior-y: none;
+    /* Verhindert Text-Auswahl beim Tippen */
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-body { 
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: #f8fafc;
     color: #1e293b;
+    /* Wichtig für iPhones mit Notch/Home-Bar */
+    padding-bottom: env(safe-area-inset-bottom); 
 }
 
-/* Verhindert blaues Aufleuchten bei Touch auf Mobile */
+/* Verhindert blaues Aufleuchten beim Tippen auf Buttons */
 * {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Hilfsklassen für Animationen */
-.animate-in {
-    animation-duration: 0.3s;
-    animation-fill-mode: both;
+/* Scrollbar verstecken für cleanerem Look */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+/* Hilfsklasse für iPhone Home-Bar Abstand */
+.pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
 }
