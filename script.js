@@ -23,63 +23,12 @@ const Layers = (p) => <Icon {...p} path={<><polygon points="12 2 2 7 12 12 22 7 
 const Info = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></>} />;
 
 // --- MOCK DATA ---
-const INITIAL_DATA = [
-    { rank: 1, french: "le/la", english: "the" },
-    { rank: 2, french: "de", english: "of/from" },
-    { rank: 3, french: "un/une", english: "a/an" },
-    { rank: 4, french: "à", english: "to/at" },
-    { rank: 5, french: "être", english: "to be" },
-    { rank: 6, french: "et", english: "and" },
-    { rank: 7, french: "en", english: "in/by" },
-    { rank: 8, french: "avoir", english: "to have" },
-    { rank: 9, french: "que", english: "that/what" },
-    { rank: 10, french: "pour", english: "for" },
-    { rank: 11, french: "dans", english: "in/inside" },
-    { rank: 12, french: "ce", english: "this/that" },
-    { rank: 13, french: "il/elle", english: "he/she" },
-    { rank: 14, french: "qui", english: "who" },
-    { rank: 15, french: "ne", english: "not (part of negation)" },
-    { rank: 16, french: "sur", english: "on/upon" },
-    { rank: 17, french: "se", english: "oneself" },
-    { rank: 18, french: "pas", english: "not/step" },
-    { rank: 19, french: "plus", english: "more" },
-    { rank: 20, french: "pouvoir", english: "to be able to/can" },
-    { rank: 21, french: "par", english: "by/through" },
-    { rank: 22, french: "je", english: "I" },
-    { rank: 23, french: "avec", english: "with" },
-    { rank: 24, french: "tout", english: "all/very" },
-    { rank: 25, french: "faire", english: "to do/make" },
-    { rank: 26, french: "son", english: "his/her/its" },
-    { rank: 27, french: "mettre", english: "to put/place" },
-    { rank: 28, french: "autre", english: "other" },
-    { rank: 29, french: "on", english: "one/we" },
-    { rank: 30, french: "mais", english: "but" },
-    { rank: 31, french: "nous", english: "we/us" },
-    { rank: 32, french: "comme", english: "like/as" },
-    { rank: 33, french: "ou", english: "or" },
-    { rank: 34, french: "si", english: "if/whether" },
-    { rank: 35, french: "leur", english: "their/them" },
-    { rank: 36, french: "y", english: "there" },
-    { rank: 37, french: "dire", english: "to say" },
-    { rank: 38, french: "elle", english: "she" },
-    { rank: 39, french: "devoir", english: "to have to/must" },
-    { rank: 40, french: "avant", english: "before" },
-    { rank: 41, french: "deux", english: "two" },
-    { rank: 42, french: "même", english: "same/even" },
-    { rank: 43, french: "prendre", english: "to take" },
-    { rank: 44, french: "aussi", english: "also/too" },
-    { rank: 45, french: "celui", english: "the one/that one" },
-    { rank: 46, french: "donner", english: "to give" },
-    { rank: 47, french: "bien", english: "well/good" },
-    { rank: 48, french: "où", english: "where" },
-    { rank: 49, french: "fois", english: "time(s)" },
-    { rank: 50, french: "vous", english: "you (formal/plural)" }
-];
+//const INITIAL_DATA = vocab_List;
 
 function App() {
     // --- STATE MANAGEMENT ---
     const [view, setView] = useState('home'); 
-    const [vocabulary, setVocabulary] = useState(INITIAL_DATA);
+    const [vocabulary, setVocabulary] = useState(vocab_List);
     const [userProgress, setUserProgress] = useState({}); 
     
     // Session State
@@ -90,8 +39,10 @@ function App() {
     const [sessionResults, setSessionResults] = useState({ correct: 0, wrong: 0 });
 
     // Configurations
+// Configurations
     const [testConfig, setTestConfig] = useState({ startRank: 1, endRank: 50, count: 20 });
-    const [smartConfig, setSmartConfig] = useState({ sessionSize: 15 });
+    // NEU: rangeStart und rangeEnd hinzugefügt (Standard: 1 bis 5000)
+    const [smartConfig, setSmartConfig] = useState({ sessionSize: 15, rangeStart: 1, rangeEnd: 5000 });
 
     // Initial Load & Persistence
     useEffect(() => {
@@ -130,15 +81,21 @@ function App() {
         const sessionSize = smartConfig.sessionSize; 
         let sessionWords = [];
 
-        const dueWords = vocabulary.filter(word => {
+        // SCHRITT 1: Erstmal nur Wörter im gewählten Bereich holen
+        const pool = vocabulary.filter(w => w.rank >= smartConfig.rangeStart && w.rank <= smartConfig.rangeEnd);
+
+        // SCHRITT 2: Aus DIESEM Pool die fälligen Wörter suchen
+        const dueWords = pool.filter(word => {
             const progress = userProgress[word.rank];
             return progress && progress.nextReview <= now;
         });
 
-        const newWords = vocabulary
+        // SCHRITT 3: Aus DIESEM Pool neue Wörter suchen
+        const newWords = pool
             .filter(word => !userProgress[word.rank])
             .sort((a, b) => a.rank - b.rank); 
 
+        // Priorität: Erst Wiederholungen, dann neue
         sessionWords = [...dueWords];
         
         if (sessionWords.length < sessionSize) {
@@ -151,7 +108,7 @@ function App() {
         }
 
         if (sessionWords.length === 0) {
-            alert("All caught up! You've learned all available words for now.");
+            alert("All caught up in this range! Try selecting a different rank range or increase the limit.");
             return;
         }
 
@@ -310,26 +267,71 @@ function App() {
         );
     };
 
-    const renderSmartConfig = () => (
-        <div className="max-w-lg mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
-            <div className="flex items-center gap-3 mb-6">
-                <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full"><RotateCcw size={20} className="text-slate-500" /></button>
-                <h2 className="text-2xl font-bold text-slate-800">Learning Session</h2>
-            </div>
-            <div className="space-y-8">
-                <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-sm text-indigo-900">
-                    <p><strong>Goal:</strong> Complete all words in the session.</p>
-                    <p className="mt-2 text-xs opacity-80">Words you miss will be added to the end of the stack until you get them right.</p>
+    const renderSmartConfig = () => {
+        // Definition der Bereiche für die Buttons (jetzt mit 2001-5000)
+        const ranges = [
+            { label: "All Words", start: 1, end: 5000 },
+            { label: "Top 100", start: 1, end: 100 },
+            { label: "101 - 500", start: 101, end: 500 },
+            { label: "501 - 1000", start: 501, end: 1000 },
+            { label: "1001 - 2000", start: 1001, end: 2000 },
+            { label: "2001 - 5000", start: 2001, end: 5000 }, // <--- NEU
+        ];
+
+        return (
+            <div className="max-w-lg mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
+                <div className="flex items-center gap-3 mb-6">
+                    <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full"><RotateCcw size={20} className="text-slate-500" /></button>
+                    <h2 className="text-2xl font-bold text-slate-800">Learning Setup</h2>
                 </div>
-                <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">How many new words to master?</label>
-                    <input type="range" min="5" max="50" step="5" value={smartConfig.sessionSize} onChange={(e) => setSmartConfig({...smartConfig, sessionSize: parseInt(e.target.value)})} className="w-full accent-indigo-600 h-12" />
-                    <div className="flex justify-between mt-2 text-xs text-slate-400"><span>5 (Quick)</span><span className="text-indigo-600 font-bold text-lg">{smartConfig.sessionSize} Words</span><span>50 (Intense)</span></div>
+                
+                <div className="space-y-8">
+                    {/* RANGE SELECTION */}
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-3">Focus Range</label>
+                        <div className="grid grid-cols-2 gap-3">
+                            {ranges.map((r) => {
+                                const isActive = smartConfig.rangeStart === r.start && smartConfig.rangeEnd === r.end;
+                                return (
+                                    <button 
+                                        key={r.label}
+                                        onClick={() => setSmartConfig({ ...smartConfig, rangeStart: r.start, rangeEnd: r.end })}
+                                        className={`p-3 rounded-xl text-sm font-medium transition-all border ${
+                                            isActive 
+                                            ? "bg-indigo-600 text-white border-indigo-600 shadow-md transform scale-[1.02]" 
+                                            : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50"
+                                        }`}
+                                    >
+                                        {r.label}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* SESSION SIZE SLIDER */}
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">New words per session</label>
+                        <input type="range" min="5" max="50" step="5" value={smartConfig.sessionSize} onChange={(e) => setSmartConfig({...smartConfig, sessionSize: parseInt(e.target.value)})} className="w-full accent-indigo-600 h-12" />
+                        <div className="flex justify-between mt-2 text-xs text-slate-400">
+                            <span>5 (Light)</span>
+                            <span className="text-indigo-600 font-bold text-lg">{smartConfig.sessionSize} Words</span>
+                            <span>50 (Heavy)</span>
+                        </div>
+                    </div>
+
+                    <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-sm text-indigo-900 flex gap-3">
+                        <Info className="shrink-0" size={18} />
+                        <p>We prioritize words due for review within your selected range, then fill up with new words.</p>
+                    </div>
+
+                    <button onClick={startSmartSession} className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white p-4 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all flex justify-center items-center gap-2">
+                        <Play size={20} fill="currentColor" /> Start Session
+                    </button>
                 </div>
-                <button onClick={startSmartSession} className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white p-4 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all flex justify-center items-center gap-2"><Play size={20} fill="currentColor" /> Start Session</button>
             </div>
-        </div>
-    );
+        );
+    };
 
     const renderTestConfig = () => (
         <div className="max-w-lg mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
@@ -358,75 +360,91 @@ function App() {
 
 /* Ersetze die alte renderFlashcard Funktion hiermit: */
 
+/* Ersetze die renderFlashcard Funktion hiermit: */
     const renderFlashcard = () => {
-        const isSmartMode = view === 'smart-session';
-        const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
-        let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
-        let progressPercent = !isSmartMode ? (currentIndex / activeSession.length) * 100 : 0;
+            const isSmartMode = view === 'smart-session';
+            const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
+            let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
+            let progressPercent = !isSmartMode ? (currentIndex / activeSession.length) * 100 : 0;
 
-        return (
-            <div className="flex flex-col h-full max-w-xl mx-auto w-full">
-                {/* Header mit Fortschritt */}
-                <div className="flex items-center justify-between mb-4 md:mb-6">
-                    <button onClick={() => setView('home')} className="p-2 -ml-2 text-slate-400 hover:text-slate-600"><X size={24} /></button>
-                    <div className="text-sm font-medium text-slate-500">{progressText}</div>
-                    <div className="w-6"></div> 
-                </div>
-                
-                {/* Fortschrittsbalken (nur im Test-Modus) */}
-                {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-6"><div className="bg-indigo-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }}></div></div>}
-                
-                {/* Badge für Smart Mode */}
-                {isSmartMode && <div className="text-center mb-6 text-sm text-indigo-500 font-medium bg-indigo-50 py-1 px-3 rounded-full mx-auto w-fit">Stack Loop Mode</div>}
-
-                {/* DIE KARTE */}
-                <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-8 flex flex-col items-center justify-center min-h-[400px] relative transition-all">
-                    
-                    {/* Rang Anzeige oben rechts */}
-                    <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-xs px-2 py-1 rounded-md">Rank #{word.rank}</div>
-                    {/* Box Anzeige oben links (nur Smart Mode) */}
-                    {isSmartMode && userProgress[word.rank] && <div className="absolute top-4 left-4 bg-indigo-50 text-indigo-400 text-xs px-2 py-1 rounded-md flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
-
-                    {/* FRANZÖSISCH (Immer sichtbar) */}
-                    <div className="mb-8 text-center w-full">
-                        <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">French</div>
-                        <h2 className="text-5xl font-bold text-slate-800 break-words">{word.french}</h2>
+            return (
+                <div className="flex flex-col h-full max-w-xl mx-auto w-full">
+                    {/* Header mit Fortschritt - Abstände (mb) verringert, damit es hochrutscht */}
+                    <div className="flex items-center justify-between mb-2">
+                        <button onClick={() => setView('home')} className="p-2 -ml-2 text-slate-400 hover:text-slate-600"><X size={24} /></button>
+                        <div className="text-sm font-medium text-slate-500">{progressText}</div>
+                        <div className="w-6"></div> 
                     </div>
+                    
+                    {/* Fortschrittsbalken (nur im Test-Modus) - Abstand nach unten verringert */}
+                    {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-4"><div className="bg-indigo-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }}></div></div>}
+                    
+                    {/* HIER WURDE DAS STACK LOOP BADGE ENTFERNT */}
 
-                    {/* ENTWEDER Button ODER Lösung */}
-                    {!isFlipped ? (
-                        /* ZUSTAND 1: Button zum Anzeigen */
-                        <button 
-                            onClick={() => setIsFlipped(true)} 
-                            className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 flex items-center gap-2"
-                        >
-                            <BookOpen size={20} /> Show Translation
-                        </button>
-                    ) : (
-                        /* ZUSTAND 2: Lösung + Buttons */
-                        <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center">
-                            <div className="w-full h-px bg-slate-100 my-6"></div> {/* Trennlinie */}
+                    {/* DIE KARTE */}
+                    {/* min-h wurde von 400px auf 300px reduziert, damit sie kompakter startet */}
+                    <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-6 flex flex-col items-center justify-center min-h-[300px] relative transition-all">
+                        
+                        {/* Rang Anzeige oben rechts */}
+                        <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-xs px-2 py-1 rounded-md">Rank #{word.rank}</div>
+                        {/* Box Anzeige oben links (nur Smart Mode) */}
+                        {isSmartMode && userProgress[word.rank] && <div className="absolute top-4 left-4 bg-indigo-50 text-indigo-400 text-xs px-2 py-1 rounded-md flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
+
+                        {/* --- FRONT: FRANZÖSISCH --- */}
+                        <div className="mb-4 text-center w-full">
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">French</div>
+                            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words mb-4">{word.french}</h2>
                             
-                            <div className="text-center mb-8">
-                                <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
-                                <h3 className="text-3xl font-bold text-indigo-600">{word.english || word.german}</h3>
-                            </div>
-
-                            {/* Bewertungs-Buttons */}
-                            <div className="grid grid-cols-2 gap-4 w-full">
-                                <button onClick={() => handleResult(false)} className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 p-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
-                                    <X size={20} /> Missed
-                                </button>
-                                <button onClick={() => handleResult(true)} className="bg-green-50 hover:bg-green-100 text-green-600 border border-green-200 p-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
-                                    <Check size={20} /> Got it
-                                </button>
-                            </div>
+                            {/* Französischer Beispielsatz */}
+                            {word.example_fr && (
+                                <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl text-slate-600 italic text-lg leading-relaxed">
+                                    "{word.example_fr}"
+                                </div>
+                            )}
                         </div>
-                    )}
+
+                        {/* --- INTERAKTION --- */}
+                        {!isFlipped ? (
+                            /* ZUSTAND 1: Button zum Anzeigen */
+                            <button 
+                                onClick={() => setIsFlipped(true)} 
+                                className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 flex items-center gap-2"
+                            >
+                                <BookOpen size={20} /> Show Translation
+                            </button>
+                        ) : (
+                            /* ZUSTAND 2: Lösung + Buttons */
+                            <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center">
+                                <div className="w-full h-px bg-slate-100 my-4"></div> {/* Trennlinie */}
+                                
+                                {/* ENGLISCH */}
+                                <div className="text-center mb-6 w-full">
+                                    <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
+                                    <h3 className="text-3xl font-bold text-indigo-600 mb-2">{word.english || word.german}</h3>
+                                    
+                                    {/* Englischer Beispielsatz */}
+                                    {word.example_en && (
+                                        <p className="text-indigo-400 italic">
+                                            "{word.example_en}"
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Bewertungs-Buttons */}
+                                <div className="grid grid-cols-2 gap-3 w-full">
+                                    <button onClick={() => handleResult(false)} className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 p-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
+                                        <X size={20} /> Missed
+                                    </button>
+                                    <button onClick={() => handleResult(true)} className="bg-green-50 hover:bg-green-100 text-green-600 border border-green-200 p-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
+                                        <Check size={20} /> Got it
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
-        );
-    };
+            );
+        };
 
     const renderResults = () => (
         <div className="text-center max-w-md mx-auto py-10 animate-in zoom-in duration-300">
