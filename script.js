@@ -455,32 +455,23 @@ function App() {
         </div>
     );
     const renderSmartConfig = () => {
-        // Helper um den Modus zu setzen
         const setMode = (mode) => {
             if (mode === 'new') {
-                // Modus: Neue Wörter (Priorität auf unbekannte)
                 setSmartConfig({ ...smartConfig, rangeStart: 1, rangeEnd: 5000, sessionSize: 15 });
                 startSmartSession(); 
             } else if (mode === 'review') {
-                // Modus: Wiederholung (Box > 0 und fällig)
                 setSmartConfig({ ...smartConfig, rangeStart: 1, rangeEnd: 5000, sessionSize: 20 });
                 startSmartSession();
             } else if (mode === 'repair') {
-                // Modus: Problemfälle (Box 1 oder oft falsch)
-                // Wir filtern Wörter, die gelernt wurden (progress existiert), aber in Box 1 sind ODER oft falsch waren
                 const difficultWords = vocabulary.filter(w => {
                     const p = userProgress[w.rank];
-                    // Kriterium: Hat einen Eintrag UND (ist in Box 1 ODER wurde mehr als 2 mal falsch gemacht)
                     return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
                 });
-
                 if (difficultWords.length === 0) {
                     alert("Good news! You don't have any 'critical' words right now.");
                     return;
                 }
-
-                // Wir starten eine Session direkt mit diesen Wörtern
-                setSessionQueue(difficultWords.slice(0, 20)); // Max 20 auf einmal
+                setSessionQueue(difficultWords.slice(0, 20));
                 setIsFlipped(false);
                 setSessionResults({ correct: 0, wrong: 0 });
                 setView('smart-session');
@@ -488,29 +479,33 @@ function App() {
         };
 
         return (
-            <div className="max-w-lg mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-8">
-                    <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+            // ÄNDERUNG: Kein weißer Hintergrund, kein Border, kein Padding im Wrapper mehr.
+            // Nur "pt-4", damit es nicht am oberen Rand klebt (wie beim Home Screen).
+            <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 pt-4">
+                
+                {/* Header - Schwebt jetzt frei, genau wie "Bonjour" auf dem Home Screen */}
+                <div className="flex items-center gap-3 mb-6 pl-1">
+                    <button onClick={() => setView('home')} className="p-2 -ml-2 hover:bg-slate-200 rounded-full transition-colors">
                         <RotateCcw size={20} className="text-slate-500" />
                     </button>
                     <div>
                         <h2 className="text-2xl font-bold text-slate-800">Training Mode</h2>
-                        <p className="text-slate-400 text-sm">Select your focus for this session.</p>
+                        <p className="text-slate-400 text-sm">Select your focus.</p>
                     </div>
                 </div>
                 
                 <div className="space-y-4">
                     {/* OPTION 1: EXPAND */}
+                    {/* Button ist selbst eine Karte, das passt perfekt */}
                     <button 
                         onClick={() => setMode('new')}
-                        className="w-full group relative overflow-hidden bg-indigo-600 hover:bg-indigo-700 text-white p-6 rounded-2xl shadow-lg shadow-indigo-200 transition-all text-left active:scale-[0.98]"
+                        className="w-full group relative overflow-hidden bg-indigo-600 hover:bg-indigo-700 text-white p-5 rounded-3xl shadow-lg shadow-indigo-200 transition-all text-left active:scale-[0.98]"
                     >
                         <div className="relative z-10 flex items-center gap-4">
-                            <div className="bg-white/20 p-3 rounded-xl"><Play size={24} fill="currentColor" /></div>
+                            <div className="bg-white/20 p-3 rounded-2xl shrink-0"><Play size={24} fill="currentColor" /></div>
                             <div>
-                                <div className="font-bold text-lg">Expand Vocabulary</div>
-                                <div className="text-indigo-100 text-sm opacity-80">Learn new high-frequency words.</div>
+                                <div className="font-bold text-lg leading-tight">Expand Vocabulary</div>
+                                <div className="text-indigo-100 text-xs mt-1 opacity-80">Learn new high-frequency words.</div>
                             </div>
                         </div>
                         <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-white/10 to-transparent"></div>
@@ -519,51 +514,41 @@ function App() {
                     {/* OPTION 2: REVIEW */}
                     <button 
                         onClick={() => setMode('review')}
-                        className="w-full group bg-white hover:bg-slate-50 border border-slate-200 p-5 rounded-2xl transition-all text-left active:scale-[0.98] flex items-center gap-4"
+                        className="w-full group bg-white hover:bg-slate-50 border border-slate-200 p-5 rounded-3xl shadow-sm transition-all text-left active:scale-[0.98] flex items-center gap-4"
                     >
-                        <div className="bg-emerald-100 text-emerald-600 p-3 rounded-xl"><RotateCcw size={24} /></div>
+                        <div className="bg-emerald-100 text-emerald-600 p-3 rounded-2xl shrink-0"><RotateCcw size={24} /></div>
                         <div>
-                            <div className="font-bold text-slate-700 text-lg">Review Due Words</div>
-                            <div className="text-slate-400 text-sm">Keep your memory fresh.</div>
+                            <div className="font-bold text-slate-700 text-lg leading-tight">Review Due Words</div>
+                            <div className="text-slate-400 text-xs mt-1">Keep your memory fresh.</div>
                         </div>
                     </button>
 
-                    {/* OPTION 3: REPAIR (Der neue Weak-Mode) */}
+                    {/* OPTION 3: REPAIR */}
                     <button 
                         onClick={() => setMode('repair')}
-                        className="w-full group bg-red-50 hover:bg-red-100 border border-red-100 p-5 rounded-2xl transition-all text-left active:scale-[0.98] flex items-center gap-4"
+                        className="w-full group bg-red-50 hover:bg-red-100 border border-red-100 p-5 rounded-3xl shadow-sm transition-all text-left active:scale-[0.98] flex items-center gap-4"
                     >
-                        <div className="bg-red-200 text-red-600 p-3 rounded-xl"><Activity size={24} /></div>
+                        <div className="bg-red-200 text-red-600 p-3 rounded-2xl shrink-0"><Activity size={24} /></div>
                         <div>
-                            <div className="font-bold text-red-900 text-lg">Difficult Words</div>
-                            <div className="text-red-400 text-sm">Fix words you got wrong often.</div>
+                            <div className="font-bold text-red-900 text-lg leading-tight">Difficult Words</div>
+                            <div className="text-red-400 text-xs mt-1">Fix words you got wrong often.</div>
                         </div>
                     </button>
 
-                    {/* DIVIDER */}
-                    <div className="flex items-center gap-4 py-2 opacity-50">
-                        <div className="h-px bg-slate-200 flex-1"></div>
-                        <span className="text-[10px] text-slate-400 font-bold uppercase">Or</span>
-                        <div className="h-px bg-slate-200 flex-1"></div>
-                    </div>
-
-                    {/* OPTION 4: MANUAL */}
-                    <div className="bg-slate-50 rounded-2xl border border-slate-100 p-1">
-                         <div className="px-5 py-4">
-                             <label className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 block flex justify-between">
-                                <span>Custom Range</span>
-                                <span className="text-indigo-500">{smartConfig.rangeStart}-{smartConfig.rangeEnd}</span>
-                             </label>
-                             <div className="flex items-center gap-2 mb-3">
-                                <input type="number" value={smartConfig.rangeStart} onChange={(e) => setSmartConfig({...smartConfig, rangeStart: parseInt(e.target.value)})} className="w-full bg-white border border-slate-200 rounded-xl p-2 text-center text-sm font-mono" />
+                    {/* MANUAL SECTION */}
+                    {/* ÄNDERUNG: Jetzt "bg-white" statt "bg-slate-50", damit es als eigene Karte sichtbar ist auf dem grauen Hintergrund */}
+                     <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-1 mt-2">
+                         <div className="px-5 py-3 flex items-center justify-between">
+                             <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">Custom Range</span>
+                             <div className="flex items-center gap-2">
+                                <input type="number" value={smartConfig.rangeStart} onChange={(e) => setSmartConfig({...smartConfig, rangeStart: parseInt(e.target.value)})} className="w-16 bg-slate-50 border border-slate-200 rounded-lg p-1 text-center text-xs font-mono focus:bg-white transition-colors" />
                                 <span className="text-slate-300">-</span>
-                                <input type="number" value={smartConfig.rangeEnd} onChange={(e) => setSmartConfig({...smartConfig, rangeEnd: parseInt(e.target.value)})} className="w-full bg-white border border-slate-200 rounded-xl p-2 text-center text-sm font-mono" />
+                                <input type="number" value={smartConfig.rangeEnd} onChange={(e) => setSmartConfig({...smartConfig, rangeEnd: parseInt(e.target.value)})} className="w-16 bg-slate-50 border border-slate-200 rounded-lg p-1 text-center text-xs font-mono focus:bg-white transition-colors" />
+                                <button onClick={startSmartSession} className="ml-2 bg-slate-100 text-indigo-600 p-1.5 rounded-lg hover:bg-indigo-100 transition-colors"><Play size={14} fill="currentColor"/></button>
                              </div>
-                             <button onClick={startSmartSession} className="w-full bg-white border border-slate-200 text-slate-600 py-2 rounded-xl font-bold text-sm hover:border-indigo-300 hover:text-indigo-600 transition-colors">
-                                Start Custom
-                             </button>
                          </div>
                     </div>
+
                 </div>
             </div>
         );
@@ -994,7 +979,7 @@ const renderTestConfig = () => {
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col items-center">
             {/* Main Content Area */}
             {/* pb-24 sorgt dafür, dass Inhalt nicht hinter der Leiste verschwindet */}
-            <div className={`w-full max-w-md px-5 py-6 md:p-8 ${!isSessionActive ? 'pb-28' : ''}`}>
+            <div className={`w-full max-w-lg md:max-w-2xl px-5 py-6 md:p-8 ${!isSessionActive ? 'pb-28' : ''}transition-all duration-300 ease-in-out`}>
                 
                 {/* Wenn Session aktiv -> Session Views zeigen */}
                 {isSessionActive ? (

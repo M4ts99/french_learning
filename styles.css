@@ -2,10 +2,10 @@
 
 /* style.css */
 html {
-    /* Fixiert die Höhe auf iOS, damit die Adressleiste nichts kaputt macht */
     height: -webkit-fill-available;
+    /* WICHTIG: Reserviert immer Platz für die Scrollbar, damit nichts springt */
+    scrollbar-gutter: stable; 
 }
-
 body {
     width: 100vw;           /* Exakt Bildschirmbreite */
     min-height: 100vh;
