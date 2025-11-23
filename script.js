@@ -24,12 +24,14 @@ const Info = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><path d
 const User = (p) => <Icon {...p} path={<><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>} />;
 const Search = (p) => <Icon {...p} path={<><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></>} />;
 const HomeIcon = (p) => <Icon {...p} path={<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>} />;
+const PenTool = (p) => <Icon {...p} path={<><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-17z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></>} />;
 // --- MOCK DATA ---
 //const INITIAL_DATA = vocab_List;
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
         { id: 'home', label: 'Home', icon: <HomeIcon size={24} /> },
         { id: 'library', label: 'Library', icon: <BookOpen size={24} /> },
+        { id: 'grammar', label: 'Grammar', icon: <PenTool size={24} /> }, // <--- NEU
         { id: 'stats', label: 'Profile', icon: <User size={24} /> },
         { id: 'settings', label: 'Settings', icon: <Settings size={24} /> },
     ];
@@ -306,7 +308,7 @@ function App() {
         <div className="space-y-6 animate-in fade-in duration-500 pt-4">
             {/* Begrüßung & Info */}
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-slate-800 mb-4">Bonjour! 👋</h1>
+                <h1 className="text-3xl font-bold text-slate-800 mb-4">Anyo Hassayo! 👋</h1>
                 
                 {/* Frequency Learning Info Box */}
                 <div className="bg-indigo-50 border border-indigo-100 p-5 rounded-2xl">
@@ -418,30 +420,127 @@ function App() {
         );
     };
 
-    const renderTestConfig = () => (
-        <div className="max-w-lg mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
-            <div className="flex items-center gap-3 mb-6">
-                <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full"><RotateCcw size={20} className="text-slate-500" /></button>
-                <h2 className="text-2xl font-bold text-slate-800">Configure Test</h2>
-            </div>
-            <div className="space-y-6">
-                <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Frequency Range (Rank)</label>
-                    <div className="flex items-center gap-4">
-                        <div className="flex-1"><span className="text-xs text-slate-500 block">From</span><input type="number" min="1" max={vocabulary.length} value={testConfig.startRank} onChange={(e) => setTestConfig({...testConfig, startRank: parseInt(e.target.value)})} className="w-full mt-1 p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" /></div>
-                        <span className="text-slate-400 mt-4">-</span>
-                        <div className="flex-1"><span className="text-xs text-slate-500 block">To</span><input type="number" min="1" max={vocabulary.length} value={testConfig.endRank} onChange={(e) => setTestConfig({...testConfig, endRank: parseInt(e.target.value)})} className="w-full mt-1 p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" /></div>
+const renderTestConfig = () => {
+        const levels = [
+            { label: "Foundation", limit: 100, sub: "Survival" },
+            { label: "Essentials", limit: 500, sub: "Daily Life" },
+            { label: "Base", limit: 1000, sub: "Solid Core" },
+            { label: "Extension", limit: 2000, sub: "Fluent" },
+            { label: "Mastery", limit: 5000, sub: "Native" },
+            { label: "Individual", limit: -1, sub: "Custom" }, // -1 als Marker für Custom
+        ];
+
+        // Prüfen, ob aktuell eine der Preset-Einstellungen aktiv ist
+        const currentLimit = testConfig.endRank;
+        const isCustomActive = testConfig.startRank !== 1 || !levels.some(l => l.limit === currentLimit);
+
+        return (
+            <div className="max-w-lg mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-6">
+                    <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                        <RotateCcw size={20} className="text-slate-500" />
+                    </button>
+                    <h2 className="text-2xl font-bold text-slate-800">Quick Test</h2>
+                </div>
+
+                <div className="space-y-8">
+                    {/* Level Auswahl Grid */}
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-3">Difficulty Level</label>
+                        <div className="grid grid-cols-2 gap-3">
+                            {levels.map((l) => {
+                                const isCustomBtn = l.limit === -1;
+                                // Button ist aktiv, wenn: (Es ist Custom UND Custom-Modus ist an) ODER (Limit stimmt überein UND Start ist 1)
+                                const isActive = isCustomBtn ? isCustomActive : (!isCustomActive && currentLimit === l.limit);
+
+                                return (
+                                    <button
+                                        key={l.label}
+                                        onClick={() => {
+                                            if (isCustomBtn) {
+                                                // Nichts ändern, nur Inputs anzeigen (User muss selbst tippen)
+                                                // Wir setzen es auf einen "krummen" Wert, damit der Custom Modus anspringt, oder lassen es so
+                                                setTestConfig({ ...testConfig, startRank: 1, endRank: 5001 }); // Kleiner Hack um Custom zu erzwingen
+                                            } else {
+                                                setTestConfig({ ...testConfig, startRank: 1, endRank: l.limit });
+                                            }
+                                        }}
+                                        className={`p-4 rounded-2xl border text-left transition-all ${
+                                            isActive
+                                                ? 'bg-indigo-600 border-indigo-600 text-white shadow-md scale-[1.02]'
+                                                : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:bg-slate-50'
+                                        }`}
+                                    >
+                                        <div className={`font-bold text-sm ${isActive ? 'text-white' : 'text-slate-800'}`}>{l.label}</div>
+                                        <div className={`text-xs mt-1 ${isActive ? 'text-indigo-200' : 'text-slate-400'}`}>
+                                            {isCustomBtn ? 'Range input' : `1 - ${l.limit}`}
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
+
+                    {/* Manuelle Eingabe (Nur sichtbar bei "Individual") */}
+                    {isCustomActive && (
+                        <div className="animate-in fade-in slide-in-from-top-2 duration-300 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Custom Range</label>
+                            <div className="flex items-center gap-3">
+                                <input 
+                                    type="number" 
+                                    min="1" 
+                                    max={vocabulary.length} 
+                                    value={testConfig.startRank} 
+                                    onChange={(e) => setTestConfig({ ...testConfig, startRank: parseInt(e.target.value) || 1 })} 
+                                    className="w-full p-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-center" 
+                                />
+                                <span className="text-slate-400 font-bold">-</span>
+                                <input 
+                                    type="number" 
+                                    min="1" 
+                                    max={vocabulary.length} 
+                                    value={testConfig.endRank} 
+                                    onChange={(e) => setTestConfig({ ...testConfig, endRank: parseInt(e.target.value) || 1 })} 
+                                    className="w-full p-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-center" 
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Fragen Anzahl Slider */}
+                    <div>
+                        <div className="flex justify-between items-center mb-2">
+                            <label className="text-sm font-medium text-slate-700">Question Count</label>
+                            <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-lg">{testConfig.count}</span>
+                        </div>
+                        <input 
+                            type="range" 
+                            min="5" 
+                            max="50" 
+                            step="5" 
+                            value={testConfig.count} 
+                            onChange={(e) => setTestConfig({ ...testConfig, count: parseInt(e.target.value) })} 
+                            className="w-full accent-indigo-600 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" 
+                        />
+                        <div className="flex justify-between mt-2 text-[10px] text-slate-400 uppercase font-bold tracking-wide">
+                            <span>Quick (5)</span>
+                            <span>Deep (50)</span>
+                        </div>
+                    </div>
+
+                    {/* Start Button */}
+                    <button 
+                        onClick={startTestSession} 
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white p-4 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all flex justify-center items-center gap-2"
+                    >
+                        <Play size={20} fill="currentColor" /> 
+                        Start Test
+                    </button>
                 </div>
-                <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Number of Questions</label>
-                    <input type="range" min="5" max="50" step="5" value={testConfig.count} onChange={(e) => setTestConfig({...testConfig, count: parseInt(e.target.value)})} className="w-full accent-indigo-600 h-12" />
-                    <div className="text-center text-indigo-600 font-bold mt-2">{testConfig.count} words</div>
-                </div>
-                <button onClick={startTestSession} className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white p-4 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all flex justify-center items-center gap-2"><Play size={20} fill="currentColor" /> Start Test</button>
             </div>
-        </div>
-    );
+        );
+    };
     const renderFlashcard = () => {
             const isSmartMode = view === 'smart-session';
             const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
@@ -539,7 +638,22 @@ function App() {
             <button onClick={() => setView('home')} className="bg-slate-900 text-white px-8 py-3 rounded-xl font-medium hover:bg-slate-800 transition-colors">Back to Home</button>
         </div>
     );
-
+    const renderGrammar = () => (
+        <div className="flex flex-col items-center justify-center min-h-[50vh] text-center space-y-6 animate-in fade-in zoom-in duration-500">
+            <div className="bg-indigo-50 p-8 rounded-full shadow-inner">
+                <PenTool size={64} className="text-indigo-300" />
+            </div>
+            <div className="max-w-xs mx-auto">
+                <h2 className="text-2xl font-bold text-slate-700 mb-2">Grammar Drills</h2>
+                <p className="text-slate-400">
+                    Conjugations, Tenses & Sentence Structure exercises are currently under construction.
+                </p>
+            </div>
+            <div className="bg-amber-50 text-amber-600 px-4 py-2 rounded-xl text-sm font-bold border border-amber-100">
+                🚧 Coming Soon
+            </div>
+        </div>
+    );
     const renderDataMgmt = () => (
         <div className="max-w-2xl mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
             <div className="flex items-center gap-3 mb-6">
@@ -717,6 +831,8 @@ function App() {
                 return renderStats();
 
             case 'settings':
+            case 'grammar':
+                return renderGrammar();
             case 'data-mgmt':
                 return renderDataMgmt(); // Oder ein erweitertes Settings-Menü
             
