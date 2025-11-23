@@ -1,22 +1,24 @@
-/* style.css */
-.perspective-1000 {
-    perspective: 1000px;
+/* style.css - Clean Version ohne 3D */
+
+html, body {
+    height: 100%;
+    /* Verhindert "Pull-to-Refresh" und Bouncing auf Mobile */
+    overscroll-behavior-y: none; 
 }
 
-.preserve-3d {
-    transform-style: preserve-3d;
-}
-
-.backface-hidden {
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-}
-
-.rotate-y-180 {
-    transform: rotateY(180deg);
-}
-
-body {
-    background-color: #f8fafc;
+body { 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+}
+
+/* Verhindert blaues Aufleuchten bei Touch auf Mobile */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Hilfsklassen für Animationen */
+.animate-in {
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
 }

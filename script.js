@@ -356,6 +356,8 @@ function App() {
         </div>
     );
 
+/* Ersetze die alte renderFlashcard Funktion hiermit: */
+
     const renderFlashcard = () => {
         const isSmartMode = view === 'smart-session';
         const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
@@ -363,32 +365,64 @@ function App() {
         let progressPercent = !isSmartMode ? (currentIndex / activeSession.length) * 100 : 0;
 
         return (
-            <div className="flex flex-col h-[calc(100vh-4rem)] md:h-auto max-w-xl mx-auto w-full">
+            <div className="flex flex-col h-full max-w-xl mx-auto w-full">
+                {/* Header mit Fortschritt */}
                 <div className="flex items-center justify-between mb-4 md:mb-6">
                     <button onClick={() => setView('home')} className="p-2 -ml-2 text-slate-400 hover:text-slate-600"><X size={24} /></button>
                     <div className="text-sm font-medium text-slate-500">{progressText}</div>
                     <div className="w-6"></div> 
                 </div>
-                {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-6 md:mb-8"><div className="bg-indigo-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }}></div></div>}
+                
+                {/* Fortschrittsbalken (nur im Test-Modus) */}
+                {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-6"><div className="bg-indigo-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }}></div></div>}
+                
+                {/* Badge für Smart Mode */}
                 {isSmartMode && <div className="text-center mb-6 text-sm text-indigo-500 font-medium bg-indigo-50 py-1 px-3 rounded-full mx-auto w-fit">Stack Loop Mode</div>}
-                <div className="flex-grow perspective-1000 mb-6 relative">
-                    <div className={`relative w-full h-full min-h-[300px] md:h-80 transition-all duration-500 transform preserve-3d cursor-pointer ${isFlipped ? 'rotate-y-180' : ''}`} onClick={() => setIsFlipped(!isFlipped)}>
-                        <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-3xl shadow-lg flex flex-col items-center justify-center p-8 select-none">
-                            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">French</div>
-                            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 text-center">{word.french}</h2>
-                            <div className="mt-8 text-indigo-500 text-sm font-medium animate-pulse flex items-center gap-1">Tap to flip <RotateCcw size={12}/></div>
-                            <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-xs px-2 py-1 rounded-md">Rank #{word.rank}</div>
-                            {isSmartMode && userProgress[word.rank] && <div className="absolute top-4 left-4 bg-indigo-50 text-indigo-400 text-xs px-2 py-1 rounded-md flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
-                        </div>
-                        <div className="absolute inset-0 backface-hidden bg-indigo-50 border-2 border-indigo-100 rounded-3xl shadow-lg rotate-y-180 flex flex-col items-center justify-center p-8 select-none">
-                            <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-4">English</div>
-                            <h2 className="text-3xl md:text-4xl font-bold text-indigo-900 text-center">{word.english || word.german}</h2>
-                        </div>
+
+                {/* DIE KARTE */}
+                <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-8 flex flex-col items-center justify-center min-h-[400px] relative transition-all">
+                    
+                    {/* Rang Anzeige oben rechts */}
+                    <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-xs px-2 py-1 rounded-md">Rank #{word.rank}</div>
+                    {/* Box Anzeige oben links (nur Smart Mode) */}
+                    {isSmartMode && userProgress[word.rank] && <div className="absolute top-4 left-4 bg-indigo-50 text-indigo-400 text-xs px-2 py-1 rounded-md flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
+
+                    {/* FRANZÖSISCH (Immer sichtbar) */}
+                    <div className="mb-8 text-center w-full">
+                        <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">French</div>
+                        <h2 className="text-5xl font-bold text-slate-800 break-words">{word.french}</h2>
                     </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4 mt-auto mb-4">
-                    <button onClick={(e) => { e.stopPropagation(); handleResult(false); }} className="bg-red-50 hover:bg-red-100 active:bg-red-200 text-red-600 border border-red-200 p-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors touch-manipulation"><X size={20} /> Missed</button>
-                    <button onClick={(e) => { e.stopPropagation(); handleResult(true); }} className="bg-green-50 hover:bg-green-100 active:bg-green-200 text-green-600 border border-green-200 p-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors touch-manipulation"><Check size={20} /> Got it</button>
+
+                    {/* ENTWEDER Button ODER Lösung */}
+                    {!isFlipped ? (
+                        /* ZUSTAND 1: Button zum Anzeigen */
+                        <button 
+                            onClick={() => setIsFlipped(true)} 
+                            className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 flex items-center gap-2"
+                        >
+                            <BookOpen size={20} /> Show Translation
+                        </button>
+                    ) : (
+                        /* ZUSTAND 2: Lösung + Buttons */
+                        <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center">
+                            <div className="w-full h-px bg-slate-100 my-6"></div> {/* Trennlinie */}
+                            
+                            <div className="text-center mb-8">
+                                <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
+                                <h3 className="text-3xl font-bold text-indigo-600">{word.english || word.german}</h3>
+                            </div>
+
+                            {/* Bewertungs-Buttons */}
+                            <div className="grid grid-cols-2 gap-4 w-full">
+                                <button onClick={() => handleResult(false)} className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 p-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
+                                    <X size={20} /> Missed
+                                </button>
+                                <button onClick={() => handleResult(true)} className="bg-green-50 hover:bg-green-100 text-green-600 border border-green-200 p-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
+                                    <Check size={20} /> Got it
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         );
