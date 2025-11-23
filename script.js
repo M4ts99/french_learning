@@ -7,7 +7,7 @@ const Icon = ({ path, size = 24, className = "" }) => (
         {path}
     </svg>
 );
-
+const BookCheck = (p) => <Icon {...p} path={<><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="m9 9.5 2 2 4-4"/></>} />;
 const BookOpen = (p) => <Icon {...p} path={<><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></>} />;
 const Check = (p) => <Icon {...p} path={<polyline points="20 6 9 17 4 12"/>} />;
 const X = (p) => <Icon {...p} path={<><path d="M18 6 6 18"/><path d="m6 6 12 12"/></>} />;
@@ -41,8 +41,8 @@ function App() {
     // Configurations
 // Configurations
     const [testConfig, setTestConfig] = useState({ startRank: 1, endRank: 50, count: 20 });
-    // NEU: rangeStart und rangeEnd hinzugefügt (Standard: 1 bis 5000)
     const [smartConfig, setSmartConfig] = useState({ sessionSize: 15, rangeStart: 1, rangeEnd: 5000 });
+    const [reviewCount, setReviewCount] = useState(20);
 
     // Initial Load & Persistence
     useEffect(() => {
@@ -134,6 +134,32 @@ function App() {
         setIsFlipped(false);
         setSessionResults({ correct: 0, wrong: 0 });
         setView('test-session');
+    };
+    const startReviewSession = () => {
+        // 1. Alle gelernten Wörter holen (Box > 0)
+        const learnedWords = vocabulary.filter(w => userProgress[w.rank] && userProgress[w.rank].box > 0);
+        
+        if (learnedWords.length === 0) {
+            alert("You haven't learned any words yet! Go to Personal Training first.");
+            return;
+        }
+
+        // 2. Mischen (Fisher-Yates Shuffle)
+        let pool = [...learnedWords];
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+
+        // 3. Auf gewünschte Anzahl begrenzen
+        const selected = pool.slice(0, reviewCount);
+
+        // 4. Session starten (Wir nutzen den existierenden Test-Modus, da er keine Boxen verändert)
+        setActiveSession(selected);
+        setCurrentIndex(0);
+        setIsFlipped(false);
+        setSessionResults({ correct: 0, wrong: 0 });
+        setView('test-session'); // Wir nutzen test-session für reines Abfragen
     };
 
     const handleResult = (known) => {
@@ -230,18 +256,33 @@ function App() {
                     </p>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
+                    {/* Button 1: Personal Training */}
                     <button onClick={() => setView('smart-config')} className="group relative overflow-hidden bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white p-6 rounded-2xl shadow-md transition-all hover:scale-[1.01] flex items-center justify-between">
                         <div className="flex items-center gap-4 relative z-10">
                             <div className="bg-white/20 p-3 rounded-xl"><GraduationCap size={32} /></div>
-                            <div className="text-left"><h2 className="text-xl font-bold">Personalized Training</h2><p className="text-indigo-100 text-sm">Smart loop based on your progress.</p></div>
+                            <div className="text-left"><h2 className="text-xl font-bold">Personal Training</h2><p className="text-indigo-100 text-sm">Smart loop based on your progress.</p></div>
                         </div>
                         <ChevronRight size={24} className="text-indigo-200" />
                         <GraduationCap size={120} className="absolute -right-6 -bottom-6 opacity-10 rotate-12" />
                     </button>
+
+                    {/* Button 2: My Words (NEU) */}
+                    <button onClick={() => setView('learned-section')} className="bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-200 text-slate-700 p-6 rounded-2xl transition-all flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="bg-emerald-100 p-3 rounded-xl text-emerald-600"><BookCheck size={24} /></div>
+                            <div className="text-left">
+                                <div className="font-bold text-lg">My Collection</div>
+                                <div className="text-slate-500 text-sm">Review your learned words.</div>
+                            </div>
+                        </div>
+                        <ChevronRight size={20} className="text-slate-300" />
+                    </button>
+
+                    {/* Button 3: Vocabulary Test */}
                     <button onClick={() => setView('test-config')} className="bg-white hover:bg-slate-50 active:bg-slate-100 border border-slate-200 text-slate-700 p-6 rounded-2xl transition-all flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <div className="bg-amber-100 p-3 rounded-xl text-amber-600"><BookOpen size={24} /></div>
-                            <div className="text-left"><div className="font-bold text-lg">Vocabulary Test</div><div className="text-slate-500 text-sm">Quick check without saving progress.</div></div>
+                            <div className="text-left"><div className="font-bold text-lg">Vocabulary Test</div><div className="text-slate-500 text-sm">Quick check specific ranges.</div></div>
                         </div>
                         <ChevronRight size={20} className="text-slate-300" />
                     </button>
@@ -472,12 +513,103 @@ function App() {
             </form>
         </div>
     );
+    const renderLearnedSection = () => {
+        // Filtere die gelernten Wörter
+        const learnedList = vocabulary.filter(w => userProgress[w.rank] && userProgress[w.rank].box > 0);
+        // Sortiere sie nach Rang (optional)
+        const sortedList = [...learnedList].sort((a, b) => a.rank - b.rank);
 
+        return (
+            <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in duration-500">
+                {/* Header */}
+                <div className="flex items-center gap-3">
+                    <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full"><RotateCcw size={20} className="text-slate-500" /></button>
+                    <h2 className="text-2xl font-bold text-slate-800">My Collection</h2>
+                </div>
+
+                {/* Stats Card */}
+                <div className="bg-emerald-600 text-white p-6 rounded-3xl shadow-lg shadow-emerald-100 relative overflow-hidden">
+                    <div className="relative z-10">
+                        <div className="text-emerald-100 font-medium mb-1">Total Words Learned</div>
+                        <div className="text-5xl font-bold">{learnedList.length}</div>
+                        <div className="mt-4 text-sm text-emerald-100 bg-emerald-700/30 inline-block px-3 py-1 rounded-full">
+                            {((learnedList.length / 5000) * 100).toFixed(1)}% of top 5000
+                        </div>
+                    </div>
+                    <BookCheck size={140} className="absolute -right-6 -bottom-8 opacity-20 rotate-12" />
+                </div>
+
+                {/* Review Config Section */}
+                {learnedList.length > 0 ? (
+                    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                        <h3 className="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
+                            <RotateCcw size={18} className="text-emerald-600" /> Review Session
+                        </h3>
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-slate-700 mb-2">How many words to review?</label>
+                            <input 
+                                type="range" 
+                                min="5" 
+                                max={Math.min(50, learnedList.length)} 
+                                step="5" 
+                                value={reviewCount} 
+                                onChange={(e) => setReviewCount(parseInt(e.target.value))} 
+                                className="w-full accent-emerald-600 h-12" 
+                            />
+                            <div className="flex justify-between mt-2 text-xs text-slate-400">
+                                <span>5</span>
+                                <span className="text-emerald-600 font-bold text-lg">{reviewCount} Words</span>
+                                <span>{Math.min(50, learnedList.length)}</span>
+                            </div>
+                        </div>
+                        <button onClick={startReviewSession} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-xl font-bold shadow-lg shadow-emerald-100 transition-all flex justify-center items-center gap-2">
+                            <Play size={20} fill="currentColor" /> Start Random Review
+                        </button>
+                    </div>
+                ) : (
+                    <div className="text-center p-8 bg-slate-50 rounded-2xl border border-dashed border-slate-300 text-slate-500">
+                        You haven't mastered any words yet! <br/>Start your Personal Training to fill this list.
+                    </div>
+                )}
+
+                {/* Word List Preview (Die letzten 50 gelernten oder alle) */}
+                {learnedList.length > 0 && (
+                    <div className="space-y-3">
+                        <h3 className="font-bold text-slate-700 px-1">Your Library (Top {Math.min(100, learnedList.length)})</h3>
+                        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                            <div className="max-h-[400px] overflow-y-auto">
+                                <table className="w-full text-left text-sm">
+                                    <thead className="bg-slate-50 text-slate-500 sticky top-0">
+                                        <tr>
+                                            <th className="p-4 font-medium">Rank</th>
+                                            <th className="p-4 font-medium">French</th>
+                                            <th className="p-4 font-medium">English</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100">
+                                        {sortedList.slice(0, 100).map(word => (
+                                            <tr key={word.rank} className="hover:bg-slate-50">
+                                                <td className="p-4 text-slate-400">#{word.rank}</td>
+                                                <td className="p-4 font-bold text-slate-700">{word.french}</td>
+                                                <td className="p-4 text-slate-600">{word.english || word.german}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {learnedList.length > 100 && <div className="p-3 text-center text-xs text-slate-400 bg-slate-50 border-t border-slate-100">...and {learnedList.length - 100} more</div>}
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    };
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900 p-4 md:p-8 flex flex-col items-center">
             <div className="w-full max-w-4xl">
                 {view === 'home' && renderHome()}
                 {view === 'smart-config' && renderSmartConfig()}
+                {view === 'learned-section' && renderLearnedSection()} {/* <--- NEU */}
                 {(view === 'smart-session' || view === 'test-session') && renderFlashcard()}
                 {view === 'test-config' && renderTestConfig()}
                 {view === 'results' && renderResults()}
