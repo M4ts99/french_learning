@@ -217,7 +217,7 @@ function App() {
         return (
             <div className="space-y-6 animate-in fade-in duration-500 pb-12">
                 <div className="text-center space-y-2 mt-4">
-                    <h1 className="text-4xl font-bold text-slate-800 tracking-tight">Bonjour! 👋</h1>
+                    <h1 className="text-4xl font-bold text-slate-800 tracking-tight">Anyo Hassayo! 👋</h1>
                     <p className="text-slate-500">Your Frequency Learning Hub.</p>
                 </div>
                 <div className="bg-indigo-50 p-5 rounded-2xl border border-indigo-100 text-slate-700 space-y-2">
