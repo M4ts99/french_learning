@@ -75,13 +75,13 @@ const BottomNav = ({ activeTab, onTabChange }) => {
 // Du musst hier nur die "ids" Arrays mit deinen Rank-Nummern füllen
 const COLLECTIONS = {
     grammar: [
-        { id: 'verbs', label: 'Top Verbs', sub: 'Actions & States', icon: <Activity size={20}/>, color: 'text-blue-600 bg-blue-50 border-blue-100', ids: [] },
+        { id: 'verbs', label: 'Top Verbs', sub: 'Actions & States', icon: <Activity size={20}/>, color: 'text-blue-600 bg-blue-50 border-blue-100', ids: [42,53,88,90,120,163,174,309,316,336,337] },
         { id: 'nouns', label: 'Top Nouns', sub: 'Objects & Things', icon: <Box size={20}/>, color: 'text-emerald-600 bg-emerald-50 border-emerald-100', ids: [] },
         { id: 'adj', label: 'Adjectives', sub: 'Descriptions', icon: <Palette size={20}/>, color: 'text-purple-600 bg-purple-50 border-purple-100', ids: [] },
         { id: 'adv', label: 'Adverbs', sub: 'Modifications', icon: <Layers size={20}/>, color: 'text-amber-600 bg-amber-50 border-amber-100', ids: [] },
     ],
     topics: [
-        { id: 'animals', label: 'Animals', sub: 'Nature', icon: <PawPrint size={24}/>, ids: [/* Z.B. 400, 402, 500 */] },
+        { id: 'animals', label: 'Animals', sub: 'Nature', icon: <PawPrint size={24}/>, ids: [1002,1616,1744,2220,2435,2591,2768] },
         { id: 'food', label: 'Food & Drink', sub: 'Gastronomy', icon: <Coffee size={24}/>, ids: [] },
         { id: 'body', label: 'The Body', sub: 'Anatomy', icon: <User size={24}/>, ids: [] },
         { id: 'travel', label: 'Transport', sub: 'Travel', icon: <Car size={24}/>, ids: [] },
@@ -291,15 +291,20 @@ function App() {
         if (view === 'smart-session') {
             const currentWord = sessionQueue[0];
             setUserProgress(prev => {
-                const currentStats = prev[currentWord.rank] || { box: 0, correctCount: 0 };
+                const currentStats = prev[currentWord.rank] || { box: 0, correctCount: 0, wrongCount: 0 }; // Neu: wrongCount
                 let newBox = currentStats.box;
                 let newCorrectCount = currentStats.correctCount;
+                let newWrongCount = currentStats.wrongCount || 0;
 
                 if (known) {
+                    // Richtig: Eine Box hoch (max 5)
                     newBox = Math.min(newBox + 1, 5); 
                     newCorrectCount += 1;
                 } else {
-                    newBox = Math.max(newBox - 1, 0); 
+                    // FALSCH: Harte Strafe! Zurück auf Box 1 (oder 0), damit es sofort wiederholt wird.
+                    // Das ist dein "Weak Topf".
+                    newBox = 1; 
+                    newWrongCount += 1; // Wir merken uns, dass dieses Wort schwer fällt
                 }
 
                 return {
@@ -307,7 +312,8 @@ function App() {
                     [currentWord.rank]: {
                         box: newBox,
                         nextReview: getNextReviewTime(newBox),
-                        correctCount: newCorrectCount
+                        correctCount: newCorrectCount,
+                        wrongCount: newWrongCount // Speichern
                     }
                 };
             });
@@ -449,66 +455,115 @@ function App() {
         </div>
     );
     const renderSmartConfig = () => {
-        // Definition der Bereiche für die Buttons (jetzt mit 2001-5000)
-        const ranges = [
-            { label: "Individuel", start: 1, end: 5000 },
-            { label: "Top 100", start: 1, end: 100 },
-            { label: "101 - 500", start: 101, end: 500 },
-            { label: "501 - 1000", start: 501, end: 1000 },
-            { label: "1001 - 2000", start: 1001, end: 2000 },
-            { label: "2001 - 5000", start: 2001, end: 5000 }, // <--- NEU
-        ];
+        // Helper um den Modus zu setzen
+        const setMode = (mode) => {
+            if (mode === 'new') {
+                // Modus: Neue Wörter (Priorität auf unbekannte)
+                setSmartConfig({ ...smartConfig, rangeStart: 1, rangeEnd: 5000, sessionSize: 15 });
+                startSmartSession(); 
+            } else if (mode === 'review') {
+                // Modus: Wiederholung (Box > 0 und fällig)
+                setSmartConfig({ ...smartConfig, rangeStart: 1, rangeEnd: 5000, sessionSize: 20 });
+                startSmartSession();
+            } else if (mode === 'repair') {
+                // Modus: Problemfälle (Box 1 oder oft falsch)
+                // Wir filtern Wörter, die gelernt wurden (progress existiert), aber in Box 1 sind ODER oft falsch waren
+                const difficultWords = vocabulary.filter(w => {
+                    const p = userProgress[w.rank];
+                    // Kriterium: Hat einen Eintrag UND (ist in Box 1 ODER wurde mehr als 2 mal falsch gemacht)
+                    return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
+                });
+
+                if (difficultWords.length === 0) {
+                    alert("Good news! You don't have any 'critical' words right now.");
+                    return;
+                }
+
+                // Wir starten eine Session direkt mit diesen Wörtern
+                setSessionQueue(difficultWords.slice(0, 20)); // Max 20 auf einmal
+                setIsFlipped(false);
+                setSessionResults({ correct: 0, wrong: 0 });
+                setView('smart-session');
+            }
+        };
 
         return (
-            <div className="max-w-lg mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
-                <div className="flex items-center gap-3 mb-6">
-                    <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full"><RotateCcw size={20} className="text-slate-500" /></button>
-                    <h2 className="text-2xl font-bold text-slate-800">Learning Setup</h2>
+            <div className="max-w-lg mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-8">
+                    <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                        <RotateCcw size={20} className="text-slate-500" />
+                    </button>
+                    <div>
+                        <h2 className="text-2xl font-bold text-slate-800">Training Mode</h2>
+                        <p className="text-slate-400 text-sm">Select your focus for this session.</p>
+                    </div>
                 </div>
                 
-                <div className="space-y-8">
-                    {/* RANGE SELECTION */}
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-3">Focus Range</label>
-                        <div className="grid grid-cols-2 gap-3">
-                            {ranges.map((r) => {
-                                const isActive = smartConfig.rangeStart === r.start && smartConfig.rangeEnd === r.end;
-                                return (
-                                    <button 
-                                        key={r.label}
-                                        onClick={() => setSmartConfig({ ...smartConfig, rangeStart: r.start, rangeEnd: r.end })}
-                                        className={`p-3 rounded-xl text-sm font-medium transition-all border ${
-                                            isActive 
-                                            ? "bg-indigo-600 text-white border-indigo-600 shadow-md transform scale-[1.02]" 
-                                            : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50"
-                                        }`}
-                                    >
-                                        {r.label}
-                                    </button>
-                                );
-                            })}
+                <div className="space-y-4">
+                    {/* OPTION 1: EXPAND */}
+                    <button 
+                        onClick={() => setMode('new')}
+                        className="w-full group relative overflow-hidden bg-indigo-600 hover:bg-indigo-700 text-white p-6 rounded-2xl shadow-lg shadow-indigo-200 transition-all text-left active:scale-[0.98]"
+                    >
+                        <div className="relative z-10 flex items-center gap-4">
+                            <div className="bg-white/20 p-3 rounded-xl"><Play size={24} fill="currentColor" /></div>
+                            <div>
+                                <div className="font-bold text-lg">Expand Vocabulary</div>
+                                <div className="text-indigo-100 text-sm opacity-80">Learn new high-frequency words.</div>
+                            </div>
                         </div>
-                    </div>
-
-                    {/* SESSION SIZE SLIDER */}
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">New words per session</label>
-                        <input type="range" min="5" max="50" step="5" value={smartConfig.sessionSize} onChange={(e) => setSmartConfig({...smartConfig, sessionSize: parseInt(e.target.value)})} className="w-full accent-indigo-600 h-12" />
-                        <div className="flex justify-between mt-2 text-xs text-slate-400">
-                            <span>5 (Light)</span>
-                            <span className="text-indigo-600 font-bold text-lg">{smartConfig.sessionSize} Words</span>
-                            <span>50 (Heavy)</span>
-                        </div>
-                    </div>
-
-                    <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-sm text-indigo-900 flex gap-3">
-                        <Info className="shrink-0" size={18} />
-                        <p>We prioritize words due for review within your selected range, then fill up with new words.</p>
-                    </div>
-
-                    <button onClick={startSmartSession} className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white p-4 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all flex justify-center items-center gap-2">
-                        <Play size={20} fill="currentColor" /> Start Session
+                        <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-white/10 to-transparent"></div>
                     </button>
+
+                    {/* OPTION 2: REVIEW */}
+                    <button 
+                        onClick={() => setMode('review')}
+                        className="w-full group bg-white hover:bg-slate-50 border border-slate-200 p-5 rounded-2xl transition-all text-left active:scale-[0.98] flex items-center gap-4"
+                    >
+                        <div className="bg-emerald-100 text-emerald-600 p-3 rounded-xl"><RotateCcw size={24} /></div>
+                        <div>
+                            <div className="font-bold text-slate-700 text-lg">Review Due Words</div>
+                            <div className="text-slate-400 text-sm">Keep your memory fresh.</div>
+                        </div>
+                    </button>
+
+                    {/* OPTION 3: REPAIR (Der neue Weak-Mode) */}
+                    <button 
+                        onClick={() => setMode('repair')}
+                        className="w-full group bg-red-50 hover:bg-red-100 border border-red-100 p-5 rounded-2xl transition-all text-left active:scale-[0.98] flex items-center gap-4"
+                    >
+                        <div className="bg-red-200 text-red-600 p-3 rounded-xl"><Activity size={24} /></div>
+                        <div>
+                            <div className="font-bold text-red-900 text-lg">Difficult Words</div>
+                            <div className="text-red-400 text-sm">Fix words you got wrong often.</div>
+                        </div>
+                    </button>
+
+                    {/* DIVIDER */}
+                    <div className="flex items-center gap-4 py-2 opacity-50">
+                        <div className="h-px bg-slate-200 flex-1"></div>
+                        <span className="text-[10px] text-slate-400 font-bold uppercase">Or</span>
+                        <div className="h-px bg-slate-200 flex-1"></div>
+                    </div>
+
+                    {/* OPTION 4: MANUAL */}
+                    <div className="bg-slate-50 rounded-2xl border border-slate-100 p-1">
+                         <div className="px-5 py-4">
+                             <label className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 block flex justify-between">
+                                <span>Custom Range</span>
+                                <span className="text-indigo-500">{smartConfig.rangeStart}-{smartConfig.rangeEnd}</span>
+                             </label>
+                             <div className="flex items-center gap-2 mb-3">
+                                <input type="number" value={smartConfig.rangeStart} onChange={(e) => setSmartConfig({...smartConfig, rangeStart: parseInt(e.target.value)})} className="w-full bg-white border border-slate-200 rounded-xl p-2 text-center text-sm font-mono" />
+                                <span className="text-slate-300">-</span>
+                                <input type="number" value={smartConfig.rangeEnd} onChange={(e) => setSmartConfig({...smartConfig, rangeEnd: parseInt(e.target.value)})} className="w-full bg-white border border-slate-200 rounded-xl p-2 text-center text-sm font-mono" />
+                             </div>
+                             <button onClick={startSmartSession} className="w-full bg-white border border-slate-200 text-slate-600 py-2 rounded-xl font-bold text-sm hover:border-indigo-300 hover:text-indigo-600 transition-colors">
+                                Start Custom
+                             </button>
+                         </div>
+                    </div>
                 </div>
             </div>
         );
