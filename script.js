@@ -62,7 +62,7 @@ const BottomNav = ({ activeTab, onTabChange }) => {
 function App() {
     // --- STATE MANAGEMENT ---
     const [view, setView] = useState('home'); 
-    const [vocabulary, setVocabulary] = useState(vocab_List);
+    const [vocabulary, setVocabulary] = useState([]); // Startet leer, useEffect füllt es sofort
     const [userProgress, setUserProgress] = useState({}); 
     
     // Session State
@@ -79,11 +79,27 @@ function App() {
     const [reviewCount, setReviewCount] = useState(20);
 
     // Initial Load & Persistence
+// Initial Load & Persistence
     useEffect(() => {
+        // 1. Fortschritt laden
         const savedProgress = localStorage.getItem('vocabApp_progress');
+        if (savedProgress) {
+            setUserProgress(JSON.parse(savedProgress));
+        }
+
+        // 2. Vokabeln laden (Hier liegt der Fix!)
         const savedVocab = localStorage.getItem('vocabApp_vocab');
-        if (savedProgress) setUserProgress(JSON.parse(savedProgress));
-        if (savedVocab) setVocabulary(JSON.parse(savedVocab));
+        
+        if (savedVocab) {
+            // A: Wenn wir eigene Daten hochgeladen haben (Settings), nimm diese
+            setVocabulary(JSON.parse(savedVocab));
+        } else if (typeof vocab_List !== 'undefined') {
+            // B: Wenn nicht, nimm die Daten aus der vocab.js Datei
+            // Das "typeof" verhindert Abstürze, falls die Datei fehlt
+            setVocabulary(vocab_List);
+        } else {
+            console.error("WICHTIG: vocab_List wurde nicht gefunden. Prüfe den Dateinamen.");
+        }
     }, []);
 
     useEffect(() => {
@@ -115,21 +131,33 @@ function App() {
         const sessionSize = smartConfig.sessionSize; 
         let sessionWords = [];
 
+        // DEBUG CHECK 1: Sind überhaupt Vokabeln geladen?
+        if (!vocabulary || vocabulary.length === 0) {
+            alert("Fehler: Keine Vokabeln gefunden! Bitte überprüfe die Datei 'vocab.js' oder importiere eine Liste unter Settings.");
+            return;
+        }
+
         // SCHRITT 1: Erstmal nur Wörter im gewählten Bereich holen
         const pool = vocabulary.filter(w => w.rank >= smartConfig.rangeStart && w.rank <= smartConfig.rangeEnd);
 
-        // SCHRITT 2: Aus DIESEM Pool die fälligen Wörter suchen
+        // DEBUG CHECK 2: Ist der gewählte Bereich leer?
+        if (pool.length === 0) {
+            alert(`Keine Wörter im Bereich ${smartConfig.rangeStart} bis ${smartConfig.rangeEnd} gefunden. Bitte wähle einen anderen Bereich in den Einstellungen.`);
+            return;
+        }
+
+        // SCHRITT 2: Aus DIESEM Pool die fälligen Wörter suchen (Wiederholungen)
         const dueWords = pool.filter(word => {
             const progress = userProgress[word.rank];
             return progress && progress.nextReview <= now;
         });
 
-        // SCHRITT 3: Aus DIESEM Pool neue Wörter suchen
+        // SCHRITT 3: Aus DIESEM Pool neue Wörter suchen (die noch nie gelernt wurden)
         const newWords = pool
             .filter(word => !userProgress[word.rank])
             .sort((a, b) => a.rank - b.rank); 
 
-        // Priorität: Erst Wiederholungen, dann neue
+        // Zusammenstellen: Erst Wiederholungen, dann neue Wörter auffüllen
         sessionWords = [...dueWords];
         
         if (sessionWords.length < sessionSize) {
@@ -137,12 +165,14 @@ function App() {
             sessionWords = [...sessionWords, ...newWords.slice(0, needed)];
         }
         
+        // Begrenzen auf Session-Größe (falls zu viele fällig sind)
         if (sessionWords.length > sessionSize) {
             sessionWords = sessionWords.slice(0, sessionSize);
         }
 
+        // Wenn am Ende immer noch 0 Wörter da sind, hast du wirklich alles in diesem Bereich gelernt
         if (sessionWords.length === 0) {
-            alert("All caught up in this range! Try selecting a different rank range or increase the limit.");
+            alert("Großartig! Du bist in diesem Rang-Bereich auf dem neuesten Stand. Es gibt aktuell nichts zu lernen oder zu wiederholen.");
             return;
         }
 
@@ -274,11 +304,20 @@ function App() {
     // --- RENDERERS ---
     const renderHome = () => (
         <div className="space-y-6 animate-in fade-in duration-500 pt-4">
-            {/* Begrüßung */}
-            <div className="flex justify-between items-end mb-6">
-                <div>
-                    <h1 className="text-3xl font-bold text-slate-800">Bonjour! 👋</h1>
-                    <p className="text-slate-500">Ready to expand your vocabulary?</p>
+            {/* Begrüßung & Info */}
+            <div className="mb-6">
+                <h1 className="text-3xl font-bold text-slate-800 mb-4">Bonjour! 👋</h1>
+                
+                {/* Frequency Learning Info Box */}
+                <div className="bg-indigo-50 border border-indigo-100 p-5 rounded-2xl">
+                    <div className="flex items-center gap-2 text-indigo-700 font-bold mb-2 text-sm uppercase tracking-wide">
+                        <Info size={16} />
+                        <span>Why Frequency?</span>
+                    </div>
+                    <p className="text-indigo-900/80 text-sm leading-relaxed">
+                        Did you know that the top <strong className="text-indigo-900">2,000 words</strong> make up about <strong className="text-indigo-900">80%</strong> of spoken and written French? <br/>
+                        Mastering these high-frequency words first is the fastest shortcut to fluency.
+                    </p>
                 </div>
             </div>
 
@@ -514,6 +553,57 @@ function App() {
             </form>
         </div>
     );
+    
+    const renderStats = () => {
+        const milestones = [
+            { limit: 100, label: "Foundation", desc: "Survival Vocabulary", color: "bg-indigo-400" },
+            { limit: 500, label: "Essentials", desc: "Daily Conversation", color: "bg-indigo-500" },
+            { limit: 1000, label: "Base", desc: "Solid Understanding", color: "bg-violet-500" },
+            { limit: 2000, label: "Extension", desc: "Fluent Expression", color: "bg-fuchsia-500" },
+            { limit: 5000, label: "Mastery", desc: "Native-like Nuance", color: "bg-pink-500" },
+        ];
+
+        return (
+            <div className="space-y-6 animate-in fade-in duration-500 pt-4">
+                <div className="flex items-center gap-3 mb-2">
+                     <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><BarChart3 size={24} /></div>
+                     <h2 className="text-2xl font-bold text-slate-800">Frequency Profile</h2>
+                </div>
+
+                <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-6">
+                    {milestones.map((m) => {
+                        const pct = getStatsForRange(m.limit);
+                        return (
+                            <div key={m.limit}>
+                                <div className="flex justify-between items-end mb-2">
+                                    <div>
+                                        <div className="font-bold text-slate-700 flex items-center gap-2">
+                                            {m.label} 
+                                            <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">Top {m.limit}</span>
+                                        </div>
+                                        <div className="text-xs text-slate-400">{m.desc}</div>
+                                    </div>
+                                    <div className="font-bold text-lg text-slate-800">{pct}%</div>
+                                </div>
+                                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                                    <div 
+                                        className={`h-full rounded-full transition-all duration-1000 ${m.color}`} 
+                                        style={{ width: `${pct}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+                
+                <div className="text-center p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                    <p className="text-xs text-slate-500 italic">
+                        "Focus on the Foundation first. The first 1000 words account for 85% of daily speech."
+                    </p>
+                </div>
+            </div>
+        );
+    };
     const renderLearnedSection = () => {
         // Filtere die gelernten Wörter
         const learnedList = vocabulary.filter(w => userProgress[w.rank] && userProgress[w.rank].box > 0);
@@ -624,13 +714,7 @@ function App() {
                 return renderLearnedSection(); 
             
             case 'stats':
-                return (
-                    <div className="text-center p-10 text-slate-500">
-                        <BarChart3 size={48} className="mx-auto mb-4 opacity-50"/>
-                        <h2 className="text-xl font-bold">Statistics</h2>
-                        <p>Coming soon: Heatmaps & Detailed Graphs</p>
-                    </div>
-                );
+                return renderStats();
 
             case 'settings':
             case 'data-mgmt':
