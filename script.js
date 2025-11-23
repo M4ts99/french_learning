@@ -81,8 +81,8 @@ const COLLECTIONS = {
         { id: 'adv', label: 'Adverbs', sub: 'Modifications', icon: <Layers size={20}/>, color: 'text-amber-600 bg-amber-50 border-amber-100', ids: [] },
     ],
     topics: [
-        { id: 'animals', label: 'Animals', sub: 'Nature', icon: <PawPrint size={24}/>, ids: [1002,1616,1744,2220,2435,2591,2768] },
-        { id: 'food', label: 'Food & Drink', sub: 'Gastronomy', icon: <Coffee size={24}/>, ids: [] },
+        { id: 'animals', label: 'Animals', sub: 'Nature', icon: <PawPrint size={24}/>, ids: [1002, 1616, 1744, 2220, 2435, 2591, 2768, 3138, 3353, 3382, 3914, 3927, 4036, 4175, 4290, 4321, 4328, 4739, 4800, 4842, 4947] },
+        { id: 'food', label: 'Food & Drink', sub: 'Gastronomy', icon: <Coffee size={24}/>, ids: [475, 896, 1616, 1886, 2167, 2285, 2309, 2340, 2365, 2393, 2465, 2507, 2580, 2618, 2625, 2685, 2692, 2724, 2802, 2845, 2847, 2855, 2948, 2979, 3012, 3117, 3152, 3258, 3265, 3356, 3470, 3517, 3520, 3562, 3641, 3719, 3912, 3914, 4036, 4112, 4175, 4222, 4276, 4321, 4475, 4556, 4563, 4748, 4845, 4983, 4992] },
         { id: 'body', label: 'The Body', sub: 'Anatomy', icon: <User size={24}/>, ids: [] },
         { id: 'travel', label: 'Transport', sub: 'Travel', icon: <Car size={24}/>, ids: [] },
         { id: 'family', label: 'Family', sub: 'People', icon: <Heart size={24}/>, ids: [] },
@@ -479,11 +479,9 @@ function App() {
         };
 
         return (
-            // ÄNDERUNG: Kein weißer Hintergrund, kein Border, kein Padding im Wrapper mehr.
-            // Nur "pt-4", damit es nicht am oberen Rand klebt (wie beim Home Screen).
             <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 pt-4">
                 
-                {/* Header - Schwebt jetzt frei, genau wie "Bonjour" auf dem Home Screen */}
+                {/* Header */}
                 <div className="flex items-center gap-3 mb-6 pl-1">
                     <button onClick={() => setView('home')} className="p-2 -ml-2 hover:bg-slate-200 rounded-full transition-colors">
                         <RotateCcw size={20} className="text-slate-500" />
@@ -496,11 +494,7 @@ function App() {
                 
                 <div className="space-y-4">
                     {/* OPTION 1: EXPAND */}
-                    {/* Button ist selbst eine Karte, das passt perfekt */}
-                    <button 
-                        onClick={() => setMode('new')}
-                        className="w-full group relative overflow-hidden bg-indigo-600 hover:bg-indigo-700 text-white p-5 rounded-3xl shadow-lg shadow-indigo-200 transition-all text-left active:scale-[0.98]"
-                    >
+                    <button onClick={() => setMode('new')} className="w-full group relative overflow-hidden bg-indigo-600 hover:bg-indigo-700 text-white p-5 rounded-3xl shadow-lg shadow-indigo-200 transition-all text-left active:scale-[0.98]">
                         <div className="relative z-10 flex items-center gap-4">
                             <div className="bg-white/20 p-3 rounded-2xl shrink-0"><Play size={24} fill="currentColor" /></div>
                             <div>
@@ -512,10 +506,7 @@ function App() {
                     </button>
 
                     {/* OPTION 2: REVIEW */}
-                    <button 
-                        onClick={() => setMode('review')}
-                        className="w-full group bg-white hover:bg-slate-50 border border-slate-200 p-5 rounded-3xl shadow-sm transition-all text-left active:scale-[0.98] flex items-center gap-4"
-                    >
+                    <button onClick={() => setMode('review')} className="w-full group bg-white hover:bg-slate-50 border border-slate-200 p-5 rounded-3xl shadow-sm transition-all text-left active:scale-[0.98] flex items-center gap-4">
                         <div className="bg-emerald-100 text-emerald-600 p-3 rounded-2xl shrink-0"><RotateCcw size={24} /></div>
                         <div>
                             <div className="font-bold text-slate-700 text-lg leading-tight">Review Due Words</div>
@@ -524,10 +515,7 @@ function App() {
                     </button>
 
                     {/* OPTION 3: REPAIR */}
-                    <button 
-                        onClick={() => setMode('repair')}
-                        className="w-full group bg-red-50 hover:bg-red-100 border border-red-100 p-5 rounded-3xl shadow-sm transition-all text-left active:scale-[0.98] flex items-center gap-4"
-                    >
+                    <button onClick={() => setMode('repair')} className="w-full group bg-red-50 hover:bg-red-100 border border-red-100 p-5 rounded-3xl shadow-sm transition-all text-left active:scale-[0.98] flex items-center gap-4">
                         <div className="bg-red-200 text-red-600 p-3 rounded-2xl shrink-0"><Activity size={24} /></div>
                         <div>
                             <div className="font-bold text-red-900 text-lg leading-tight">Difficult Words</div>
@@ -535,57 +523,70 @@ function App() {
                         </div>
                     </button>
 
-                    {/* MANUAL SECTION */}
-                    {/* ÄNDERUNG: Jetzt "bg-white" statt "bg-slate-50", damit es als eigene Karte sichtbar ist auf dem grauen Hintergrund */}
-                     <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-1 mt-2">
-                         <div className="px-5 py-3 flex items-center justify-between">
-                             <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">Custom Range</span>
-                             <div className="flex items-center gap-2">
-                                <input type="number" value={smartConfig.rangeStart} onChange={(e) => setSmartConfig({...smartConfig, rangeStart: parseInt(e.target.value)})} className="w-16 bg-slate-50 border border-slate-200 rounded-lg p-1 text-center text-xs font-mono focus:bg-white transition-colors" />
-                                <span className="text-slate-300">-</span>
-                                <input type="number" value={smartConfig.rangeEnd} onChange={(e) => setSmartConfig({...smartConfig, rangeEnd: parseInt(e.target.value)})} className="w-16 bg-slate-50 border border-slate-200 rounded-lg p-1 text-center text-xs font-mono focus:bg-white transition-colors" />
-                                <button onClick={startSmartSession} className="ml-2 bg-slate-100 text-indigo-600 p-1.5 rounded-lg hover:bg-indigo-100 transition-colors"><Play size={14} fill="currentColor"/></button>
-                             </div>
+                    {/* MANUAL SECTION - Jetzt groß und bedienbar */}
+                     <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-5">
+                         <div className="flex items-center gap-2 mb-4 text-slate-500">
+                             <Settings size={18} />
+                             <span className="font-bold text-sm uppercase tracking-wide">Custom Range</span>
                          </div>
+                         
+                         <div className="flex items-center gap-3 mb-4">
+                            <div className="flex-1">
+                                <div className="text-[10px] text-slate-400 font-bold mb-1 ml-1">FROM</div>
+                                <input type="number" value={smartConfig.rangeStart} onChange={(e) => setSmartConfig({...smartConfig, rangeStart: parseInt(e.target.value)})} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-center text-lg font-bold font-mono focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
+                            </div>
+                            <span className="text-slate-300 font-bold text-xl mt-4">-</span>
+                            <div className="flex-1">
+                                <div className="text-[10px] text-slate-400 font-bold mb-1 ml-1">TO</div>
+                                <input type="number" value={smartConfig.rangeEnd} onChange={(e) => setSmartConfig({...smartConfig, rangeEnd: parseInt(e.target.value)})} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-center text-lg font-bold font-mono focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
+                            </div>
+                         </div>
+
+                         <button onClick={startSmartSession} className="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-600 py-3 rounded-xl font-bold transition-colors flex justify-center items-center gap-2">
+                            Start Custom Session <ChevronRight size={16} />
+                         </button>
                     </div>
 
                 </div>
             </div>
         );
-    };
+    };  
 
-const renderTestConfig = () => {
+    const renderTestConfig = () => {
         const levels = [
             { label: "Foundation", limit: 100, sub: "Survival" },
             { label: "Essentials", limit: 500, sub: "Daily Life" },
             { label: "Base", limit: 1000, sub: "Solid Core" },
             { label: "Extension", limit: 2000, sub: "Fluent" },
             { label: "Mastery", limit: 5000, sub: "Native" },
-            { label: "Individual", limit: -1, sub: "Custom" }, // -1 als Marker für Custom
+            { label: "Individual", limit: -1, sub: "Custom" },
         ];
 
-        // Prüfen, ob aktuell eine der Preset-Einstellungen aktiv ist
         const currentLimit = testConfig.endRank;
         const isCustomActive = testConfig.startRank !== 1 || !levels.some(l => l.limit === currentLimit);
 
         return (
-            <div className="max-w-lg mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
+            // ÄNDERUNG: Kein Wrapper-Container mehr, nur "pt-4"
+            <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 pt-4">
+                
                 {/* Header */}
-                <div className="flex items-center gap-3 mb-6">
-                    <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                <div className="flex items-center gap-3 mb-6 pl-1">
+                    <button onClick={() => setView('home')} className="p-2 -ml-2 hover:bg-slate-200 rounded-full transition-colors">
                         <RotateCcw size={20} className="text-slate-500" />
                     </button>
-                    <h2 className="text-2xl font-bold text-slate-800">Quick Test</h2>
+                    <div>
+                        <h2 className="text-2xl font-bold text-slate-800">Quick Test</h2>
+                        <p className="text-slate-400 text-sm">Test your knowledge.</p>
+                    </div>
                 </div>
 
-                <div className="space-y-8">
-                    {/* Level Auswahl Grid */}
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-3">Difficulty Level</label>
+                <div className="space-y-6">
+                    {/* KARTE 1: Difficulty Selection */}
+                    <div className="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Difficulty Level</label>
                         <div className="grid grid-cols-2 gap-3">
                             {levels.map((l) => {
                                 const isCustomBtn = l.limit === -1;
-                                // Button ist aktiv, wenn: (Es ist Custom UND Custom-Modus ist an) ODER (Limit stimmt überein UND Start ist 1)
                                 const isActive = isCustomBtn ? isCustomActive : (!isCustomActive && currentLimit === l.limit);
 
                                 return (
@@ -593,82 +594,54 @@ const renderTestConfig = () => {
                                         key={l.label}
                                         onClick={() => {
                                             if (isCustomBtn) {
-                                                // Nichts ändern, nur Inputs anzeigen (User muss selbst tippen)
-                                                // Wir setzen es auf einen "krummen" Wert, damit der Custom Modus anspringt, oder lassen es so
-                                                setTestConfig({ ...testConfig, startRank: 1, endRank: 5001 }); // Kleiner Hack um Custom zu erzwingen
+                                                setTestConfig({ ...testConfig, startRank: 1, endRank: 5001 });
                                             } else {
                                                 setTestConfig({ ...testConfig, startRank: 1, endRank: l.limit });
                                             }
                                         }}
-                                        className={`p-4 rounded-2xl border text-left transition-all ${
+                                        className={`p-3 rounded-2xl border text-left transition-all ${
                                             isActive
                                                 ? 'bg-indigo-600 border-indigo-600 text-white shadow-md scale-[1.02]'
-                                                : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:bg-slate-50'
+                                                : 'bg-slate-50 border-slate-100 text-slate-600 hover:border-indigo-200 hover:bg-indigo-50'
                                         }`}
                                     >
                                         <div className={`font-bold text-sm ${isActive ? 'text-white' : 'text-slate-800'}`}>{l.label}</div>
-                                        <div className={`text-xs mt-1 ${isActive ? 'text-indigo-200' : 'text-slate-400'}`}>
-                                            {isCustomBtn ? 'Range input' : `1 - ${l.limit}`}
+                                        <div className={`text-[10px] mt-0.5 ${isActive ? 'text-indigo-200' : 'text-slate-400'}`}>
+                                            {isCustomBtn ? 'Set Range' : `Top ${l.limit}`}
                                         </div>
                                     </button>
                                 );
                             })}
                         </div>
+
+                        {/* Manuelle Eingabe (Innerhalb der Karte, klappt auf) */}
+                        {isCustomActive && (
+                            <div className="mt-4 pt-4 border-t border-slate-100 animate-in fade-in duration-300">
+                                <div className="flex items-center gap-3">
+                                    <input type="number" min="1" value={testConfig.startRank} onChange={(e) => setTestConfig({ ...testConfig, startRank: parseInt(e.target.value) || 1 })} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-center font-bold" placeholder="Start" />
+                                    <span className="text-slate-300 font-bold">-</span>
+                                    <input type="number" min="1" value={testConfig.endRank} onChange={(e) => setTestConfig({ ...testConfig, endRank: parseInt(e.target.value) || 1 })} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-center font-bold" placeholder="End" />
+                                </div>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Manuelle Eingabe (Nur sichtbar bei "Individual") */}
-                    {isCustomActive && (
-                        <div className="animate-in fade-in slide-in-from-top-2 duration-300 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Custom Range</label>
-                            <div className="flex items-center gap-3">
-                                <input 
-                                    type="number" 
-                                    min="1" 
-                                    max={vocabulary.length} 
-                                    value={testConfig.startRank} 
-                                    onChange={(e) => setTestConfig({ ...testConfig, startRank: parseInt(e.target.value) || 1 })} 
-                                    className="w-full p-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-center" 
-                                />
-                                <span className="text-slate-400 font-bold">-</span>
-                                <input 
-                                    type="number" 
-                                    min="1" 
-                                    max={vocabulary.length} 
-                                    value={testConfig.endRank} 
-                                    onChange={(e) => setTestConfig({ ...testConfig, endRank: parseInt(e.target.value) || 1 })} 
-                                    className="w-full p-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-center" 
-                                />
-                            </div>
+                    {/* KARTE 2: Slider */}
+                    <div className="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+                        <div className="flex justify-between items-center mb-4">
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Question Count</label>
+                            <span className="bg-indigo-100 text-indigo-700 text-sm font-bold px-3 py-1 rounded-full">{testConfig.count}</span>
                         </div>
-                    )}
-
-                    {/* Fragen Anzahl Slider */}
-                    <div>
-                        <div className="flex justify-between items-center mb-2">
-                            <label className="text-sm font-medium text-slate-700">Question Count</label>
-                            <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-lg">{testConfig.count}</span>
-                        </div>
-                        <input 
-                            type="range" 
-                            min="5" 
-                            max="50" 
-                            step="5" 
-                            value={testConfig.count} 
-                            onChange={(e) => setTestConfig({ ...testConfig, count: parseInt(e.target.value) })} 
-                            className="w-full accent-indigo-600 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" 
-                        />
-                        <div className="flex justify-between mt-2 text-[10px] text-slate-400 uppercase font-bold tracking-wide">
+                        <input type="range" min="5" max="50" step="5" value={testConfig.count} onChange={(e) => setTestConfig({ ...testConfig, count: parseInt(e.target.value) })} className="w-full accent-indigo-600 h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer" />
+                        <div className="flex justify-between mt-2 text-[10px] text-slate-400 font-bold tracking-wide uppercase">
                             <span>Quick (5)</span>
                             <span>Deep (50)</span>
                         </div>
                     </div>
 
                     {/* Start Button */}
-                    <button 
-                        onClick={startTestSession} 
-                        className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white p-4 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all flex justify-center items-center gap-2"
-                    >
-                        <Play size={20} fill="currentColor" /> 
+                    <button onClick={startTestSession} className="w-full bg-slate-900 hover:bg-slate-800 active:scale-[0.98] text-white p-5 rounded-3xl font-bold shadow-xl shadow-slate-200 transition-all flex justify-center items-center gap-3">
+                        <Play size={24} fill="currentColor" /> 
                         Start Test
                     </button>
                 </div>
