@@ -42,9 +42,9 @@ const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
         { id: 'home', label: 'Home', icon: <HomeIcon size={24} /> },
         { id: 'library', label: 'Library', icon: <BookOpen size={24} /> },
-        { id: 'grammar', label: 'Grammar', icon: <PenTool size={24} /> }, // <--- NEU
+        { id: 'grammar', label: 'Translator', icon: <PenTool size={24} /> }, // <--- NEU
         { id: 'stats', label: 'Profile', icon: <User size={24} /> },
-        { id: 'settings', label: 'Settings', icon: <Settings size={24} /> },
+        
     ];
 
     return (
