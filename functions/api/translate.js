@@ -10,7 +10,7 @@ export async function onRequestPost(context) {
     // WICHTIG: Wir nutzen jetzt exakt 'gemini-1.5-flash'
     // Das ist die stabilste Version für die v1beta API.
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
