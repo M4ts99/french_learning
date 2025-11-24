@@ -93,91 +93,110 @@ const COLLECTIONS = {
 
 
 // --- NEW COMPONENTS ---
-const GrammarTerminal = () => {
+const ModernTranslator = () => {
     const [input, setInput] = useState('');
-    const [history, setHistory] = useState([
-        { type: 'system', content: 'French5000 Terminal v1.0' },
-        { type: 'system', content: 'Connected to Gemini Translation Core...' },
-        { type: 'system', content: 'Ready. Type (English/German) to translate.' }
-    ]);
+    const [result, setResult] = useState('');
     const [loading, setLoading] = useState(false);
-    const bottomRef = React.useRef(null);
+    const [error, setError] = useState(null);
 
-    // Immer nach unten scrollen bei neuer Nachricht
-    useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [history]);
+    const handleTranslate = async () => {
+        if (!input.trim()) return;
+        
+        setLoading(true);
+        setError(null);
+        setResult(''); // Altes Ergebnis löschen
 
-    const handleCommand = async (e) => {
-        if (e.key === 'Enter' && input.trim()) {
-            const userText = input.trim();
-            setInput('');
-            setLoading(true);
+        try {
+            const res = await fetch('/api/translate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: input.trim() })
+            });
+            
+            const data = await res.json();
 
-            // 1. User Eingabe anzeigen
-            setHistory(prev => [...prev, { type: 'user', content: userText }]);
+            if (data.error) throw new Error(data.error);
+            setResult(data.translation);
+        } catch (err) {
+            setError("Oops! Something went wrong. Please try again.");
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-            try {
-                // 2. Backend aufrufen
-                const res = await fetch('/api/translate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: userText })
-                });
-                
-                const data = await res.json();
-
-                if (data.error) throw new Error(data.error);
-
-                // 3. Antwort anzeigen
-                setHistory(prev => [...prev, { type: 'bot', content: data.translation }]);
-            } catch (err) {
-                setHistory(prev => [...prev, { type: 'error', content: 'Error: ' + err.message }]);
-            } finally {
-                setLoading(false);
-            }
+    // Enter-Taste Support (Strg+Enter zum Senden)
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+            handleTranslate();
         }
     };
 
     return (
-        <div className="w-full max-w-md mx-auto h-[500px] bg-slate-900 rounded-xl overflow-hidden shadow-2xl flex flex-col font-mono text-sm border border-slate-700">
-            {/* Terminal Header */}
-            <div className="bg-slate-800 p-2 flex items-center gap-2 border-b border-slate-700">
-                <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+        <div className="w-full max-w-xl mx-auto space-y-4">
+            
+            {/* INPUT CARD */}
+            <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden transition-shadow focus-within:shadow-md focus-within:border-indigo-300">
+                <div className="bg-slate-50 px-4 py-2 border-b border-slate-100 flex justify-between items-center">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Input (German/English)</span>
+                    {input && (
+                        <button onClick={() => {setInput(''); setResult('');}} className="text-slate-400 hover:text-slate-600">
+                            <X size={16} />
+                        </button>
+                    )}
                 </div>
-                <div className="text-slate-400 text-xs ml-2">bash — french-translator</div>
-            </div>
-
-            {/* Output Area */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-2 text-slate-300">
-                {history.map((entry, i) => (
-                    <div key={i} className={`${entry.type === 'user' ? 'text-white' : entry.type === 'bot' ? 'text-emerald-400' : entry.type === 'error' ? 'text-red-400' : 'text-slate-500'}`}>
-                        {entry.type === 'user' && <span className="text-blue-400 mr-2">user@f5000:~$</span>}
-                        {entry.type === 'bot' && <span className="mr-2 text-emerald-600">➜</span>}
-                        {entry.content}
-                    </div>
-                ))}
-                {loading && <div className="text-emerald-400 animate-pulse">Thinking...</div>}
-                <div ref={bottomRef}></div>
-            </div>
-
-            {/* Input Line */}
-            <div className="p-3 bg-slate-900 border-t border-slate-800 flex items-center">
-                <span className="text-blue-400 mr-2 shrink-0">user@f5000:~$</span>
-                <input 
-                    autoFocus
-                    type="text" 
+                <textarea 
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleCommand}
-                    className="w-full bg-transparent outline-none text-white placeholder-slate-600"
-                    placeholder="Type here..."
-                    disabled={loading}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Type something to translate..."
+                    className="w-full h-32 p-4 text-lg text-slate-700 placeholder-slate-300 outline-none resize-none bg-transparent"
                 />
+                <div className="px-4 py-3 bg-white border-t border-slate-50 flex justify-end">
+                    <button 
+                        onClick={handleTranslate} 
+                        disabled={loading || !input}
+                        className={`rounded-xl px-6 py-2.5 font-bold text-white transition-all flex items-center gap-2 ${
+                            loading || !input 
+                            ? 'bg-slate-200 text-slate-400 cursor-not-allowed' 
+                            : 'bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 active:scale-95'
+                        }`}
+                    >
+                        {loading ? (
+                            <><RotateCcw className="animate-spin" size={18}/> Translating...</>
+                        ) : (
+                            <><PenTool size={18}/> Translate</>
+                        )}
+                    </button>
+                </div>
             </div>
+
+            {/* ERROR MESSAGE */}
+            {error && (
+                <div className="bg-red-50 text-red-600 p-4 rounded-2xl text-sm border border-red-100 flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+                    <Activity size={18} /> {error}
+                </div>
+            )}
+
+            {/* RESULT CARD (Nur sichtbar wenn Ergebnis da ist) */}
+            {result && (
+                <div className="bg-indigo-50 rounded-3xl border border-indigo-100 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-500">
+                    <div className="bg-indigo-100/50 px-4 py-2 border-b border-indigo-100 flex justify-between items-center">
+                        <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">French Translation</span>
+                        <button 
+                            onClick={() => navigator.clipboard.writeText(result)} 
+                            className="text-indigo-400 hover:text-indigo-600 text-xs font-bold flex items-center gap-1"
+                        >
+                            <Save size={14} /> Copy
+                        </button>
+                    </div>
+                    <div className="p-6">
+                        <p className="text-2xl md:text-3xl text-indigo-900 font-serif leading-relaxed">
+                            {result}
+                        </p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
@@ -836,21 +855,24 @@ function App() {
             <button onClick={() => setView('home')} className="bg-slate-900 text-white px-8 py-3 rounded-xl font-medium hover:bg-slate-800 transition-colors">Back to Home</button>
         </div>
     );
+    //tetsad
     const renderGrammar = () => (
-        <div className="flex flex-col items-center justify-start min-h-[60vh] text-center space-y-6 animate-in fade-in zoom-in duration-500 pt-4">
-            <div className="max-w-md mx-auto w-full text-left px-1 mb-2">
-                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                    <PenTool size={24} className="text-indigo-600"/> Grammar Lab
+        <div className="flex flex-col items-center justify-start min-h-[60vh] space-y-6 animate-in fade-in duration-500 pt-4 pb-20">
+            {/* Header */}
+            <div className="max-w-xl mx-auto w-full px-1 text-center">
+                <div className="inline-flex items-center justify-center p-3 bg-indigo-100 rounded-full text-indigo-600 mb-4 shadow-sm">
+                    <PenTool size={32} />
+                </div>
+                <h2 className="text-2xl font-bold text-slate-800 mb-1">
+                    AI Translator
                 </h2>
-                <p className="text-slate-400 text-sm">AI-Powered Translator & Corrector.</p>
+                <p className="text-slate-400 text-sm">
+                    Instant corrections & translations powered by Google Gemini.
+                </p>
             </div>
             
-            {/* Hier binden wir das Terminal ein */}
-            <GrammarTerminal />
-
-            <div className="bg-amber-50 text-amber-600 px-4 py-3 rounded-xl text-xs font-bold border border-amber-100 max-w-md mx-auto w-full text-left">
-                💡 Tip: Type any German or English sentence. The AI will translate it or correct your French.
-            </div>
+            {/* Die neue Komponente */}
+            <ModernTranslator />
         </div>
     );
     const renderDataMgmt = () => (
