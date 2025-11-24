@@ -78,7 +78,7 @@ const COLLECTIONS = {
         { id: 'verbs', label: 'Top Verbs', sub: 'Actions & States', icon: <Activity size={20}/>, color: 'text-blue-600 bg-blue-50 border-blue-100', ids: [290, 413, 676, 1218, 1248, 1535, 1749, 1805, 1979, 1987, 2051, 2081, 2254, 2322, 2883, 2963, 3623, 3905, 4205, 4245, 4393, 4519, 4532, 4611, 4617, 4676, 4894, 4929, 1202, 1476, 1891, 1950, 2449, 2544, 2904, 2928, 3033, 3759, 3788, 4225, 4270, 4330, 4360, 4368, 4370, 4405, 4520, 4604, 4682, 4708, 4730, 4734, 4754, 4852, 4861, 4865, 521, 590, 686, 745, 1095, 1787, 1856, 2056, 2152, 2267, 2725, 3043, 3086, 3372, 3409, 3671, 3772, 3809, 3918, 4022, 4034, 4062, 4072, 4116, 4121, 4347, 4358, 4638] },
         { id: 'nouns', label: 'Top Nouns', sub: 'Objects & Things', icon: <Box size={20}/>, color: 'text-emerald-600 bg-emerald-50 border-emerald-100', ids: [370, 371, 383, 423, 452, 461, 465, 473, 478, 482, 485, 488, 489, 490, 492, 495, 496, 509, 516, 570, 576, 582, 602, 603, 604, 606, 608, 627, 634, 638, 692, 694, 720, 729, 746, 763, 765, 782, 783, 789, 799, 814, 825, 831, 836, 845, 855, 862, 882, 887, 898, 909, 913, 937, 941, 947, 952, 953, 956, 971, 972, 973, 976, 993, 995, 1005, 1006, 1016, 1030, 1036, 1050, 1057, 1073, 1074, 1075, 1076, 1079, 1083, 1085, 1094, 1096, 1139, 1157, 1158, 1159, 1162, 1165, 1174, 1179, 1180, 1182, 1192, 1195, 1199, 1204, 1211, 1215, 1237, 1247, 1250, 1263, 1266, 1278, 1279, 1286, 1298, 1299, 1312, 1324, 1330, 1342, 1345, 1350, 1351, 1352, 1386, 1388, 1402, 1421, 1428, 1432, 1437, 1440, 1464, 1467, 1469, 1494, 1496, 1505, 1512, 1513, 1522, 1525, 1528, 1555, 1558, 1561, 1568, 1570, 1571, 1572, 1573, 1578, 1583, 1587, 1598, 1602, 1607, 1609, 1613, 1617, 1623, 1624, 1626, 1632, 1636, 1638, 1641, 1644, 1649, 1651, 1655, 1656, 1657, 1659, 1662, 1667, 1668, 1669, 1671, 1680, 1685, 1687, 1688, 1693, 1694, 1697, 1698, 1699, 1700, 1707, 1716, 1717, 1723, 1726, 1735, 1741, 1745, 1747, 1752, 1754, 1755, 1756, 1757, 1758, 1761, 1771, 1773, 1776, 1779, 1785, 1788, 1789, 1790, 1791, 1793, 1795, 1799, 1803, 1804, 1806, 1809, 1817, 1818, 1819, 1821, 1822, 1824, 1825, 1826, 1830, 1832, 1834, 1835, 1837] },
         { id: 'adj', label: 'Adjectives', sub: 'Descriptions', icon: <Palette size={20}/>, color: 'text-purple-600 bg-purple-50 border-purple-100', ids: [893, 942, 1090, 1225, 1242, 1244, 1322, 1331, 1488, 1637, 1665, 1739, 1811, 2137, 2238, 2241, 2310, 2348, 2356, 2373, 2382, 2555, 2657, 2663, 2765, 2780, 2800, 2929, 2945, 2968, 2971, 2993, 2995, 3018, 3034, 3050, 3074, 3118, 3134, 3182, 3199, 3218, 3262, 3304, 3357, 3369, 3533, 3548, 3599, 3690, 3761, 3787, 3789, 3819, 3862, 3872, 3966, 4030, 4054, 4126, 4206, 4210, 4243, 4316, 4433, 4463, 4485, 4539, 4543, 4588, 4599, 4655, 4666, 4668, 4680, 4701, 4747, 4841, 4889] },
-        { id: 'adv', label: 'Adverbs', sub: 'Modifications', icon: <Layers size={20}/>, color: 'text-amber-600 bg-amber-50 border-amber-100', ids: [150, 192, 193, 234, 284, 304, 341, 348, 349, 352, 360, 361, 377, 411, 460, 481, 513, 560, 581, 588, 593, 594, 600, 614, 615, 678, 711, 718, 728, 770, 779, 800, 807, 838, 843, 857, 869, 871, 872, 888, 903, 974, 1001, 1009, 1013, 1021, 1023, 1025, 1071, 1148, 1172, 1194, 1197, 1208, 1217, 1222, 1252, 1271, 1316, 1319, 1332, 1340, 1353, 1382, 1395, 1504, 1518, 1543, 1545, 1547, 1550, 1559, 1563, 1591, 1612, 1629, 1633, 1660, 1710, 1727, 1734, 1766, 1769, 1777, 1852, 1888, 1965, 1975, 2010, 2018, 2036, 2055, 2062, 2130, 2188, 2189, 2208, 2242, 2297, 2310, 2327, 2333, 2362, 2363, 2366, 2384, 2389, 2390, 2396, 2444, 2491, 2535, 2564, 2637, 2739, 2742, 2767, 2778, 2813, 2915, 2930, 2957, 2990, 3013, 3014, 3038, 3039, 3058, 3061, 3066, 3094, 3115, 3116, 3170, 3198, 3200, 3242, 3256, 3318, 3340, 3349, 3394, 3410, 3420, 3432, 3497, 3516, 3529, 3537, 3538, 3555, 3579, 3594, 3647, 3651, 3657, 3677, 3730, 3739, 3796, 3800, 3810, 3824, 3843, 3857, 3860, 3898, 3902, 3909, 3962, 3965, 3969, 4009, 4015, 4023, 4057, 4078, 4090, 4091, 4096, 4165, 4181, 4252, 4266, 4293, 4296, 4334, 4335, 4367, 4386, 4390, 4397, 4405, 4409, 4414, 4417, 4527, 4534, 4535, 4550, 4557, 4579, 4599, 4632, 4644, 4691, 4698, 4726, 4795, 4808, 4815, 4818, 4843, 4859, 4882, 4917, 4991, 4999] },
+        { id: 'adv', label: 'Adverbs', sub: 'Modifications', icon: <Layers size={20}/>, color: 'text-amber-600 bg-amber-50 border-amber-100', ids: [150, 192, 193, 234, 284, 304, 361, 615,800, 857, 869, 1009, 1013, 1071, 1319, 1332, 1340,1543,1545,1550,1777,2010,, 2208, 2366,3039, 3349,341,481,805,1591,2036,2310,2362,2384,2491,2497,2637,2742,2990,3013,3058,3066,3170,3242,3594,3800,3902,4015,4267,4535,4550,4795,411,439,678,1025,1382,1504,1547,1710,1769,1965,2018,2055,2333,2363,2659,2767,3116,3394,3432,3538,3555,3739,3965,4057,4090,4252] },
     ],
     topics: [
         { id: 'animals', label: 'Animals', sub: 'Nature', icon: <PawPrint size={24}/>, ids: [1002, 1616, 1744, 2220, 2435, 2591, 2768, 3138, 3353, 3382, 3914, 3927, 4036, 4175, 4290, 4321, 4328, 4739, 4800, 4842, 4947] },
@@ -89,6 +89,97 @@ const COLLECTIONS = {
         { id: 'clothes', label: 'Clothing', sub: 'Fashion', icon: <Shirt size={24}/>, ids: [468, 965, 1940, 2383, 2864, 2908, 3437, 3638, 3746, 3892, 4462, 4538, 4670] },
         { id: 'prof', label: 'Professions', sub: 'Work', icon: <Briefcase size={24}/>, ids: [204, 268, 386, 457, 483, 640, 684, 688, 690, 762, 783, 827, 901, 909, 917, 1098, 1150, 1188, 1203, 1232, 1259, 1264, 1323, 1328, 1337, 1341, 1343, 1406, 1411, 1499, 1546, 1552, 1631, 1706, 1722, 1737, 1738, 1789, 1797, 1861, 1876, 1924, 1957, 1961, 2039, 2049, 2089, 2100, 2101, 2119, 2176, 2183, 2201, 2233, 2248, 2276, 2307, 2404, 2415, 2430, 2436, 2443, 2461, 2523, 2587, 2645, 2741, 2768, 2824, 2848, 2906, 2928, 2954, 2963, 2981, 2995, 3003, 3042, 3048, 3072, 3081, 3085, 3100, 3118, 3163, 3167, 3189, 3223, 3241, 3251, 3262, 3283, 3327, 3350, 3371, 3446, 3494, 3503, 3518, 3630, 3745, 3767, 3886, 4052, 4131, 4261, 4282, 4346, 4430, 4422, 4463, 4787, 4309, 4253, 827, 640, 1264] },
     ]
+};
+
+
+// --- NEW COMPONENTS ---
+const GrammarTerminal = () => {
+    const [input, setInput] = useState('');
+    const [history, setHistory] = useState([
+        { type: 'system', content: 'French5000 Terminal v1.0' },
+        { type: 'system', content: 'Connected to Gemini Translation Core...' },
+        { type: 'system', content: 'Ready. Type (English/German) to translate.' }
+    ]);
+    const [loading, setLoading] = useState(false);
+    const bottomRef = React.useRef(null);
+
+    // Immer nach unten scrollen bei neuer Nachricht
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [history]);
+
+    const handleCommand = async (e) => {
+        if (e.key === 'Enter' && input.trim()) {
+            const userText = input.trim();
+            setInput('');
+            setLoading(true);
+
+            // 1. User Eingabe anzeigen
+            setHistory(prev => [...prev, { type: 'user', content: userText }]);
+
+            try {
+                // 2. Backend aufrufen
+                const res = await fetch('/api/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: userText })
+                });
+                
+                const data = await res.json();
+
+                if (data.error) throw new Error(data.error);
+
+                // 3. Antwort anzeigen
+                setHistory(prev => [...prev, { type: 'bot', content: data.translation }]);
+            } catch (err) {
+                setHistory(prev => [...prev, { type: 'error', content: 'Error: ' + err.message }]);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
+    return (
+        <div className="w-full max-w-md mx-auto h-[500px] bg-slate-900 rounded-xl overflow-hidden shadow-2xl flex flex-col font-mono text-sm border border-slate-700">
+            {/* Terminal Header */}
+            <div className="bg-slate-800 p-2 flex items-center gap-2 border-b border-slate-700">
+                <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div className="text-slate-400 text-xs ml-2">bash — french-translator</div>
+            </div>
+
+            {/* Output Area */}
+            <div className="flex-1 p-4 overflow-y-auto space-y-2 text-slate-300">
+                {history.map((entry, i) => (
+                    <div key={i} className={`${entry.type === 'user' ? 'text-white' : entry.type === 'bot' ? 'text-emerald-400' : entry.type === 'error' ? 'text-red-400' : 'text-slate-500'}`}>
+                        {entry.type === 'user' && <span className="text-blue-400 mr-2">user@f5000:~$</span>}
+                        {entry.type === 'bot' && <span className="mr-2 text-emerald-600">➜</span>}
+                        {entry.content}
+                    </div>
+                ))}
+                {loading && <div className="text-emerald-400 animate-pulse">Thinking...</div>}
+                <div ref={bottomRef}></div>
+            </div>
+
+            {/* Input Line */}
+            <div className="p-3 bg-slate-900 border-t border-slate-800 flex items-center">
+                <span className="text-blue-400 mr-2 shrink-0">user@f5000:~$</span>
+                <input 
+                    autoFocus
+                    type="text" 
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleCommand}
+                    className="w-full bg-transparent outline-none text-white placeholder-slate-600"
+                    placeholder="Type here..."
+                    disabled={loading}
+                />
+            </div>
+        </div>
+    );
 };
 function App() {
     // --- STATE MANAGEMENT ---
@@ -746,18 +837,19 @@ function App() {
         </div>
     );
     const renderGrammar = () => (
-        <div className="flex flex-col items-center justify-center min-h-[50vh] text-center space-y-6 animate-in fade-in zoom-in duration-500">
-            <div className="bg-indigo-50 p-8 rounded-full shadow-inner">
-                <PenTool size={64} className="text-indigo-300" />
+        <div className="flex flex-col items-center justify-start min-h-[60vh] text-center space-y-6 animate-in fade-in zoom-in duration-500 pt-4">
+            <div className="max-w-md mx-auto w-full text-left px-1 mb-2">
+                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <PenTool size={24} className="text-indigo-600"/> Grammar Lab
+                </h2>
+                <p className="text-slate-400 text-sm">AI-Powered Translator & Corrector.</p>
             </div>
-            <div className="max-w-xs mx-auto">
-                <h2 className="text-2xl font-bold text-slate-700 mb-2">Grammar Drills</h2>
-                <p className="text-slate-400">
-                    Conjugations, Tenses & Sentence Structure exercises are currently under construction.
-                </p>
-            </div>
-            <div className="bg-amber-50 text-amber-600 px-4 py-2 rounded-xl text-sm font-bold border border-amber-100">
-                🚧 Coming Soon
+            
+            {/* Hier binden wir das Terminal ein */}
+            <GrammarTerminal />
+
+            <div className="bg-amber-50 text-amber-600 px-4 py-3 rounded-xl text-xs font-bold border border-amber-100 max-w-md mx-auto w-full text-left">
+                💡 Tip: Type any German or English sentence. The AI will translate it or correct your French.
             </div>
         </div>
     );
