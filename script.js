@@ -870,7 +870,7 @@ function App() {
                                     {aiExamples && (
                                         <div className="text-left space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-100 mt-2 animate-in fade-in zoom-in duration-300">
                                             <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 flex items-center gap-1">
-                                                <Sparkles size={12} /> Gemini Generated
+                                                <Sparkles size={12} /> 
                                             </div>
                                             {aiExamples.map((ex, i) => (
                                                 <div key={i} className="text-sm">
@@ -925,7 +925,7 @@ function App() {
                     AI Translator
                 </h2>
                 <p className="text-slate-400 text-sm">
-                    Instant corrections & translations powered by Google Gemini.
+                    Instant corrections & translations 
                 </p>
             </div>
             
