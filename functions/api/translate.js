@@ -7,34 +7,32 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ error: "Cloudflare Config Error: GEMINI_API_KEY is missing" }), { status: 500 });
     }
 
-    // ÄNDERUNG: Wir nutzen 'gemini-1.5-flash-latest' statt nur 'gemini-1.5-flash'
-    // Das ist oft robuster bei der Erkennung.
+    // WICHTIG: Wir nutzen jetzt exakt 'gemini-1.5-flash'
+    // Das ist die stabilste Version für die v1beta API.
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{
             parts: [{
-              // Der Prompt bleibt gleich
-              text: `You are a French translator. Translate to French: "${text}"`
+              text: `You are a French translator. Translate the following text into French. Output ONLY the translation. If it is already French, correct it. Input: "${text}"`
             }]
           }]
         })
       }
     );
-    //test 123123
 
     const data = await response.json();
 
-    // Fehlerbehandlung: Falls Google immer noch meckert
+    // Detaillierte Fehlerprüfung
     if (data.error) {
-        return new Response(JSON.stringify({ error: "Google Error: " + data.error.message }), { status: 400 });
+        return new Response(JSON.stringify({ error: `Google Error (${data.error.code}): ${data.error.message}` }), { status: 400 });
     }
 
     if (!data.candidates || data.candidates.length === 0) {
-        return new Response(JSON.stringify({ error: "No translation found." }), { status: 500 });
+        return new Response(JSON.stringify({ error: "Gemini sent empty response." }), { status: 500 });
     }
 
     const translatedText = data.candidates[0].content.parts[0].text;
@@ -44,6 +42,6 @@ export async function onRequestPost(context) {
     });
 
   } catch (err) {
-    return new Response(JSON.stringify({ error: "Server Error: " + err.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Server Exception: " + err.message }), { status: 500 });
   }
 }
