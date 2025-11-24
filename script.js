@@ -36,6 +36,7 @@ const Briefcase = (p) => <Icon {...p} path={<><rect width="20" height="14" x="2"
 const Activity = (p) => <Icon {...p} path={<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>} />;
 const Box = (p) => <Icon {...p} path={<><path d="M21 16.5A2.5 2.5 0 0 1 18.5 19H5.5A2.5 2.5 0 0 1 3 16.5v-5C3 10.1 4.1 9 5.5 9H18.5c1.4 0 2.5 1.1 2.5 2.5v5z"/><path d="M7.5 9V5.5A2.5 2.5 0 0 1 10 3h4a2.5 2.5 0 0 1 2.5 2.5V9"/></>} />;
 const Palette = (p) => <Icon {...p} path={<><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></>} />;// --- MOCK DATA ---
+const Sparkles = (p) => <Icon {...p} path={<><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></>} />;
 //const INITIAL_DATA = vocab_List;
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
@@ -218,6 +219,8 @@ function App() {
     const [testConfig, setTestConfig] = useState({ startRank: 1, endRank: 50, count: 20 });
     const [smartConfig, setSmartConfig] = useState({ sessionSize: 15, rangeStart: 1, rangeEnd: 5000 });
     const [reviewCount, setReviewCount] = useState(20);
+    const [aiExamples, setAiExamples] = useState(null);
+    const [loadingExamples, setLoadingExamples] = useState(false);
 
     // Initial Load & Persistence
 // Initial Load & Persistence
@@ -398,6 +401,8 @@ function App() {
     };
 
     const handleResult = (known) => {
+        setAiExamples(null); // <--- NEU: Reset beim Weiterklicken
+        setLoadingExamples(false); // <--- NEU: Reset
         if (view === 'smart-session') {
             const currentWord = sessionQueue[0];
             setUserProgress(prev => {
@@ -758,6 +763,27 @@ function App() {
             </div>
         );
     };
+    const fetchAiExamples = async (wordText) => {
+        setLoadingExamples(true);
+        try {
+            const res = await fetch('/api/examples', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ word: wordText })
+            });
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                setAiExamples(data);
+            } else {
+                console.error("No valid JSON array received", data);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Could not load examples. Check connection.");
+        } finally {
+            setLoadingExamples(false);
+        }
+    };
     const renderFlashcard = () => {
             const isSmartMode = view === 'smart-session';
             const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
@@ -810,34 +836,66 @@ function App() {
                                 <BookOpen size={20} /> Show Translation
                             </button>
                         ) : (
-                            /* ZUSTAND 2: Lösung + Buttons */
-                            <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center">
-                                <div className="w-full h-px bg-slate-100 my-4"></div> {/* Trennlinie */}
+                /* ZUSTAND 2: Lösung + Buttons */
+                        <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center pb-2">
+                            <div className="w-full h-px bg-slate-100 my-4"></div> 
+                            
+                            {/* ENGLISCH / DEUTSCH */}
+                            <div className="text-center mb-6 w-full">
+                                <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">Translation</div>
+                                <h3 className="text-3xl font-bold text-indigo-600 mb-2">{word.english || word.german}</h3>
                                 
-                                {/* ENGLISCH */}
-                                <div className="text-center mb-6 w-full">
-                                    <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
-                                    <h3 className="text-3xl font-bold text-indigo-600 mb-2">{word.english || word.german}</h3>
-                                    
-                                    {/* Englischer Beispielsatz */}
-                                    {word.example_en && (
-                                        <p className="text-indigo-400 italic">
-                                            "{word.example_en}"
-                                        </p>
+                                {/* Standard Beispielsatz (Statisch) */}
+                                {word.example_en && (
+                                    <p className="text-indigo-400 italic mb-4">"{word.example_en}"</p>
+                                )}
+
+                                {/* --- NEU: KI BEISPIELE BEREICH --- */}
+                                <div className="mt-4">
+                                    {!aiExamples && !loadingExamples && (
+                                        <button 
+                                            onClick={() => fetchAiExamples(word.french)}
+                                            className="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-4 py-2 rounded-full text-sm font-bold transition-colors flex items-center justify-center gap-2 mx-auto"
+                                        >
+                                            <Sparkles size={16} /> More Examples
+                                        </button>
+                                    )}
+
+                                    {loadingExamples && (
+                                        <div className="text-slate-400 text-sm animate-pulse flex items-center justify-center gap-2">
+                                            <RotateCcw size={14} className="animate-spin"/> Generating sentences...
+                                        </div>
+                                    )}
+
+                                    {aiExamples && (
+                                        <div className="text-left space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-100 mt-2 animate-in fade-in zoom-in duration-300">
+                                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 flex items-center gap-1">
+                                                <Sparkles size={12} /> Gemini Generated
+                                            </div>
+                                            {aiExamples.map((ex, i) => (
+                                                <div key={i} className="text-sm">
+                                                    <div className="font-medium text-slate-700">{ex.fr}</div>
+                                                    <div className="text-slate-500 italic">{ex.en}</div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     )}
                                 </div>
+                                {/* --- ENDE NEU --- */}
 
-                                {/* Bewertungs-Buttons */}
-                                <div className="grid grid-cols-2 gap-3 w-full">
-                                    <button onClick={() => handleResult(false)} className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 p-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
-                                        <X size={20} /> Missed
-                                    </button>
-                                    <button onClick={() => handleResult(true)} className="bg-green-50 hover:bg-green-100 text-green-600 border border-green-200 p-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
-                                        <Check size={20} /> Got it
-                                    </button>
-                                </div>
                             </div>
-                        )}
+
+                            {/* Bewertungs-Buttons (Unverändert) */}
+                            <div className="grid grid-cols-2 gap-3 w-full mt-2">
+                                <button onClick={() => handleResult(false)} className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 p-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
+                                    <X size={20} /> Missed
+                                </button>
+                                <button onClick={() => handleResult(true)} className="bg-green-50 hover:bg-green-100 text-green-600 border border-green-200 p-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
+                                    <Check size={20} /> Got it
+                                </button>
+                            </div>
+                        </div>
+                    )}
                     </div>
                 </div>
             );
