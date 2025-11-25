@@ -25733,10502 +25733,10495 @@ const vocab_List = [
   },
   {
     "rank": 3501,
-    "french": "confrontation",
-    "english": "confrontation",
-    "example_fr": "nous souhaitons éviter une confrontation",
-    "example_en": "we hope to avoid a confrontation"
+    "french": "homosexuel",
+    "english": "homosexual",
+    "example_fr": "il n'avait plus honte d'être homosexuel",
+    "example_en": "he wasn't ashamed to be homosexual"
   },
   {
     "rank": 3502,
-    "french": "dopage",
-    "english": "doping",
-    "example_fr": "le dopage fait honte au sport",
-    "example_en": "doping brings shame to sports"
+    "french": "toile",
+    "english": "cloth, canvas, web",
+    "example_fr": "j'ai horreur des toiles d'araignée",
+    "example_en": "I hate spider webs"
   },
   {
     "rank": 3503,
-    "french": "plombier",
-    "english": "plumber",
-    "example_fr": "vous êtes plombier?",
-    "example_en": "are you a plumber?"
+    "french": "laver",
+    "english": "to wash, clean",
+    "example_fr": "lavez-vous les mains avant de manger",
+    "example_en": "wash your hands before eating"
   },
   {
     "rank": 3504,
-    "french": "rétablir",
-    "english": "to restore, re-establish",
-    "example_fr": "il faut rétablir la situation à l'identique",
-    "example_en": "the situation must be returned to its previous state"
+    "french": "empreinte",
+    "english": "imprint, print, mark, impression",
+    "example_fr": "la police a retrouvé des empreintes",
+    "example_en": "the police found fingerprints"
   },
   {
     "rank": 3505,
-    "french": "façonner",
-    "english": "to fashion, shape, form",
-    "example_fr": "je peux façonner ma destinée",
-    "example_en": "I can shape my destiny"
+    "french": "faillir",
+    "english": "to have almost, fail, fail to",
+    "example_fr": "j'ai failli tout perdre",
+    "example_en": "I almost lost everything"
   },
   {
     "rank": 3506,
-    "french": "communément",
-    "english": "commonly",
-    "example_fr": "c'est là l'idée la plus communément répandue",
-    "example_en": "that's the most commonly held idea"
+    "french": "curiosité",
+    "english": "curiosity",
+    "example_fr": "ma curiosité reste insatisfaite sur certains points",
+    "example_en": "my curiosity remains unsatisfied on a few points"
   },
   {
     "rank": 3507,
-    "french": "sillon",
-    "english": "furrow, groove, track, trail",
-    "example_fr": "le bateau laissait un sillon dans les vagues",
-    "example_en": "the boat left a wake in the waves"
+    "french": "passeport",
+    "english": "passport",
+    "example_fr": "billet et passeport, s'il vous plaît",
+    "example_en": "ticket and passport, please"
   },
   {
     "rank": 3508,
-    "french": "flot",
-    "english": "flow, stream, flood",
-    "example_fr": "le flot des réfugiés ne cessait de grossir",
-    "example_en": "the stream of refugees continued to grow"
+    "french": "creux",
+    "english": "hollow, empty, hole",
+    "example_fr": "aux heures creuses -- durant la nuit, par exemple",
+    "example_en": "in the off hours--during the night, for example"
   },
   {
     "rank": 3509,
-    "french": "évolutif",
-    "english": "evolving",
-    "example_fr": "le processus doit être souple et évolutif",
-    "example_en": "the process must be flexible and evolving"
+    "french": "livraison",
+    "english": "delivery",
+    "example_fr": "la livraison du navire est prévue en avril",
+    "example_en": "delivery of the ship is slated for April"
   },
   {
     "rank": 3510,
-    "french": "réglementer",
-    "english": "to regulate, control",
-    "example_fr": "on doit réglementer la diffusion du gaz",
-    "example_en": "we must regulate the gas supply"
+    "french": "château",
+    "english": "castle",
+    "example_fr": "je viens prendre possession de son château",
+    "example_en": "I have come to take over his castle"
   },
   {
     "rank": 3511,
-    "french": "détériorer",
-    "english": "to spoil, damage",
-    "example_fr": "la situation sécuritaire s'est détériorée dans les régions frontalières",
-    "example_en": "the security situation deteriorated in the border areas"
+    "french": "nous-mêmes",
+    "english": "ourselves",
+    "example_fr": "on n'aurait pas fait mieux nous-mêmes",
+    "example_en": "we wouldn't have done better ourselves"
   },
   {
     "rank": 3512,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "tout est flou, les idées sont floues",
-    "example_en": "everything is hazy, the ideas are vague"
+    "french": "forum",
+    "english": "forum, newsgroup",
+    "example_fr": "elle va organiser un forum",
+    "example_en": "she will organize a forum"
   },
   {
     "rank": 3513,
-    "french": "pâle",
-    "english": "pale",
-    "example_fr": "elle avait l'air pâle et malade",
-    "example_en": "she looked pale and sick"
+    "french": "via",
+    "english": "via",
+    "example_fr": "j'ai déjà fait des interviews via Internet",
+    "example_en": "I have already been interviewed over the Internet"
   },
   {
     "rank": 3514,
-    "french": "sérieusement",
-    "english": "seriously",
-    "example_fr": "elle a été sérieusement blessée",
-    "example_en": "she was seriously injured"
+    "french": "coter",
+    "english": "to quote, rate",
+    "example_fr": "en septembre, le dollar cotait encore 1.20 euro",
+    "example_en": "In September, the dollar still stood at 1.20 euros"
   },
   {
     "rank": 3515,
-    "french": "détendu",
-    "english": "relaxed",
-    "example_fr": "vous devriez vous sentir plus détendu",
-    "example_en": "you should feel more relaxed"
+    "french": "éclat",
+    "english": "splinter, fragment, brightness, burst",
+    "example_fr": "des éclats de rire se firent entendre derrière une porte",
+    "example_en": "peals of laughter could be heard behind a door"
   },
   {
     "rank": 3516,
-    "french": "préjugé",
-    "english": "prejudice",
-    "example_fr": "le racisme est un préjugé",
-    "example_en": "racism is a prejudice"
+    "french": "sincèrement",
+    "english": "sincerely",
+    "example_fr": "je pense sincèrement qu'il est un type bien",
+    "example_en": "I sincerely think he's a decent fellow"
   },
   {
     "rank": 3517,
-    "french": "déménager",
-    "english": "to move house, move out",
-    "example_fr": "on ne peut pas déménager un mur",
-    "example_en": "you can't move a wall"
+    "french": "thé",
+    "english": "tea",
+    "example_fr": "je vous ai aussi apporté du thé",
+    "example_en": "I have also brought you some tea"
   },
   {
     "rank": 3518,
-    "french": "théologien",
-    "english": "theologian",
-    "example_fr": "j'ai discuté avec deux théologiens",
-    "example_en": "I talked with two theologians"
+    "french": "préférable",
+    "english": "preferable",
+    "example_fr": "madame, je crois préférable que nous discutions en privé",
+    "example_en": "ma'am, I belive it would be preferable for us to discuss this in private"
   },
   {
     "rank": 3519,
-    "french": "bénévole",
-    "english": "voluntary, volunteer",
-    "example_fr": "je suis un bénévole pour cette association",
-    "example_en": "I'm a volunteer for this association"
+    "french": "attachement",
+    "english": "attachment, affection",
+    "example_fr": "il éprouva une sorte d'attachement pour ce vieillard",
+    "example_en": "he felt some kind of affection for this old-timer"
   },
   {
     "rank": 3520,
-    "french": "affreux",
-    "english": "dreadful, awful, frightful",
-    "example_fr": "j'ai eu l'impression d'avoir fait un rêve affreux",
-    "example_en": "I had the impression of having had a dreadful dream"
+    "french": "liquide",
+    "english": "liquid",
+    "example_fr": "il a avalé du liquide vaisselle",
+    "example_en": "he swallowed some liquid dishwashing detergent"
   },
   {
     "rank": 3521,
-    "french": "régime",
-    "english": "diet, slimming diet",
-    "example_fr": "je suis un régime anti-cancer",
-    "example_en": "I'm on an anti-cancer diet"
+    "french": "gamme",
+    "english": "range, scale",
+    "example_fr": "nous avons déjà une bonne gamme de programmes",
+    "example_en": "we already have a good range of programs"
   },
   {
     "rank": 3522,
-    "french": "poursuivant",
-    "english": "prosecutor",
-    "example_fr": "il faut avertir le poursuivant",
-    "example_en": "the prosecutor must be warned"
+    "french": "motivation",
+    "english": "motivation, application",
+    "example_fr": "cet assassinat n'aurait pas de motivations politiques",
+    "example_en": "this assassination presumably lacks political motives"
   },
   {
     "rank": 3523,
-    "french": "défavorable",
-    "english": "unfavorable, negative",
-    "example_fr": "j'ai une opinion défavorable sur cet accord",
-    "example_en": "I have a negative opinion of this agreement"
+    "french": "protestation",
+    "english": "protest, protestation",
+    "example_fr": "j'ai reçu des lettres de protestation",
+    "example_en": "I received letters of protest"
   },
   {
     "rank": 3524,
-    "french": "départ",
-    "english": "starting off",
-    "example_fr": "le départ pour la région était prévu dimanche matin",
-    "example_en": "the departure for the area was planned for Sunday morning"
+    "french": "demeure",
+    "english": "residence, home",
+    "example_fr": "ils retrouvent leurs demeures pillées, brûlées, leurs champs dévastés",
+    "example_en": "they find their homes looted, burned, their fields devastated"
   },
   {
     "rank": 3525,
-    "french": "maternelle",
-    "english": "maternal, kindergarten",
-    "example_fr": "la cour d'une école maternelle est trop petite pour jouer",
-    "example_en": "a kindergarten playground is too small to play in"
+    "french": "adéquat",
+    "english": "appropriate, suitable, adequate",
+    "example_fr": "la protection sociale n'est pas adéquate",
+    "example_en": "the social safety net is not adequate"
   },
   {
     "rank": 3526,
-    "french": "mémoire",
-    "english": "dissertation, memoir, memorandum",
-    "example_fr": "j'ai reçu un mémoire à ce sujet",
-    "example_en": "I received a memorandum on this subject"
+    "french": "geler",
+    "english": "to freeze, ice over, suspend",
+    "example_fr": "vous allez geler avec ce petit manteau",
+    "example_en": "you're going to freeze with this light coat"
   },
   {
     "rank": 3527,
-    "french": "émettre",
-    "english": "to emit, issue",
-    "example_fr": "les entreprises émettent des gaz toxiques",
-    "example_en": "companies emit toxic gases"
+    "french": "défiler",
+    "english": "to unthread, parade",
+    "example_fr": "les manifestants ont défilé silencieusement dans la rue",
+    "example_en": "the protesters paraded silently in the street"
   },
   {
     "rank": 3528,
-    "french": "racheter",
-    "english": "to repurchase, buy back, redeem",
-    "example_fr": "on pouvait racheter sa liberté",
-    "example_en": "you could buy back your freedom"
+    "french": "peintre",
+    "english": "painter",
+    "example_fr": "je suis le seul peintre valable des Etats-Unis",
+    "example_en": "I'm the only worthwhile painter in the U.S."
   },
   {
     "rank": 3529,
-    "french": "s'asseoir",
-    "english": "to sit down",
-    "example_fr": "je ne pouvais m'asseoir nulle part",
-    "example_en": "I couldn't sit down anywhere"
+    "french": "volontairement",
+    "english": "voluntarily, willingly",
+    "example_fr": "volontairement, je fermai les yeux",
+    "example_en": "willingly, I closed my eyes"
   },
   {
     "rank": 3530,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "la foudre allait frapper une église",
-    "example_en": "lightning was going to strike a church"
+    "french": "magique",
+    "english": "magic; magical",
+    "example_fr": "je n'ai pas de pouvoir magique moi",
+    "example_en": "me, I don't have any magic powers"
   },
   {
     "rank": 3531,
-    "french": "couper",
-    "english": "to cut, sever",
-    "example_fr": "ils coupaient du bois sans autorisation",
-    "example_en": "they cut wood without permission"
+    "french": "bien-être",
+    "english": "well being",
+    "example_fr": "tous ces services dépendent au bien-être économique de notre pays",
+    "example_en": "all of these services depend on the economic well-being of our country"
   },
   {
     "rank": 3532,
-    "french": "compliment",
-    "english": "compliment",
-    "example_fr": "le président aime les compliments",
-    "example_en": "the president likes compliments"
+    "french": "cap",
+    "english": "cape",
+    "example_fr": "mettez le cap sur la rive gauche, commanda-t-il",
+    "example_en": "set course for the left bank, he ordered"
   },
   {
     "rank": 3533,
-    "french": "rêveur",
-    "english": "dreamer, dreamy",
-    "example_fr": "il est resté rêveur, songeur",
-    "example_en": "he remained dreamy, pensive"
+    "french": "raide",
+    "english": "stiff, straight",
+    "example_fr": "elle se tient immobile, raide, les regardant",
+    "example_en": "she remained immobile and stiff while looking at them"
   },
   {
     "rank": 3534,
-    "french": "communauté",
-    "english": "community, fellowship",
-    "example_fr": "le gouvernement veut travailler avec la communauté locale",
-    "example_en": "the government wants to work with the local community"
+    "french": "maigre",
+    "english": "thin, skinny, slim, lean",
+    "example_fr": "c'était un homme maigre et chauve",
+    "example_en": "he was a thin, bald man"
   },
   {
     "rank": 3535,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "ne pensez pas qu'on vous oublie",
-    "example_en": "don't think we've forgotten you"
+    "french": "artistique",
+    "english": "artistic",
+    "example_fr": "ils ont une vraie vision artistique",
+    "example_en": "they have truly artistic vision"
   },
   {
     "rank": 3536,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a été lourdement condamné",
-    "example_en": "he received a heavy sentence"
+    "french": "aspirer",
+    "english": "to breathe in, inhale, aspire to",
+    "example_fr": "Paule aspira la fumée de sa cigarette",
+    "example_en": "Paule breathed in the smoke of his cigarette"
   },
   {
     "rank": 3537,
-    "french": "transgresser",
-    "english": "to transgress, violate, infringe, break",
-    "example_fr": "il a transgressé toutes les règles",
-    "example_en": "he broke all the rules"
+    "french": "habituellement",
+    "english": "usually, generally",
+    "example_fr": "les groupes sont habituellement composés de huit élèves",
+    "example_en": "the groups are usually made up of eight students"
   },
   {
     "rank": 3538,
-    "french": "prédication",
-    "english": "preaching",
-    "example_fr": "il a poursuivi sa prédication",
-    "example_en": "he continued his preaching"
+    "french": "quasiment",
+    "english": "almost, early",
+    "example_fr": "il a quasiment tout gagné",
+    "example_en": "he almost won everything"
   },
   {
     "rank": 3539,
-    "french": "remettre",
-    "english": "to postpone, put back",
-    "example_fr": "nous remettons la rencontre au lendemain",
-    "example_en": "we postponed the meeting until the next day"
+    "french": "allure",
+    "english": "speed, pace, walk, look, appearance",
+    "example_fr": "les voitures filaient à vive allure",
+    "example_en": "the cars sped away"
   },
   {
     "rank": 3540,
-    "french": "entourer",
-    "english": "to surround",
-    "example_fr": "il ne voulait s'entourer que de gens sincères et simples",
-    "example_en": "he only wanted to surround himself with sincere, simple people"
+    "french": "deuil",
+    "english": "mourning, grief",
+    "example_fr": "il laisse dans le deuil son épouse",
+    "example_en": "he leaves behind a grieving wife"
   },
   {
     "rank": 3541,
-    "french": "départemental",
-    "english": "departmental",
-    "example_fr": "le taux de chômage départemental est en légère hausse",
-    "example_en": "the departmental unemployment rate rose slightly"
+    "french": "énoncer",
+    "english": "to state, set out, express",
+    "example_fr": "ce qui se conçoit bien s'énonce clairement",
+    "example_en": "that which is conceived well is expressed clearly"
   },
   {
     "rank": 3542,
-    "french": "séisme",
-    "english": "earthquake",
-    "example_fr": "il faut évacuer les populations après ce séisme",
-    "example_en": "the population must be evacuated after the earthquake"
+    "french": "islamiste",
+    "english": "Islamist",
+    "example_fr": "je pense que la piste islamiste progresse plus que les autres",
+    "example_en": "I think the Islamic way is progressing more than the others"
   },
   {
     "rank": 3543,
-    "french": "décence",
-    "english": "decency",
-    "example_fr": "ils ont un peu de décence, me semble-t-il",
-    "example_en": "they have a little decency, it seems to me"
+    "french": "prénom",
+    "english": "first name",
+    "example_fr": "il appelle les journalistes par leur prénom",
+    "example_en": "the calls journalists by their first name"
   },
   {
     "rank": 3544,
-    "french": "seizième",
-    "english": "sixteenth",
-    "example_fr": "c'est mon seizième jour dans ce fauteuil",
-    "example_en": "it's my sixteenth day in this armchair"
+    "french": "réussi",
+    "english": "successful",
+    "example_fr": "sa vie est beaucoup plus réussie que la nôtre",
+    "example_en": "his life is much more successful than ours"
   },
   {
     "rank": 3545,
-    "french": "milieu",
-    "english": "middle, milieu, environment",
-    "example_fr": "elle l'a emmené se reposer dans un autre milieu",
-    "example_en": "she took him to rest in a different environment"
+    "french": "bilatéral",
+    "english": "bilateral",
+    "example_fr": "les relations bilatérales ont enregistré récemment des changements positifs",
+    "example_en": "bilateral relations recently involved positive changes"
   },
   {
     "rank": 3546,
-    "french": "tournoi",
-    "english": "tournament",
-    "example_fr": "on a été éliminés du tournoi hier",
-    "example_en": "we were eliminated from the tournament yesterday"
+    "french": "rétablissement",
+    "english": "restoring, re-establishment, recovery",
+    "example_fr": "nous leur souhaitons un prompt rétablissement",
+    "example_en": "we wish them a swift recovery"
   },
   {
     "rank": 3547,
-    "french": "compétitif",
-    "english": "competitive",
-    "example_fr": "le secteur industriel reste compétitif",
-    "example_en": "the industrial sector remains competitive"
+    "french": "cynique",
+    "english": "cynical, cynic",
+    "example_fr": "leur cinéma est terriblement cynique",
+    "example_en": "their cinema is terribly cynical"
   },
   {
     "rank": 3548,
-    "french": "mériter",
-    "english": "to deserve",
-    "example_fr": "elle mérite tous mes efforts, non?",
-    "example_en": "she deserves all my efforts, right?"
+    "french": "environnemental",
+    "english": "environmental",
+    "example_fr": "les questions environnementales transcendent les frontières",
+    "example_en": "environmental issues transcend borders"
   },
   {
     "rank": 3549,
-    "french": "téléphone",
-    "english": "telephone, phone",
-    "example_fr": "il est difficile d'avoir accès à un téléphone",
-    "example_en": "it's difficult to get access to a telephone"
+    "french": "constructeur",
+    "english": "builder, manufacturer",
+    "example_fr": "VW est devenu le premier constructeur européen",
+    "example_en": "VW has become the largest European manufacturer"
   },
   {
     "rank": 3550,
-    "french": "alléger",
-    "english": "to lighten, ease, relieve",
-    "example_fr": "nous allons alléger le fardeau des citoyens",
-    "example_en": "we are going to lighten the citizens' burden"
+    "french": "colonel",
+    "english": "colonel",
+    "example_fr": "le colonel voudrait vous voir immédiatement",
+    "example_en": "the colonel wishes to see you immediately"
   },
   {
     "rank": 3551,
-    "french": "souci",
-    "english": "worry, concern",
-    "example_fr": "son seul souci était d'éviter les tirs de la police",
-    "example_en": "his only concern was avoiding police gunfire"
+    "french": "nœud",
+    "english": "knot",
+    "example_fr": "fais un double nœud, mais doucement",
+    "example_en": "make a double knot, but do it carefully"
   },
   {
     "rank": 3552,
-    "french": "gitan",
-    "english": "Gypsy",
-    "example_fr": "la loi est trop dure pour les gitans",
-    "example_en": "the law is too harsh on Gypsies"
+    "french": "peindre",
+    "english": "to paint, depict, portray",
+    "example_fr": "le mur était peint d'une couleur ocre",
+    "example_en": "the wall was painted ochre"
   },
   {
     "rank": 3553,
-    "french": "bavarder",
-    "english": "to chat",
-    "example_fr": "je vous propose d'aller bavarder au bar",
-    "example_en": "I suggest we go chat at the bar"
+    "french": "bâton",
+    "english": "tick, club, baton",
+    "example_fr": "elles sont armées de bâtons",
+    "example_en": "they're armed with clubs"
   },
   {
     "rank": 3554,
-    "french": "chèvre",
-    "english": "goat",
-    "example_fr": "ma chèvre fait des bonds partout",
-    "example_en": "my goat leaps everywhere"
+    "french": "démocrate",
+    "english": "democrat, democratic",
+    "example_fr": "pour certains responsables démocrates la réponse est claire",
+    "example_en": "for certain democratic leaders the answer is clear"
   },
   {
     "rank": 3555,
-    "french": "chiffre",
-    "english": "figure, number",
-    "example_fr": "le chiffre d'affaires annuel a augmenté",
-    "example_en": "annual sales increased"
+    "french": "précédemment",
+    "english": "previously",
+    "example_fr": "j'ai développé tout ceci précédemment",
+    "example_en": "I had already developed this"
   },
   {
     "rank": 3556,
-    "french": "dieu",
-    "english": "God",
-    "example_fr": "je vous demande de prier Dieu pour nous",
-    "example_en": "I ask you to pray to God for us"
+    "french": "idiot",
+    "english": "idiot, fool, stupid",
+    "example_fr": "bouge-toi, espèce d'idiot",
+    "example_en": "move, you idiot"
   },
   {
     "rank": 3557,
-    "french": "désarmer",
-    "english": "to disarm",
-    "example_fr": "la douceur de mon sourire le désarma",
-    "example_en": "the sweetness of my smile disarmed him"
+    "french": "querelle",
+    "english": "quarrel",
+    "example_fr": "les querelles politiciennes n'intéressent pas le peuple",
+    "example_en": "political squabbles don't interest the populace"
   },
   {
     "rank": 3558,
-    "french": "affreux",
-    "english": "dreadful, awful, frightful",
-    "example_fr": "c'est affreux, ce que vous avez fait!",
-    "example_en": "what you did is awful!"
+    "french": "explosif",
+    "english": "explosive",
+    "example_fr": "il y a assez d'explosif pour raser tout un quartier",
+    "example_en": "there are enough explosives to level a whole neighborhood"
   },
   {
     "rank": 3559,
-    "french": "enrayer",
-    "english": "to stop, check, prevent, halt",
-    "example_fr": "il est difficile d'enrayer cette crise",
-    "example_en": "it's difficult to stop this crisis"
+    "french": "flic",
+    "english": "cop",
+    "example_fr": "si tu vois des flics, appelle-moi",
+    "example_en": "call me if you see any cops"
   },
   {
     "rank": 3560,
-    "french": "sérénité",
-    "english": "serenity",
-    "example_fr": "la sérénité n'est pas compatible avec la misère",
-    "example_en": "serenity isn't compatible with poverty"
+    "french": "solitaire",
+    "english": "solitary, lone, lonely",
+    "example_fr": "vous avez une vie plutôt solitaire",
+    "example_en": "you lead a rather solitary existence"
   },
   {
     "rank": 3561,
-    "french": "procéder",
-    "english": "to carry out, proceed",
-    "example_fr": "il faut procéder à une vérification",
-    "example_en": "a check must be carried out"
+    "french": "déceler",
+    "english": "to discover, detect",
+    "example_fr": "l'erreur administrative a été décelée puis corrigée",
+    "example_en": "the administrative error was found and corrected"
   },
   {
     "rank": 3562,
-    "french": "toxicomanie",
-    "english": "drug addiction",
-    "example_fr": "la toxicomanie peut être traitée",
-    "example_en": "drug addiction can be treated"
+    "french": "herbe",
+    "english": "grass, herb",
+    "example_fr": "l'herbe est plus verte ailleurs",
+    "example_en": "the grass is greener elsewhere"
   },
   {
     "rank": 3563,
-    "french": "couler",
-    "english": "to flow, run, sink",
-    "example_fr": "il laissa couler la boisson entre ses lèvres",
-    "example_en": "he let the drink run through his lips"
+    "french": "élevé",
+    "english": "high, heavy, tall",
+    "example_fr": "c'est un pourcentage assez élevé",
+    "example_en": "that's quite a high percentage"
   },
   {
     "rank": 3564,
-    "french": "interrompre",
-    "english": "to interrupt",
-    "example_fr": "tu ne dois pas m'interrompre!",
-    "example_en": "you must not interrupt me!"
+    "french": "acharner",
+    "english": "to go at fiercely and unrelentingly",
+    "example_fr": "c'est une lutte acharnée pour la vie",
+    "example_en": "it's a fierce fight to the death"
   },
   {
     "rank": 3565,
-    "french": "confronté",
-    "english": "confronted",
-    "example_fr": "il est confronté à un choix difficile",
-    "example_en": "he is confronted with a difficult choice"
+    "french": "bombardement",
+    "english": "bombing, shelling",
+    "example_fr": "jamais le nombre des victimes des bombardements n'a été publié",
+    "example_en": "the number of bombing victims was never published"
   },
   {
     "rank": 3566,
-    "french": "séparer",
-    "english": "to separate",
-    "example_fr": "on est séparés depuis treize ans",
-    "example_en": "we've been separated for thirteen years"
+    "french": "bagage",
+    "english": "luggage, baggage",
+    "example_fr": "je voyageais sans bagages",
+    "example_en": "I travelled without luggage"
   },
   {
     "rank": 3567,
-    "french": "parrain",
-    "english": "godfather",
-    "example_fr": "j'aimerais que mon frère soit le parrain de mon fils",
-    "example_en": "I would like my brother to be my son's godfather"
+    "french": "singulier",
+    "english": "unique, singular",
+    "example_fr": "il n'arrive pas de choses singulières",
+    "example_en": "unusual things don't happen"
   },
   {
     "rank": 3568,
-    "french": "pessimiste",
-    "english": "pessimist, pessimistic",
-    "example_fr": "je me dis que je suis pessimiste et c'est tout",
-    "example_en": "I just tell myself I'm pessimistic, and that's all"
+    "french": "capitalisme",
+    "english": "capitalism",
+    "example_fr": "tout le capitalisme est fondé sur la notion de rareté",
+    "example_en": "capitalism is completely founded on the notion of scarcity"
   },
   {
     "rank": 3569,
-    "french": "méchant",
-    "english": "nasty, wicked, mean",
-    "example_fr": "un méchant a détruit sa vie",
-    "example_en": "an evil person destroyed his life"
+    "french": "suspension",
+    "english": "hanging, suspending, breaking off, postponement, suspension",
+    "example_fr": "Pyongyang confirme publiquement la suspension des tirs de missiles",
+    "example_en": "Pyongyang publicly confirms a suspension of missile launches"
   },
   {
     "rank": 3570,
-    "french": "communiquer",
-    "english": "to communicate",
-    "example_fr": "je communique avec le monde par la poésie",
-    "example_en": "I communicate with the world through poetry"
+    "french": "mince",
+    "english": "thin, slim, slender",
+    "example_fr": "elle est mince et jolie et elle ment",
+    "example_en": "she is thin and beautiful and she lies"
   },
   {
     "rank": 3571,
-    "french": "précisément",
-    "english": "precisely",
-    "example_fr": "je n'étais plus, précisément, une enfant",
-    "example_en": "I was no longer, precisely, a child"
+    "french": "assimiler",
+    "english": "to assimilate, take in",
+    "example_fr": "les gens ne peuvent pas tout assimiler",
+    "example_en": "people can't take it all in"
   },
   {
     "rank": 3572,
-    "french": "télécommunication",
-    "english": "telecommunication",
-    "example_fr": "nous avons besoin de télécommunications fiables",
-    "example_en": "we need reliable telecommunications"
+    "french": "plume",
+    "english": "feather",
+    "example_fr": "cet oiseau a beaucoup plus de plumes blanches",
+    "example_en": "this bird has many white feathers"
   },
   {
     "rank": 3573,
-    "french": "côte",
-    "english": "slope, rib, hillside, cote",
-    "example_fr": "il a couru la côte à plusieurs reprises",
-    "example_en": "he ran up the hillside several times"
+    "french": "publicitaire",
+    "english": "advertising, promotional",
+    "example_fr": "nous n'avons pratiquement pas de budget publicitaire",
+    "example_en": "we have almost no advertising budget"
   },
   {
     "rank": 3574,
-    "french": "découpage",
-    "english": "cutting, carving",
-    "example_fr": "le découpage est un art populaire",
-    "example_en": "cutting is a popular art form"
+    "french": "incarner",
+    "english": "to embody, incarnate",
+    "example_fr": "en cela, il incarne la quintessence de l'esprit poétique",
+    "example_en": "herein he embodies the essence of the poetic spirit"
   },
   {
     "rank": 3575,
-    "french": "prédire",
-    "english": "to predict",
-    "example_fr": "je ne sais rien prédire de mon propre avenir",
-    "example_en": "I can't predict anything about my own future"
+    "french": "opter",
+    "english": "to opt, decide",
+    "example_fr": "j'ai donc opté pour une coiffure simple",
+    "example_en": "so I chose a simple haircut"
   },
   {
     "rank": 3576,
-    "french": "démolir",
-    "english": "to demolish, tear down",
-    "example_fr": "je vais déménager. je veux déménager. démolir cette maison",
-    "example_en": "I'm going to move out. I want to move out. tear down this house"
+    "french": "habiller",
+    "english": "to dress, get dressed",
+    "example_fr": "il s'habille comme un vampire",
+    "example_en": "he's dressed like a vampire"
   },
   {
     "rank": 3577,
-    "french": "souhaiter",
-    "english": "to wish, desire",
-    "example_fr": "je ne souhaite qu'une chose, retrouver ma liberté",
-    "example_en": "I want only one thing: to regain my freedom"
+    "french": "trajet",
+    "english": "journey, route",
+    "example_fr": "durant le trajet, nous avons été peu bavards",
+    "example_en": "during the trip, we did very little talking"
   },
   {
     "rank": 3578,
-    "french": "couvert",
-    "english": "place, seat, cutlery",
-    "example_fr": "il n'y avait plus que six couverts",
-    "example_en": "there were only six place settings left"
+    "french": "sinistre",
+    "english": "disaster, sinister",
+    "example_fr": "leurs rires résonnaient de façon sinistre",
+    "example_en": "their laughter echoed ominously"
   },
   {
     "rank": 3579,
-    "french": "coureur",
-    "english": "runner, racing driver",
-    "example_fr": "j'ai vu un coureur cycliste tricher",
-    "example_en": "I saw a bike racer cheat"
+    "french": "pis",
+    "english": "worse",
+    "example_fr": "les choses vont de mal en pis",
+    "example_en": "things are going from bad to worse"
   },
   {
     "rank": 3580,
-    "french": "foyer",
-    "english": "home, hearth",
-    "example_fr": "ils sont logés dans un foyer",
-    "example_en": "they are staying in a hostel"
+    "french": "reconstruire",
+    "english": "to rebuild, reconstruct",
+    "example_fr": "on a donc reconstruit la planète",
+    "example_en": "so we rebuilt the planet"
   },
   {
     "rank": 3581,
-    "french": "entamer",
-    "english": "to start",
-    "example_fr": "cette crise a entamé sa fortune",
-    "example_en": "this crisis seriously damaged his fortune"
+    "french": "tueur",
+    "english": "killer, hit man",
+    "example_fr": "oh vous savez, un tueur est rarement drôle",
+    "example_en": "oh, you know, a killer is rarely funny"
   },
   {
     "rank": 3582,
-    "french": "tente",
-    "english": "tent",
-    "example_fr": "le paysan coucha dans une tente",
-    "example_en": "the peasant slept in a tent"
+    "french": "tournoi",
+    "english": "tournament",
+    "example_fr": "j'ai gagné ce tournoi",
+    "example_en": "I won the tournament"
   },
   {
     "rank": 3583,
-    "french": "allée",
-    "english": "path, aisle, way, drive",
-    "example_fr": "je fais les allées et venues",
-    "example_en": "I'm coming and going"
+    "french": "cimetière",
+    "english": "cemetery, graveyard",
+    "example_fr": "dans un cimetière, la mort est supportable",
+    "example_en": "in a cemetery, death is bearable"
   },
   {
     "rank": 3584,
-    "french": "cycliste",
-    "english": "cyclist",
-    "example_fr": "le coureur cycliste a dépassé la limite d'âge",
-    "example_en": "the bike racer has exceeded the age limit"
+    "french": "douane",
+    "english": "customs, duty",
+    "example_fr": "nos agents de douane ne sont pas équipés",
+    "example_en": "our customs agents are not equipped"
   },
   {
     "rank": 3585,
-    "french": "cahier",
-    "english": "exercise book, copybook, notebook",
-    "example_fr": "je vous ai apporté son cahier d'exercices",
-    "example_en": "I brought you his exercise book"
+    "french": "domestique",
+    "english": "servant, domestic",
+    "example_fr": "c'est au foyer domestique qu'elles avaient pris leurs leçons",
+    "example_en": "home is where they learned their lessons"
   },
   {
     "rank": 3586,
-    "french": "sillonner",
-    "english": "to crisscross, roam, cut through",
-    "example_fr": "il sillonnait les mers depuis sept ans",
-    "example_en": "he crisscrossed the oceans for seven years"
+    "french": "soucieux",
+    "english": "concerned, worried",
+    "example_fr": "j'en suis soucieux mais non surpris",
+    "example_en": "I'm worried about it but not surprised"
   },
   {
     "rank": 3587,
-    "french": "banque",
-    "english": "bank",
-    "example_fr": "je suis au service d'une banque",
-    "example_en": "I work for a bank"
+    "french": "premièrement",
+    "english": "first",
+    "example_fr": "pour nous, jouer, performer est premièrement une passion!",
+    "example_en": "for us playing, performing is first of all a passion"
   },
   {
     "rank": 3588,
-    "french": "praticien",
-    "english": "practitioner, experienced",
-    "example_fr": "je suis un praticien de l'absurde",
-    "example_en": "I'm a practitioner of the absurd"
+    "french": "complicité",
+    "english": "complicity",
+    "example_fr": "il y a une complicité d'instinct entre elle et moi",
+    "example_en": "there's an instinctive collusion between her and me"
   },
   {
     "rank": 3589,
-    "french": "réduire",
-    "english": "to reduce, curb",
-    "example_fr": "on doit réduire les dégâts et la confusion",
-    "example_en": "we must reduce the damage and the confusion"
+    "french": "décréter",
+    "english": "to declare, decree",
+    "example_fr": "le gouvernement a décrété un deuil de sept jours",
+    "example_en": "the government declared a week-long period of mourning"
   },
   {
     "rank": 3590,
-    "french": "alléger",
-    "english": "to lighten, ease, relieve",
-    "example_fr": "je propose d'alléger le fardeau des contribuables",
-    "example_en": "I suggest we relieve taxpayers of their burden"
+    "french": "flamme",
+    "english": "flame, fire, fervor, brilliance",
+    "example_fr": "ils ont dû voir les flammes",
+    "example_en": "they must have seen the flames"
   },
   {
     "rank": 3591,
-    "french": "sinistre",
-    "english": "sinister, dark, claim, loss",
-    "example_fr": "ce sinistre a fait un mort",
-    "example_en": "this disaster resulted in one death"
+    "french": "approprié",
+    "english": "appropriate",
+    "example_fr": "il faudra prendre des mesures appropriées",
+    "example_en": "appropriate measures must be taken"
   },
   {
     "rank": 3592,
-    "french": "boule",
-    "english": "ball",
-    "example_fr": "je me roulais en boule sous ma couverture",
-    "example_en": "I rolled myself into a ball under my blanket"
+    "french": "dix-huit",
+    "english": "eighteen",
+    "example_fr": "j'ai une fille de dix-huit ans",
+    "example_en": "I have an eighteen-year-old daughter"
   },
   {
     "rank": 3593,
-    "french": "bénéfique",
-    "english": "beneficial",
-    "example_fr": "le désaccord est souvent bénéfique",
-    "example_en": "disagreement is often beneficial"
+    "french": "nouveauté",
+    "english": "novelty, new release",
+    "example_fr": "l'émission a perdu son parfum de nouveauté",
+    "example_en": "the broadcast lost its new feel"
   },
   {
     "rank": 3594,
-    "french": "gagner",
-    "english": "to win, earn",
-    "example_fr": "il est difficile de gagner de l'argent",
-    "example_en": "it's difficult to earn money"
+    "french": "brusquement",
+    "english": "abruptly, suddenly",
+    "example_fr": "je me retournai brusquement, surpris de son silence",
+    "example_en": "I turned around suddenly, surprised by her silence"
   },
   {
     "rank": 3595,
-    "french": "médicament",
-    "english": "medicine, drug, medication",
-    "example_fr": "ces médicaments ne nuisent pas à la santé",
-    "example_en": "these medications aren't harmful to your health"
+    "french": "coïncider",
+    "english": "to coincide, correspond",
+    "example_fr": "avec Caïn, la première révolte coïncide avec le premier crime",
+    "example_en": "with Cain, the first rebellion coincided with the first crime"
   },
   {
     "rank": 3596,
-    "french": "discerner",
-    "english": "to discern, perceive",
-    "example_fr": "je peux difficilement discerner le visage de cet homme",
-    "example_en": "I can hardly make out this man's face"
+    "french": "déterminé",
+    "english": "determined, resolute, specific",
+    "example_fr": "nous avons passé un contrat à durée déterminée avec Unilever",
+    "example_en": "we concluded a fixed-period contract with Unilever"
   },
   {
     "rank": 3597,
-    "french": "affecté",
-    "english": "affected",
-    "example_fr": "elle semble peu affectée par les événements",
-    "example_en": "she seems little affected by the events"
+    "french": "ménager",
+    "english": "to handle, arrange, domestic",
+    "example_fr": "cela permettait aussi de ménager la surprise",
+    "example_en": "it also enabled arranging the surprise"
   },
   {
     "rank": 3598,
-    "french": "relever",
-    "english": "to note, take note of, raise, pick up, relieve",
-    "example_fr": "le soldat a été relevé de ses fonctions",
-    "example_en": "the soldier was relieved of his duties"
+    "french": "millénaire",
+    "english": "millennium, thousand-year-old",
+    "example_fr": "le tournant du millénaire approche à grands pas",
+    "example_en": "the millennial changeover is nearing quickly"
   },
   {
     "rank": 3599,
-    "french": "ferme",
-    "english": "firm, farm",
-    "example_fr": "je suis un homme de la ferme. je sais cultiver",
-    "example_en": "I'm a farm man. I know how to cultivate"
+    "french": "alerte",
+    "english": "agile, alert, warning",
+    "example_fr": "l'armée de terre est en alerte",
+    "example_en": "the ground forces are on alert"
   },
   {
     "rank": 3600,
-    "french": "lâche",
-    "english": "coward, loose",
-    "example_fr": "tu es un lâche, tu n'as pas tenu ta promesse",
-    "example_en": "you're a coward, you didn't keep your promise"
+    "french": "renforcement",
+    "english": "reinforcement, strengthening",
+    "example_fr": "on peut se féliciter du renforcement des mesures pour la formation",
+    "example_en": "we can be proud of strengthening the measures for training"
   },
   {
     "rank": 3601,
-    "french": "théologie",
-    "english": "theology",
-    "example_fr": "j'ai étudié la théologie",
-    "example_en": "I studied theology"
+    "french": "ange",
+    "english": "angel",
+    "example_fr": "est-ce qu'on peut faire un ange d'un démon?",
+    "example_en": "can you turn a devil into an angel?"
   },
   {
     "rank": 3602,
-    "french": "défaite",
-    "english": "defeat",
-    "example_fr": "la flotte subit une grave défaite",
-    "example_en": "the fleet suffered a serious defeat"
+    "french": "guérir",
+    "english": "to cure, heal, get better",
+    "example_fr": "le rire guérit tout",
+    "example_en": "laughter heals everything"
   },
   {
     "rank": 3603,
-    "french": "précis",
-    "english": "precise, accurate, summary",
-    "example_fr": "je ne connais pas le chiffre précis",
-    "example_en": "I don't know the precise figure"
+    "french": "immobilier",
+    "english": "property, real estate, property business, real estate business",
+    "example_fr": "une autre société immobilière a été créée",
+    "example_en": "another real estate company was formed"
   },
   {
     "rank": 3604,
-    "french": "relayer",
-    "english": "to relay, take turns, replace",
-    "example_fr": "il faut relayer cette information",
-    "example_en": "this information must be relayed"
+    "french": "certificat",
+    "english": "certificate",
+    "example_fr": "elle avait raté de justesse son certificat d'études supérieures",
+    "example_en": "she barely failed her higher-education certificate"
   },
   {
     "rank": 3605,
-    "french": "démocratie",
-    "english": "democracy",
-    "example_fr": "il n'y a pas de démocratie sans élection libre",
-    "example_en": "there's no democracy without free elections"
+    "french": "contaminer",
+    "english": "to contaminate, infect",
+    "example_fr": "j'ai l'impression d'être contaminé. c'est répugnant",
+    "example_en": "I feel like I'm contaminated. it's disgusting"
   },
   {
     "rank": 3606,
-    "french": "seizième",
-    "english": "sixteenth",
-    "example_fr": "c'est mon seizième jour dans ce fauteuil",
-    "example_en": "it's my sixteenth day in this armchair"
+    "french": "pénurie",
+    "english": "shortage",
+    "example_fr": "il n'y a pas de pénurie d'uranium au niveau mondial",
+    "example_en": "there's no world shortage of uranium"
   },
   {
     "rank": 3607,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "il faut un désarmement nucléaire",
-    "example_en": "nuclear disarmament is needed"
+    "french": "tirage",
+    "english": "drawing, circulation, run",
+    "example_fr": "vous finirez par présenter le tirage du loto",
+    "example_en": "you will end by presenting the lottery drawing"
   },
   {
     "rank": 3608,
-    "french": "entier",
-    "english": "whole, full",
-    "example_fr": "vous avez le monde entier à vos pieds",
-    "example_en": "you have the whole world at your feet"
+    "french": "perception",
+    "english": "perception, collection",
+    "example_fr": "ça ne correspond pas à ma perception de la ville",
+    "example_en": "that doesn't fit my impression of the city"
   },
   {
     "rank": 3609,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "le film tournera dans les banlieues parisiennes",
-    "example_en": "the film will be shot in the Parisian suburbs"
+    "french": "philosophe",
+    "english": "philosopher",
+    "example_fr": "il est plus homme que philosophe",
+    "example_en": "he is more a man than a philosopher"
   },
   {
     "rank": 3610,
-    "french": "méfiance",
-    "english": "mistrust, suspicion",
-    "example_fr": "j'ai vu beaucoup de méfiance chez les gens",
-    "example_en": "I saw much mistrust among the people"
+    "french": "planche",
+    "english": "plank, board",
+    "example_fr": "il a cloué la planche sur la porte",
+    "example_en": "he nailed the plank onto the door"
   },
   {
     "rank": 3611,
-    "french": "gourmandise",
-    "english": "greed, delicacy, confection",
-    "example_fr": "je suis gourmande, mais je ne mange pas de viande",
-    "example_en": "I'm a sweet tooth, but I don't eat meat"
+    "french": "crédibilité",
+    "english": "credibility",
+    "example_fr": "la crédibilité de tous les états financiers est compromis",
+    "example_en": "the credibility of our financial state is compromised"
   },
   {
     "rank": 3612,
-    "french": "conduit",
-    "english": "duct, pipe",
-    "example_fr": "le conduit était plein de sable et de poussière",
-    "example_en": "the conduit was full of sand and dust"
+    "french": "fiction",
+    "english": "fiction",
+    "example_fr": "ce livre est bien une fiction",
+    "example_en": "this book is truly a piece of fiction"
   },
   {
     "rank": 3613,
-    "french": "météo",
-    "english": "weather, weather forecast",
-    "example_fr": "la météo ne sera pas favorable",
-    "example_en": "the weather won't be favorable"
+    "french": "handicapé",
+    "english": "disabled, handicapped",
+    "example_fr": "il y a aussi les handicapés physiques",
+    "example_en": "there are also the physically handicapped"
   },
   {
     "rank": 3614,
-    "french": "appeler",
-    "english": "to call, appeal, name, call on, call in",
-    "example_fr": "il faut appeler le docteur immédiatement",
-    "example_en": "you have to call the doctor immediately"
+    "french": "boisson",
+    "english": "drink, beverage",
+    "example_fr": "le thé représente la deuxième boisson consommée dans le monde",
+    "example_en": "tea is the second-most consumed drink in the world"
   },
   {
     "rank": 3615,
-    "french": "dix-huit",
-    "english": "eighteen",
-    "example_fr": "je suis là depuis dix-huit heures, sans dormir",
-    "example_en": "I've been here for eighteen hours, without sleep"
+    "french": "élaboration",
+    "english": "working-out, development",
+    "example_fr": "vous allez demander l'élaboration d'un dossier",
+    "example_en": "you're going to ask that a file be put together"
   },
   {
     "rank": 3616,
-    "french": "périlleux",
-    "english": "perilous",
-    "example_fr": "c'est un exercice périlleux, mais passionnant",
-    "example_en": "it's a perilous, but exciting, exercise"
+    "french": "habitation",
+    "english": "residence, home, dwelling, housing",
+    "example_fr": "environ 200 habitations ont été détruites",
+    "example_en": "about 200 dwellings were destroyed"
   },
   {
     "rank": 3617,
-    "french": "lancer",
-    "english": "to launch, start, initiate",
-    "example_fr": "il a lancé un nouveau produit!",
-    "example_en": "he launched a new product!"
+    "french": "représentatif",
+    "english": "representative",
+    "example_fr": "le Danemark a des syndicats puissants, très représentatifs",
+    "example_en": "Denmark has powerful unions, very representative"
   },
   {
     "rank": 3618,
-    "french": "allonger",
-    "english": "to lengthen, stretch out, extend",
-    "example_fr": "j'ai pas envie de rallonger cette conversation",
-    "example_en": "I don't want to lengthen this conversation"
+    "french": "débrouiller",
+    "english": "to untangle, sort out, manage, get by",
+    "example_fr": "tu te débrouilles très bien",
+    "example_en": "you're managing very well"
   },
   {
     "rank": 3619,
-    "french": "mêler",
-    "english": "to mingle, mix",
-    "example_fr": "le sang se mêlait au sable",
-    "example_en": "the blood mixed with the sand"
+    "french": "imposition",
+    "english": "taxation",
+    "example_fr": "il veut un taux d'imposition uniforme",
+    "example_en": "he wants a uniform tax rate"
   },
   {
     "rank": 3620,
-    "french": "attache",
-    "english": "tie, attachment, binder, link, allegiance",
-    "example_fr": "il est difficile de conserver nos liens et nos attaches",
-    "example_en": "it's hard to keep our ties and our allegiances"
+    "french": "générer",
+    "english": "to generate",
+    "example_fr": "les aérosols génèrent des pluies acides",
+    "example_en": "aerosols produce acid rain"
   },
   {
     "rank": 3621,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "de cette façon, nous arriverons à une paix durable",
-    "example_en": "in this way, we will achieve lasting peace"
+    "french": "ajustement",
+    "english": "adjustment",
+    "example_fr": "l'ajustement reste aussi insuffisant",
+    "example_en": "the adjustment is still inadequate"
   },
   {
     "rank": 3622,
-    "french": "mille",
-    "english": "thousand, mile",
-    "example_fr": "des milliers de gens sont morts dans le chaos",
-    "example_en": "thousands of people died in the chaos"
+    "french": "princesse",
+    "english": "princess",
+    "example_fr": "une princesse ne peut pas embrasser un crapaud?",
+    "example_en": "a princess can't kiss a toad?"
   },
   {
     "rank": 3623,
-    "french": "réduire",
-    "english": "to reduce, curb",
-    "example_fr": "il faut réduire la pollution",
-    "example_en": "pollution must be reduced"
+    "french": "virer",
+    "english": "to turn, change, transfer, kick out",
+    "example_fr": "il vire encore une fois à droite",
+    "example_en": "he turns right one more time"
   },
   {
     "rank": 3624,
-    "french": "flotter",
-    "english": "to float",
-    "example_fr": "il me semble que je suis en train de flotter",
-    "example_en": "I think I'm floating"
+    "french": "facilité",
+    "english": "easiness, ease, aptitude",
+    "example_fr": "il lit avec facilité",
+    "example_en": "he reads easily"
   },
   {
     "rank": 3625,
-    "french": "théologien",
-    "english": "theologian",
-    "example_fr": "un théologien islamique a publié un ouvrage",
-    "example_en": "an Islamic theologian published a work"
+    "french": "postal",
+    "english": "postal, mail",
+    "example_fr": "ils lui écrivaient une carte postale",
+    "example_en": "they wrote her a postcard"
   },
   {
     "rank": 3626,
-    "french": "laitier",
-    "english": "dairy, milk",
-    "example_fr": "tu ne manges pas de produits laitiers?",
-    "example_en": "you don't eat dairy products?"
+    "french": "perturber",
+    "english": "to disrupt, disturb",
+    "example_fr": "je suis perturbée par une enquête que je mène",
+    "example_en": "I'm disturbed by an investigation that I'm leading"
   },
   {
     "rank": 3627,
-    "french": "remède",
-    "english": "remedy, cure",
-    "example_fr": "je n'ai pas de remède miracle pour vous",
-    "example_en": "I don't have a miracle cure for you"
+    "french": "répercussion",
+    "english": "repercussion",
+    "example_fr": "le transport a des répercussions sur tous les aspects de notre vie",
+    "example_en": "transportation impacts on all aspects of life"
   },
   {
     "rank": 3628,
-    "french": "récolter",
-    "english": "to harvest, gather",
-    "example_fr": "la compagnie ne fera pas les profits escomptés",
-    "example_en": "the company will not make the expected profits"
+    "french": "oncle",
+    "english": "uncle",
+    "example_fr": "je vis avec mon oncle et ma tante",
+    "example_en": "I live with my uncle and my aunt"
   },
   {
     "rank": 3629,
-    "french": "bavarder",
-    "english": "to chat",
-    "example_fr": "nous aimons bavarder longuement sur la philosophie",
-    "example_en": "we like chatting at length about philosophy"
+    "french": "viol",
+    "english": "rape",
+    "example_fr": "je vais crier au viol",
+    "example_en": "I'm going to cry rape"
   },
   {
     "rank": 3630,
-    "french": "s'asseoir",
-    "english": "to sit down",
-    "example_fr": "assieds-toi, s'il te plaît",
-    "example_en": "sit down, please"
+    "french": "culte",
+    "english": "worship, cult",
+    "example_fr": "le culte des anciens dieux a été réinstauré",
+    "example_en": "the worship of ancient gods was reinstated"
   },
   {
     "rank": 3631,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il aimait jouer avec son chien",
-    "example_en": "he loved to play with his dog"
+    "french": "gosse",
+    "english": "kid",
+    "example_fr": "nous, on était gosses, on savait pas",
+    "example_en": "we were just kids, we didn't know"
   },
   {
     "rank": 3632,
-    "french": "prévenir",
-    "english": "to prevent, warn; to notify",
-    "example_fr": "il fallait prévenir les ambassades, je pense",
-    "example_en": "we needed to notify the embassies, I think"
+    "french": "équipage",
+    "english": "crew, gear",
+    "example_fr": "les membres d'équipage ont retiré la femme de l'eau",
+    "example_en": "the crew members pulled the woman from the water"
   },
   {
     "rank": 3633,
-    "french": "détaillé",
-    "english": "detailed",
-    "example_fr": "il faudra une liste détaillée de vos dépenses",
-    "example_en": "a detailed list of your expenses will be needed"
+    "french": "carburant",
+    "english": "fuel",
+    "example_fr": "les prix élevés des carburants ont frappé tous les secteurs de l'économie",
+    "example_en": "high gas prices have affected all sectors of the economy"
   },
   {
     "rank": 3634,
-    "french": "jouet",
-    "english": "toy",
-    "example_fr": "le jeu est-il le jouet d'une autre entité?",
-    "example_en": "is the game the toy of another entity?"
+    "french": "canon",
+    "english": "gun, cannon",
+    "example_fr": "ils nous ont attaqués au canon à eau et au gaz lacrymogène",
+    "example_en": "they attacked us with water cannons and tear gas"
   },
   {
     "rank": 3635,
-    "french": "réception",
-    "english": "reception",
-    "example_fr": "le comité organise une réception le soir de la finale",
-    "example_en": "the committee is organizing a reception the night of the final"
+    "french": "prometteur",
+    "english": "promising",
+    "example_fr": "l'avenir n'est pas prometteur",
+    "example_en": "the future is not promising"
   },
   {
     "rank": 3636,
-    "french": "médicale",
-    "english": "medical",
-    "example_fr": "le dossier médical est secret",
-    "example_en": "the medical file is secret"
+    "french": "apprentissage",
+    "english": "learning, apprenticeship",
+    "example_fr": "chaque poste possède un plan d'apprentissage",
+    "example_en": "each job has a training plan"
   },
   {
     "rank": 3637,
-    "french": "surveiller",
-    "english": "to watch, supervise, keep an eye on",
-    "example_fr": "nous allons surveiller les élections",
-    "example_en": "we're going to monitor the elections"
+    "french": "soi-disant",
+    "english": "so-called, supposedly",
+    "example_fr": "il m'a donné un bijou soi-disant précieux",
+    "example_en": "he gave me a supposedly precious jewel"
   },
   {
     "rank": 3638,
-    "french": "démocrate",
-    "english": "democrat",
-    "example_fr": "je suis démocrate. j'ai voté démocrate",
-    "example_en": "I'm a Democrat. I voted Democrat"
+    "french": "chaussure",
+    "english": "shoe, sneaker",
+    "example_fr": "il faut enlever vos chaussures",
+    "example_en": "you must remove your shoes"
   },
   {
     "rank": 3639,
-    "french": "communiquer",
-    "english": "to communicate",
-    "example_fr": "je n'arrive pas à communiquer avec mon fils",
-    "example_en": "I can't seem to communicate with my son"
+    "french": "salarial",
+    "english": "salary",
+    "example_fr": "le problème de l'équité salariale existe",
+    "example_en": "there's a problem with equitable salaries"
   },
   {
     "rank": 3640,
-    "french": "contradictoire",
-    "english": "contradictory, conflicting",
-    "example_fr": "je n'ai pas trouvé ses dires contradictoires",
-    "example_en": "I didn't find his statements contradictory"
+    "french": "abolir",
+    "english": "to abolish, do away with",
+    "example_fr": "l'esclavage n'a jamais vraiment été aboli",
+    "example_en": "slavery never really was abolished"
   },
   {
     "rank": 3641,
-    "french": "réduire",
-    "english": "to reduce, curb",
-    "example_fr": "il faut réduire les inégalités sociales",
-    "example_en": "social inequalities must be reduced"
+    "french": "pâte",
+    "english": "paste, dough, pasta",
+    "example_fr": "ils mangent du riz et des pâtes tous les jours",
+    "example_en": "they eat rice and noodles every day"
   },
   {
     "rank": 3642,
-    "french": "découpage",
-    "english": "cutting, carving",
-    "example_fr": "le découpage électoral favorise les zones rurales",
-    "example_en": "electoral redistribution favors rural areas"
+    "french": "cohésion",
+    "english": "cohesion",
+    "example_fr": "tant que cette situation durera, la cohésion ne sera jamais atteinte",
+    "example_en": "as long as this situation lasts, unity will never be achieved"
   },
   {
     "rank": 3643,
-    "french": "pousser",
-    "english": "to push, shove",
-    "example_fr": "ils ne font que se pousser",
-    "example_en": "all they do is push one another"
+    "french": "ruine",
+    "english": "ruin, ruins",
+    "example_fr": "la maison était en ruine",
+    "example_en": "the house was in ruins"
   },
   {
     "rank": 3644,
-    "french": "réclamer",
-    "english": "to claim",
-    "example_fr": "elle réclame la restitution de ses documents",
-    "example_en": "she demands the return of her documents"
+    "french": "percer",
+    "english": "to pierce, drill, break into",
+    "example_fr": "le couteau avait percé la chair avec précision",
+    "example_en": "the knife pierced the flesh with exactness"
   },
   {
     "rank": 3645,
-    "french": "s'asseoir",
-    "english": "to sit down",
-    "example_fr": "laisse-moi m'asseoir avec toi",
-    "example_en": "let me sit down with you"
+    "french": "rassemblement",
+    "english": "gathering, collecting, assembling",
+    "example_fr": "rassemblement au gymnase pour une annonce spêciale",
+    "example_en": "there's an assembly in the gymnasium for a special annoucement"
   },
   {
     "rank": 3646,
-    "french": "soudainement",
-    "english": "suddenly",
-    "example_fr": "tout est arrivé soudainement",
-    "example_en": "everything happened suddenly"
+    "french": "malentendu",
+    "english": "misunderstanding",
+    "example_fr": "ce n'est qu'un malentendu ridicule",
+    "example_en": "it's nothing but a ridiculous misunderstanding"
   },
   {
     "rank": 3647,
-    "french": "contrôle",
-    "english": "control, check",
-    "example_fr": "les militaires ont pris le contrôle de l'aéroport",
-    "example_en": "the military took control of the airport"
+    "french": "soigneusement",
+    "english": "tidily, neatly, carefully",
+    "example_fr": "j'ai soigneusement examiné le document",
+    "example_en": "I examined the document carefully"
   },
   {
     "rank": 3648,
-    "french": "découper",
-    "english": "to cut up, carve",
-    "example_fr": "on peut découper le territoire en zones",
-    "example_en": "we can carve up the territory into zones"
+    "french": "pot",
+    "english": "jar, pot",
+    "example_fr": "j'ai arrêté de vendre du pot puis de la coke",
+    "example_en": "I stopped selling pot, then coke"
   },
   {
     "rank": 3649,
-    "french": "enfreindre",
-    "english": "to infringe, violate, break",
-    "example_fr": "pour une fois, je vais enfreindre mes règles",
-    "example_en": "for once, I'm going to break my own rules"
+    "french": "règne",
+    "english": "reign",
+    "example_fr": "en France, c'est le règne du politiquement correct",
+    "example_en": "in France, it's the reign of political correctness"
   },
   {
     "rank": 3650,
-    "french": "déposer",
-    "english": "to give a statement, make a statement, lodge, record",
-    "example_fr": "je peux déposer une plainte",
-    "example_en": "I can lodge a complaint"
+    "french": "impulsion",
+    "english": "impulse, pulse",
+    "example_fr": "il y avait une impulsion qui nous poussait",
+    "example_en": "there was an impulse that pushed us"
   },
   {
     "rank": 3651,
-    "french": "poursuite",
-    "english": "chase, pursuit",
-    "example_fr": "ils couraient à la poursuite de leur rêve",
-    "example_en": "they were chasing after their dream"
+    "french": "physiquement",
+    "english": "physically",
+    "example_fr": "il était physiquement plus fort que moi",
+    "example_en": "he was physically stronger than I was"
   },
   {
     "rank": 3652,
-    "french": "délivrance",
-    "english": "delivery, release, delivery from, riddance",
-    "example_fr": "la musique était pour moi une délivrance",
-    "example_en": "music was a deliverance for me"
+    "french": "minimal",
+    "english": "minimal, minimum",
+    "example_fr": "une peine minimale de quatre ans est juste et équitable",
+    "example_en": "a minimum sentence of four years is just and equitable"
   },
   {
     "rank": 3653,
-    "french": "mille",
-    "english": "thousand, mile",
-    "example_fr": "le mur mesure plus de 10.000 milles de long",
-    "example_en": "the wall measures more than 10,000 miles long"
+    "french": "fossé",
+    "english": "ditch",
+    "example_fr": "la forêt se terminait par un fossé",
+    "example_en": "the forest ended at a ditch"
   },
   {
     "rank": 3654,
-    "french": "pliant",
-    "english": "folding",
-    "example_fr": "j'ai un vélo pliant dans ma voiture",
-    "example_en": "I have a folding bike in my car"
+    "french": "dépens",
+    "english": "expense",
+    "example_fr": "la Russie a affirmé ses ambitions aux dépens de l'Italie",
+    "example_en": "Russia affirmed its ambitions at Italy's expense"
   },
   {
     "rank": 3655,
-    "french": "fléau",
-    "english": "scourge",
-    "example_fr": "le terrorisme est le fléau du XXIe siècle",
-    "example_en": "terrorism is the scourge of the 21st century"
+    "french": "implanter",
+    "english": "to implant, set up, establish",
+    "example_fr": "il est nécessaire d'implanter un nouveau système",
+    "example_en": "it's necessary to set up a new system"
   },
   {
     "rank": 3656,
-    "french": "communauté",
-    "english": "community, fellowship",
-    "example_fr": "la communauté musulmane est très fermée",
-    "example_en": "the Moslem community is very closed"
+    "french": "descendant",
+    "english": "downward, descending, descendant",
+    "example_fr": "les descendants parleront de leurs ancêtres disparus",
+    "example_en": "the descendants will speak of their ancestors who have disappeared"
   },
   {
     "rank": 3657,
-    "french": "égoïste",
-    "english": "selfish",
-    "example_fr": "je suis pas plus égoïste que toi",
-    "example_en": "I'm no more selfish than you are"
+    "french": "politiquement",
+    "english": "politically, diplomatically",
+    "example_fr": "il est politiquement correct d'être anti-américain",
+    "example_en": "it's politically correct to be anti-American"
   },
   {
     "rank": 3658,
-    "french": "contenir",
-    "english": "to restrain, hold in, check",
-    "example_fr": "elle pouvait difficilement contenir son enthousiasme",
-    "example_en": "she could hardly restrain her enthusiasm"
+    "french": "crever",
+    "english": "to burst, puncture",
+    "example_fr": "quel pneu est crevé? c'est pas de ton côté",
+    "example_en": "which tire is flat. it's not on your side"
   },
   {
     "rank": 3659,
-    "french": "s'approcher",
-    "english": "to approach, get closer",
-    "example_fr": "il n'osait pas s'approcher d'elle",
-    "example_en": "he didn't dare approach her"
+    "french": "interruption",
+    "english": "interruption, break",
+    "example_fr": "elle parlait sans interruption, d'un air raisonnable",
+    "example_en": "she spoke uninterrupted, quite reasonably"
   },
   {
     "rank": 3660,
-    "french": "compétence",
-    "english": "competence, jurisdiction",
-    "example_fr": "c'est de votre compétence, non?",
-    "example_en": "it's your jurisdiction, right?"
+    "french": "polonais",
+    "english": "Polish",
+    "example_fr": "vous dites avoir des racines polonaises",
+    "example_en": "you say you have Polish roots"
   },
   {
     "rank": 3661,
-    "french": "déployer",
-    "english": "to deploy, open",
-    "example_fr": "elle déployait des trésors d'énergie",
-    "example_en": "she deployed a wealth of energy"
+    "french": "patrie",
+    "english": "homeland, home country",
+    "example_fr": "ils ont parlé de protection de la patrie",
+    "example_en": "they talked about protecting the homeland"
   },
   {
     "rank": 3662,
-    "french": "dévouement",
-    "english": "dedication, devotion",
-    "example_fr": "je te remercie pour ton travail, ton dévouement",
-    "example_en": "thank you for your work, your devotion"
+    "french": "prélèvement",
+    "english": "imposition, levying, withdrawal, removal, deduction",
+    "example_fr": "un prélèvement est, en réalité, une taxe",
+    "example_en": "a deduction is, in fact, a tax"
   },
   {
     "rank": 3663,
-    "french": "inédit",
-    "english": "new, unpublished",
-    "example_fr": "le manuscrit est inédit",
-    "example_en": "the manuscript is unpublished"
+    "french": "ex",
+    "english": "ex",
+    "example_fr": "mon ex serait ravie que je vous parle",
+    "example_en": "my ex will be thrilled that I'm speaking to you"
   },
   {
     "rank": 3664,
-    "french": "droit",
-    "english": "law",
-    "example_fr": "le droit à l'existence est inaliénable",
-    "example_en": "the right to exist is inalienable"
+    "french": "studio",
+    "english": "studio, studio apartment",
+    "example_fr": "mon bureau était en face du studio",
+    "example_en": "my office is across from the studio"
   },
   {
     "rank": 3665,
-    "french": "réfugié",
-    "english": "refugee",
-    "example_fr": "les réfugiés ont besoin d'aide humanitaire",
-    "example_en": "refugees need humanitarian aid"
+    "french": "intégrité",
+    "english": "integrity",
+    "example_fr": "lui au moins a gardé son intégrité",
+    "example_en": "at least he kept his integrity"
   },
   {
     "rank": 3666,
-    "french": "jouer",
-    "english": "to play, gamble",
-    "example_fr": "il joua son argent à la roulette",
-    "example_en": "he gambled his money at roulette"
+    "french": "prescrire",
+    "english": "to order, command, prescribe, stipulate",
+    "example_fr": "ils prescrivent ces médicaments",
+    "example_en": "they prescribe these medicines"
   },
   {
     "rank": 3667,
-    "french": "mâcher",
-    "english": "to chew",
-    "example_fr": "je mâche de la gomme",
-    "example_en": "I'm chewing gum"
+    "french": "exhorter",
+    "english": "to exhort, urge",
+    "example_fr": "je l'exhorte à retirer sa motion",
+    "example_en": "I exhort her to repeal her motion"
   },
   {
     "rank": 3668,
-    "french": "s'élever",
-    "english": "to rise, amount to",
-    "example_fr": "la chaleur s'élevait du béton",
-    "example_en": "heat rose from the concrete"
+    "french": "tribu",
+    "english": "tribe",
+    "example_fr": "nous sommes une tribu, une communauté",
+    "example_en": "we're a tribe, a community"
   },
   {
     "rank": 3669,
-    "french": "défendre",
-    "english": "to defend",
-    "example_fr": "je devais le défendre, malgré ses erreurs",
-    "example_en": "I had to defend him, in spite of his mistakes"
+    "french": "globe",
+    "english": "globe",
+    "example_fr": "ils viennent de toutes les régions du globe",
+    "example_en": "they come from all parts of the globe"
   },
   {
     "rank": 3670,
-    "french": "épuisé",
-    "english": "exhausted, worn out, used up, out of stock",
-    "example_fr": "j'ai cherché le livre. il était épuisé",
-    "example_en": "I looked for the book. it was out of print"
+    "french": "apaiser",
+    "english": "to calm, appease, calm down",
+    "example_fr": "officiellement, les tensions s'apaisent",
+    "example_en": "officially, tensions are cooling"
   },
   {
     "rank": 3671,
-    "french": "découper",
-    "english": "to cut up, carve",
-    "example_fr": "je ne sais pas découper les légumes",
-    "example_en": "I don't know how to cut up vegetables"
+    "french": "sélectionner",
+    "english": "to select",
+    "example_fr": "il faut avant tout sélectionner les rôles qui nous plaisent",
+    "example_en": "above all we have to select the roles that we enjoy"
   },
   {
     "rank": 3672,
-    "french": "pousser",
-    "english": "to push, grow, shove, urge",
-    "example_fr": "les chèvres ne poussent pas le mur",
-    "example_en": "the goats are not pushing the wall"
+    "french": "familier",
+    "english": "familiar, informal",
+    "example_fr": "apparemment, cette voix t'est familière",
+    "example_en": "apparently this voice is familiar to you"
   },
   {
     "rank": 3673,
-    "french": "mérite",
-    "english": "merit",
-    "example_fr": "il a le mérite d'être franc",
-    "example_en": "he has the merit of being frank"
+    "french": "quinzaine",
+    "english": "about fifteen, two weeks",
+    "example_fr": "dans moins d'une quinzaine, vous serez un homme libre",
+    "example_en": "in less than two weeks, you'll be a free man"
   },
   {
     "rank": 3674,
-    "french": "répandu",
-    "english": "widespread",
-    "example_fr": "ce type d'accord est très répandu en Europe",
-    "example_en": "this type of agreement is widespread in Europe"
+    "french": "paralyser",
+    "english": "to paralyze",
+    "example_fr": "la mine est paralysée par la grève",
+    "example_en": "the mine is paralyzed by the strike"
   },
   {
     "rank": 3675,
-    "french": "militaire",
-    "english": "military, soldier",
-    "example_fr": "vous êtes officier, militaire de carrière?",
-    "example_en": "you're an officer, a career military man?"
+    "french": "impatience",
+    "english": "impatience",
+    "example_fr": "nous vous attendons avec impatience",
+    "example_en": "we're waiting impatiently for you"
   },
   {
     "rank": 3676,
-    "french": "seul",
-    "english": "only, alone, sole",
-    "example_fr": "je vous donnerai la clef pour votre seul usage",
-    "example_en": "I will give you the key for your use only"
+    "french": "logiciel",
+    "english": "software, program, application",
+    "example_fr": "il vous faudra peut-être réinstaller votre logiciel",
+    "example_en": "you might have to reinstall your software"
   },
   {
     "rank": 3677,
-    "french": "sérénité",
-    "english": "serenity",
-    "example_fr": "l'âme atteint à la sérénité après une longue et douloureuse bataille",
-    "example_en": "the soul achieves serenity after a long and painful battle"
+    "french": "visiblement",
+    "english": "obviously, clearly, visibly",
+    "example_fr": "il se tait, se domine visiblement",
+    "example_en": "he shuts up, visibly controlling himself"
   },
   {
     "rank": 3678,
-    "french": "pénible",
-    "english": "painful, laborious, arduous",
-    "example_fr": "cette réunion est longue et pénible",
-    "example_en": "this meeting is long and painful"
+    "french": "suicider",
+    "english": "to commit suicide",
+    "example_fr": "quatre suspects se sont suicidés samedi",
+    "example_en": "four suspects committed suicide Saturday"
   },
   {
     "rank": 3679,
-    "french": "bouclé",
-    "english": "curly, looped, fastened, resolved",
-    "example_fr": "il avait les cheveux blonds et bouclés",
-    "example_en": "he had curly blonde hair"
+    "french": "préjugé",
+    "english": "prejudice, bias",
+    "example_fr": "il est moins facile de désintégrer un préjugé qu'un atome",
+    "example_en": "it's harder to smash a prejudice than an atom"
   },
   {
     "rank": 3680,
-    "french": "chasser",
-    "english": "to chase away, hunt",
-    "example_fr": "je veux le chasser hors de mon pays",
-    "example_en": "I want to chase him out of my country"
+    "french": "impératif",
+    "english": "need, necessity, urgent, imperative",
+    "example_fr": "c'est impératif, c'est nécessaire",
+    "example_en": "it's imperative, it's necessary"
   },
   {
     "rank": 3681,
-    "french": "seuil",
-    "english": "doorstep, threshold",
-    "example_fr": "je n'ai pas franchi le seuil de cet endroit depuis",
-    "example_en": "I haven't crossed the threshold of this place since then"
+    "french": "renvoi",
+    "english": "dismissal, expulsion, suspension, cross-reference",
+    "example_fr": "il allait demander ton renvoi de la police",
+    "example_en": "he was going to seek your suspension from the police force"
   },
   {
     "rank": 3682,
-    "french": "relatif",
-    "english": "relative",
-    "example_fr": "c'est un échec relatif, je pense",
-    "example_en": "it's a relative failure, I think"
+    "french": "charme",
+    "english": "charm",
+    "example_fr": "la liberté est une espèce de charme",
+    "example_en": "liberty is a kind of charm"
   },
   {
     "rank": 3683,
-    "french": "lourd",
-    "english": "heavy",
-    "example_fr": "il y avait un lourd silence",
-    "example_en": "there was a heavy silence"
+    "french": "atout",
+    "english": "trump, asset",
+    "example_fr": "l'Oscar est un atout commercial de calibre mondial",
+    "example_en": "the Oscar is a worldwide commercial asset"
   },
   {
     "rank": 3684,
-    "french": "développement",
-    "english": "development",
-    "example_fr": "il faut accélérer le développement de l'Afrique",
-    "example_en": "Africa's development must be hastened"
+    "french": "portugais",
+    "english": "Portuguese",
+    "example_fr": "admettons que je sois portugais",
+    "example_en": "let's assume I'm Portuguese"
   },
   {
     "rank": 3685,
-    "french": "célébrité",
-    "english": "fame, celebrity",
-    "example_fr": "la célébrité est temporaire",
-    "example_en": "fame is fleeting"
+    "french": "nord-ouest",
+    "english": "north-west",
+    "example_fr": "un tremblement de terre secoue le nordouest de la Turquie",
+    "example_en": "an earthquake shakes northwestern Turkey"
   },
   {
     "rank": 3686,
-    "french": "embouteillage",
-    "english": "traffic jam, bottling",
-    "example_fr": "je suis coincé dans un embouteillage!",
-    "example_en": "I'm stuck in a traffic jam!"
+    "french": "affaiblissement",
+    "english": "weakening",
+    "example_fr": "l'euro a profité de l'affaiblissement du dollar",
+    "example_en": "the euro has profited from the weakened dollar"
   },
   {
     "rank": 3687,
-    "french": "sincèrement",
-    "english": "sincerely",
-    "example_fr": "je m'excuse sincèrement",
-    "example_en": "I sincerely apologize"
+    "french": "balayer",
+    "english": "to sweep up, sweep out",
+    "example_fr": "une fois qu'on aura balayé, ce sera à nouveau impeccable",
+    "example_en": "once we've swept it, it will be impeccable again"
   },
   {
     "rank": 3688,
-    "french": "sévère",
-    "english": "severe, harsh",
-    "example_fr": "la crise est sévère, mais pas permanente",
-    "example_en": "the crisis is severe, but not permanent"
+    "french": "peupler",
+    "english": "to populate, inhabit",
+    "example_fr": "l'enfer est peuplé d'anges",
+    "example_en": "hell is populated by angels"
   },
   {
     "rank": 3689,
-    "french": "déclaration",
-    "english": "declaration",
-    "example_fr": "il a fait une déclaration à la presse",
-    "example_en": "he made a statement to the press"
+    "french": "cauchemar",
+    "english": "nightmare, bad dream",
+    "example_fr": "toute cette affaire est un vrai cauchemar",
+    "example_en": "this whole affair is a real nightmare"
   },
   {
     "rank": 3690,
-    "french": "déménager",
-    "english": "to move house, move out",
-    "example_fr": "j'ai décidé de déménager de mon domicile",
-    "example_en": "I decided to move out of my house"
+    "french": "pénible",
+    "english": "hard, difficult, painful, tiresome",
+    "example_fr": "ton incompétence devient extrêmement pénible",
+    "example_en": "your incompetence is becoming extremely bothersome"
   },
   {
     "rank": 3691,
-    "french": "déplacé",
-    "english": "displaced",
-    "example_fr": "il y a des milliers de déplacés",
-    "example_en": "there are thousands of displaced persons"
+    "french": "venue",
+    "english": "coming",
+    "example_fr": "une grande nouveauté récente est la venue des nouveaux dépanneurs",
+    "example_en": "a big recent trend is the arrival of new convenience stores"
   },
   {
     "rank": 3692,
-    "french": "mouvement",
-    "english": "movement",
-    "example_fr": "il était membre d'un mouvement catholique",
-    "example_en": "he was a member of a Catholic movement"
+    "french": "ballon",
+    "english": "ball",
+    "example_fr": "l'usage de tout autre ballon est strictement interdit",
+    "example_en": "use of any other ball is strictly forbidden"
   },
   {
     "rank": 3693,
-    "french": "dieu",
-    "english": "god",
-    "example_fr": "merci, mon Dieu!",
-    "example_en": "thank you, God!"
+    "french": "abstenir",
+    "english": "to abstain, refrain",
+    "example_fr": "vous feriez mieux de vous abstenir",
+    "example_en": "you would do better to abstain"
   },
   {
     "rank": 3694,
-    "french": "déjà",
-    "english": "already",
-    "example_fr": "j'ai déjà donné mon avis",
-    "example_en": "I already gave my opinion"
+    "french": "affrontement",
+    "english": "clash, confrontation",
+    "example_fr": "il y a eu des affrontements dans les rues",
+    "example_en": "there were confrontations in the streets"
   },
   {
     "rank": 3695,
-    "french": "seuil",
-    "english": "threshold",
-    "example_fr": "j'ai atteint mon seuil de tolérance",
-    "example_en": "I've reached my threshold of tolerance"
+    "french": "expulser",
+    "english": "to expel, evict, deport, throw out",
+    "example_fr": "les policiers l'expulseront légalement de la propriété",
+    "example_en": "the police will evict her legally from the property"
   },
   {
     "rank": 3696,
-    "french": "dizaine",
-    "english": "about ten",
-    "example_fr": "il restait une douzaine de personnes sur la quarantaine d'invités",
-    "example_en": "a dozen people remained of the forty guests"
+    "french": "resserrer",
+    "english": "to tighten up, strengthen",
+    "example_fr": "nous devrions nous voir plus souvent, resserrer nos relations",
+    "example_en": "we should see each other more often, strengthen our relations"
   },
   {
     "rank": 3697,
-    "french": "poursuivant",
-    "english": "prosecutor",
-    "example_fr": "les tribunaux n'ont pas accepté l'argument du poursuivant",
-    "example_en": "the courts did not accept the prosecutor's argument"
+    "french": "activement",
+    "english": "actively",
+    "example_fr": "les évadés sont activement recherchés",
+    "example_en": "the fugitives are being actively sought"
   },
   {
     "rank": 3698,
-    "french": "praticien",
-    "english": "practitioner",
-    "example_fr": "vous êtes un praticien du droit public",
-    "example_en": "you practice public law"
+    "french": "décor",
+    "english": "scenery, décor, set",
+    "example_fr": "on a déjà changé le décor en milieu d'année",
+    "example_en": "we already changed the decor mid-year"
   },
   {
     "rank": 3699,
-    "french": "flotter",
-    "english": "to float",
-    "example_fr": "nous laissions le bateau flotter",
-    "example_en": "we let the boat drift"
+    "french": "compassion",
+    "english": "compassion",
+    "example_fr": "nous avons toujours réagi avec compassion",
+    "example_en": "we have always reacted with compassion"
   },
   {
     "rank": 3700,
-    "french": "jouer",
-    "english": "to play, gamble",
-    "example_fr": "j'aimais jouer au football",
-    "example_en": "I liked to play soccer"
+    "french": "couronne",
+    "english": "crown, wreath",
+    "example_fr": "aucune couronne ne tient sur aucune tête",
+    "example_en": "crowns don't stay on anybody's head"
   },
   {
     "rank": 3701,
-    "french": "poussière",
-    "english": "dust",
-    "example_fr": "il y avait des particules de poussière dans l'atmosphère",
-    "example_en": "there were particles of dust in the atmosphere"
+    "french": "descente",
+    "english": "descent, raid, downward slope",
+    "example_fr": "le PCF poursuit sa descente aux enfers",
+    "example_en": "the French Communist Party continues its descent into hell"
   },
   {
     "rank": 3702,
-    "french": "droit",
-    "english": "right, law",
-    "example_fr": "je suis au service du droit à la liberté",
-    "example_en": "I'm devoted to the right of freedom"
+    "french": "plancher",
+    "english": "floor",
+    "example_fr": "il entendit la clef tomber sur le plancher",
+    "example_en": "he heard the key fall onto the floor"
   },
   {
     "rank": 3703,
-    "french": "mépriser",
-    "english": "to despise, scorn",
-    "example_fr": "j'ai méprisé la foule de journalistes devant chez moi",
-    "example_en": "I despised the crowd of journalists in front of my house"
+    "french": "trentaine",
+    "english": "about thirty",
+    "example_fr": "je suis contente d'arriver à la trentaine",
+    "example_en": "I'm happy to have reached thirty years old"
   },
   {
     "rank": 3704,
-    "french": "considérer",
-    "english": "to consider",
-    "example_fr": "il est honnête de considérer que vous avez raison",
-    "example_en": "it's honest to concede that you are right"
+    "french": "détresse",
+    "english": "distress",
+    "example_fr": "nous répondons à votre signal de détresse",
+    "example_en": "we are responding to your distress signal"
   },
   {
     "rank": 3705,
-    "french": "légitime",
-    "english": "legitimate, valid",
-    "example_fr": "c'est une demande tout à fait légitime",
-    "example_en": "it's a completely legitimate request"
+    "french": "escalier",
+    "english": "stairs, staircase",
+    "example_fr": "il montait et descendait l'escalier",
+    "example_en": "he climbed up and down the stairs"
   },
   {
     "rank": 3706,
-    "french": "revers",
-    "english": "reverse, back",
-    "example_fr": "au revers du document, j'ai inscrit mes notes",
-    "example_en": "on the back of the document I wrote my notes"
+    "french": "barrage",
+    "english": "barrier, obstruction, dam, roadblock",
+    "example_fr": "de nombreux barrages ont été érigés par la police",
+    "example_en": "many barricades were erected by the police"
   },
   {
     "rank": 3707,
-    "french": "flamboyant",
-    "english": "flamboyant, flame-coloured",
-    "example_fr": "il a un style personnel flamboyant",
-    "example_en": "he has a flamboyant personal style"
+    "french": "néant",
+    "english": "nothingness",
+    "example_fr": "vous réduisez ma vie à néant",
+    "example_en": "you're reducing my life to oblivion"
   },
   {
     "rank": 3708,
-    "french": "vague",
-    "english": "wave, vague",
-    "example_fr": "j'ai vu une énorme vague blanche",
-    "example_en": "I saw a huge white wave"
+    "french": "support",
+    "english": "support, stand",
+    "example_fr": "reste là. c'est un support moral",
+    "example_en": "stay there. it's a moral support"
   },
   {
     "rank": 3709,
-    "french": "relayer",
-    "english": "to relay, take turns, replace",
-    "example_fr": "nous allons relayer le bulletin de météo",
-    "example_en": "we're going to relay the weather forecast"
+    "french": "effondrement",
+    "english": "collapse, caving-in, falling-in, breaking-down",
+    "example_fr": "on va assister à l'effondrement de l'histoire de la finance",
+    "example_en": "we'll witness a collapse of financial history"
   },
   {
     "rank": 3710,
-    "french": "approuver",
-    "english": "to approve",
-    "example_fr": "je ne pouvais pas approuver une telle décision",
-    "example_en": "I couldn't approve of such a decision"
+    "french": "encaisser",
+    "english": "to receive, collect, cash",
+    "example_fr": "j'encaisserai son chèque dans la matinée",
+    "example_en": "I will cash her check in the morning"
   },
   {
     "rank": 3711,
-    "french": "disparu",
-    "english": "missing, disappeared, deceased",
-    "example_fr": "le chien a disparu! c'est un chien perdu",
-    "example_en": "the dog has disappeared! it's a lost dog"
+    "french": "déduire",
+    "english": "to deduct, deduce, infer, figure out",
+    "example_fr": "j'en ai déduit de façon certaine que je l'avais perdue",
+    "example_en": "I figured out for sure that I had lost it"
   },
   {
     "rank": 3712,
-    "french": "théologien",
-    "english": "theologian",
-    "example_fr": "j'ai rencontré un théologien",
-    "example_en": "I met a theologian"
+    "french": "baptiser",
+    "english": "to name, christen, baptize",
+    "example_fr": "j'ai baptisé presque tous les habitants de la ville",
+    "example_en": "I baptized almost everyone living in the city"
   },
   {
     "rank": 3713,
-    "french": "considérablement",
-    "english": "considerably, significantly, extensively",
-    "example_fr": "son revenu a augmenté considérablement",
-    "example_en": "his income increased considerably"
+    "french": "incompatible",
+    "english": "incompatible",
+    "example_fr": "les deux choses sont tout à fait incompatibles",
+    "example_en": "the two things are completely incompatible"
   },
   {
     "rank": 3714,
-    "french": "gouverner",
-    "english": "to govern, rule, steer, helm",
-    "example_fr": "ils ne sont pas les seuls à gouverner ce pays",
-    "example_en": "they aren't the only ones running this country"
+    "french": "bienvenu",
+    "english": "welcome",
+    "example_fr": "j'aimerais vous souhaiter à tous la bienvenue",
+    "example_en": "I would like to welcome you all"
   },
   {
     "rank": 3715,
-    "french": "complaisance",
-    "english": "complacency, obligingness",
-    "example_fr": "elle l'a écouté avec une grande complaisance",
-    "example_en": "she listened to him with great obligingness"
+    "french": "espérance",
+    "english": "hope",
+    "example_fr": "je pars donc dans l'espérance de vous revoir",
+    "example_en": "so I'm leaving in the hopes of seeing you again"
   },
   {
     "rank": 3716,
-    "french": "découpage",
-    "english": "cutting, carving",
-    "example_fr": "le découpage du poulet est une tâche pénible",
-    "example_en": "carving the chicken is a chore"
+    "french": "synthèse",
+    "english": "summary, synthesis",
+    "example_fr": "il s'agit d'une synthèse fondée sur les connaissances",
+    "example_en": "it's a synthesis based on knowledge"
   },
   {
     "rank": 3717,
-    "french": "méchant",
-    "english": "nasty, wicked, mean",
-    "example_fr": "pourquoi tu es si méchant?",
-    "example_en": "why are you so mean?"
+    "french": "conjoncture",
+    "english": "situation, climate",
+    "example_fr": "la conjoncture économique n'est plus la même",
+    "example_en": "the economic climate is not the same"
   },
   {
     "rank": 3718,
-    "french": "déplacer",
-    "english": "to move, displace",
-    "example_fr": "il faut déplacer les charges lourdes",
-    "example_en": "the heavy weights must be moved"
+    "french": "défier",
+    "english": "to challenge, defy, distrust",
+    "example_fr": "il aimait à défier le destin par fierté",
+    "example_en": "he liked to defy destiny with pride"
   },
   {
     "rank": 3719,
-    "french": "entier",
-    "english": "whole, full",
-    "example_fr": "la population entière a été déplacée",
-    "example_en": "the entire population was displaced"
+    "french": "baie",
+    "english": "bay; berry",
+    "example_fr": "la baie immense de Naples s'éployait sans fin",
+    "example_en": "the immense bay of Naples extended endlessly"
   },
   {
     "rank": 3720,
-    "french": "réduire",
-    "english": "to reduce, curb",
-    "example_fr": "nous voulons réduire les émissions de gaz à effet de serre",
-    "example_en": "we want to reduce greenhouse gas emissions"
+    "french": "récompense",
+    "english": "reward, award",
+    "example_fr": "ton courage mérite récompense",
+    "example_en": "your courage should be rewarded"
   },
   {
     "rank": 3721,
-    "french": "compenser",
-    "english": "to compensate for, make up for",
-    "example_fr": "la croissance des exportations ne peut compenser la faiblesse de la demande",
-    "example_en": "export growth can't compensate for weak demand"
+    "french": "étendue",
+    "english": "area, expanse, duration, extent, range",
+    "example_fr": "il fut surpris de l'étendue de son savoir",
+    "example_en": "he was surprised at the extent of her knowledge"
   },
   {
     "rank": 3722,
-    "french": "démocratie",
-    "english": "democracy",
-    "example_fr": "la démocratie ne doit pas être un vain mot",
-    "example_en": "democracy must not be an empty word"
+    "french": "tiens",
+    "english": "ah, well",
+    "example_fr": "tiens, je te rends tes 5 livres",
+    "example_en": "here, I'm returning your 5 books"
   },
   {
     "rank": 3723,
-    "french": "allouer",
-    "english": "to allocate",
-    "example_fr": "nous allons allouer les fonds",
-    "example_en": "we will allocate the funds"
+    "french": "carnet",
+    "english": "notebook, notepad",
+    "example_fr": "j'inscrivais les rendez-vous sur mon carnet",
+    "example_en": "I wrote the meetings in my notebook"
   },
   {
     "rank": 3724,
-    "french": "parrain",
-    "english": "godfather",
-    "example_fr": "mon parrain et ma marraine étaient de bons amis",
-    "example_en": "my godfather and godmother were good friends"
+    "french": "banc",
+    "english": "bench, workbench, pew",
+    "example_fr": "il alla s'asseoir sur le banc",
+    "example_en": "he went to sit on the bench"
   },
   {
     "rank": 3725,
-    "french": "régional",
-    "english": "regional",
-    "example_fr": "les problèmes régionaux ne sont pas résolus",
-    "example_en": "regional problems are not resolved"
+    "french": "réformer",
+    "english": "to re-form, reform, discharge",
+    "example_fr": "il était nécessaire de réformer l'ancien système d'assurance-chômage",
+    "example_en": "it was necessary to reform the old unemployment insurance system"
   },
   {
     "rank": 3726,
-    "french": "allouer",
-    "english": "to allocate",
-    "example_fr": "nous devons allouer un budget pour cela",
-    "example_en": "we must allocate a budget for that"
+    "french": "assise",
+    "english": "basis, foundation",
+    "example_fr": "l'équité est l'une des assises fondamentales",
+    "example_en": "equity is one of the fundamental bases"
   },
   {
     "rank": 3727,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "il y a un mécontentement parmi la population",
-    "example_en": "there's dissatisfaction among the population"
+    "french": "énergétique",
+    "english": "energetic, vigorous",
+    "example_fr": "c'est l'industrie des services énergétiques",
+    "example_en": "it's the energy services industry"
   },
   {
     "rank": 3728,
-    "french": "couper",
-    "english": "to cut, sever",
-    "example_fr": "je me suis coupé en découpant le poulet",
-    "example_en": "I cut myself carving the chicken"
+    "french": "reléguer",
+    "english": "to relegate",
+    "example_fr": "ils sont relégués aux banquettes arrières",
+    "example_en": "they have been relegated to the back bench"
   },
   {
     "rank": 3729,
-    "french": "démarrer",
-    "english": "to start up",
-    "example_fr": "la machine va démarrer automatiquement",
-    "example_en": "the machine will start automatically"
+    "french": "architecte",
+    "english": "architect",
+    "example_fr": "c'est un architecte merveilleux",
+    "example_en": "he's a marvelous architect"
   },
   {
     "rank": 3730,
-    "french": "affecter",
-    "english": "to affect",
-    "example_fr": "cela pourrait affecter ses chances de succès",
-    "example_en": "this could affect his chances of success"
+    "french": "deuxièmement",
+    "english": "secondly",
+    "example_fr": "deuxièmement, ce n'est pas ma faute",
+    "example_en": "second, it's not my fault"
   },
   {
     "rank": 3731,
-    "french": "crainte",
-    "english": "fear",
-    "example_fr": "la crainte du chômage est très forte",
-    "example_en": "the fear of unemployment is very strong"
+    "french": "vedette",
+    "english": "star, patrol boat",
+    "example_fr": "des tas de vedettes viennent ici, vous savez",
+    "example_en": "lots of movie stars come here, you know"
   },
   {
     "rank": 3732,
-    "french": "complaire",
-    "english": "to please, conform",
-    "example_fr": "j'ai été obligé de lui complaire",
-    "example_en": "I was forced to please her"
+    "french": "intervenant",
+    "english": "contributor, intervener",
+    "example_fr": "j'ai été un intervenant de notre système de justice",
+    "example_en": "I was an intervener in our justice system"
   },
   {
     "rank": 3733,
-    "french": "interrompre",
-    "english": "to interrupt",
-    "example_fr": "le match a été interrompu par la pluie",
-    "example_en": "the game was interrupted by the rain"
+    "french": "séminaire",
+    "english": "seminar, seminary",
+    "example_fr": "je vais vous dire. ces séminaires m'excitent à mort",
+    "example_en": "I'll tell you. these seminars bore me to death"
   },
   {
     "rank": 3734,
-    "french": "séparer",
-    "english": "to separate",
-    "example_fr": "il sépare l'eau de l'huile",
-    "example_en": "he separates the water from the oil"
+    "french": "contrer",
+    "english": "to counter",
+    "example_fr": "heureusement, je sais comment contrer ça",
+    "example_en": "happily, I know how to counter this"
   },
   {
     "rank": 3735,
-    "french": "réparer",
-    "english": "to repair, fix, correct, make up",
-    "example_fr": "je ne crois pas pouvoir réparer cette erreur",
-    "example_en": "I don't think I can make up for this mistake"
+    "french": "nerveux",
+    "english": "nervous, irritable",
+    "example_fr": "les tests me rendent nerveux",
+    "example_en": "tests make me nervous"
   },
   {
     "rank": 3736,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "les enfants jouent dans la rue",
-    "example_en": "the children are playing in the street"
+    "french": "assaut",
+    "english": "assault, attack, bout",
+    "example_fr": "vous mènerez la 1ère vague d'assaut",
+    "example_en": "you will lead the first wave of attack"
   },
   {
     "rank": 3737,
-    "french": "théâtre",
-    "english": "theater",
-    "example_fr": "il a écrit pour le théâtre et le cinéma",
-    "example_en": "he wrote for the theater and the movies"
+    "french": "couteau",
+    "english": "knife",
+    "example_fr": "pourquoi t'achètes des couteaux?",
+    "example_en": "why are you buying knives?"
   },
   {
     "rank": 3738,
-    "french": "concession",
-    "english": "concession",
-    "example_fr": "j'ai fait de graves concessions",
-    "example_en": "I made serious concessions"
+    "french": "arbitraire",
+    "english": "arbitrary",
+    "example_fr": "la police se livre à des activités arbitraires",
+    "example_en": "the police are prone to arbitrary activities"
   },
   {
     "rank": 3739,
-    "french": "couloir",
-    "english": "corridor, aisle",
-    "example_fr": "il y a du sang dans le couloir",
-    "example_en": "there's blood in the hallway"
+    "french": "vraisemblablement",
+    "english": "most probably",
+    "example_fr": "les prix resteront vraisemblablement stables",
+    "example_en": "the prices will likely remain stable"
   },
   {
     "rank": 3740,
-    "french": "considérable",
-    "english": "considerable, significant",
-    "example_fr": "la chaleur est considérable",
-    "example_en": "the heat is considerable"
+    "french": "propagation",
+    "english": "propagation, spreading",
+    "example_fr": "vous vous acheminez vers une propagation de votre théorie?",
+    "example_en": "you're making progress towards spreading your theory?"
   },
   {
     "rank": 3741,
-    "french": "saison",
-    "english": "season",
-    "example_fr": "la saison de la pêche est fermée",
-    "example_en": "fishing season is closed"
+    "french": "masculin",
+    "english": "male, masculine",
+    "example_fr": "je n'entendis que des voix masculines",
+    "example_en": "all I heard was masculine voices"
   },
   {
     "rank": 3742,
-    "french": "ferme",
-    "english": "firm, farm",
-    "example_fr": "mon mari achète sa viande directement à la ferme",
-    "example_en": "my husband buys his meat directly from the farm"
+    "french": "imiter",
+    "english": "to imitate",
+    "example_fr": "j'imitais les gestes de mes voisins",
+    "example_en": "I imitated the gestures of my neghbors"
   },
   {
     "rank": 3743,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "vous êtes des touristes, non?",
-    "example_en": "you're tourists, aren't you?"
+    "french": "embaucher",
+    "english": "to hire",
+    "example_fr": "en onze mois, il a embauché sept personnes",
+    "example_en": "in eleven months he hired seven people"
   },
   {
     "rank": 3744,
-    "french": "plaine",
-    "english": "plain, flat, simple",
-    "example_fr": "la guerre se déroule dans la plaine",
-    "example_en": "the war is taking place on the plain"
+    "french": "primordial",
+    "english": "primordial, basic, vital, primary",
+    "example_fr": "la citoyenneté revêt une importance primordiale",
+    "example_en": "citizenship assumes primary importance"
   },
   {
     "rank": 3745,
-    "french": "flèche",
-    "english": "arrow",
-    "example_fr": "la flèche a été tirée vers l'horizon",
-    "example_en": "the arrow was shot toward the horizon"
+    "french": "arbitre",
+    "english": "referee, arbitrer, arbitrator",
+    "example_fr": "c'est un bon arbitre. il arbitre bien",
+    "example_en": "he's a good arbitrator. he judges well"
   },
   {
     "rank": 3746,
-    "french": "seizième",
-    "english": "sixteenth",
-    "example_fr": "le seizième est un grand siècle",
-    "example_en": "the sixteenth century is a great century"
+    "french": "manteau",
+    "english": "coat, overcoat",
+    "example_fr": "j'aurais dû enlever mon manteau et le jeter par la fenêtre",
+    "example_en": "I should have removed my coat and thrown it out the window"
   },
   {
     "rank": 3747,
-    "french": "parvenir",
-    "english": "to reach, achieve",
-    "example_fr": "je suis sûr que vous parviendrez à un accord",
-    "example_en": "I'm sure you will reach an agreement"
+    "french": "implication",
+    "english": "implication",
+    "example_fr": "ceci peut avoir d'énormes implications",
+    "example_en": "this could have enormous implications"
   },
   {
     "rank": 3748,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "il faut un désarmement nucléaire et conventionnel",
-    "example_en": "nuclear and conventional disarmament is needed"
+    "french": "grand-père",
+    "english": "grandfather",
+    "example_fr": "c'est grand-père qui me l'a fait comprendre",
+    "example_en": "Grandfather's the one who helped me understand that"
   },
   {
     "rank": 3749,
-    "french": "mécontent",
-    "english": "discontented, unhappy",
-    "example_fr": "les gens sont mécontents. ils ont raison",
-    "example_en": "people are unhappy. they are right"
+    "french": "reflet",
+    "english": "reflection, glint, highlight",
+    "example_fr": "mes livres sont le reflet de mes propres expériences",
+    "example_en": "my books reflect my own experiences"
   },
   {
     "rank": 3750,
-    "french": "révéler",
-    "english": "to reveal",
-    "example_fr": "il ne faut pas révéler les secrets de cette guerre",
-    "example_en": "the secrets of this war must not be revealed"
+    "french": "requête",
+    "english": "request, petition",
+    "example_fr": "la requête iranienne bloque les négociations",
+    "example_en": "the Iranian request has stalled negotiations"
   },
   {
     "rank": 3751,
-    "french": "particulier",
-    "english": "individual, private person",
-    "example_fr": "elle est un des rares particuliers qui possède un avion",
-    "example_en": "she is one of the few individuals who owns an airplane"
+    "french": "décliner",
+    "english": "to decline, refuse, turn down",
+    "example_fr": "vous avez décliné notre offre",
+    "example_en": "you have declined our offer"
   },
   {
     "rank": 3752,
-    "french": "conclure",
-    "english": "to conclude",
-    "example_fr": "je conclus mon propos par une citation",
-    "example_en": "I conclude my speech with a quote"
+    "french": "rideau",
+    "english": "curtain",
+    "example_fr": "«ferme les rideaux», dis-je",
+    "example_en": "\"close the curtains\", I said"
   },
   {
     "rank": 3753,
-    "french": "attraper",
-    "english": "to catch",
-    "example_fr": "tu as attrapé mon chien?",
-    "example_en": "did you catch my dog?"
+    "french": "fermé",
+    "english": "shut, closed, locked",
+    "example_fr": "je pourrais dessiner les yeux fermés",
+    "example_en": "I could draw with my eyes closed"
   },
   {
     "rank": 3754,
-    "french": "prédire",
-    "english": "to predict",
-    "example_fr": "je ne sais pas prédire l'avenir, mais j'essaie",
-    "example_en": "I can't predict the future, but I try to"
+    "french": "manipulation",
+    "english": "handling, manipulation",
+    "example_fr": "la manipulation génétique n'est pas une bonne chose",
+    "example_en": "genetic manipulation isn't a good thing"
   },
   {
     "rank": 3755,
-    "french": "allier",
-    "english": "to ally, match, unite",
-    "example_fr": "il a su allier rigueur et souplesse",
-    "example_en": "he was able to combine rigor and flexibility"
+    "french": "piquer",
+    "english": "to sting, bite, prick, be hot; to steal",
+    "example_fr": "ne me piquez pas mon taxi ... passez votre chemin",
+    "example_en": "don't you take my taxi ... scram"
   },
   {
     "rank": 3756,
-    "french": "considérer",
-    "english": "to consider",
-    "example_fr": "je peux considérer votre candidature",
-    "example_en": "I can consider your application"
+    "french": "assiette",
+    "english": "plate, dish, bowl",
+    "example_fr": "je prendrai l'assiette de crudités",
+    "example_en": "I will take the veggie plate"
   },
   {
     "rank": 3757,
-    "french": "éloge",
-    "english": "praise",
-    "example_fr": "son ouvrage a reçu un éloge unanime",
-    "example_en": "his work received unanimous praise"
+    "french": "gigantesque",
+    "english": "gigantic, immense",
+    "example_fr": "il s'agit là d'un problème gigantesque",
+    "example_en": "that's a huge problem"
   },
   {
     "rank": 3758,
-    "french": "flotter",
-    "english": "to float",
-    "example_fr": "l'avion a flotté une heure après l'impact",
-    "example_en": "the plane floated for an hour after impact"
+    "french": "rival",
+    "english": "rival",
+    "example_fr": "ils ne peuvent pas tuer leur rival",
+    "example_en": "they can't kill their rival"
   },
   {
     "rank": 3759,
-    "french": "tournoi",
-    "english": "tournament",
-    "example_fr": "je suis le champion du tournoi",
-    "example_en": "I'm the tournament champion"
+    "french": "refermer",
+    "english": "to close again, shut again, close up",
+    "example_fr": "j'entends la porte se refermer derrière moi",
+    "example_en": "I hear the door close behind me"
   },
   {
     "rank": 3760,
-    "french": "tenter",
-    "english": "to tempt, try",
-    "example_fr": "il n'a pas osé tenter le diable",
-    "example_en": "he didn't dare tempt the devil"
+    "french": "écu",
+    "english": "ecu",
+    "example_fr": "plus de 100 millions d'écus seront gaspillés",
+    "example_en": "over 100 million ecus will be wasted"
   },
   {
     "rank": 3761,
-    "french": "légitime",
-    "english": "legitimate, valid",
-    "example_fr": "c'est une crainte tout à fait légitime",
-    "example_en": "it's a completely legitimate fear"
+    "french": "confus",
+    "english": "confused, embarrassed",
+    "example_fr": "je suis très confus, je ne sais pas pourquoi",
+    "example_en": "I'm very confused -- I don't know why"
   },
   {
     "rank": 3762,
-    "french": "bénéficiaire",
-    "english": "beneficiary",
-    "example_fr": "l'enfant est le bénéficiaire de cette assurance-vie",
-    "example_en": "the child is the beneficiary of this life insurance policy"
+    "french": "expédition",
+    "english": "dispatch, shipping, shipment, expedition",
+    "example_fr": "je n'ai jamais regretté une seule expédition",
+    "example_en": "I never regretted a single expedition"
   },
   {
     "rank": 3763,
-    "french": "allumer",
-    "english": "to switch on, light up, turn on",
-    "example_fr": "il alluma une cigarette",
-    "example_en": "he lit a cigarette"
+    "french": "reconstituer",
+    "english": "to reconstitute, restore, reconstruct",
+    "example_fr": "je dois donc reconstituer des réserves",
+    "example_en": "I therefore have to rebuild some reserves"
   },
   {
     "rank": 3764,
-    "french": "détendu",
-    "english": "relaxed",
-    "example_fr": "vous êtes plus détendu, je vois",
-    "example_en": "you're more relaxed, I see"
+    "french": "protégé",
+    "english": "protected, protégé",
+    "example_fr": "elle était sa protégée et devait normalement lui succéder",
+    "example_en": "she was his protégée and should normally have replaced him"
   },
   {
     "rank": 3765,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "son attitude est un signe de mépris",
-    "example_en": "his attitude is a sign of contempt"
+    "french": "chant",
+    "english": "song",
+    "example_fr": "nous allons prendre des cours de chant à domicile",
+    "example_en": "we're going to take singing lessons at home"
   },
   {
     "rank": 3766,
-    "french": "attraper",
-    "english": "to catch",
-    "example_fr": "ils courent pour attraper leur bus",
-    "example_en": "they are running to catch their bus"
+    "french": "diplomatie",
+    "english": "diplomacy",
+    "example_fr": "il y faut toute une diplomatie et une patience infinie",
+    "example_en": "there we need true diplomacy and infinite patience"
   },
   {
     "rank": 3767,
-    "french": "démentir",
-    "english": "to deny, belie",
-    "example_fr": "le président a dû démentir la rumeur",
-    "example_en": "the president had to deny the rumor"
+    "french": "lieutenant",
+    "english": "lieutenant",
+    "example_fr": "la guerre est finie, mon lieutenant",
+    "example_en": "the war is over, Lieutenant"
   },
   {
     "rank": 3768,
-    "french": "découvrir",
-    "english": "to discover",
-    "example_fr": "il est difficile de découvrir la vérité",
-    "example_en": "it's difficult to discover the truth"
+    "french": "réputé",
+    "english": "famous, renowned",
+    "example_fr": "son personnel est réputé pour son service hors pair",
+    "example_en": "its staff has a reputation for unequalled service"
   },
   {
     "rank": 3769,
-    "french": "méthode",
-    "english": "method, procedure",
-    "example_fr": "la méthode de calcul est cohérente",
-    "example_en": "the calculation method is coherent"
+    "french": "indirect",
+    "english": "indirect",
+    "example_fr": "est-ce une référence indirecte à la religion?",
+    "example_en": "is that an indirect reference to religion?"
   },
   {
     "rank": 3770,
-    "french": "déménager",
-    "english": "to move house, move out",
-    "example_fr": "j'ai aidé ma cousine à déménager",
-    "example_en": "I helped my cousin move out"
+    "french": "apte",
+    "english": "capable",
+    "example_fr": "la France est parfaitement apte à s'adapter",
+    "example_en": "France is perfectly able to adapt"
   },
   {
     "rank": 3771,
-    "french": "parrain",
-    "english": "godfather",
-    "example_fr": "mon père est le parrain de mon cousin",
-    "example_en": "my father is my cousin's godfather"
+    "french": "dépêcher",
+    "english": "to dispatch, send, hurry",
+    "example_fr": "j'ai bloqué l'ascenseur, dépêchez vous, vite",
+    "example_en": "I'm holding the elevator--hurry up, quick"
   },
   {
     "rank": 3772,
-    "french": "pousser",
-    "english": "to push, grow, shove, urge",
-    "example_fr": "il a fallu le pousser à démissionner",
-    "example_en": "he had to be urged to resign"
+    "french": "démentir",
+    "english": "to deny, refute, contradict",
+    "example_fr": "la Maison Blanche a démenti cette nouvelle version",
+    "example_en": "the White House contradicted this new version"
   },
   {
     "rank": 3773,
-    "french": "communiquer",
-    "english": "to communicate",
-    "example_fr": "je peux vous communiquer mes observations",
-    "example_en": "I can communicate my observations to you"
+    "french": "sud-ouest",
+    "english": "south-west",
+    "example_fr": "quelque chose approche en provenance du sud-ouest",
+    "example_en": "something is coming from the south-west"
   },
   {
     "rank": 3774,
-    "french": "découpage",
-    "english": "cutting, carving",
-    "example_fr": "le découpage des zones a été contesté",
-    "example_en": "the zoning was disputed"
+    "french": "envergure",
+    "english": "wingspan, breadth, scope",
+    "example_fr": "quel projet d'envergure se fait instantanément?",
+    "example_en": "what large-scale project happens in an instant?"
   },
   {
     "rank": 3775,
-    "french": "flamboyant",
-    "english": "flamboyant, flame-coloured",
-    "example_fr": "ce genre de voiture est trop flamboyant",
-    "example_en": "that kind of car is too flamboyant"
+    "french": "touche",
+    "english": "button, key, touch, touchline",
+    "example_fr": "elle appuie sur une touche. allo?",
+    "example_en": "she pushes a button. hello?"
   },
   {
     "rank": 3776,
-    "french": "attraper",
-    "english": "to catch",
-    "example_fr": "il a attrapé un méchant virus",
-    "example_en": "he caught a nasty virus"
+    "french": "déterminant",
+    "english": "determining, deciding, crucial",
+    "example_fr": "il a joué un rôle déterminant lors du coup d'Etat",
+    "example_en": "he played a crucial role during the insurrection"
   },
   {
     "rank": 3777,
-    "french": "délivrance",
-    "english": "delivery, release, delivery from, riddance",
-    "example_fr": "la délivrance fut progressive",
-    "example_en": "the release was gradual"
+    "french": "sous-marin",
+    "english": "submarine, underwater",
+    "example_fr": "la marine chinoise dispose de 69 sous-marins",
+    "example_en": "the Chinese navy has 69 submarines"
   },
   {
     "rank": 3778,
-    "french": "réduction",
-    "english": "reduction",
-    "example_fr": "il y a une réduction des taux de croissance",
-    "example_en": "there's a reduction in the growth rates"
+    "french": "acheminement",
+    "english": "routing, shipment",
+    "example_fr": "il aurait organisé l'acheminement des explosifs",
+    "example_en": "he allegedly organized the shipment of explosives"
   },
   {
     "rank": 3779,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "il est un grand joueur de foot",
-    "example_en": "he's a great soccer player"
+    "french": "externe",
+    "english": "external, outer",
+    "example_fr": "les problèmes externes se révèlent aussi importants",
+    "example_en": "the external problems prove as important"
   },
   {
     "rank": 3780,
-    "french": "communément",
-    "english": "commonly",
-    "example_fr": "on appelle communément cette maladie la grippe espagnole",
-    "example_en": "this disease is commonly called the Spanish flu"
+    "french": "hôte",
+    "english": "host, guest",
+    "example_fr": "je sais accueillir mes hôtes",
+    "example_en": "I know how to welcome my guests"
   },
   {
     "rank": 3781,
-    "french": "mêler",
-    "english": "to mingle, mix",
-    "example_fr": "je ne voulais pas me mêler de ses affaires",
-    "example_en": "I didn't want to get involved in his business"
+    "french": "assassin",
+    "english": "murderer, assassin",
+    "example_fr": "l'assassin cache peut-être ses victimes",
+    "example_en": "the assassin might be hiding his victims"
   },
   {
     "rank": 3782,
-    "french": "détérioration",
-    "english": "deterioration",
-    "example_fr": "la détérioration des infrastructures était inéluctable",
-    "example_en": "infrastructure deterioration was unavoidable"
+    "french": "confirmation",
+    "english": "confirmation",
+    "example_fr": "les syndicats veulent une confirmation écrite",
+    "example_en": "the unions want written confirmation"
   },
   {
     "rank": 3783,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "on ne peut rattraper ce retard",
-    "example_en": "we can't make up for this delay"
+    "french": "tapis",
+    "english": "carpet, mat, covering",
+    "example_fr": "il faut les accueillir avec le tapis rouge",
+    "example_en": "they should be given a red-carpet welcome"
   },
   {
     "rank": 3784,
-    "french": "sûr",
-    "english": "sure, certain",
-    "example_fr": "je suis sûr qu'elle a raison",
-    "example_en": "I'm sure she's right"
+    "french": "corde",
+    "english": "rope, chord, string",
+    "example_fr": "je l'ai étranglé. avec une corde",
+    "example_en": "I strangled him. with a rope"
   },
   {
     "rank": 3785,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement des électeurs est réel",
-    "example_en": "the voters' dissatisfaction is real"
+    "french": "notable",
+    "english": "notable, noteworthy",
+    "example_fr": "il y a des disparités notables entre pays",
+    "example_en": "there are noteworthy disparities among countries"
   },
   {
     "rank": 3786,
-    "french": "débarquer",
-    "english": "to unload, land, disembark",
-    "example_fr": "les militaires ont débarqué sur la rive",
-    "example_en": "the military landed on the shore"
+    "french": "rationnel",
+    "english": "rational",
+    "example_fr": "il y a une explication rationnelle à tout cela",
+    "example_en": "there's a rational explanation for all that"
   },
   {
     "rank": 3787,
-    "french": "chute",
-    "english": "fall",
-    "example_fr": "il y a eu une chute spectaculaire des prix",
-    "example_en": "there was a spectacular drop in prices"
+    "french": "divin",
+    "english": "divine, heavenly",
+    "example_fr": "vous êtes divine, adorable",
+    "example_en": "you're divine, adorable"
   },
   {
     "rank": 3788,
-    "french": "convenir",
-    "english": "to suit, be suitable",
-    "example_fr": "cela ne me convient pas du tout",
-    "example_en": "that doesn't suit me at all"
+    "french": "endormir",
+    "english": "to put to sleep, fall asleep",
+    "example_fr": "je ne voulais surtout pas m'endormir au volant",
+    "example_en": "I certainly didn't want to fall asleep at the wheel"
   },
   {
     "rank": 3789,
-    "french": "contestation",
-    "english": "questioning, protest",
-    "example_fr": "c'est une longue et inutile contestation",
-    "example_en": "it's a long and useless dispute"
+    "french": "épais",
+    "english": "thick, pitch dark, thickly",
+    "example_fr": "c'était des lunettes très épaisses",
+    "example_en": "they were very thick eyeglasses"
   },
   {
     "rank": 3790,
-    "french": "interrogation",
-    "english": "question, interviewing, interrogation, questioning, test",
-    "example_fr": "je n'ai pas pu répondre à toutes les interrogations",
-    "example_en": "I wasn't able to answer all the questions"
+    "french": "exposé",
+    "english": "account, statement, talk",
+    "example_fr": "j'en ai parlé dans mon exposé",
+    "example_en": "I spoke of it in my statement"
   },
   {
     "rank": 3791,
-    "french": "façonner",
-    "english": "to fashion, shape, form",
-    "example_fr": "je peux façonner mon destin",
-    "example_en": "I can shape my destiny"
+    "french": "boutique",
+    "english": "shop",
+    "example_fr": "les émeutiers pillèrent les boutiques, les maisons, les ateliers",
+    "example_en": "the rioters looted shops, houses, workshops"
   },
   {
     "rank": 3792,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "elle portait un chapeau de feutre jaune",
-    "example_en": "she was wearing a yellow felt hat"
+    "french": "récolter",
+    "english": "to harvest, gather",
+    "example_fr": "je récolte en permanence les histoires des gens",
+    "example_en": "I gather for posterity people's stories"
   },
   {
     "rank": 3793,
-    "french": "souplesse",
-    "english": "flexibility, suppleness",
-    "example_fr": "le gouvernement a fait preuve de souplesse",
-    "example_en": "the government showed flexibility"
+    "french": "tchèque",
+    "english": "Czech",
+    "example_fr": "la République tchèque est l'une des grandes démocraties",
+    "example_en": "the Czech Republic is one of the great democracies"
   },
   {
     "rank": 3794,
-    "french": "mémoire",
-    "english": "dissertation, memoir, memorandum",
-    "example_fr": "j'ai relu le mémoire de mon ancien professeur",
-    "example_en": "I reread my former professor's dissertation"
+    "french": "autoroute",
+    "english": "motorway, highway, freeway",
+    "example_fr": "de nombreuses autoroutes ont dû être fermées",
+    "example_en": "many highways had to be closed"
   },
   {
     "rank": 3795,
-    "french": "communauté",
-    "english": "community, fellowship",
-    "example_fr": "il faut consulter la communauté internationale",
-    "example_en": "the international community must be consulted"
+    "french": "maternité",
+    "english": "maternity, motherhood",
+    "example_fr": "j'ai pris un congé maternité",
+    "example_en": "I took maternity leave"
   },
   {
     "rank": 3796,
-    "french": "gouverner",
-    "english": "to govern, rule, steer, helm",
-    "example_fr": "le gouvernement a été élu pour gouverner",
-    "example_en": "the government was elected to govern"
+    "french": "là-dedans",
+    "english": "inside, in it",
+    "example_fr": "maintenant rentre là-dedans et fais-moi du thé",
+    "example_en": "now go back inside and make me some tea"
   },
   {
     "rank": 3797,
-    "french": "considérer",
-    "english": "to consider",
-    "example_fr": "je considère cette offre sérieusement",
-    "example_en": "I am seriously considering this offer"
+    "french": "différend",
+    "english": "disagreement, controversy",
+    "example_fr": "nous venons de régler le différend qui nous opposait",
+    "example_en": "we have just resolved the disagreement that separated us"
   },
   {
     "rank": 3798,
-    "french": "seizième",
-    "english": "sixteenth",
-    "example_fr": "c'est mon seizième jour dans ce fauteuil",
-    "example_en": "it's my sixteenth day in this armchair"
+    "french": "explicite",
+    "english": "explicitly",
+    "example_fr": "c'étaient des impératifs assez explicites",
+    "example_en": "they were rather explicit requirements"
   },
   {
     "rank": 3799,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "le vent frappait violemment la maison",
-    "example_en": "the wind violently struck the house"
+    "french": "comté",
+    "english": "county, earldom",
+    "example_fr": "c'est un des plus beaux comtés au Canada",
+    "example_en": "it's one of the most beautiful counties in Canada"
   },
   {
     "rank": 3800,
-    "french": "récompense",
-    "english": "reward",
-    "example_fr": "je n'ai pas de récompense à vous offrir",
-    "example_en": "I have no reward to offer you"
+    "french": "par-dessus",
+    "english": "over",
+    "example_fr": "elle voulait un enfant par-dessus tout",
+    "example_en": "she wanted a child more than anything"
   },
   {
     "rank": 3801,
-    "french": "entourer",
-    "english": "to surround",
-    "example_fr": "la maison était entourée d'arbres",
-    "example_en": "the house was surrounded by trees"
+    "french": "quota",
+    "english": "quota",
+    "example_fr": "il ne peut justifier une hausse des quotas de phoques",
+    "example_en": "he can't justify raising the seal quota"
   },
   {
     "rank": 3802,
-    "french": "débordé",
-    "english": "overwhelmed, swamped",
-    "example_fr": "je suis complètement débordé de travail",
-    "example_en": "I'm completely swamped with work"
+    "french": "tailler",
+    "english": "to cut, carve, engrave, sharpen, trim",
+    "example_fr": "le résultat fut une cote mal taillée",
+    "example_en": "the result was a badly tailored quote"
   },
   {
     "rank": 3803,
-    "french": "musulman",
-    "english": "Muslim, Moslem",
-    "example_fr": "il est de religion musulmane",
-    "example_en": "he is of the Muslim faith"
+    "french": "apparent",
+    "english": "apparent, obvious",
+    "example_fr": "je me surprenais à pleurer sans cause apparente",
+    "example_en": "I surprised myself by weeping without any apparent cause"
   },
   {
     "rank": 3804,
-    "french": "souhait",
-    "english": "wish",
-    "example_fr": "mon souhait est que vous soyez heureux",
-    "example_en": "my wish is for you to be happy"
+    "french": "enfuir",
+    "english": "to run away, flee",
+    "example_fr": "je voudrais m'enfuir, mais je suis comme paralysée",
+    "example_en": "I wanted to escape but it's like I'm paralyzed"
   },
   {
     "rank": 3805,
-    "french": "laitier",
-    "english": "dairy, milk",
-    "example_fr": "nous n'avons pas d'industrie laitière",
-    "example_en": "we don't have a dairy industry"
+    "french": "assistant",
+    "english": "assistant",
+    "example_fr": "j'ai demandé à être assistant stagiaire",
+    "example_en": "I asked to be an intern"
   },
   {
     "rank": 3806,
-    "french": "chasseur",
-    "english": "hunter, fighter, page, messenger",
-    "example_fr": "il est un chasseur professionnel",
-    "example_en": "he is a professional hunter"
+    "french": "portion",
+    "english": "portion, share",
+    "example_fr": "les pannes ont frappé de larges portions du sud de Moscou",
+    "example_en": "blackouts hit large portions of southern Moscow"
   },
   {
     "rank": 3807,
-    "french": "attache",
-    "english": "tie, attachment, binder, link, allegiance",
-    "example_fr": "elle n'a pas d'attaches ici",
-    "example_en": "she has no ties here"
+    "french": "allocation",
+    "english": "allocation, granting, allotment, allowance",
+    "example_fr": "il dirigeait l'allocation des ressources",
+    "example_en": "he directed the allocation of resources"
   },
   {
     "rank": 3808,
-    "french": "soudainement",
-    "english": "suddenly",
-    "example_fr": "la musique s'est arrêtée soudainement",
-    "example_en": "the music stopped suddenly"
+    "french": "spéculation",
+    "english": "speculation",
+    "example_fr": "la fièvre de la spéculation a produit les mariages d'argent",
+    "example_en": "speculation madness led to money marriages"
   },
   {
     "rank": 3809,
-    "french": "attacher",
-    "english": "to attach, tie, fasten",
-    "example_fr": "il faut attacher le chien",
-    "example_en": "the dog must be tied up"
+    "french": "décéder",
+    "english": "to die, pass away, pass on",
+    "example_fr": "une vieille dame est décédée pendant qu'elle dormait",
+    "example_en": "an elderly woman died in her sleep"
   },
   {
     "rank": 3810,
-    "french": "musée",
-    "english": "museum",
-    "example_fr": "ils iront au musée demain matin",
-    "example_en": "they will go to the museum tomorrow morning"
+    "french": "serré",
+    "english": "tight, packed, crowded",
+    "example_fr": "le budget est serré cette année",
+    "example_en": "the budget is tight this year"
   },
   {
     "rank": 3811,
-    "french": "administrateur",
-    "english": "administrator",
-    "example_fr": "je suis un administrateur provisoire",
-    "example_en": "I am a temporary administrator"
+    "french": "enquêter",
+    "english": "to investigate, hold inquiry, conduct a survey",
+    "example_fr": "tu veux vraiment enquêter sur lui?",
+    "example_en": "you really want to investigate him?"
   },
   {
     "rank": 3812,
-    "french": "séjour",
-    "english": "stay",
-    "example_fr": "ce fut un agréable séjour",
-    "example_en": "it was a pleasant stay"
+    "french": "dix-sept",
+    "english": "seventeen",
+    "example_fr": "la ville brûla pendant dix-sept jours",
+    "example_en": "the city burned for seventeen days"
   },
   {
     "rank": 3813,
-    "french": "plombier",
-    "english": "plumber",
-    "example_fr": "il faut appeler un plombier",
-    "example_en": "we need to call a plumber"
+    "french": "allonger",
+    "english": "to lengthen, extend, stretch out",
+    "example_fr": "je m'allongeai sur mon lit",
+    "example_en": "I stretched out on my bed"
   },
   {
     "rank": 3814,
-    "french": "remède",
-    "english": "remedy, cure",
-    "example_fr": "il n'y a pas de remède à la mort",
-    "example_en": "there's no cure for death"
+    "french": "chauffeur",
+    "english": "driver, chauffeur",
+    "example_fr": "le chauffeur du véhicule n'a pas été identifié",
+    "example_en": "the driver of the vehicle has not been identified"
   },
   {
     "rank": 3815,
-    "french": "sillon",
-    "english": "furrow, groove, track, trail",
-    "example_fr": "la charrue traça un sillon droit",
-    "example_en": "the plough traced a straight furrow"
+    "french": "prospérité",
+    "english": "prosperity",
+    "example_fr": "la société japonaise a connu une grande prospérité",
+    "example_en": "Japanese society enjoyed great prosperity"
   },
   {
     "rank": 3816,
-    "french": "absorber",
-    "english": "to absorb, remove, take up, take over",
-    "example_fr": "ces idées ont été absorbées par le groupe",
-    "example_en": "these ideas were absorbed by the group"
+    "french": "ambiguïté",
+    "english": "ambiguity",
+    "example_fr": "cette affirmation cache encore bien des ambiguïtés",
+    "example_en": "this assertion still hides several ambiguities"
   },
   {
     "rank": 3817,
-    "french": "administrer",
-    "english": "to manage, run, administer; to give",
-    "example_fr": "il administre ses biens et sa fortune",
-    "example_en": "he manages his assets and fortune"
+    "french": "bourgeois",
+    "english": "middle class",
+    "example_fr": "ses parents vivaient comme des bourgeois",
+    "example_en": "her parents lived like middle-class people"
   },
   {
     "rank": 3818,
-    "french": "agiter",
-    "english": "to shake, disturb",
-    "example_fr": "la foule s'agite devant les caméras",
-    "example_en": "the crowd stirs before the cameras"
+    "french": "touristique",
+    "english": "holiday, tourist",
+    "example_fr": "elle évite les lieux touristiques",
+    "example_en": "she avoids tourist traps"
   },
   {
     "rank": 3819,
-    "french": "racheter",
-    "english": "to repurchase, buy back, redeem",
-    "example_fr": "je veux racheter ma faute",
-    "example_en": "I want to atone for my mistake"
+    "french": "obscur",
+    "english": "dark, vague, obscure",
+    "example_fr": "c'est le combat entre les forces obscures et les forces de la lumière",
+    "example_en": "it's the struggle between the dark forces and the forces of light"
   },
   {
     "rank": 3820,
-    "french": "départemental",
-    "english": "departmental",
-    "example_fr": "l'assemblée départementale a voté la motion",
-    "example_en": "the departmental assembly voted for the motion"
+    "french": "cou",
+    "english": "neck",
+    "example_fr": "elle nouait ses bras à mon cou",
+    "example_en": "she wrapped her arms around my neck"
   },
   {
     "rank": 3821,
-    "french": "délivrer",
-    "english": "to set free, rid, relieve",
-    "example_fr": "nous devons délivrer les otages",
-    "example_en": "we must free the hostages"
+    "french": "invention",
+    "english": "invention",
+    "example_fr": "le calendrier est une invention humaine",
+    "example_en": "the calendar is a human invention"
   },
   {
     "rank": 3822,
-    "french": "compliment",
-    "english": "compliment",
-    "example_fr": "je vous fais un compliment sincère",
-    "example_en": "I'm giving you a sincere compliment"
+    "french": "boucle",
+    "english": "loop, buckle, curl",
+    "example_fr": "ils sont si mignons avec leurs boucles blondes",
+    "example_en": "they are so cute with their blond curls"
   },
   {
     "rank": 3823,
-    "french": "chèvre",
-    "english": "goat",
-    "example_fr": "mon mari élève des chèvres",
-    "example_en": "my husband raises goats"
+    "french": "flou",
+    "english": "blurred, fuzzy, vague",
+    "example_fr": "tout dans la pièce lui sembla flou, déformé",
+    "example_en": "everything in the room seemed blurred to him"
   },
   {
     "rank": 3824,
-    "french": "lancer",
-    "english": "to launch, start, initiate",
-    "example_fr": "il va lancer sa candidature",
-    "example_en": "he is launching his candidacy"
+    "french": "redire",
+    "english": "to say again, repeat",
+    "example_fr": "je te l'ai dit et redit",
+    "example_en": "I told you once, and then again"
   },
   {
     "rank": 3825,
-    "french": "relancer",
-    "english": "to throw back, restart, relaunch",
-    "example_fr": "il faut relancer le dialogue avec les minorités",
-    "example_en": "the dialogue with minorities must be restarted"
+    "french": "consultatif",
+    "english": "advisory",
+    "example_fr": "ils seront réduits à un rôle consultatif",
+    "example_en": "they will be relegated to an advisory role"
   },
   {
     "rank": 3826,
-    "french": "bénévole",
-    "english": "voluntary, volunteer",
-    "example_fr": "les militaires ont offert leur aide bénévole",
-    "example_en": "the military offered their voluntary help"
+    "french": "torturer",
+    "english": "to torture",
+    "example_fr": "elle m'a torturée mentalement toute l'année",
+    "example_en": "she tortured me mentally all year long"
   },
   {
     "rank": 3827,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "le souvenir était flou",
-    "example_en": "the memory was hazy"
+    "french": "carton",
+    "english": "cardboard, card, score",
+    "example_fr": "il y a une petite boîte de carton où vous trouverez un carnet de timbres",
+    "example_en": "there is a little cardboard box where you will find a book of stamps"
   },
   {
     "rank": 3828,
-    "french": "soucis",
-    "english": "worry, concern",
-    "example_fr": "je veux éviter les soucis",
-    "example_en": "I want to avoid worries"
+    "french": "effrayer",
+    "english": "to frighten, scare",
+    "example_fr": "le futur m'attirait et m'effrayait à la fois",
+    "example_en": "the future both attracted me and scared me"
   },
   {
     "rank": 3829,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "le monde tourne rond",
-    "example_en": "the world is turning round"
+    "french": "pitié",
+    "english": "pity, mercy",
+    "example_fr": "enfin le ciel eut pitié de cette mère malheureuse",
+    "example_en": "finally heaven had pity on this unhappy mother"
   },
   {
     "rank": 3830,
-    "french": "confrontation",
-    "english": "confrontation",
-    "example_fr": "il y a une confrontation entre les deux blocs",
-    "example_en": "there's a confrontation between the two blocks"
+    "french": "complexité",
+    "english": "complexity",
+    "example_fr": "le livre explore la complexité de la société de l'information",
+    "example_en": "the book explores the complexity of the information society"
   },
   {
     "rank": 3831,
-    "french": "théologien",
-    "english": "theologian",
-    "example_fr": "j'ai consulté un théologien",
-    "example_en": "I consulted a theologian"
+    "french": "favori",
+    "english": "favourite, favorite",
+    "example_fr": "le favori a gagné. nous le félicitons",
+    "example_en": "the faorite won. we congratulated him"
   },
   {
     "rank": 3832,
-    "french": "communauté",
-    "english": "community, fellowship",
-    "example_fr": "nous travaillons avec la communauté locale",
-    "example_en": "we work with the local community"
+    "french": "noyau",
+    "english": "core, nucleus, pit",
+    "example_fr": "il recracha le noyau d'une olive",
+    "example_en": "he spat out an olive pit"
   },
   {
     "rank": 3833,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "ne pense pas que j'ai changé d'avis",
-    "example_en": "don't think I changed my mind"
+    "french": "brandir",
+    "english": "to brandish, wield, wave",
+    "example_fr": "il brandit longuement les poings sous l'ovation",
+    "example_en": "he pumped his fists as the crowd cheered"
   },
   {
     "rank": 3834,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "nous avons rattrapé le retard",
-    "example_en": "we made up for the delay"
+    "french": "repenser",
+    "english": "to rethink",
+    "example_fr": "il faut complètement repenser le tourisme",
+    "example_en": "tourism must be completely rethought"
   },
   {
     "rank": 3835,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une façon peu élégante de démissionner",
-    "example_en": "it's an inelegant way to resign"
+    "french": "timide",
+    "english": "timid, shy, bashful",
+    "example_fr": "sois pas timide, petit minou",
+    "example_en": "don't be timid, little buddy"
   },
   {
     "rank": 3836,
-    "french": "poursuite",
-    "english": "chase, pursuit",
-    "example_fr": "il a pris la fuite. la poursuite est engagée",
-    "example_en": "he fled. the chase is on"
+    "french": "audition",
+    "english": "hearing, examination, audition",
+    "example_fr": "on a assisté aux auditions",
+    "example_en": "we attended the hearings"
   },
   {
     "rank": 3837,
-    "french": "approuver",
-    "english": "to approve",
-    "example_fr": "j'ai approuvé ce projet",
-    "example_en": "I approved this project"
+    "french": "comptabilité",
+    "english": "accountancy, accounting, book-keeping",
+    "example_fr": "il a fait beaucoup de travail en comptabilité",
+    "example_en": "he worked extensively in accounting"
   },
   {
     "rank": 3838,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement grandit",
-    "example_en": "dissatisfaction is growing"
+    "french": "précaire",
+    "english": "precarious, makeshift",
+    "example_fr": "le futur de leurs fils devient précaire",
+    "example_en": "their son's future was becoming precarious"
   },
   {
     "rank": 3839,
-    "french": "plaine",
-    "english": "plain, flat, simple",
-    "example_fr": "il était né dans la plaine",
-    "example_en": "he was born on the plain"
+    "french": "trône",
+    "english": "throne",
+    "example_fr": "nous sommes des auxiliaires du trône pontifical",
+    "example_en": "we are assistants to the pontifical throne"
   },
   {
     "rank": 3840,
-    "french": "pôle",
-    "english": "pole",
-    "example_fr": "les deux blocs se trouvent aux deux pôles",
-    "example_en": "the two blocks are at the two poles"
+    "french": "insulter",
+    "english": "to insult",
+    "example_fr": "jamais je ne vous aurais insulté de propos délibérés",
+    "example_en": "I never would have insulted you deliberately"
   },
   {
     "rank": 3841,
-    "french": "sûr",
-    "english": "sure, certain",
-    "example_fr": "j'en suis sûr. vous avez raison",
-    "example_en": "I'm sure of it. you're right"
+    "french": "saut",
+    "english": "jump, leap",
+    "example_fr": "il a fait le grand saut",
+    "example_en": "he made the big leap"
   },
   {
     "rank": 3842,
-    "french": "flèche",
-    "english": "arrow",
-    "example_fr": "le chasseur tira une flèche",
-    "example_en": "the hunter shot an arrow"
+    "french": "amende",
+    "english": "fine",
+    "example_fr": "il devra payer l'amende",
+    "example_en": "he'll have to pay the fine"
   },
   {
     "rank": 3843,
-    "french": "contester",
-    "english": "to contest, question",
-    "example_fr": "je conteste ce découpage",
-    "example_en": "I dispute this zoning"
+    "french": "différemment",
+    "english": "differently",
+    "example_fr": "les femmes ont voté différemment de leurs maris",
+    "example_en": "the women voted differently from their husbands"
   },
   {
     "rank": 3844,
-    "french": "flotter",
-    "english": "to float",
-    "example_fr": "les débris flottent sur l'eau",
-    "example_en": "debris is floating on the water"
+    "french": "programmation",
+    "english": "programming",
+    "example_fr": "c'est trois heures de programmation par jour en direct",
+    "example_en": "it's three hours of live daily programming"
   },
   {
     "rank": 3845,
-    "french": "découpage",
-    "english": "cutting, carving",
-    "example_fr": "le découpage est un art",
-    "example_en": "cutting is an art form"
+    "french": "crédible",
+    "english": "credible",
+    "example_fr": "notre système est crédible, reconnu mondialement",
+    "example_en": "our system is credible, recognized worldwide"
   },
   {
     "rank": 3846,
-    "french": "gouverner",
-    "english": "to govern, rule, steer, helm",
-    "example_fr": "il est difficile de gouverner sans consensus",
-    "example_en": "it's difficult to govern without consensus"
+    "french": "justification",
+    "english": "justification, proof",
+    "example_fr": "on ne saurait trouver de justification au terrorisme",
+    "example_en": "there's no justification for terrorism"
   },
   {
     "rank": 3847,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a affiché son mépris",
-    "example_en": "he showed his disdain"
+    "french": "conservation",
+    "english": "preservation, preserving, retention",
+    "example_fr": "quelles mesures de conservation peuvent être prises",
+    "example_en": "what conservation measures can be taken"
   },
   {
     "rank": 3848,
-    "french": "relayer",
-    "english": "to relay, take turns, replace",
-    "example_fr": "il faut relayer l'information",
-    "example_en": "the information must be relayed"
+    "french": "transit",
+    "english": "transit",
+    "example_fr": "le fric est en transit. bouge pas",
+    "example_en": "the loot is on its way. don't move"
   },
   {
     "rank": 3849,
-    "french": "attraper",
-    "english": "to catch",
-    "example_fr": "j'ai attrapé froid",
-    "example_en": "I caught a cold"
+    "french": "organisateur",
+    "english": "organiser, organising",
+    "example_fr": "il a été l'un des principaux organisateurs",
+    "example_en": "he was one of the principal organizers"
   },
   {
     "rank": 3850,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il aimait jouer à des jeux vidéo",
-    "example_en": "he liked to play video games"
+    "french": "galerie",
+    "english": "gallery",
+    "example_fr": "il y a toute une galerie de personnages",
+    "example_en": "there's a whole range of personalities"
   },
   {
     "rank": 3851,
-    "french": "démentir",
-    "english": "to deny, belie",
-    "example_fr": "je ne peux démentir ces accusations",
-    "example_en": "I cannot deny these accusations"
+    "french": "aménagement",
+    "english": "development, planning, fitting, adjustment",
+    "example_fr": "alors, on a fait des aménagements",
+    "example_en": "so, we made some adjustments"
   },
   {
     "rank": 3852,
-    "french": "allumer",
-    "english": "to switch on, light up, turn on",
-    "example_fr": "il a allumé la lumière",
-    "example_en": "he turned on the light"
+    "french": "manifestant",
+    "english": "protester, demonstrator",
+    "example_fr": "les manifestants ont fait monter la pression",
+    "example_en": "the protesters increased the pressure"
   },
   {
     "rank": 3853,
-    "french": "mêler",
-    "english": "to mingle, mix",
-    "example_fr": "je me suis mêlé à la foule",
-    "example_en": "I mingled with the crowd"
+    "french": "char",
+    "english": "tank",
+    "example_fr": "j'entends vaguement les chars qui s'approchent",
+    "example_en": "I barely hear the tanks as they approach"
   },
   {
     "rank": 3854,
-    "french": "tournoi",
-    "english": "tournament",
-    "example_fr": "le tournoi a été annulé",
-    "example_en": "the tournament was canceled"
+    "french": "criminalité",
+    "english": "crime",
+    "example_fr": "la prévention de la criminalité devrait être notre objectif final",
+    "example_en": "crime prevention should be our ultimate goal"
   },
   {
     "rank": 3855,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "la faillite de la banque est imminente",
-    "example_en": "the bank's bankruptcy is imminent"
+    "french": "masquer",
+    "english": "to mask, conceal, put on a mask",
+    "example_fr": "le brouillard descendit des montagnes, masquant le coucher de soleil",
+    "example_en": "the fog rolled down the mountains, masking the sunset"
   },
   {
     "rank": 3856,
-    "french": "théâtre",
-    "english": "theater",
-    "example_fr": "elle est passionnée de théâtre",
-    "example_en": "she is passionate about theater"
+    "french": "masque",
+    "english": "mask",
+    "example_fr": "je voudrais voir le visage derrière ce masque",
+    "example_en": "I would like to see the face behind that mask"
   },
   {
     "rank": 3857,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a plus de touristes dans cette zone",
-    "example_en": "there are no more tourists in this area"
+    "french": "dorénavant",
+    "english": "from now on, henceforth",
+    "example_fr": "j'écrirai dorénavant sur les deux côtés de la page",
+    "example_en": "from now on I will write on both sides of the page"
   },
   {
     "rank": 3858,
-    "french": "réduire",
-    "english": "to reduce, curb",
-    "example_fr": "il faut réduire les dépenses",
-    "example_en": "expenses must be reduced"
+    "french": "festival",
+    "english": "festival",
+    "example_fr": "j'étais dans un festival de musique",
+    "example_en": "I was in a music festival"
   },
   {
     "rank": 3859,
-    "french": "compétitif",
-    "english": "competitive",
-    "example_fr": "nous devons rester compétitifs",
-    "example_en": "we must remain competitive"
+    "french": "prôner",
+    "english": "to laud, extol, advocate, commend",
+    "example_fr": "l'évangile prône la pauvreté",
+    "example_en": "the gospel preaches poverty"
   },
   {
     "rank": 3860,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "l'avion a lourdement chuté",
-    "example_en": "the airplane fell heavily"
+    "french": "radicalement",
+    "english": "radically",
+    "example_fr": "aujourd'hui, la situation est radicalement différente",
+    "example_en": "today, the situation is radically different"
   },
   {
     "rank": 3861,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "c'est un coup de génie",
-    "example_en": "it's a stroke of genius"
+    "french": "franchise",
+    "english": "frankness, exemption, duty-free, franchise, deductible",
+    "example_fr": "vous parlez avec une grande franchise",
+    "example_en": "you speak very frankly"
   },
   {
     "rank": 3862,
-    "french": "communauté",
-    "english": "community, fellowship",
-    "example_fr": "la communauté internationale s'inquiète",
-    "example_en": "the international community is worried"
+    "french": "ultérieur",
+    "english": "later, subsequent",
+    "example_fr": "sauvegardez-la pour un traitement ultérieur",
+    "example_en": "save it for subsequent processing"
   },
   {
     "rank": 3863,
-    "french": "démocratie",
-    "english": "democracy",
-    "example_fr": "il faut défendre la démocratie",
-    "example_en": "democracy must be defended"
+    "french": "expédier",
+    "english": "to send, dispatch",
+    "example_fr": "nous l'expédions dans des pays comme le Japon",
+    "example_en": "we send him to countries like Japan"
   },
   {
     "rank": 3864,
-    "french": "découpage",
-    "english": "cutting, carving",
-    "example_fr": "il faut un nouveau découpage",
-    "example_en": "a new distribution is needed"
+    "french": "axer",
+    "english": "to center",
+    "example_fr": "sa morale privée était axée sur le culte de la famille",
+    "example_en": "her private morals centered on family worship"
   },
   {
     "rank": 3865,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il se met à frapper la porte",
-    "example_en": "he starts hitting the door"
+    "french": "propager",
+    "english": "to propagate, spread",
+    "example_fr": "vous propagez le malheur des gens au monde entier",
+    "example_en": "you're spreading people's misery througout the world"
   },
   {
     "rank": 3866,
-    "french": "façonner",
-    "english": "to fashion, shape, form",
-    "example_fr": "je peux façonner mon corps",
-    "example_en": "I can shape my body"
+    "french": "rectifier",
+    "english": "to rectify, correct",
+    "example_fr": "nul n'osa l'interrompre pour rectifier",
+    "example_en": "nobody dared interrupt her to correct her"
   },
   {
     "rank": 3867,
-    "french": "poussière",
-    "english": "dust",
-    "example_fr": "le vent soulevait la poussière",
-    "example_en": "the wind raised the dust"
+    "french": "tennis",
+    "english": "tennis",
+    "example_fr": "la télévision retransmettait un match de tennis",
+    "example_en": "the television rebroadcast a tennis match"
   },
   {
     "rank": 3868,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "le film sera tourné à Paris",
-    "example_en": "the film will be shot in Paris"
+    "french": "avenue",
+    "english": "avenue",
+    "example_fr": "ils empruntèrent d'abord une grande avenue",
+    "example_en": "first they took a broad street"
   },
   {
     "rank": 3869,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "nous appuyons un désarmement général",
-    "example_en": "we support general disarmament"
+    "french": "vengeance",
+    "english": "revenge",
+    "example_fr": "le désir de vengeance est bon pour la santé",
+    "example_en": "the desire for revenge is healthy"
   },
   {
     "rank": 3870,
-    "french": "complaisance",
-    "english": "complacency, obligingness",
-    "example_fr": "il m'a écouté avec complaisance",
-    "example_en": "he listened to me complacently"
+    "french": "émouvoir",
+    "english": "to move, touch",
+    "example_fr": "j'ai été profondément ému par la cérémonie",
+    "example_en": "I was deeply moved by the ceremony"
   },
   {
     "rank": 3871,
-    "french": "pénible",
-    "english": "painful, laborious, arduous",
-    "example_fr": "c'est une tâche pénible",
-    "example_en": "it's an arduous task"
+    "french": "hé",
+    "english": "hey",
+    "example_fr": "hé, les gars, regardez par ici",
+    "example_en": "hey, guys, look over here"
   },
   {
     "rank": 3872,
-    "french": "croyance",
-    "english": "belief",
-    "example_fr": "il a une foi et une croyance profonde",
-    "example_en": "he has a deep faith and belief"
+    "french": "génial",
+    "english": "inspired, great, brilliant",
+    "example_fr": "j'ai une idée géniale",
+    "example_en": "I have a brilliant idea"
   },
   {
     "rank": 3873,
-    "french": "communiquer",
-    "english": "to communicate",
-    "example_fr": "nous devons communiquer nos décisions",
-    "example_en": "we must communicate our decisions"
+    "french": "réduit",
+    "english": "reduced, scaled-down, cut-down, tiny room, hideout",
+    "example_fr": "nous avions une équipe très réduite",
+    "example_en": "we had a team that had been greatly reduced"
   },
   {
     "rank": 3874,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "tout est flou dans mon esprit",
-    "example_en": "everything is hazy in my mind"
+    "french": "alléger",
+    "english": "to lighten, alleviate",
+    "example_fr": "il est temps d'alléger les impôts",
+    "example_en": "it's time to reduce taxes"
   },
   {
     "rank": 3875,
-    "french": "départemental",
-    "english": "departmental",
-    "example_fr": "nous avons voté une motion départementale",
-    "example_en": "we voted for a departmental motion"
+    "french": "vierge",
+    "english": "virgin",
+    "example_fr": "la Vierge est célébrée deux fois l'an",
+    "example_en": "the Virgin is celebrated twice a year"
   },
   {
     "rank": 3876,
-    "french": "théologien",
-    "english": "theologian",
-    "example_fr": "j'ai consulté un théologien",
-    "example_en": "I consulted a theologian"
+    "french": "meuble",
+    "english": "piece of furniture",
+    "example_fr": "on me cache derrière un meuble",
+    "example_en": "they hid me behind a piece of furniture"
   },
   {
     "rank": 3877,
-    "french": "mécontent",
-    "english": "discontented, unhappy",
-    "example_fr": "je suis mécontent de mon sort",
-    "example_en": "I'm unhappy with my fate"
+    "french": "rapprochement",
+    "english": "bringing together, coming closer, parallel",
+    "example_fr": "nous cherchons un rapprochement entre les deux extrêmes",
+    "example_en": "we're seeking a consensus between the two extremes"
   },
   {
     "rank": 3878,
-    "french": "approuver",
-    "english": "to approve",
-    "example_fr": "je ne peux pas approuver cela",
-    "example_en": "I cannot approve that"
+    "french": "confession",
+    "english": "confession",
+    "example_fr": "la confession de mes fautes me permet de recommencer",
+    "example_en": "confessing my faults allows me to start afresh"
   },
   {
     "rank": 3879,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "je suis un simple touriste",
-    "example_en": "I am a simple tourist"
+    "french": "suspens",
+    "english": "suspension, abeyance",
+    "example_fr": "trop de questions vont rester en suspens",
+    "example_en": "too many questions will remain unresolved"
   },
   {
     "rank": 3880,
-    "french": "débarquer",
-    "english": "to unload, land, disembark",
-    "example_fr": "les journalistes ont débarqué sur place",
-    "example_en": "the journalists landed on the scene"
+    "french": "dégradation",
+    "english": "degrading, damaging, erosion; demotion",
+    "example_fr": "il vient de subir une nouvelle dégradation",
+    "example_en": "he has just been demoted again"
   },
   {
     "rank": 3881,
-    "french": "détérioration",
-    "english": "deterioration",
-    "example_fr": "la détérioration est visible",
-    "example_en": "the deterioration is visible"
+    "french": "vingtième",
+    "english": "twentieth",
+    "example_fr": "la chambre obscure, au vingtième étage, cuit à gros feu",
+    "example_en": "the dark room, on the twentieth floor, is burning intensely"
   },
   {
     "rank": 3882,
-    "french": "allumer",
-    "english": "to switch on, light up, turn on",
-    "example_fr": "elle a allumé une cigarette",
-    "example_en": "she lit a cigarette"
+    "french": "agenda",
+    "english": "diary, planner",
+    "example_fr": "j'écris mes poèmes dans un agenda",
+    "example_en": "I write my poems in a day planner"
   },
   {
     "rank": 3883,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "le moteur tourne",
-    "example_en": "the engine is running"
+    "french": "grand-mère",
+    "english": "grandmother",
+    "example_fr": "elle est allée chez sa grand-mère",
+    "example_en": "she went to her grandmother's place"
   },
   {
     "rank": 3884,
-    "french": "alléger",
-    "english": "to lighten, ease, relieve",
-    "example_fr": "il faut alléger la fiscalité",
-    "example_en": "taxation must be eased"
+    "french": "phare",
+    "english": "lighthouse, headlight",
+    "example_fr": "éteignez les phares! restez où vous êtes!",
+    "example_en": "turn off the lights! stay where you are!"
   },
   {
     "rank": 3885,
-    "french": "détendu",
-    "english": "relaxed",
-    "example_fr": "il a l'air détendu",
-    "example_en": "he looks relaxed"
+    "french": "virtuel",
+    "english": "virtual, potential",
+    "example_fr": "c'est pire que l'espace virtuel, le cyberespace",
+    "example_en": "cyberspace is worse than virtual space"
   },
   {
     "rank": 3886,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a été lourdement condamné",
-    "example_en": "he received a heavy sentence"
+    "french": "gagnant",
+    "english": "winner, winning",
+    "example_fr": "j'en sortirai gagnant, finalement",
+    "example_en": "I will finally end up being the winner"
   },
   {
     "rank": 3887,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "son travail est un chef-d'œuvre de génie",
-    "example_en": "his work is a masterpiece of genius"
+    "french": "nettoyer",
+    "english": "to clean",
+    "example_fr": "elle nettoyait la chambre",
+    "example_en": "she cleaned the room"
   },
   {
     "rank": 3888,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "j'ai du mépris pour ses opinions",
-    "example_en": "I have contempt for his opinions"
+    "french": "diagnostic",
+    "english": "diagnosis",
+    "example_fr": "comment confirme-t-on le diagnostic de l'Alzheimer?",
+    "example_en": "how does one confirm a diagnosis of Alzheimer's?"
   },
   {
     "rank": 3889,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il aime jouer aux échecs",
-    "example_en": "he likes to play chess"
+    "french": "poing",
+    "english": "fist, punch",
+    "example_fr": "je vais t'envoyer mon poing dans la figure!",
+    "example_en": "I'm gonna give you a fist in the mug!"
   },
   {
     "rank": 3890,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser aux autres",
-    "example_en": "you have to think about others"
+    "french": "étiquette",
+    "english": "label, ticket, etiquette, sticker, tag",
+    "example_fr": "l'étiquette distingue un élément d'information d'un autre",
+    "example_en": "the tag distinguishes one data item from another"
   },
   {
     "rank": 3891,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "nous allons rattraper le temps perdu",
-    "example_en": "we're going to make up for lost time"
+    "french": "tante",
+    "english": "aunt",
+    "example_fr": "j'avais été élevé par ma tante",
+    "example_en": "I was raised by my aunt"
   },
   {
     "rank": 3892,
-    "french": "communauté",
-    "english": "community, fellowship",
-    "example_fr": "il faut intégrer la communauté musulmane",
-    "example_en": "the Muslim community must be integrated"
+    "french": "chemise",
+    "english": "shirt, folder",
+    "example_fr": "le col de sa chemise était largement ouvert",
+    "example_en": "the collar of her shirt was mostly open"
   },
   {
     "rank": 3893,
-    "french": "démocratie",
-    "english": "democracy",
-    "example_fr": "la démocratie est en péril",
-    "example_en": "democracy is in danger"
+    "french": "pile",
+    "english": "pile, stack, battery, tails",
+    "example_fr": "j'ai retiré les piles du détecteur d'oxyde de carbone",
+    "example_en": "I removed the batteries from the carbon monoxide detector"
   },
   {
     "rank": 3894,
-    "french": "sûr",
-    "english": "sure, certain",
-    "example_fr": "je suis sûr de ma décision",
-    "example_en": "I am sure of my decision"
+    "french": "kilo",
+    "english": "kilo",
+    "example_fr": "j'ai perdu 7 kilos en un an",
+    "example_en": "I lost 7 kilos in one year"
   },
   {
     "rank": 3895,
-    "french": "flèche",
-    "english": "arrow",
-    "example_fr": "il a tiré une flèche",
-    "example_en": "he shot an arrow"
+    "french": "citoyenneté",
+    "english": "citizenship",
+    "example_fr": "la citoyenneté nous donne un sens de la communauté",
+    "example_en": "citizenship gives us a sense of belonging"
   },
   {
     "rank": 3896,
-    "french": "confrontation",
-    "english": "confrontation",
-    "example_fr": "nous avons évité la confrontation",
-    "example_en": "we avoided the confrontation"
+    "french": "douceur",
+    "english": "softness, smoothness, mildness, gentleness, sweetness",
+    "example_fr": "nous venons de goûter la douceur de la victoire",
+    "example_en": "we have just tasted the sweetness of victory"
   },
   {
     "rank": 3897,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "il se mêle de tout",
-    "example_en": "he gets involved in everything"
+    "french": "attester",
+    "english": "to attest, confirm",
+    "example_fr": "comme l'attesteront les amis qui me connaissent bien",
+    "example_en": "as those friends who know me well will attest"
   },
   {
     "rank": 3898,
-    "french": "réduire",
-    "english": "to reduce, curb",
-    "example_fr": "il faut réduire les risques",
-    "example_en": "risks must be reduced"
+    "french": "attraper",
+    "english": "to catch, get, pick up",
+    "example_fr": "attention quand même : vous allez attraper un rhume",
+    "example_en": "now be careful--you're going to catch a cold"
   },
   {
     "rank": 3899,
-    "french": "poursuite",
-    "english": "chase, pursuit",
-    "example_fr": "la police est à sa poursuite",
-    "example_en": "the police are in pursuit of him"
+    "french": "prestigiux",
+    "english": "prestigious",
+    "example_fr": "le jeune homme cumule trois diplômes prestigieux",
+    "example_en": "the young man is earning three prestigious degrees"
   },
   {
     "rank": 3900,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "il est un joueur de poker",
-    "example_en": "he is a poker player"
+    "french": "ruiner",
+    "english": "to ruin, bankrupt oneself",
+    "example_fr": "maintenant je suis ruiné. je suis divorcé",
+    "example_en": "I'm ruined now. I'm divorced"
   },
   {
     "rank": 3901,
-    "french": "regagner",
-    "english": "to win again, regain, get back, make up",
-    "example_fr": "nous allons regagner notre liberté",
-    "example_en": "we are going to regain our freedom"
+    "french": "croix",
+    "english": "cross",
+    "example_fr": "fais alors un signe de croix",
+    "example_en": "then make the sign of the cross"
   },
   {
     "rank": 3902,
-    "french": "approuver",
-    "english": "to approve",
-    "example_fr": "le plan a été approuvé",
-    "example_en": "the plan was approved"
+    "french": "nullement",
+    "english": "not in the least",
+    "example_fr": "il n'est nullement indispensable",
+    "example_en": "he's by no means indispensable"
   },
   {
     "rank": 3903,
-    "french": "pousser",
-    "english": "to push, grow, shove, urge",
-    "example_fr": "il faut le pousser à travailler",
-    "example_en": "he needs to be pushed to work"
+    "french": "incorporer",
+    "english": "to incorporate, insert, merge",
+    "example_fr": "ce texte a été incorporé éventuellement dans le chapitre",
+    "example_en": "this text was eventually merged into the chapter"
   },
   {
     "rank": 3904,
-    "french": "sillonner",
-    "english": "to crisscross, roam, cut through",
-    "example_fr": "il sillonnait les mers",
-    "example_en": "he crisscrossed the seas"
+    "french": "débloquer",
+    "english": "to free, unfreeze, unjam, release, unblock",
+    "example_fr": "le premier ministre cherchait sans doute à débloquer le projet",
+    "example_en": "the prime minister clearly sought to unblock the project"
   },
   {
     "rank": 3905,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une drôle de façon de se comporter",
-    "example_en": "it's a strange way to behave"
+    "french": "ficher",
+    "english": "to file; to make fun of, not care, not give a damn",
+    "example_fr": "je me fiche pas mal de ce que tu fais!",
+    "example_en": "I really don't give a damn what you do"
   },
   {
     "rank": 3906,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "elle portait un chapeau",
-    "example_en": "she was wearing a hat"
+    "french": "censure",
+    "english": "censorship",
+    "example_fr": "j'ai toujours eu des problèmes de censure",
+    "example_en": "I always had problems with censorship"
   },
   {
     "rank": 3907,
-    "french": "départemental",
-    "english": "departmental",
-    "example_fr": "le conseil départemental a voté",
-    "example_en": "the departmental council voted"
+    "french": "linguistique",
+    "english": "linguistic, linguistics",
+    "example_fr": "il est difficile de franchir la barrière linguistique",
+    "example_en": "it's difficult to overcome the language barrier"
   },
   {
     "rank": 3908,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est général",
-    "example_en": "dissatisfaction is widespread"
+    "french": "accompli",
+    "english": "accomplished",
+    "example_fr": "mission accomplie, hein? c'est fini",
+    "example_en": "mission accomplished, eh? it's over"
   },
   {
     "rank": 3909,
-    "french": "flotter",
-    "english": "to float",
-    "example_fr": "le drapeau flotte",
-    "example_en": "the flag is flying"
+    "french": "terriblement",
+    "english": "terribly, awfully",
+    "example_fr": "je suis terriblement navré",
+    "example_en": "I am terribly embarrassed"
   },
   {
     "rank": 3910,
-    "french": "réduire",
-    "english": "to reduce, curb",
-    "example_fr": "il faut réduire la dette",
-    "example_en": "the debt must be reduced"
+    "french": "main-d'œuvre",
+    "english": "manpower, labor, workforce",
+    "example_fr": "une main-d'œuvre hautement qualifiée existe dans le Sud-Est asiatique",
+    "example_en": "highly qualified manpower exists in south-east Asia"
   },
   {
     "rank": 3911,
-    "french": "relayer",
-    "english": "to relay, take turns, replace",
-    "example_fr": "nous allons relayer le message",
-    "example_en": "we are going to relay the message"
+    "french": "invasion",
+    "english": "invasion",
+    "example_fr": "personne ne sait exactement combien l'invasion de l'Irak va coûter",
+    "example_en": "nobody knows exactly how much the invasion of Iraq will cost"
   },
   {
     "rank": 3912,
-    "french": "sûr",
-    "english": "sure, certain",
-    "example_fr": "il est sûr de lui",
-    "example_en": "he is sure of himself"
+    "french": "orange",
+    "english": "orange",
+    "example_fr": "ils cultivent des oranges",
+    "example_en": "they grow oranges"
   },
   {
     "rank": 3913,
-    "french": "attraper",
-    "english": "to catch",
-    "example_fr": "il a attrapé un ballon",
-    "example_en": "he caught a ball"
+    "french": "jury",
+    "english": "jury, board of examiners",
+    "example_fr": "c'est un jury exclusivement blanc",
+    "example_en": "it's an all-white jury"
   },
   {
     "rank": 3914,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue du piano",
-    "example_en": "he plays the piano"
+    "french": "bœuf",
+    "english": "ox, steer, beef",
+    "example_fr": "il est bien possible que ce bœuf ait été engraissé aux hormones",
+    "example_en": "this cow may have been fattened with hormones"
   },
   {
     "rank": 3915,
-    "french": "théâtre",
-    "english": "theater",
-    "example_fr": "nous allons au théâtre",
-    "example_en": "we are going to the theater"
+    "french": "rallier",
+    "english": "to rally, win over, join",
+    "example_fr": "on veut faire de l'argent, on veut rallier les gens, faire le party",
+    "example_en": "we want to make money, we want to gather people, to party"
   },
   {
     "rank": 3916,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il est un touriste étranger",
-    "example_en": "he is a foreign tourist"
+    "french": "roue",
+    "english": "wheel",
+    "example_fr": "avance doucement, dis-je. les roues se mirent à tourner",
+    "example_en": "inch slowly forward, I said. the wheels began turning"
   },
   {
     "rank": 3917,
-    "french": "façonner",
-    "english": "to fashion, shape, form",
-    "example_fr": "il façonne l'argile",
-    "example_en": "he shapes the clay"
+    "french": "barrer",
+    "english": "to close, block, bar, cross",
+    "example_fr": "les deux autres me barraient la sortie",
+    "example_en": "the two others blocked my way"
   },
   {
     "rank": 3918,
-    "french": "démocratie",
-    "english": "democracy",
-    "example_fr": "la démocratie est fragile",
-    "example_en": "democracy is fragile"
+    "french": "réaffirmer",
+    "english": "to reaffirm, reassert",
+    "example_fr": "il faut réaffirmer ce droit fondamental",
+    "example_en": "we must reaffirm this fundamental right"
   },
   {
     "rank": 3919,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé à la porte",
-    "example_en": "he knocked on the door"
+    "french": "assigner",
+    "english": "to assign, allocate, attach, attribute",
+    "example_fr": "deux grandes tâches lui sont assignées",
+    "example_en": "two great tasks are assigned to her"
   },
   {
     "rank": 3920,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement du nouveau produit est imminent",
-    "example_en": "the launch of the new product is imminent"
+    "french": "souhaitable",
+    "english": "desirable",
+    "example_fr": "une dictature militaire n'est pas souhaitable dans ce pays",
+    "example_en": "a military dictatorship isn't desirable in this country"
   },
   {
     "rank": 3921,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "le souvenir est flou",
-    "example_en": "the memory is hazy"
+    "french": "soupçon",
+    "english": "suspicion",
+    "example_fr": "elle l'examina avec soupçon",
+    "example_en": "she examined it with suspicion"
   },
   {
     "rank": 3922,
-    "french": "théologie",
-    "english": "theology",
-    "example_fr": "il étudie la théologie",
-    "example_en": "he studies theology"
+    "french": "constat",
+    "english": "report, statement",
+    "example_fr": "ces associations en sont arrivées à ce constat",
+    "example_en": "these associations arrived at this agreement"
   },
   {
     "rank": 3923,
-    "french": "complice",
-    "english": "accomplice",
-    "example_fr": "il était son complice",
-    "example_en": "he was her accomplice"
+    "french": "communisme",
+    "english": "communism",
+    "example_fr": "nous avons hérité du communisme une destruction massive de l'environnement",
+    "example_en": "we inherited from communism massive destruction of the environment"
   },
   {
     "rank": 3924,
-    "french": "poussière",
-    "english": "dust",
-    "example_fr": "il y a de la poussière partout",
-    "example_en": "there is dust everywhere"
+    "french": "dynamisme",
+    "english": "dynamism",
+    "example_fr": "quel est le secret de votre dynamisme?",
+    "example_en": "what's the secret of your vitality?"
   },
   {
     "rank": 3925,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la conférence sur le désarmement",
-    "example_en": "the disarmament conference"
+    "french": "flagrant",
+    "english": "blatant, glaring",
+    "example_fr": "c'est une contradiction flagrante",
+    "example_en": "it's a blatant contradiction"
   },
   {
     "rank": 3926,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "la tête lui tourne",
-    "example_en": "his head is spinning"
+    "french": "paire",
+    "english": "pair",
+    "example_fr": "une paire de gants nous suffisait",
+    "example_en": "a pair of gloves was sufficient for us"
   },
   {
     "rank": 3927,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "la faillite de l'entreprise",
-    "example_en": "the company's bankruptcy"
+    "french": "loup",
+    "english": "wolf",
+    "example_fr": "ce n'était pas un loup, ce n'en était que l'ombre",
+    "example_en": "it wasn't a wolf, just the shadow of one"
   },
   {
     "rank": 3928,
-    "french": "mêler",
-    "english": "to mingle, mix",
-    "example_fr": "je ne veux pas me mêler de ça",
-    "example_en": "I don't want to get involved in that"
+    "french": "concerter",
+    "english": "to devise, consult",
+    "example_fr": "l'occasion de nous concerter avec nos groupes",
+    "example_en": "the chance to consult together in our groups"
   },
   {
     "rank": 3929,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "il est un joueur de foot",
-    "example_en": "he is a soccer player"
+    "french": "désespérer",
+    "english": "to despair",
+    "example_fr": "il faut désespérer de ce peuple et le subjuguer",
+    "example_en": "you must lose hope in this people and take them captive"
   },
   {
     "rank": 3930,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a été lourdement blessé",
-    "example_en": "he was severely injured"
+    "french": "subit",
+    "english": "sudden",
+    "example_fr": "une chaleur subite l'envahissait",
+    "example_en": "a sudden heat overcame him"
   },
   {
     "rank": 3931,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a le génie de la musique",
-    "example_en": "he has a genius for music"
+    "french": "diplomate",
+    "english": "diplomat, diplomatic",
+    "example_fr": "ils sont accompagnés par un diplomate russe",
+    "example_en": "they're accompanied by a Russian diplomat"
   },
   {
     "rank": 3932,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a montré son mépris",
-    "example_en": "he showed his contempt"
+    "french": "joue",
+    "english": "cheek",
+    "example_fr": "des larmes coulaient sur mes joues, sans arrêt",
+    "example_en": "tears rolled down my cheeks continually"
   },
   {
     "rank": 3933,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "elle aime jouer avec son chien",
-    "example_en": "she likes to play with her dog"
+    "french": "essuyer",
+    "english": "to wipe, dry, mop, dust",
+    "example_fr": "essuie tes larmes",
+    "example_en": "wipe away your tears"
   },
   {
     "rank": 3934,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut y penser",
-    "example_en": "you have to think about it"
+    "french": "exporter",
+    "english": "to export",
+    "example_fr": "le Canada exporte un certain nombre de produits alimentaires",
+    "example_en": "Canada exports some food products"
   },
   {
     "rank": 3935,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut rattraper le retard",
-    "example_en": "the delay must be made up for"
+    "french": "étaler",
+    "english": "to spread, display, apply",
+    "example_fr": "j'ai étalé mon manteau sur votre lit",
+    "example_en": "I spread out my coat on your bed"
   },
   {
     "rank": 3936,
-    "french": "communauté",
-    "english": "community, fellowship",
-    "example_fr": "il est de la communauté musulmane",
-    "example_en": "he is from the Muslim community"
+    "french": "reconduire",
+    "english": "to renew, drive back",
+    "example_fr": "je te reconduis à l'aéroport",
+    "example_en": "I'll drive you back to the airport"
   },
   {
     "rank": 3937,
-    "french": "démocratie",
-    "english": "democracy",
-    "example_fr": "nous vivons en démocratie",
-    "example_en": "we live in a democracy"
+    "french": "handicap",
+    "english": "handicap",
+    "example_fr": "mon handicap est très sérieux",
+    "example_en": "my handicap is very serious"
   },
   {
     "rank": 3938,
-    "french": "sûr",
-    "english": "sure, certain",
-    "example_fr": "je suis sûr de lui",
-    "example_en": "I am sure of him"
+    "french": "bonsoir",
+    "english": "good evening",
+    "example_fr": "bonsoir cher ami. quel plaisir de vous voir",
+    "example_en": "good evening, dear friend. how nice to see you"
   },
   {
     "rank": 3939,
-    "french": "flèche",
-    "english": "arrow",
-    "example_fr": "il y a une flèche sur le panneau",
-    "example_en": "there is an arrow on the sign"
+    "french": "casque",
+    "english": "helmet",
+    "example_fr": "je suis la seule à porter un casque au travail",
+    "example_en": "I was the only one to wear a helmet at work"
   },
   {
     "rank": 3940,
-    "french": "confrontation",
-    "english": "confrontation",
-    "example_fr": "la confrontation a été violente",
-    "example_en": "the confrontation was violent"
+    "french": "autrui",
+    "english": "others",
+    "example_fr": "vous ne pouvez pas les louer à autrui",
+    "example_en": "you're not allowed to rent them to others"
   },
   {
     "rank": 3941,
-    "french": "mêler",
-    "english": "to mingle, mix",
-    "example_fr": "il aime se mêler aux gens",
-    "example_en": "he likes to mingle with people"
+    "french": "bousculer",
+    "english": "to knock over, knock into",
+    "example_fr": "je voulais bousculer les habitudes des gens",
+    "example_en": "I wanted to shake up people's habits"
   },
   {
     "rank": 3942,
-    "french": "réduire",
-    "english": "to reduce, curb",
-    "example_fr": "nous allons réduire les effectifs",
-    "example_en": "we are going to reduce the staff"
+    "french": "ériger",
+    "english": "to erect, set up",
+    "example_fr": "Hitler avait érigé un vieux symbole hindou",
+    "example_en": "Hitler had erected an ancient Hindu symbol"
   },
   {
     "rank": 3943,
-    "french": "poursuite",
-    "english": "chase, pursuit",
-    "example_fr": "il est en poursuite",
-    "example_en": "he is in pursuit"
+    "french": "conversion",
+    "english": "conversion",
+    "example_fr": "pouvez-vous expliquer votre notion de conversion psychique?",
+    "example_en": "can you explain your notion of psychic conversion?"
   },
   {
     "rank": 3944,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "le joueur a été blessé",
-    "example_en": "the player was injured"
+    "french": "patte",
+    "english": "paw, foot, leg",
+    "example_fr": "elles marchaient de côté avec des pattes de crabe",
+    "example_en": "they walked sideways crab-style"
   },
   {
     "rank": 3945,
-    "french": "déménager",
-    "english": "to move house, move out",
-    "example_fr": "nous allons déménager en banlieue",
-    "example_en": "we are moving to the suburbs"
+    "french": "planifier",
+    "english": "to plan",
+    "example_fr": "plus nous planifions longtemps d'avance, mieux c'est",
+    "example_en": "the longer ahead we plan, the better"
   },
   {
     "rank": 3946,
-    "french": "allumer",
-    "english": "to switch on, light up, turn on",
-    "example_fr": "il faut allumer le chauffage",
-    "example_en": "the heating must be turned on"
+    "french": "transitoire",
+    "english": "transient, interim, provisional",
+    "example_fr": "il y a installé l'administration transitoire",
+    "example_en": "there he set up the transitional administration"
   },
   {
     "rank": 3947,
-    "french": "détérioration",
-    "english": "deterioration",
-    "example_fr": "la détérioration de la situation",
-    "example_en": "the deterioration of the situation"
+    "french": "tardif",
+    "english": "late",
+    "example_fr": "je vous prie d'excuser mon arrivée tardive",
+    "example_en": "I beg you to excuse my late arrival"
   },
   {
     "rank": 3948,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "le bateau tourne à gauche",
-    "example_en": "the boat turns left"
+    "french": "prédécesseur",
+    "english": "predecessor",
+    "example_fr": "il est substantiellement semblable à son prédécesseur",
+    "example_en": "he's largely similar to his predecessor"
   },
   {
     "rank": 3949,
-    "french": "alléger",
-    "english": "to lighten, ease, relieve",
-    "example_fr": "il faut alléger la tâche",
-    "example_en": "the task must be eased"
+    "french": "natal",
+    "english": "native, home",
+    "example_fr": "il voulait quitter sa ville natale",
+    "example_en": "he wanted to leave his hometown"
   },
   {
     "rank": 3950,
-    "french": "détendu",
-    "english": "relaxed",
-    "example_fr": "elle est très détendue",
-    "example_en": "she is very relaxed"
+    "french": "humour",
+    "english": "humor",
+    "example_fr": "sans humour, tu ne survis pas",
+    "example_en": "without humor, you don't survive"
   },
   {
     "rank": 3951,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a agi par mépris",
-    "example_en": "he acted out of contempt"
+    "french": "défaillance",
+    "english": "fault, failure, breakdown, blackout, weakness",
+    "example_fr": "je connaissais mes défaillances et je les regrettais",
+    "example_en": "I knew my shortcomings and I regretted them"
   },
   {
     "rank": 3952,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle important",
-    "example_en": "he plays an important role"
+    "french": "hélas",
+    "english": "alas",
+    "example_fr": "hélas, je ne pourrai pas",
+    "example_en": "alas, I won't be able to"
   },
   {
     "rank": 3953,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il ne faut pas trop penser",
-    "example_en": "you should not think too much"
+    "french": "cabine",
+    "english": "hut, cubicle, booth, box, room",
+    "example_fr": "elle dort dans une cabine",
+    "example_en": "she's sleeping in a cabin"
   },
   {
     "rank": 3954,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "nous avons rattrapé les autres",
-    "example_en": "we caught up with the others"
+    "french": "fardeau",
+    "english": "burden",
+    "example_fr": "le gouvernement doit alléger le fardeau des entreprises",
+    "example_en": "the government must lighten the load of companies"
   },
   {
     "rank": 3955,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une nouvelle façon de faire",
-    "example_en": "it's a new way of doing things"
+    "french": "héritier",
+    "english": "heir",
+    "example_fr": "il n'a pas d'héritiers directs",
+    "example_en": "he has no direct heirs"
   },
   {
     "rank": 3956,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a mis son chapeau",
-    "example_en": "he put on his hat"
+    "french": "apport",
+    "english": "supply, contribution",
+    "example_fr": "cite-moi un seul apport positif de la technologie",
+    "example_en": "name me one positive contribution from technology"
   },
   {
     "rank": 3957,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il y a des touristes partout",
-    "example_en": "there are tourists everywhere"
+    "french": "remboursement",
+    "english": "reimbursement",
+    "example_fr": "s'ils veulent un remboursement, je le prendrais sur ta paye",
+    "example_en": "if they want reimbursement, I'll take it from your paycheck"
   },
   {
     "rank": 3958,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un coup",
-    "example_en": "he struck a blow"
+    "french": "échelon",
+    "english": "rung, step, grade, echelon",
+    "example_fr": "j'ai tenté de grimper encore un échelon, pour lui échapper",
+    "example_en": "I tried to crawl up one more rung to escape him"
   },
   {
     "rank": 3959,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement du satellite",
-    "example_en": "the satellite launch"
+    "french": "fondre",
+    "english": "to melt, merge",
+    "example_fr": "quel pudding exquis, il fond dans la bouche",
+    "example_en": "what exquisite pudding--it melts in the mouth"
   },
   {
     "rank": 3960,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "tout est flou",
-    "example_en": "everything is hazy"
+    "french": "occurrence",
+    "english": "instance, case, occurrence",
+    "example_fr": "nous pourrions compter sur les doigts de la main les occurrences du mot",
+    "example_en": "we could count on the fingers of one hand the occurrences of the word"
   },
   {
     "rank": 3961,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est visible",
-    "example_en": "dissatisfaction is visible"
+    "french": "authentique",
+    "english": "genuine, authentic",
+    "example_fr": "mon objectif premier : rester authentique",
+    "example_en": "my main objective: to remain authentic"
   },
   {
     "rank": 3962,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "il est pour le désarmement",
-    "example_en": "he is for disarmament"
+    "french": "attentivement",
+    "english": "attentively, carefully, closely",
+    "example_fr": "écoute-moi attentivement",
+    "example_en": "listen to me carefully"
   },
   {
     "rank": 3963,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné le coin",
-    "example_en": "he turned the corner"
+    "french": "irlandais",
+    "english": "Irish",
+    "example_fr": "ma femme est d'origine irlandaise",
+    "example_en": "my wife is of Irish background"
   },
   {
     "rank": 3964,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "la faillite est déclarée",
-    "example_en": "bankruptcy is declared"
+    "french": "confortable",
+    "english": "comfortable",
+    "example_fr": "ce canapé n'est pas très confortable",
+    "example_en": "this sofa is not very comfortable"
   },
   {
     "rank": 3965,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "je me mêle de mes affaires",
-    "example_en": "I mind my own business"
+    "french": "au-dessous",
+    "english": "underneath",
+    "example_fr": "la température descend au-dessous de -40",
+    "example_en": "the temperature is falling below -- 40"
   },
   {
     "rank": 3966,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "il est un joueur clé",
-    "example_en": "he is a key player"
+    "french": "fonctionnel",
+    "english": "functional",
+    "example_fr": "vous savez, tout est fonctionnel",
+    "example_en": "you know, everything works"
   },
   {
     "rank": 3967,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il est lourdement endetté",
-    "example_en": "he is heavily in debt"
+    "french": "panne",
+    "english": "breakdown, failure",
+    "example_fr": "ton téléphone est en panne",
+    "example_en": "your telephone doesn't work"
   },
   {
     "rank": 3968,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "c'est un génie",
-    "example_en": "he is a genius"
+    "french": "adieu",
+    "english": "goodbye, farewell, adieu",
+    "example_fr": "je ne t'aime plus. adieu",
+    "example_en": "I don't love you any more. farewell"
   },
   {
     "rank": 3969,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "son mépris est évident",
-    "example_en": "his contempt is obvious"
+    "french": "entre-temps",
+    "english": "meanwhile, in the meantime",
+    "example_fr": "entre-temps, la population vieillit et augmente",
+    "example_en": "in the meantime the population is aging and increasing"
   },
   {
     "rank": 3970,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "elle joue du violon",
-    "example_en": "she plays the violin"
+    "french": "insérer",
+    "english": "to insert",
+    "example_fr": "j'insère ma carte dans la machine",
+    "example_en": "I insert my card into the machine"
   },
   {
     "rank": 3971,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "je ne pense qu'à ça",
-    "example_en": "I only think about that"
+    "french": "confrère",
+    "english": "colleague",
+    "example_fr": "mes confrères de classe ont bénéficié de ces bourses",
+    "example_en": "my classmates benefited from those scholarships"
   },
   {
     "rank": 3972,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut rattraper le coup",
-    "example_en": "the situation must be salvaged"
+    "french": "litre",
+    "english": "litre",
+    "example_fr": "il vient de boire deux litres de bière d'un coup",
+    "example_en": "he just drank two litres of beer in one sitting"
   },
   {
     "rank": 3973,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est sa façon de parler",
-    "example_en": "it's his way of speaking"
+    "french": "suivi",
+    "english": "follow-up; consistent, continuous",
+    "example_fr": "il n'y a pas assez de suivi psychiatrique et sanitaire en prison",
+    "example_en": "there isn't enough psychiatric and sanitary follow-up in prison"
   },
   {
     "rank": 3974,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a perdu son chapeau",
-    "example_en": "he lost his hat"
+    "french": "variation",
+    "english": "variation, change",
+    "example_fr": "les variations peuvent être compensées",
+    "example_en": "the variations can be compensated"
   },
   {
     "rank": 3975,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "le touriste est perdu",
-    "example_en": "the tourist is lost"
+    "french": "productif",
+    "english": "productive",
+    "example_fr": "j'essaie de rendre le gens les moins productifs que possible",
+    "example_en": "I try to make people the least productive possible"
   },
   {
     "rank": 3976,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé fort",
-    "example_en": "he struck hard"
+    "french": "groupement",
+    "english": "grouping, group, categorization",
+    "example_fr": "j'étais dans toutes sortes de groupements",
+    "example_en": "I was in all kinds of groups"
   },
   {
     "rank": 3977,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement du projet",
-    "example_en": "the project launch"
+    "french": "modernisation",
+    "english": "modernization",
+    "example_fr": "il va nous amener à poursuivre notre modernisation",
+    "example_en": "he's going to push us to pursue our modernization"
   },
   {
     "rank": 3978,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "les images sont floues",
-    "example_en": "the images are blurred"
+    "french": "déploiement",
+    "english": "deployment, spreading, unfurling, display",
+    "example_fr": "il s'agirait du premier déploiement de missiles sol-air",
+    "example_en": "it would be the first deployment of surface-to-air missiles"
   },
   {
     "rank": 3979,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "il y a un fort mécontentement",
-    "example_en": "there is strong dissatisfaction"
+    "french": "impuissant",
+    "english": "powerless, helpless",
+    "example_fr": "la justice est complètement impuissante",
+    "example_en": "justice is completely powerless"
   },
   {
     "rank": 3980,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "un accord de désarmement",
-    "example_en": "a disarmament agreement"
+    "french": "restauration",
+    "english": "restoration; catering",
+    "example_fr": "la restauration emploie beaucoup de jeunes",
+    "example_en": "catering employs many young people"
   },
   {
     "rank": 3981,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "le moteur ne tourne pas",
-    "example_en": "the engine is not turning"
+    "french": "haïr",
+    "english": "to detest, hate, abhor",
+    "example_fr": "j'ai toujours haï la campagne",
+    "example_en": "I always hated the countryside"
   },
   {
     "rank": 3982,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est en faillite",
-    "example_en": "he is bankrupt"
+    "french": "marée",
+    "english": "tide",
+    "example_fr": "c'est à marée haute qu'il faut venir",
+    "example_en": "you must come at high tide"
   },
   {
     "rank": 3983,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "souscrire",
+    "english": "to subscribe",
+    "example_fr": "elle ne souscrit pas complètement à nos principes",
+    "example_en": "she doesn't altogether subscribe to our principles"
   },
   {
     "rank": 3984,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "diable",
+    "english": "devil",
+    "example_fr": "vous croyez que je suis le diable?",
+    "example_en": "you think I'm the devil?"
   },
   {
     "rank": 3985,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "suffrage",
+    "english": "vote",
+    "example_fr": "le suffrage est le court moment du souverain",
+    "example_en": "the popular vote is the beginning of the end for a monarch"
   },
   {
     "rank": 3986,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "spontané",
+    "english": "spontaneous",
+    "example_fr": "sois spontanée pour une fois dans ta vie",
+    "example_en": "be spontaneous for once in your life"
   },
   {
     "rank": 3987,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "joyeux",
+    "english": "merry, joyful, happy",
+    "example_fr": "je ne regrette pas cette époque très joyeuse de ma vie",
+    "example_en": "I don't regret this very joyful time in my life"
   },
   {
     "rank": 3988,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "concilier",
+    "english": "to reconcile",
+    "example_fr": "j'arriverai à concilier plaisir et nécessité",
+    "example_en": "I managed to reconcile pleasure and duty"
   },
   {
     "rank": 3989,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "tristesse",
+    "english": "sadness, gloominess, dreariness",
+    "example_fr": "je n'ai jamais pris leur tristesse au sérieux",
+    "example_en": "I never took their sadness seriously"
   },
   {
     "rank": 3990,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "asile",
+    "english": "shelter, asylum, hospital",
+    "example_fr": "ils veulent m'enfermer à l'asile!",
+    "example_en": "they want to commit me to an asylum!"
   },
   {
     "rank": 3991,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "sombrer",
+    "english": "to darken; to sink, lapse",
+    "example_fr": "je sombrai dans le chaos",
+    "example_en": "I sank into chaos"
   },
   {
     "rank": 3992,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "photographe",
+    "english": "photographer",
+    "example_fr": "je suis en quelque sorte son photographe non officiel",
+    "example_en": "I'm somewhat of his unofficial photographer"
   },
   {
     "rank": 3993,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "libanais",
+    "english": "Lebanese",
+    "example_fr": "mais nous, les Libanais, nous reviendrons",
+    "example_en": "but we Lebanese, we will return"
   },
   {
     "rank": 3994,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "archives",
+    "english": "archives, records",
+    "example_fr": "je suis allée aux archives",
+    "example_en": "I went to the archives"
   },
   {
     "rank": 3995,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "honteux",
+    "english": "ashamed, shameful",
+    "example_fr": "je trouve cela absolument honteux",
+    "example_en": "I find that absolutely shameful"
   },
   {
     "rank": 3996,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "rapporteur",
+    "english": "telltale, rapporteur",
+    "example_fr": "je vous en informe comme rapporteur",
+    "example_en": "I'm telling you this as a reporter"
   },
   {
     "rank": 3997,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "dix-neuvième",
+    "english": "nineteenth",
+    "example_fr": "la ville paraît sortie du dix-neuvième siècle",
+    "example_en": "the city seemed to come straight out of the nineteenth century"
   },
   {
     "rank": 3998,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "indemnisation",
+    "english": "indemnification, compensation",
+    "example_fr": "jamais une période d'indemnisation n'a été aussi longue",
+    "example_en": "no period of compensation has ever been this long"
   },
   {
     "rank": 3999,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "harceler",
+    "english": "to harass, plague",
+    "example_fr": "la police des mœurs harcèle encore les jeunes",
+    "example_en": "the vice squad is still harassing the youth"
   },
   {
     "rank": 4000,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "leadership",
+    "english": "leadership",
+    "example_fr": "nous devons faire preuve de leadership",
+    "example_en": "we must show leadership"
   },
   {
     "rank": 4001,
-    "french": "mêler",
-    "english": "to mingle, mix",
-    "example_fr": "je ne veux pas me mêler de ses affaires",
-    "example_en": "I don't want to get involved in his business"
+    "french": "cahier",
+    "english": "notebook",
+    "example_fr": "d'accord, fermez les cahiers. commençons cet examen",
+    "example_en": "OK, close your workbooks. let's begin this exam"
   },
   {
     "rank": 4002,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il aime jouer à la roulette",
-    "example_en": "he likes to play roulette"
+    "french": "portable",
+    "english": "portable, wearable; cell phone",
+    "example_fr": "j'achèterai un portable et je t'appellerai",
+    "example_en": "I'll buy a cell phone and I'll call you"
   },
   {
     "rank": 4003,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser aux conséquences",
-    "example_en": "you have to think about the consequences"
+    "french": "précoce",
+    "english": "early, precocious",
+    "example_fr": "nous favorisons la détection précoce et la prévention",
+    "example_en": "we support early detection and prevention"
   },
   {
     "rank": 4004,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "on ne peut pas rattraper le temps",
-    "example_en": "you can't make up for lost time"
+    "french": "qualification",
+    "english": "qualification",
+    "example_fr": "on n'a pas passé les qualifications",
+    "example_en": "we didn't pass the qualifying exam"
   },
   {
     "rank": 4005,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est sa façon de faire",
-    "example_en": "it's his way of doing things"
+    "french": "insulte",
+    "english": "insult",
+    "example_fr": "je m'enfuis, poursuivie par ses insultes",
+    "example_en": "I took off, pursued by her insults"
   },
   {
     "rank": 4006,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il portait un chapeau noir",
-    "example_en": "he was wearing a black hat"
+    "french": "planer",
+    "english": "to glide, soar",
+    "example_fr": "un grand oiseau planait",
+    "example_en": "a large bird was soaring"
   },
   {
     "rank": 4007,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il est un touriste américain",
-    "example_en": "he is an American tourist"
+    "french": "stage",
+    "english": "internship, training course",
+    "example_fr": "j'ai découvert la secte lors d'un stage d'été en Slovénie",
+    "example_en": "I found the sect during a summer internship in Slovenia"
   },
   {
     "rank": 4008,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé à la porte",
-    "example_en": "he knocked on the door"
+    "french": "dédier",
+    "english": "to dedicate",
+    "example_fr": "ce livre est dédié à ma sœur qui est décédée",
+    "example_en": "this book is dedicated to my sister who passed away"
   },
   {
     "rank": 4009,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement de la fusée",
-    "example_en": "the rocket launch"
+    "french": "carrément",
+    "english": "completely, directly, straight out",
+    "example_fr": "ici, on passe carrément par-dessus la tête des syndicats",
+    "example_en": "here, frankly, we go over the heads of the unions"
   },
   {
     "rank": 4010,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "les souvenirs sont flous",
-    "example_en": "the memories are hazy"
+    "french": "exil",
+    "english": "exile",
+    "example_fr": "elle mourut dans l'exil, dans la pauvreté",
+    "example_en": "she died in exile, in poverty"
   },
   {
     "rank": 4011,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est grand",
-    "example_en": "the dissatisfaction is great"
+    "french": "artisan",
+    "english": "craftsman, self-employed",
+    "example_fr": "nous sommes les artisans de notre propre destin",
+    "example_en": "we are the captains of our own destiny"
   },
   {
     "rank": 4012,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "il est pour le désarmement nucléaire",
-    "example_en": "he is for nuclear disarmament"
+    "french": "rassurant",
+    "english": "reassuring, comforting",
+    "example_fr": "c'est rassurant des bruits de cuisine",
+    "example_en": "kitchen sounds are reassuring"
   },
   {
     "rank": 4013,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné autour de la maison",
-    "example_en": "he turned around the house"
+    "french": "remède",
+    "english": "cure, remedy",
+    "example_fr": "leur herbier fournit des remèdes, des tisanes",
+    "example_en": "the herbalist provides remedies, herbal teas"
   },
   {
     "rank": 4014,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "la menace de faillite",
-    "example_en": "the threat of bankruptcy"
+    "french": "composant",
+    "english": "component, constituent",
+    "example_fr": "c'est une organisation politique avec un forte composante terroriste",
+    "example_en": "it's a political organization with a strong terrorist component"
   },
   {
     "rank": 4015,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "il se mêle aux autres",
-    "example_en": "he mingles with the others"
+    "french": "économiquement",
+    "english": "economically",
+    "example_fr": "ce sont des régions qui actuellement explosent économiquement",
+    "example_en": "these are regions that are currently exploding with economic activity"
   },
   {
     "rank": 4016,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "le joueur de football",
-    "example_en": "the soccer player"
+    "french": "hurler",
+    "english": "to scream, yell",
+    "example_fr": "tout le monde la cherchait, hurlait son prénom",
+    "example_en": "everyone was looking for her, yelling her name"
   },
   {
     "rank": 4017,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement insisté",
-    "example_en": "he heavily insisted"
+    "french": "yen",
+    "english": "yen",
+    "example_fr": "par ailleurs, le yen doit être soutenu",
+    "example_en": "elsewhere, the yen must be shored up"
   },
   {
     "rank": 4018,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il est un génie de la musique",
-    "example_en": "he is a musical genius"
+    "french": "gras",
+    "english": "fatty, fat, greasy",
+    "example_fr": "il y a 20 % de matières grasses dedans",
+    "example_en": "it has a 20% fat content"
   },
   {
     "rank": 4019,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il ressent du mépris",
-    "example_en": "he feels contempt"
+    "french": "médiatique",
+    "english": "media",
+    "example_fr": "c'est un coup médiatique incroyable pour cette compagnie-là",
+    "example_en": "it's an incredible public relations coup for that company"
   },
   {
     "rank": 4020,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "elle joue un rôle",
-    "example_en": "she plays a role"
+    "french": "statue",
+    "english": "statue",
+    "example_fr": "elevons une statue de moi",
+    "example_en": "let's erect a statue of me"
   },
   {
     "rank": 4021,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut bien y penser",
-    "example_en": "you really have to think about it"
+    "french": "frappe",
+    "english": "strike, striking, stamp, impression, punch",
+    "example_fr": "les frappes aériennes ne vont résoudre aucun problème",
+    "example_en": "air strikes won't resolve any problems"
   },
   {
     "rank": 4022,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "industrialiser",
+    "english": "to industrialize",
+    "example_fr": "la France vend surtout aux principaux pays industrialisés",
+    "example_en": "France sells mostly to the principal industrialized countries"
   },
   {
     "rank": 4023,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une drôle de façon",
-    "example_en": "it's a funny way"
+    "french": "efficacement",
+    "english": "efficiently, effectively",
+    "example_fr": "nous avons toujours travaillé efficacement ensemble",
+    "example_en": "we have always worked effectively together"
   },
   {
     "rank": 4024,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a mis son chapeau",
-    "example_en": "he put on his hat"
+    "french": "golfe",
+    "english": "gulf",
+    "example_fr": "les gens du Golfe sont très fiers",
+    "example_en": "the people of the Gulf are very proud"
   },
   {
     "rank": 4025,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il est un touriste",
-    "example_en": "he is a tourist"
+    "french": "ambiance",
+    "english": "atmosphere, mood",
+    "example_fr": "il y a une ambiance sympa dans cette ville",
+    "example_en": "there's a great atmosphere in this city"
   },
   {
     "rank": 4026,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé à la porte",
-    "example_en": "he knocked on the door"
+    "french": "coopérer",
+    "english": "to cooperate",
+    "example_fr": "je pense qu'il va falloir coopérer",
+    "example_en": "I think we will have to cooperate"
   },
   {
     "rank": 4027,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement du programme",
-    "example_en": "the program launch"
+    "french": "bus",
+    "english": "bus",
+    "example_fr": "à Rome, nous avons pris le bus. un bus rouge",
+    "example_en": "in Rome, we took the bus. a red bus"
   },
   {
     "rank": 4028,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "la photo est floue",
-    "example_en": "the photo is blurry"
+    "french": "septième",
+    "english": "seventh",
+    "example_fr": "le septième enfant est mort",
+    "example_en": "the seventh child died"
   },
   {
     "rank": 4029,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement monte",
-    "example_en": "dissatisfaction is rising"
+    "french": "façade",
+    "english": "front, façade",
+    "example_fr": "la façade est formée par le massif",
+    "example_en": "the facade is formed by the massif"
   },
   {
     "rank": 4030,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "le traité de désarmement",
-    "example_en": "the disarmament treaty"
+    "french": "charmant",
+    "english": "charming",
+    "example_fr": "c'était une femme tout à fait charmante",
+    "example_en": "she was an absolutely charming woman"
   },
   {
     "rank": 4031,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la page",
-    "example_en": "he turned the page"
+    "french": "marginal",
+    "english": "marginal",
+    "example_fr": "j'ai jamais pensé que j'étais marginal",
+    "example_en": "I never thought of myself as marginal"
   },
   {
     "rank": 4032,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "déclarer faillite",
-    "example_en": "to declare bankruptcy"
+    "french": "comptable",
+    "english": "accountant, accountable",
+    "example_fr": "le fruit d'une froide évaluation comptable",
+    "example_en": "the fruit of passionless accounting evaluation"
   },
   {
     "rank": 4033,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle à la conversation",
-    "example_en": "she joins the conversation"
+    "french": "isolement",
+    "english": "loneliness, isolation, insulation",
+    "example_fr": "vous avez été maintenu quatorze ans en isolement",
+    "example_en": "you were kept fourteen years in isolation"
   },
   {
     "rank": 4034,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "un joueur de tennis",
-    "example_en": "a tennis player"
+    "french": "modérer",
+    "english": "to restrain, moderate, reduce",
+    "example_fr": "malheureusement la prudence ne modérait pas toujours les élans de son coeur",
+    "example_en": "sadly, prudence didn't always restrain the outbursts of her heart"
   },
   {
     "rank": 4035,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il est lourdement chargé",
-    "example_en": "he is heavily loaded"
+    "french": "volant",
+    "english": "steering wheel",
+    "example_fr": "vas-y, prends le volant",
+    "example_en": "go ahead, take hold of the steering wheel"
   },
   {
     "rank": 4036,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "le génie du mal",
-    "example_en": "the evil genius"
+    "french": "porc",
+    "english": "pig, pork",
+    "example_fr": "on a été manger des côtes de porc dans un bistro",
+    "example_en": "we went to eat pork ribs in a bistro"
   },
   {
     "rank": 4037,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a montré son mépris",
-    "example_en": "he showed his contempt"
+    "french": "appartenance",
+    "english": "membership, belonging",
+    "example_fr": "le sentiment d'appartenance doit être entretenu",
+    "example_en": "the sense of belonging must be maintained"
   },
   {
     "rank": 4038,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue aux cartes",
-    "example_en": "he plays cards"
+    "french": "émeute",
+    "english": "riot, rioting",
+    "example_fr": "c'était le point zéro des émeutes de Los Angeles",
+    "example_en": "it was ground zero for the Los Angeles riots"
   },
   {
     "rank": 4039,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "je pense que oui",
-    "example_en": "I think so"
+    "french": "constructif",
+    "english": "constructive",
+    "example_fr": "trouvez une facon constructive de vous améliorer",
+    "example_en": "find a constructive way to improve yourself"
   },
   {
     "rank": 4040,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il a rattrapé son retard",
-    "example_en": "he caught up his delay"
+    "french": "minime",
+    "english": "minor, minimal",
+    "example_fr": "beaucoup de ces différences sont minimes",
+    "example_en": "many of these differences are minimal"
   },
   {
     "rank": 4041,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une mauvaise façon",
-    "example_en": "it's a bad way"
+    "french": "ralentissement",
+    "english": "slowing down",
+    "example_fr": "l'économie japonaise est en net ralentissement",
+    "example_en": "the Japanese economy is clearly slowing down"
   },
   {
     "rank": 4042,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a enlevé son chapeau",
-    "example_en": "he took off his hat"
+    "french": "mobilisation",
+    "english": "mobilization",
+    "example_fr": "rapidement la mobilisation se construit dans la communauté éducative",
+    "example_en": "rapidly mobilization was established in the educational community"
   },
   {
     "rank": 4043,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "les touristes arrivent",
-    "example_en": "the tourists are arriving"
+    "french": "tâcher",
+    "english": "to endeavor",
+    "example_fr": "tâchez donc à faire plus simple",
+    "example_en": "so try to simplify"
   },
   {
     "rank": 4044,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé au mur",
-    "example_en": "he hit the wall"
+    "french": "racisme",
+    "english": "racism",
+    "example_fr": "cette fausse image contribue au racisme",
+    "example_en": "this false image feeds racism"
   },
   {
     "rank": 4045,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement du film",
-    "example_en": "the film launch"
+    "french": "mairie",
+    "english": "town hall, city hall",
+    "example_fr": "ils se marièrent à la mairie",
+    "example_en": "they got married at the city hall"
   },
   {
     "rank": 4046,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "c'est un peu flou",
-    "example_en": "it's a bit hazy"
+    "french": "aptitude",
+    "english": "ability",
+    "example_fr": "ses aptitudes en mathématiques me désespèrent",
+    "example_en": "his aptitude for mathematics left me in despair"
   },
   {
     "rank": 4047,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "il y a du mécontentement",
-    "example_en": "there is dissatisfaction"
+    "french": "fumée",
+    "english": "smoke",
+    "example_fr": "on a senti des odeurs de fumée",
+    "example_en": "we smelled smoke"
   },
   {
     "rank": 4048,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "désarmement et développement",
-    "example_en": "disarmament and development"
+    "french": "sauvetage",
+    "english": "rescue, salvaging",
+    "example_fr": "nos équipes de recherche et de sauvetage sont sur place",
+    "example_en": "our search and rescue teams are in place"
   },
   {
     "rank": 4049,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la roue",
-    "example_en": "he turned the wheel"
+    "french": "récession",
+    "english": "recession",
+    "example_fr": "si on parle de récession, les gens n'achètent plus",
+    "example_en": "if there's talk of a recession, people will stop buying"
   },
   {
     "rank": 4050,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "éviter la faillite",
-    "example_en": "to avoid bankruptcy"
+    "french": "convaincant",
+    "english": "convincing",
+    "example_fr": "tu as été convaincant à la télé aujourd'hui",
+    "example_en": "you were convincing on TV today"
   },
   {
     "rank": 4051,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "il se mêle de ce qui ne le regarde pas",
-    "example_en": "he meddles in what doesn't concern him"
+    "french": "sou",
+    "english": "penny",
+    "example_fr": "ils étaient des réfugiés sans le sou",
+    "example_en": "they were refugees without a single penny"
   },
   {
     "rank": 4052,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "un joueur professionnel",
-    "example_en": "a professional player"
+    "french": "analyste",
+    "english": "analyst",
+    "example_fr": "quand ces personnes sont elles-mêmes devenues analystes?",
+    "example_en": "when did these people become analysts too?"
   },
   {
     "rank": 4053,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a été lourdement puni",
-    "example_en": "he was heavily punished"
+    "french": "prétendu",
+    "english": "so-called, alleged",
+    "example_fr": "il est impossible d'accepter cette prétendue réponse",
+    "example_en": "it's impossible to accept this so-called response"
   },
   {
     "rank": 4054,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "le génie humain",
-    "example_en": "human genius"
+    "french": "grossier",
+    "english": "unrefined, crude, coarse, rude, rough",
+    "example_fr": "excusez-moi. j'ai été grossier",
+    "example_en": "excuse me. I was rude"
   },
   {
     "rank": 4055,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a agi par mépris",
-    "example_en": "he acted out of contempt"
+    "french": "ignorance",
+    "english": "ignorance",
+    "example_fr": "tu m'as aimé par ignorance!",
+    "example_en": "you loved me out of ignorance!"
   },
   {
     "rank": 4056,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue au loto",
-    "example_en": "he plays the lottery"
+    "french": "pervers",
+    "english": "pervert, perverse, perverted",
+    "example_fr": "vous aimez les trucs pervers, hein?",
+    "example_en": "you like perverted stuff, hey?"
   },
   {
     "rank": 4057,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "je pense donc je suis",
-    "example_en": "I think therefore I am"
+    "french": "sensiblement",
+    "english": "approximately, more or less, noticeably",
+    "example_fr": "le gouvernement fédéral a réduit sensiblement sa contribution",
+    "example_en": "the federal government reduced its contribution sizably"
   },
   {
     "rank": 4058,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut rattraper le coup",
-    "example_en": "the situation must be salvaged"
+    "french": "léguer",
+    "english": "to bequeath, hand down, pass on",
+    "example_fr": "il aurait dû me léguer la maison tout entière",
+    "example_en": "he should have bequeathed me the whole house"
   },
   {
     "rank": 4059,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une façon de vivre",
-    "example_en": "it's a way of living"
+    "french": "prélever",
+    "english": "to impose, levy, withdraw, remove",
+    "example_fr": "l'argent est prélevé sur les chèques toutes les semaines",
+    "example_en": "money is debited against the checks every week"
   },
   {
     "rank": 4060,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a mis son chapeau",
-    "example_en": "he put on his hat"
+    "french": "noyer",
+    "english": "walnut; to drown, flood, blur, water down",
+    "example_fr": "tous trois ont péri noyés, prisonniers du véhicule",
+    "example_en": "all three of them drowned, trapped in the vehicle"
   },
   {
     "rank": 4061,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "un touriste perdu",
-    "example_en": "a lost tourist"
+    "french": "abbé",
+    "english": "abbot, priest",
+    "example_fr": "je vous présente M. l'abbé",
+    "example_en": "may I introduce the abbey"
   },
   {
     "rank": 4062,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé à la porte",
-    "example_en": "he knocked on the door"
+    "french": "détecter",
+    "english": "to detect",
+    "example_fr": "les fuites sont difficiles à détecter",
+    "example_en": "leaks are difficult to detect"
   },
   {
     "rank": 4063,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est imminent",
-    "example_en": "the launch is imminent"
+    "french": "capter",
+    "english": "to pick up, capture, tap",
+    "example_fr": "puis ses yeux captèrent un mouvement",
+    "example_en": "then her eyes caught a motion"
   },
   {
     "rank": 4064,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "le paysage est flou",
-    "example_en": "the landscape is hazy"
+    "french": "sceptique",
+    "english": "sceptical, sceptic",
+    "example_fr": "le monde scientifique reste en majorité sceptique",
+    "example_en": "the scientific world for the most part remains sceptical"
   },
   {
     "rank": 4065,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est visible",
-    "example_en": "dissatisfaction is visible"
+    "french": "vôtre",
+    "english": "yours",
+    "example_fr": "ça fera deux cafés, le vôtre et celui du monsieur",
+    "example_en": "that will be two coffees, yours and the gentleman's"
   },
   {
     "rank": 4066,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "problématique",
+    "english": "problematic; problem",
+    "example_fr": "quelle est la problématique environnementale principale?",
+    "example_en": "what is the principal environmental issue?"
   },
   {
     "rank": 4067,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné autour de la question",
-    "example_en": "he avoided the question"
+    "french": "voiler",
+    "english": "to veil",
+    "example_fr": "les femmes doivent se voiler",
+    "example_en": "women must wear a veil"
   },
   {
     "rank": 4068,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "au bord de la faillite",
-    "example_en": "on the verge of bankruptcy"
+    "french": "nationalité",
+    "english": "nationality",
+    "example_fr": "il avait la possibilité de choisir la nationalité française",
+    "example_en": "he had the chance to choose French nationality"
   },
   {
     "rank": 4069,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "il se mêle des affaires",
-    "example_en": "he meddles in business"
+    "french": "serment",
+    "english": "oath, vow",
+    "example_fr": "tu ne peux pas rompre un serment, c'est sacré",
+    "example_en": "you can't break an oath -- it's sacred"
   },
   {
     "rank": 4070,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "il est un joueur clé",
-    "example_en": "he is a key player"
+    "french": "envoler",
+    "english": "to fly away, fly off, take off",
+    "example_fr": "son âme s'envolait, portée par les anges",
+    "example_en": "his soul flew away, carried by the angels"
   },
   {
     "rank": 4071,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "pasteur",
+    "english": "minister, clergyman, pastor",
+    "example_fr": "elle aime mieux le pasteur que le Jésuite",
+    "example_en": "she prefers the pastor to the Jesuit"
   },
   {
     "rank": 4072,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il est un génie",
-    "example_en": "he is a genius"
+    "french": "activer",
+    "english": "to activate, speed up, stoke, get moving",
+    "example_fr": "il faut activer votre réseau",
+    "example_en": "you have to activate your network"
   },
   {
     "rank": 4073,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "chimie",
+    "english": "chemistry",
+    "example_fr": "je ferais mieux d'étudier ma chimie",
+    "example_en": "I would do better to study my chemistry"
   },
   {
     "rank": 4074,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "elle joue un rôle important",
-    "example_en": "she plays an important role"
+    "french": "erroné",
+    "english": "erroneous",
+    "example_fr": "cette idée est complètement erronée",
+    "example_en": "this idea is completely false"
   },
   {
     "rank": 4075,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser aux autres",
-    "example_en": "you have to think about others"
+    "french": "fantôme",
+    "english": "ghost, phantom",
+    "example_fr": "j'ai encore vu un fantôme dans ma maison",
+    "example_en": "I saw a ghost in my house again"
   },
   {
     "rank": 4076,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "nous avons rattrapé le retard",
-    "example_en": "we made up for the delay"
+    "french": "naviguer",
+    "english": "to navigate, sail",
+    "example_fr": "il naviguait sur Internet en quête de sujets scientifiques",
+    "example_en": "he surfed the Internet looking for science topics"
   },
   {
     "rank": 4077,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une façon de s'exprimer",
-    "example_en": "it's a way of expressing oneself"
+    "french": "yougoslave",
+    "english": "Yugoslav, Yugoslavian",
+    "example_fr": "la crise yougoslave gêne surtout leurs grands rivaux",
+    "example_en": "the Yugoslavian crisis bothers their major rivals the most"
   },
   {
     "rank": 4078,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "explicitement",
+    "english": "explicitly",
+    "example_fr": "se séparer explicitement de l'amour",
+    "example_en": "to separate oneself explicitly from love"
   },
   {
     "rank": 4079,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "le touriste est étranger",
-    "example_en": "the tourist is a foreigner"
+    "french": "alerter",
+    "english": "to alert, inform, warn",
+    "example_fr": "il ne faudrait pas alerter la population",
+    "example_en": "we shouldn't alert the population"
   },
   {
     "rank": 4080,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un coup sec",
-    "example_en": "he struck a sharp blow"
+    "french": "vigilance",
+    "english": "vigilance, watchfulness",
+    "example_fr": "le pinot demande une vigilance constante",
+    "example_en": "pinot demands constant vigilance"
   },
   {
     "rank": 4081,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement de l'initiative",
-    "example_en": "the initiative launch"
+    "french": "rock",
+    "english": "rock music",
+    "example_fr": "j'avais souhaité parler du rock de mon adolescence",
+    "example_en": "I wanted to talk about the rock of my teenage years"
   },
   {
     "rank": 4082,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "c'est flou",
-    "example_en": "it's hazy"
+    "french": "réconciliation",
+    "english": "reconciliation",
+    "example_fr": "une Europe unie a besoin de cette réconciliation",
+    "example_en": "a unified Europe needs this reconciliation"
   },
   {
     "rank": 4083,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement des salariés",
-    "example_en": "employee dissatisfaction"
+    "french": "revers",
+    "english": "back, reverse, setback",
+    "example_fr": "il y a le revers de la médaille",
+    "example_en": "there is the other side of the coin"
   },
   {
     "rank": 4084,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "le processus de désarmement",
-    "example_en": "the disarmament process"
+    "french": "aviation",
+    "english": "aviation",
+    "example_fr": "l'aviation israélienne avait mené une série de raids",
+    "example_en": "the Israeli air force carried out a series of raids"
   },
   {
     "rank": 4085,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné le dos",
-    "example_en": "he turned his back"
+    "french": "souplesse",
+    "english": "suppleness, flexibility",
+    "example_fr": "je préfère la souplesse d'âme à la souplesse de peau",
+    "example_en": "I prefer a gentle soul to soft skin"
   },
   {
     "rank": 4086,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "menacer de faillite",
-    "example_en": "to threaten with bankruptcy"
+    "french": "respectueux",
+    "english": "respectful",
+    "example_fr": "il est extrêmement respectueux avec les gens",
+    "example_en": "he is extremely respectful of people"
   },
   {
     "rank": 4087,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "il aime se mêler aux conversations",
-    "example_en": "he likes to join conversations"
+    "french": "trahison",
+    "english": "betrayal, treachery, treason",
+    "example_fr": "c'était rien, juste une petite trahison",
+    "example_en": "it was nothing, just a little bit of treason"
   },
   {
     "rank": 4088,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "un joueur de l'équipe",
-    "example_en": "a team player"
+    "french": "débit",
+    "english": "debit, turnover, delivery, rate",
+    "example_fr": "le débit était aussi rapide qu'avant",
+    "example_en": "turnover was as rapid as it was previously"
   },
   {
     "rank": 4089,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a été lourdement condamné",
-    "example_en": "he was heavily sentenced"
+    "french": "sursis",
+    "english": "reprieve, deferment",
+    "example_fr": "une peine d'emprisonnement avec sursis ne suffirait pas",
+    "example_en": "jail time with remission of sentence would not be enough"
   },
   {
     "rank": 4090,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "un coup de génie",
-    "example_en": "a stroke of genius"
+    "french": "simultanément",
+    "english": "simultaneously",
+    "example_fr": "je répondrai donc aux deux questions simultanément",
+    "example_en": "so I will answer both questions at the same time"
   },
   {
     "rank": 4091,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a le mépris des autres",
-    "example_en": "he has contempt for others"
+    "french": "techniquement",
+    "english": "technically",
+    "example_fr": "je ne te connais pas ... techniquement",
+    "example_en": "I don't know you ... technically"
   },
   {
     "rank": 4092,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "elle joue un rôle mineur",
-    "example_en": "she plays a minor role"
+    "french": "os",
+    "english": "bone",
+    "example_fr": "je jette un os à un chien",
+    "example_en": "I toss a bone to a dog"
   },
   {
     "rank": 4093,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à l'avenir",
-    "example_en": "you have to think about the future"
+    "french": "cote",
+    "english": "rating, share index, quoted value",
+    "example_fr": "l'or a dépassé la cote des $ 380",
+    "example_en": "gold rose above a quoted value of $380"
   },
   {
     "rank": 4094,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "nous allons rattraper notre retard",
-    "example_en": "we are going to make up for our delay"
+    "french": "dictionnaire",
+    "english": "dictionary",
+    "example_fr": "nous avons développé un dictionnaire assez élaboré",
+    "example_en": "we have developed quite an elaborate dictionary"
   },
   {
     "rank": 4095,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une façon de penser",
-    "example_en": "it's a way of thinking"
+    "french": "symptôme",
+    "english": "symptom",
+    "example_fr": "les symptômes se sont nettement aggravés",
+    "example_en": "the symptoms got much worse"
   },
   {
     "rank": 4096,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a acheté un chapeau",
-    "example_en": "he bought a hat"
+    "french": "délibérément",
+    "english": "deliberately",
+    "example_fr": "il marcha délibérément vers la porte",
+    "example_en": "he strode deliberately towards the door"
   },
   {
     "rank": 4097,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "le touriste est ravi",
-    "example_en": "the tourist is delighted"
+    "french": "écoute",
+    "english": "listening",
+    "example_fr": "il faut se tenir à l'écoute de tout ce qui se passe",
+    "example_en": "you have to keep informed about everything that happens"
   },
   {
     "rank": 4098,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé la balle",
-    "example_en": "he hit the ball"
+    "french": "contingent",
+    "english": "contingent, draft, quota",
+    "example_fr": "c'est le plus fort contingent d'étudiants étrangers",
+    "example_en": "that's the strongest contingent of foreign students"
   },
   {
     "rank": 4099,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "émerger",
+    "english": "to emerge, rise up, come out",
+    "example_fr": "cette façon de penser émerge presque partout",
+    "example_en": "this kind of thinking is emerging almost everywhere"
   },
   {
     "rank": 4100,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "instruire",
+    "english": "to teach, educate, inform",
+    "example_fr": "ils sauront l'instruire sur leurs anciennes pratiques",
+    "example_en": "they know how to teach him their ancient practices"
   },
   {
     "rank": 4101,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "il y a un mécontentement général",
-    "example_en": "there is general dissatisfaction"
+    "french": "équité",
+    "english": "equity, fairly",
+    "example_fr": "il faudra renforcer l'équité en matière d'emploi",
+    "example_en": "it will be necessary to strengthen equity in the workplace"
   },
   {
     "rank": 4102,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "il est pour le désarmement",
-    "example_en": "he is for disarmament"
+    "french": "inconscient",
+    "english": "unconscious, thoughtless",
+    "example_fr": "après cela, je suis resté inconscient pendant 24 heures",
+    "example_en": "afterwards, I was unconscious for 24 hours"
   },
   {
     "rank": 4103,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné autour du pot",
-    "example_en": "he beat around the bush"
+    "french": "chaleureux",
+    "english": "warm",
+    "example_fr": "c'était quand même un accueil très chaleureux",
+    "example_en": "yet it was a very warm welcome"
   },
   {
     "rank": 4104,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "déclarer faillite",
-    "example_en": "to declare bankruptcy"
+    "french": "déguiser",
+    "english": "to disguise",
+    "example_fr": "je me déguise en quelqu'un d'autre",
+    "example_en": "I'm disguised as somebody else"
   },
   {
     "rank": 4105,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "il se mêle des affaires des autres",
-    "example_en": "he meddles in other people's business"
+    "french": "fièvre",
+    "english": "fever",
+    "example_fr": "vous êtes brûlante de fièvre",
+    "example_en": "you're burning up with fever"
   },
   {
     "rank": 4106,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "un bon joueur",
-    "example_en": "a good player"
+    "french": "vitre",
+    "english": "pane, window",
+    "example_fr": "derrière la vitre, il l'observait, il la jugeait",
+    "example_en": "from behind the windowpane he watched her, he judged her"
   },
   {
     "rank": 4107,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement insisté",
-    "example_en": "he heavily insisted"
+    "french": "fantastique",
+    "english": "fantastic, terrific, great, weird, eerie",
+    "example_fr": "ils ont fait un travail fantastique",
+    "example_en": "they did a fantastic job"
   },
   {
     "rank": 4108,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "le génie du lieu",
-    "example_en": "the genius of the place"
+    "french": "courbe",
+    "english": "curve, curved",
+    "example_fr": "la courbe qu'il spécifie est une spirale",
+    "example_en": "the curve that it describes is a spiral"
   },
   {
     "rank": 4109,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a montré son mépris",
-    "example_en": "he showed his contempt"
+    "french": "soustraire",
+    "english": "to substract, remove, shield, escape from",
+    "example_fr": "nul homme ne peut se soustraire au terme de sa vie",
+    "example_en": "no man can escape from the endpoint of his life"
   },
   {
     "rank": 4110,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle important",
-    "example_en": "he plays an important role"
+    "french": "instable",
+    "english": "unstable",
+    "example_fr": "je regardai avec effroi ces êtres instables",
+    "example_en": "I watched with fear these unstable beings"
   },
   {
     "rank": 4111,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut y penser",
-    "example_en": "you have to think about it"
+    "french": "vapeur",
+    "english": "vapor, steam, steamer, steamship",
+    "example_fr": "j'aperçus au loin une vapeur bleuâtre",
+    "example_en": "I noticed a blueish vapor in the distance"
   },
   {
     "rank": 4112,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "beurre",
+    "english": "butter",
+    "example_fr": "j'aurais appris à faire du beurre, du fromage",
+    "example_en": "I would have learned to make butter and cheese"
   },
   {
     "rank": 4113,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une façon de parler",
-    "example_en": "it's a way of speaking"
+    "french": "monument",
+    "english": "monument",
+    "example_fr": "ce devait être un monument aux morts",
+    "example_en": "it must have been a monument to the dead"
   },
   {
     "rank": 4114,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a perdu son chapeau",
-    "example_en": "he lost his hat"
+    "french": "oral",
+    "english": "oral",
+    "example_fr": "ces histoires constituent le folklore oral moderne",
+    "example_en": "these stories comprise modern oral folklore"
   },
   {
     "rank": 4115,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "le touriste est ravi",
-    "example_en": "the tourist is delighted"
+    "french": "téléviser",
+    "english": "to televise",
+    "example_fr": "la concurrence des journaux télévisés est indéniable",
+    "example_en": "competition among TV newscasts is undeniable"
   },
   {
     "rank": 4116,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un coup",
-    "example_en": "he struck a blow"
+    "french": "consolider",
+    "english": "to strengthen, reinforce",
+    "example_fr": "la société consolide sa position en matière de propriété intellectuelle",
+    "example_en": "the company is solidifying its position on intellectual property"
   },
   {
     "rank": 4117,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement du projet",
-    "example_en": "the project launch"
+    "french": "muet",
+    "english": "mute, silent, dumb",
+    "example_fr": "j'ai un fils aussi muet qu'une carpe",
+    "example_en": "I have a son as mute as a carp"
   },
   {
     "rank": 4118,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "contrevenant",
+    "english": "offender, offending",
+    "example_fr": "cela évite au contrevenant d'aller en prison",
+    "example_en": "this prevents the offender from having to go to prison"
   },
   {
     "rank": 4119,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "il y a un fort mécontentement",
-    "example_en": "there is strong dissatisfaction"
+    "french": "offensive",
+    "english": "offensive, offence",
+    "example_fr": "la seule défense est une bonne offensive",
+    "example_en": "the only defence is a good offence"
   },
   {
     "rank": 4120,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "un accord de désarmement",
-    "example_en": "a disarmament agreement"
+    "french": "routine",
+    "english": "routine",
+    "example_fr": "les routines, très vite, reprirent leurs droits",
+    "example_en": "routines quickly gained the upper hand"
   },
   {
     "rank": 4121,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "coder",
+    "english": "to code, encode",
+    "example_fr": "chaque langue code une culture déterminée",
+    "example_en": "each language encodes a particular culture"
   },
   {
     "rank": 4122,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est en faillite",
-    "example_en": "he is bankrupt"
+    "french": "gel",
+    "english": "frost, freezing, gel",
+    "example_fr": "ils ont besoin d'un gel des frais de scolarité",
+    "example_en": "they need a freeze in tuition"
   },
   {
     "rank": 4123,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "rénovation",
+    "english": "renovation, restoration",
+    "example_fr": "les travaux de transformation et de rénovation iront également bon train",
+    "example_en": "transformation and renovation work will proceed together at a good pace"
   },
   {
     "rank": 4124,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "controverse",
+    "english": "controversy",
+    "example_fr": "il y a beaucoup de controverses au sujet des châtiments corporels",
+    "example_en": "there are many controversies about corporal punishment"
   },
   {
     "rank": 4125,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "médiocre",
+    "english": "mediocre, second-rate",
+    "example_fr": "pire encore, il est médiocre et inefficace",
+    "example_en": "even worse, he is mediocre and inefficient"
   },
   {
     "rank": 4126,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "filial",
+    "english": "filial; branch office",
+    "example_fr": "il fallait créer une entreprise filiale",
+    "example_en": "it was necessary to create a subsidiary company"
   },
   {
     "rank": 4127,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "son mépris est évident",
-    "example_en": "his contempt is obvious"
+    "french": "relais",
+    "english": "shift, relay",
+    "example_fr": "les paroles avaient pris le relais de ses larmes",
+    "example_en": "words took over from his tears"
   },
   {
     "rank": 4128,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "opposant",
+    "english": "opponent, opposing",
+    "example_fr": "mais les opposants sont sceptiques",
+    "example_en": "but the opponents are sceptical"
   },
   {
     "rank": 4129,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "aval",
+    "english": "downstream",
+    "example_fr": "on parle des avantages en aval",
+    "example_en": "we're talking about downstream benefits"
   },
   {
     "rank": 4130,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "rubrique",
+    "english": "column, heading, rubric",
+    "example_fr": "l'émission propose également de nombreuses rubriques",
+    "example_en": "the broadcast also offers several categories"
   },
   {
     "rank": 4131,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "préfet",
+    "english": "prefect",
+    "example_fr": "le préfet ne fera rien pour nous",
+    "example_en": "the police commissioner will do nothing for us"
   },
   {
     "rank": 4132,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "provocation",
+    "english": "provocation",
+    "example_fr": "c'est de la provocation indue, non souhaitable et injustifiée",
+    "example_en": "it's undeserved, undesirable and unjustified provocation"
   },
   {
     "rank": 4133,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "sommaire",
+    "english": "summary, brief, cursory",
+    "example_fr": "l'examen est certes assez sommaire",
+    "example_en": "the examination is certainly rather cursory"
   },
   {
     "rank": 4134,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "versant",
+    "english": "hillside, mountainside",
+    "example_fr": "voilà succinctement résumé un versant de sa nature",
+    "example_en": "there, briefly put, is one side of his nature"
   },
   {
     "rank": 4135,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "réticence",
+    "english": "reluctance, hesitation",
+    "example_fr": "je ne ressens pas de réticence de la part des auteurs français",
+    "example_en": "I don't sense any reluctance on behalf of French authors"
   },
   {
     "rank": 4136,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "grossesse",
+    "english": "pregnancy",
+    "example_fr": "elle m'avait annoncé sa grossesse",
+    "example_en": "she told me she was pregnant"
   },
   {
     "rank": 4137,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "égyptien",
+    "english": "Egyptian",
+    "example_fr": "nous avons mangé de la cuisine égyptienne",
+    "example_en": "we ate Egyptian food"
   },
   {
     "rank": 4138,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "timbre",
+    "english": "stamp",
+    "example_fr": "je regarde un peu mes timbres",
+    "example_en": "I'm just looking over my stamps"
   },
   {
     "rank": 4139,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "découper",
+    "english": "to carve, cut",
+    "example_fr": "je ne découpe pas les articles",
+    "example_en": "I don't cut out articles"
   },
   {
     "rank": 4140,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "distributeur",
+    "english": "distributor, machine",
+    "example_fr": "les distributeurs quittaient la salle en courant",
+    "example_en": "the distributors ran out of the room"
   },
   {
     "rank": 4141,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "élargissement",
+    "english": "widening, letting-out, stretching, broadening",
+    "example_fr": "il n'y aura pas d'élargissement de la Communauté",
+    "example_en": "there will be no expansion of the Community"
   },
   {
     "rank": 4142,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "dégrader",
+    "english": "to degrade, debase, damage, erode",
+    "example_fr": "la situation se dégrade depuis 1984",
+    "example_en": "the situation has been worsening since 1984"
   },
   {
     "rank": 4143,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "colonial",
+    "english": "colonial",
+    "example_fr": "la Suisse n'a pas de passé colonial",
+    "example_en": "Switzerland has no colonial history"
   },
   {
     "rank": 4144,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "pourparler",
+    "english": "talk, discussion, negotiation",
+    "example_fr": "on va bientôt participer à ces pourparlers",
+    "example_en": "we'll soon participate in these discussions"
   },
   {
     "rank": 4145,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "incidence",
+    "english": "effect, incidence",
+    "example_fr": "les catastrophes ont des incidences économiques importantes",
+    "example_en": "catastrophes cause important economic consequences"
   },
   {
     "rank": 4146,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "béton",
+    "english": "concrete",
+    "example_fr": "les murs étaient en béton",
+    "example_en": "the walls were of cement"
   },
   {
     "rank": 4147,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "fiable",
+    "english": "reliable, trustworthy",
+    "example_fr": "elle est très fiable, croyez-moi",
+    "example_en": "she's very trustworthy, believe me"
   },
   {
     "rank": 4148,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "génocide",
+    "english": "genocide",
+    "example_fr": "il est également accusé de génocide",
+    "example_en": "he is also accused of genocide"
   },
   {
     "rank": 4149,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "vingt-quatre",
+    "english": "twenty four",
+    "example_fr": "Air France propose toujours vingt-quatre vols quotidiens",
+    "example_en": "Air France still offers 24 daily flights"
   },
   {
     "rank": 4150,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "épouvantable",
+    "english": "terrible, appalling, dreadful",
+    "example_fr": "c'est un épouvantable malentendu",
+    "example_en": "it's a horrible misunderstanding"
   },
   {
     "rank": 4151,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "indifférent",
+    "english": "indifferent, unconcerned, unimportant",
+    "example_fr": "apparemment, je lui suis complètement indifférente",
+    "example_en": "apparently, I'm completely unimportant to him"
   },
   {
     "rank": 4152,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "audacieux",
+    "english": "daring, audacious, bold",
+    "example_fr": "il est temps de prendre des décisions audacieuses",
+    "example_en": "it's time to make bold decisions"
   },
   {
     "rank": 4153,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "poudre",
+    "english": "powder",
+    "example_fr": "ta copine a besoin de sa poudre magique",
+    "example_en": "your girlfriend needs her magic powder"
   },
   {
     "rank": 4154,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "teneur",
+    "english": "content",
+    "example_fr": "il n'a révélé la teneur exacte de sa conversation",
+    "example_en": "he didn't reveal the exact content of his conversation"
   },
   {
     "rank": 4155,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "inverser",
+    "english": "to reverse, invert",
+    "example_fr": "l'infirmière s'est trompée. elle a tout inversé",
+    "example_en": "the nurse was wrong. she got everything backwards"
   },
   {
     "rank": 4156,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "naval",
+    "english": "naval",
+    "example_fr": "les chantiers navals fonctionnaient à plein rendement",
+    "example_en": "the naval shipyards were operating at full capacity"
   },
   {
     "rank": 4157,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "dérive",
+    "english": "drift",
+    "example_fr": "j'imagine mal cependant des dérives extrémistes",
+    "example_en": "I have a hard time imagining extremist tendencies"
   },
   {
     "rank": 4158,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "mécontent",
+    "english": "discontented, dissatisfied, displeased",
+    "example_fr": "je regrette que vous soyez mécontent mais je ne puis rien y faire",
+    "example_en": "I'm sorry you're displeased but I can no longer do anything about it"
   },
   {
     "rank": 4159,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "vocabulaire",
+    "english": "vocabulary",
+    "example_fr": "ce n'est pas dans mon vocabulaire",
+    "example_en": "it's not in my vocabulary"
   },
   {
     "rank": 4160,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "stabiliser",
+    "english": "to stabilize",
+    "example_fr": "stabilisez vos déflecteurs arrière",
+    "example_en": "tighten your rear deflectors"
   },
   {
     "rank": 4161,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "délégué",
+    "english": "delegate",
+    "example_fr": "les délégués de 190 pays se sont retrouvés samedi",
+    "example_en": "delegates from 190 countries met Saturday"
   },
   {
     "rank": 4162,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "centrer",
+    "english": "to center",
+    "example_fr": "je centrerai mon intervention sur quatre points précis",
+    "example_en": "I will center my talk on four specific points"
   },
   {
     "rank": 4163,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "algérien",
+    "english": "Algerian",
+    "example_fr": "je ne suis ni français ni algérien",
+    "example_en": "I'm neither French nor Algerian"
   },
   {
     "rank": 4164,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "sympathique",
+    "english": "likeable, nice, pleasant",
+    "example_fr": "je vous trouve incroyablement sympathiques",
+    "example_en": "I find you incredibly likable"
   },
   {
     "rank": 4165,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "alentour",
+    "english": "around, round about",
+    "example_fr": "il n'y avait personne aux alentours immédiats",
+    "example_en": "there was nobody in the immediate vicinity"
   },
   {
     "rank": 4166,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "corrompre",
+    "english": "to corrupt, bribe",
+    "example_fr": "le régime actuel me semble absolument corrompu",
+    "example_en": "the current regime seems absolutely corrupt to me"
   },
   {
     "rank": 4167,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "commerçant",
+    "english": "shopkeeper, merchant, commercial",
+    "example_fr": "c'était plein de petits commerçants, d'artisans",
+    "example_en": "it was full of shopkeepers, artisans"
   },
   {
     "rank": 4168,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "poitrine",
+    "english": "chest, breast, breasts, bosom",
+    "example_fr": "ils avaient mal dans la poitrine, aux oreilles et à la tête",
+    "example_en": "they had sore chests, ears, and heads"
   },
   {
     "rank": 4169,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "couronner",
+    "english": "to crown, award",
+    "example_fr": "ces rencontres ont vraiment été couronnées de succès",
+    "example_en": "these meetings were crowned with success"
   },
   {
     "rank": 4170,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "relire",
+    "english": "to reread, proofread",
+    "example_fr": "il relisait, corrigeait et reprenait le travail du jour",
+    "example_en": "he reread, corrected, and reviewed the day's work"
   },
   {
     "rank": 4171,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "perpétuer",
+    "english": "to perpetuate, carry on",
+    "example_fr": "ces traditions se perpétuent au Moyen Âge",
+    "example_en": "these traditions continue through in the Middle Ages"
   },
   {
     "rank": 4172,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "doctrine",
+    "english": "doctrine",
+    "example_fr": "il a enseigné des doctrines trompeuses et répugnantes",
+    "example_en": "he taught deceitful and loathsome doctrine"
   },
   {
     "rank": 4173,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "compétitif",
+    "english": "competitive",
+    "example_fr": "l'industrie automobile européenne peut être compétitive",
+    "example_en": "the European auto industry can be competitive"
   },
   {
     "rank": 4174,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "majesté",
+    "english": "majesty",
+    "example_fr": "sa majesté le roi a été salué à son départ",
+    "example_en": "his majesty the king was saluted on his departure"
   },
   {
     "rank": 4175,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "mouton",
+    "english": "sheep",
+    "example_fr": "les moutons commençaient à se désintéresser de moi",
+    "example_en": "the sheep stopped showing interest in me"
   },
   {
     "rank": 4176,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "indifférence",
+    "english": "indifference",
+    "example_fr": "je dois subir avec indifférence les conséquences",
+    "example_en": "I must suffer the consequences unflinchingly"
   },
   {
     "rank": 4177,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "omettre",
+    "english": "to leave out, miss out, omit",
+    "example_fr": "je n'y omettrai rien",
+    "example_en": "I won't leave anything out"
   },
   {
     "rank": 4178,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "typique",
+    "english": "typical",
+    "example_fr": "c'est typique. cela ne m'étonne pas",
+    "example_en": "it's typical. that doesn't surprise me"
   },
   {
     "rank": 4179,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "concurrentiel",
+    "english": "competitive",
+    "example_fr": "divers éléments nous procurent cet avantage concurrentiel",
+    "example_en": "many factors bring us this competitive advantage"
   },
   {
     "rank": 4180,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "désarmement",
+    "english": "disarmament, disarming",
+    "example_fr": "j'ai besoin des codes de désarmement",
+    "example_en": "I need the deactivation codes"
   },
   {
     "rank": 4181,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "quotidiennement",
+    "english": "daily, every day",
+    "example_fr": "les gangs font la manchette presque quotidiennement",
+    "example_en": "gangs make the headlines almost every day"
   },
   {
     "rank": 4182,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "architecture",
+    "english": "architecture",
+    "example_fr": "l'architecture doit beaucoup aux Arabes",
+    "example_en": "architecture owes much to the Arabs"
   },
   {
     "rank": 4183,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "éventualité",
+    "english": "eventuality, possibility",
+    "example_fr": "je suis prêt à toute éventualité",
+    "example_en": "I'm ready for any eventuality"
   },
   {
     "rank": 4184,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "massacrer",
+    "english": "to slaughter, massacre",
+    "example_fr": "ils massacraient des indigènes",
+    "example_en": "they massacred some natives"
   },
   {
     "rank": 4185,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "réciproque",
+    "english": "mutual, reciprocal, the opposite",
+    "example_fr": "j'ai proposé des retraits réciproques dans tous les arrondissements",
+    "example_en": "I proposed a mutual withdrawal in all of the neighborhoods"
   },
   {
     "rank": 4186,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "état-major",
+    "english": "staff, staff headquarters",
+    "example_fr": "l'état-major entendait écraser la résistance tchétchène",
+    "example_en": "headquarters intended to crush the Chechen resistance"
   },
   {
     "rank": 4187,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "attarder",
+    "english": "to linger",
+    "example_fr": "je m'attardais longtemps à ma fenêtre",
+    "example_en": "I lingered a long while at my window"
   },
   {
     "rank": 4188,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "englober",
+    "english": "to include, encompass, incorporate",
+    "example_fr": "mon goût englobe les escargots et les huîtres",
+    "example_en": "my tastes incorporate escargots and oysters"
   },
   {
     "rank": 4189,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "grossir",
+    "english": "to get larger",
+    "example_fr": "son ventre grossissait",
+    "example_en": "her stomach got larger"
   },
   {
     "rank": 4190,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "séparatiste",
+    "english": " separatist",
+    "example_fr": "cette démarche pourrait désamorcer les visées séparatistes",
+    "example_en": "this approach could defuse separatist aims"
   },
   {
     "rank": 4191,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "surcroît",
+    "english": "extra, additional",
+    "example_fr": "la motivation financière venait de surcroît",
+    "example_en": "financial motivation appeared excessive"
   },
   {
     "rank": 4192,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "sortant",
+    "english": "outgoing",
+    "example_fr": "l'administration américaine sortante se révélant incapable de négocier",
+    "example_en": "the outgoing American administration proved incapable of negotiation"
   },
   {
     "rank": 4193,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "plomb",
+    "english": "lead",
+    "example_fr": "le plomb ordinaire serait trop lourd pour le véhicule",
+    "example_en": "ordinary lead would be too heavy for the vehicle"
   },
   {
     "rank": 4194,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "gorge",
+    "english": "throat",
+    "example_fr": "elle porte la main à sa gorge",
+    "example_en": "she brings her hand to her throat"
   },
   {
     "rank": 4195,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "nationaliste",
+    "english": "nationalist",
+    "example_fr": "qu'est-ce qu'on veut comme nationalistes?",
+    "example_en": "what do we nationalists want?"
   },
   {
     "rank": 4196,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "exportateur",
+    "english": "exportateur, exporting",
+    "example_fr": "tous les pays exportateurs profitent de la situation",
+    "example_en": "all exporting countries are benefiting from the situation"
   },
   {
     "rank": 4197,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "montre",
+    "english": "watch",
+    "example_fr": "c'est une vraie course contre la montre",
+    "example_en": "is a real race against time"
   },
   {
     "rank": 4198,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "ratifier",
+    "english": "to ratify",
+    "example_fr": "le texte doit désormais être ratifié",
+    "example_en": "the text must henceforth be ratified"
   },
   {
     "rank": 4199,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "exploit",
+    "english": "exploit",
+    "example_fr": "peu de grands exploits s'accomplissent seuls",
+    "example_en": "few great exploits are accomplished by oneself"
   },
   {
     "rank": 4200,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "encourageant",
+    "english": "encouraging",
+    "example_fr": "la situation ne semble guère encourageante",
+    "example_en": "the situation seems hardly encouraging"
   },
   {
     "rank": 4201,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "climatique",
+    "english": "climatic",
+    "example_fr": "les gens parlent du changement climatique, du réchauffement de la planète",
+    "example_en": "people talk of climate change, of global warming"
   },
   {
     "rank": 4202,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "aviser",
+    "english": "to notice, advise",
+    "example_fr": "tu aurais dû nous en aviser",
+    "example_en": "you should have told us about it"
   },
   {
     "rank": 4203,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "épidémie",
+    "english": "epidemic",
+    "example_fr": "l'épidémie de SIDA en Afrique est au pire",
+    "example_en": "the AIDS epidemic in Africa is the worst"
   },
   {
     "rank": 4204,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "alarme",
+    "english": "alarm",
+    "example_fr": "que se passe-t-il? l'alarme s'est déclenchée",
+    "example_en": "what's happening? the alarm just went off"
   },
   {
     "rank": 4205,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "parier",
+    "english": "to bet",
+    "example_fr": "j'espère que tu n'as pas parié beaucoup",
+    "example_en": "I hope you didn't bet a lot"
   },
   {
     "rank": 4206,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "écologique",
+    "english": "ecological",
+    "example_fr": "je crois en la conscience écologique des Français",
+    "example_en": "I believe in the ecological conscience of the French"
   },
   {
     "rank": 4207,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "lunette",
+    "english": "telescope, glasses",
+    "example_fr": "portez-vous des lunettes ou verres de contact?",
+    "example_en": "do you wear glasses or contact lenses?"
   },
   {
     "rank": 4208,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "entourage",
+    "english": "circle, entourage",
+    "example_fr": "mon entourage m'encourage à profiter de la vie",
+    "example_en": "my circle of friends encourages me to take advantage of life"
   },
   {
     "rank": 4209,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "sphère",
+    "english": "sphere",
+    "example_fr": "on quittait les sphères du sacré pour entrer dans la politique",
+    "example_en": "we left more sacred spheres to go into politics"
   },
   {
     "rank": 4210,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "confidentiel",
+    "english": "confidential",
+    "example_fr": "soyez attentif, ce message est confidentiel",
+    "example_en": "be careful, this message is confidential"
   },
   {
     "rank": 4211,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "sanctionner",
+    "english": "to sanction, punish, approve",
+    "example_fr": "la décision a été sanctionnée par le secrétaire général des Nations Unies",
+    "example_en": "the decision was endorsed by the Secretary General of the United Nations"
   },
   {
     "rank": 4212,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "recrutement",
+    "english": "recruiting, recruitment",
+    "example_fr": "j'ai déclaré un gel du recrutement",
+    "example_en": "I declared a hiring freeze"
   },
   {
     "rank": 4213,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "détendre",
+    "english": "to release, slacken, loosen, relax",
+    "example_fr": "entrez, détendez-vous. prenez un verre de champagne",
+    "example_en": "come in, relax. have a glass of champagne"
   },
   {
     "rank": 4214,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "aisé",
+    "english": "easy, well off, well-to-do",
+    "example_fr": "beaucoup venaient de familles aisées",
+    "example_en": "many came from well-to-do families"
   },
   {
     "rank": 4215,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "toilette",
+    "english": "washing, toilet, lavatory, bathroom, restroom",
+    "example_fr": "excusez-moi, je cherchais les toilettes",
+    "example_en": "excuse me, I was looking for the restrooms"
   },
   {
     "rank": 4216,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "autobus",
+    "english": "bus",
+    "example_fr": "je préférais l'autobus au métro",
+    "example_en": "I preferred the bus to the subway"
   },
   {
     "rank": 4217,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "défavoriser",
+    "english": "to put at a disadvantage",
+    "example_fr": "il avait à cœur le sort des défavorisés",
+    "example_en": "he dwelled on the lot of the underprivileged"
   },
   {
     "rank": 4218,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "résistant",
+    "english": "robust, sturdy, resistance fighter",
+    "example_fr": "les bactéries résistantes disparaissent en quelques jours",
+    "example_en": "resistant bacteria will disappear in a few days"
   },
   {
     "rank": 4219,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "admiration",
+    "english": "admiration",
+    "example_fr": "j'ai de l'admiration pour cet homme",
+    "example_en": "I have admiration for this man"
   },
   {
     "rank": 4220,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "acide",
+    "english": "acid",
+    "example_fr": "j'ai dissous le sang à l'acide",
+    "example_en": "I dissolved the blood with acid"
   },
   {
     "rank": 4221,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "banal",
+    "english": "banal, trite, commonplace, ordinary",
+    "example_fr": "la situation est devenue presque banale",
+    "example_en": "the situation has almost become commonplace"
   },
   {
     "rank": 4222,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "poulet",
+    "english": "chicken",
+    "example_fr": "il y a du poulet dans le frigo",
+    "example_en": "there's some chicken in the fridge"
   },
   {
     "rank": 4223,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "pêcher",
+    "english": "to fish, go fishing; peach tree",
+    "example_fr": "on pêchera des tonnes de crevettes!",
+    "example_en": "we'll go fishing and catch tons of shrimps!"
   },
   {
     "rank": 4224,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "brigade",
+    "english": "team, squad, brigade",
+    "example_fr": "une brigade de policiers a réussi à rattraper les chiens",
+    "example_en": "the squad of policemen succeeded in catching the dogs"
   },
   {
     "rank": 4225,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "trembler",
+    "english": "to shiver, tremble, shake, flicker",
+    "example_fr": "il sourit toujours, ses joues tremblent",
+    "example_en": "he always smiles, cheeks trembling"
   },
   {
     "rank": 4226,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "reçu",
+    "english": "receipt, accepted",
+    "example_fr": "il ne voulait pas me faire un reçu",
+    "example_en": "he didn't want to give me a receipt"
   },
   {
     "rank": 4227,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "civiliser",
+    "english": "to civilze",
+    "example_fr": "ce sont des nations civilisées",
+    "example_en": "these are civilized nations"
   },
   {
     "rank": 4228,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "relance",
+    "english": "boost, reminder, recovery",
+    "example_fr": "la relance économique commence à se faire sentir",
+    "example_en": "the economic recovery is starting to be felt"
   },
   {
     "rank": 4229,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "dose",
+    "english": "dose, amount",
+    "example_fr": "vous avez mal calculé la dose",
+    "example_en": "you miscalculated the dose"
   },
   {
     "rank": 4230,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "loyer",
+    "english": "rent",
+    "example_fr": "je n'ai pas payé le loyer du mois prochain",
+    "example_en": "I haven't paid next month's rent"
   },
   {
     "rank": 4231,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "distorsion",
+    "english": "distortion",
+    "example_fr": "la distorsion peut réduire la durée de cet intervalle",
+    "example_en": "the distortion can reduce the duration of that interval"
   },
   {
     "rank": 4232,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "octroyer",
+    "english": "to grant, bestow",
+    "example_fr": "on continue à octroyer des brevets pour des séquences",
+    "example_en": "we continue to grant patents for sequences"
   },
   {
     "rank": 4233,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "arrivant",
+    "english": "arrival, comer",
+    "example_fr": "il y a un nouvel arrivant dans le jeu",
+    "example_en": "there's a newcomer in the game"
   },
   {
     "rank": 4234,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "standard",
+    "english": "standard, switchboard",
+    "example_fr": "vos cartes sont de type standard?",
+    "example_en": "your cards are the standard type?"
   },
   {
     "rank": 4235,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "taxi",
+    "english": "taxi",
+    "example_fr": "je vais rentrer en taxi",
+    "example_en": "I'm going to take a taxi home"
   },
   {
     "rank": 4236,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "limitation",
+    "english": "limitation, restriction, limit",
+    "example_fr": "il y a des limitations d'âge",
+    "example_en": "there are age limitations"
   },
   {
     "rank": 4237,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "irréversible",
+    "english": "irreversible",
+    "example_fr": "beaucoup de processus sont probablement déjà irréversibles",
+    "example_en": "many processes are probably already irreversible"
   },
   {
     "rank": 4238,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "fatal",
+    "english": "fatal, deadly, fateful",
+    "example_fr": "une maladie du foie fatale",
+    "example_en": "a fatal liver disease"
   },
   {
     "rank": 4239,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "furieux",
+    "english": "furious, raging, violent",
+    "example_fr": "il est furieux contre moi",
+    "example_en": "he's furious with me"
   },
   {
     "rank": 4240,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "verbal",
+    "english": "verbal",
+    "example_fr": "on ne parle que de beauté verbale",
+    "example_en": "we only speak of verbal beauty"
   },
   {
     "rank": 4241,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "contacter",
+    "english": "to contact, get in touch with",
+    "example_fr": "comment puis-je vous contacter?",
+    "example_en": "how can I contact you?"
   },
   {
     "rank": 4242,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "commissariat",
+    "english": "police station",
+    "example_fr": "le commissariat local a été chargé de l'enquête",
+    "example_en": "the local police station was given charge of the investigation"
   },
   {
     "rank": 4243,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "gai",
+    "english": "cheerful, merry, gay",
+    "example_fr": "nous étions si beaux, si gais",
+    "example_en": "we were so beautiful, so cheerful"
   },
   {
     "rank": 4244,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "confrontation",
+    "english": "confrontation",
+    "example_fr": "comprendre n'est possible qu'après la confrontation",
+    "example_en": "understanding is only possible after confrontation"
   },
   {
     "rank": 4245,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "chier",
+    "english": "to sh*t, piss off, get pissed off",
+    "example_fr": "elle pissait et chiait partout",
+    "example_en": "she pissed and crapped everywhere"
   },
   {
     "rank": 4246,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "atlantique",
+    "english": "Atlantic",
+    "example_fr": "j'habite dans le Canada atlantique",
+    "example_en": "I live in Atlantic Canada"
   },
   {
     "rank": 4247,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "rude",
+    "english": "rough, harsh, hard, tough",
+    "example_fr": "l'hiver fut rude. il fut malade deux fois",
+    "example_en": "the winter was severe. he was sick twice"
   },
   {
     "rank": 4248,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "panneau",
+    "english": "sign, notice, panel",
+    "example_fr": "ils ont fini d'installer les gigantesques panneaux solaires",
+    "example_en": "they finished installing giant solar panels"
   },
   {
     "rank": 4249,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "appréciation",
+    "english": "appreciation, assessment, appraisal",
+    "example_fr": "les courses à ski exigent une appréciation réfléchie du terrain",
+    "example_en": "ski races require thoughtful assessment of the terrain"
   },
   {
     "rank": 4250,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "réflexe",
+    "english": "reflex",
+    "example_fr": "j'ai gardé des réflexes comme me laver à l'eau froide",
+    "example_en": "I kept old habits like washing in cold water"
   },
   {
     "rank": 4251,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "complément",
+    "english": "complement",
+    "example_fr": "c'était un complément qui lui permettait de vivre",
+    "example_en": "it was supplementary information that allowed her to live"
   },
   {
     "rank": 4252,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "initialement",
+    "english": "initially",
+    "example_fr": "initialement, cette opération devait être amicale",
+    "example_en": "at first, this operation was supposed to be friendly"
   },
   {
     "rank": 4253,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "comédien",
+    "english": "comedian, comedy",
+    "example_fr": "j'ai pensé au métier de comédien",
+    "example_en": "I thought about the comedian's craft"
   },
   {
     "rank": 4254,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "successeur",
+    "english": "successor",
+    "example_fr": "mon successeur sera comme un lion furieux",
+    "example_en": "my successor will be like a ferocious lion"
   },
   {
     "rank": 4255,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "méfiance",
+    "english": "distrust, mistrust, suspicion",
+    "example_fr": "il refusait les médicaments toujours par méfiance",
+    "example_en": "he always refused the medication because of distrust"
   },
   {
     "rank": 4256,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "replier",
+    "english": "to fold, roll up, fold up, withdraw",
+    "example_fr": "je repliai la lettre",
+    "example_en": "I folded up the letter"
   },
   {
     "rank": 4257,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "vérificateur",
+    "english": "checker, inspector, auditor",
+    "example_fr": "le vérificateur général a lui-même porté ce jugement",
+    "example_en": "the auditor general himself made this evaluation"
   },
   {
     "rank": 4258,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "dictateur",
+    "english": "dictator",
+    "example_fr": "comment négocier avec un dictateur pareil?",
+    "example_en": "how can you negotiate with a dictator like that?"
   },
   {
     "rank": 4259,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "prétention",
+    "english": "claim",
+    "example_fr": "toute prétention contraire n'est absolument pas fondée",
+    "example_en": "all claims to the contrary are absolutely unfounded"
   },
   {
     "rank": 4260,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "rédacteur",
+    "english": "editor, writer, drafter, compiler",
+    "example_fr": "j'ai d'abord été journaliste rédacteur pour la presse",
+    "example_en": "first I was an editorial journalist for the press"
   },
   {
     "rank": 4261,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "avaler",
+    "english": "to swallow",
+    "example_fr": "il a avalé un peu trop d'eau",
+    "example_en": "he swallowed a little too much water"
   },
   {
     "rank": 4262,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "extraction",
+    "english": "extraction",
+    "example_fr": "ce projet d'extraction minière constitue une agréable occasion de développement",
+    "example_en": "this mineral extraction project constitutes a nice development opportunity"
   },
   {
     "rank": 4263,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "banquier",
+    "english": "banker",
+    "example_fr": "tu feras confiance à un banquier des Bahamas?",
+    "example_en": "you would trust a banker from the Bahamas?"
   },
   {
     "rank": 4264,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "titulaire",
+    "english": "holder, with tenure, occupant",
+    "example_fr": "oui, vous êtes le titulaire",
+    "example_en": "yes, you're the incumbent"
   },
   {
     "rank": 4265,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "stabilisation",
+    "english": "stabilisation",
+    "example_fr": "la stabilisation du fonds est primordiale",
+    "example_en": "stabilizing the funds is all-important"
   },
   {
     "rank": 4266,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "mutuellement",
+    "english": "mutually, one another",
+    "example_fr": "ils se sont traités mutuellement de criminels de guerre",
+    "example_en": "they treated each other like wartime criminals"
   },
   {
     "rank": 4267,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "légion",
+    "english": "legion",
+    "example_fr": "la légion remplit vaillamment sa mission",
+    "example_en": "the legion valiantly fulfilled its mission"
   },
   {
     "rank": 4268,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "lacune",
+    "english": "gap, deficiency",
+    "example_fr": "il y a une lacune énorme dans la formation",
+    "example_en": "there's a huge gap in training"
   },
   {
     "rank": 4269,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "engin",
+    "english": "machine, tool, vehicle, device",
+    "example_fr": "l'engin était dissimulé dans une poubelle et a explosé",
+    "example_en": "the device was concealed in a trash can and exploded"
   },
   {
     "rank": 4270,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "mépriser",
+    "english": "to scorn, look down, spurn, disdain",
+    "example_fr": "il méprise l'art et les musées",
+    "example_en": "he disdains art and museums"
   },
   {
     "rank": 4271,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "minoritaire",
+    "english": "minority",
+    "example_fr": "ces gens appartiennent à un groupe minoritaire",
+    "example_en": "these people belong to a minority group"
   },
   {
     "rank": 4272,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "idéologique",
+    "english": "ideological",
+    "example_fr": "il faut cesser ce discours idéologique",
+    "example_en": "this ideological discussion must cease"
   },
   {
     "rank": 4273,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "cloche",
+    "english": "bell",
+    "example_fr": "on ententit sonner la cloche de l'église",
+    "example_en": "we heard the church bells chiming"
   },
   {
     "rank": 4274,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "compatriote",
+    "english": "compatriot",
+    "example_fr": "comme beaucoup de mes compatriotes, j'ai eu l'occasion de voyager",
+    "example_en": "like many of my compatriots, I had the chance to travel"
   },
   {
     "rank": 4275,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "affection",
+    "english": "affection, ailment",
+    "example_fr": "l'affection grandit par l'épreuve",
+    "example_en": "affection grows through difficulties"
   },
   {
     "rank": 4276,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "sel",
+    "english": "salt",
+    "example_fr": "il devait faire un régime sans sel",
+    "example_en": "he had to go on a no-salt diet"
   },
   {
     "rank": 4277,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "majoritaire",
+    "english": "majority",
+    "example_fr": "la France utilise le système majoritaire dans ses élections nationales",
+    "example_en": "France uses the majority system in national elections"
   },
   {
     "rank": 4278,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "redressement",
+    "english": "straightening up, upturn, righting",
+    "example_fr": "le redressement d'Air France est un impératif",
+    "example_en": "straightening out Air France is an urgent necessity"
   },
   {
     "rank": 4279,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "paradoxe",
+    "english": "paradox",
+    "example_fr": "nous sommes toujours en présence du paradoxe de la transgression divine",
+    "example_en": "we're all a part of the paradox of divine transgression"
   },
   {
     "rank": 4280,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "chiffrer",
+    "english": "to put a figure to, assess, quantify, number",
+    "example_fr": "tout ça est chiffré à chaque fois par les ministères",
+    "example_en": "all of this is quantified each time by the ministers"
   },
   {
     "rank": 4281,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "catastrophique",
+    "english": "catastrophic, disastrous",
+    "example_fr": "on a hérité d'une situation catastrophique",
+    "example_en": "we inherited a catastrophic situation"
   },
   {
     "rank": 4282,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "magistrat",
+    "english": "magistrate, judge",
+    "example_fr": "son père était un magistrat de la cour d'assises",
+    "example_en": "his father was a judge in the assize court"
   },
   {
     "rank": 4283,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "extrait",
+    "english": "extract, excerpt",
+    "example_fr": "ce qui suit est un extrait du rapport",
+    "example_en": "what follows is an excerpt from the report"
   },
   {
     "rank": 4284,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "amant",
+    "english": "lover",
+    "example_fr": "elle était folle de son amant",
+    "example_en": "she was crazy about her lover"
   },
   {
     "rank": 4285,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "farce",
+    "english": "joke, prank, hoax, farce",
+    "example_fr": "c'est une vraie farce et c'est honteux",
+    "example_en": "it's a real hoax and it's shameful"
   },
   {
     "rank": 4286,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "compétitivité",
+    "english": "competitiveness",
+    "example_fr": "nous avons décidé d'accroître la compétitivité et l'efficacité de nos industries",
+    "example_en": "we decided to increase the competitiveness and the efficiency of our industries"
   },
   {
     "rank": 4287,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "enthousiaste",
+    "english": "enthusiastic",
+    "example_fr": "ils m'ont accordé un appui enthousiaste",
+    "example_en": "they gave me enthusiastic support"
   },
   {
     "rank": 4288,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "quarantaine",
+    "english": "about forty",
+    "example_fr": "certains d'entre eux emploient une quarantaine de salariés",
+    "example_en": "some of them have about forty employees"
   },
   {
     "rank": 4289,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "sous-sol",
+    "english": "basement, lower ground floor, subsoil, underground",
+    "example_fr": "il utilisait les parkings en sous-sol",
+    "example_en": "he used underground parking lots"
   },
   {
     "rank": 4290,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "rat",
+    "english": "rat",
+    "example_fr": "il y a un rat dans la cuisine",
+    "example_en": "there's a rat in the kitchen"
   },
   {
     "rank": 4291,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "flot",
+    "english": "floodtide, stream of, flood of",
+    "example_fr": "un flot ininterrompu de mots et de larmes",
+    "example_en": "an uninterrupted flow of words and tears"
   },
   {
     "rank": 4292,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "mordre",
+    "english": "to bite, overlap into",
+    "example_fr": "on allait le tuer pour avoir mordu un garde",
+    "example_en": "it was going to be killed for having bitten a guard"
   },
   {
     "rank": 4293,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "partiellement",
+    "english": "partly",
+    "example_fr": "le ciel était partiellement dégagé",
+    "example_en": "the skies were partly cloudy"
   },
   {
     "rank": 4294,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "radioactif",
+    "english": "radioactive",
+    "example_fr": "les particules radioactives tombent avec les gouttes de pluie",
+    "example_en": "radioactive particles fall with raindrops"
   },
   {
     "rank": 4295,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "passe",
+    "english": "pass, channel",
+    "example_fr": "puis-je utiliser mon passe?",
+    "example_en": "can I use my pass?"
   },
   {
     "rank": 4296,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "indépendamment",
+    "english": "independently, irrespective of, regardless of",
+    "example_fr": "chaque paquet est traité indépendamment",
+    "example_en": "each package is processed individually"
   },
   {
     "rank": 4297,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "location",
+    "english": "renting",
+    "example_fr": "c'est un meublé mis en location pour quelques mois",
+    "example_en": "it's a furnished apartment being rented out for a few months"
   },
   {
     "rank": 4298,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "naïf",
+    "english": "naïve, innocent",
+    "example_fr": "elle reste extrêmement naïve sur le sujet",
+    "example_en": "she remains extremely naïve on the topic"
   },
   {
     "rank": 4299,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "retraité",
+    "english": "retired",
+    "example_fr": "les retraités ne peuvent dépenser l'argent",
+    "example_en": "retired people can't spend money"
   },
   {
     "rank": 4300,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "innocence",
+    "english": "innocence",
+    "example_fr": "vous êtes d'une innocence extrême",
+    "example_en": "you're extremely innocent"
   },
   {
     "rank": 4301,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "bijou",
+    "english": "jewel",
+    "example_fr": "j'aime bien les bijoux anciens",
+    "example_en": "I like old jewelry"
   },
   {
     "rank": 4302,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "messe",
+    "english": "mass",
+    "example_fr": "les dimanches, j'allais à la messe",
+    "example_en": "on Sundays I used to go to mass"
   },
   {
     "rank": 4303,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "coïncidence",
+    "english": "coincidence",
+    "example_fr": "est-ce là une coïncidence?",
+    "example_en": "is that a coincidence?"
   },
   {
     "rank": 4304,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "torture",
+    "english": "torture",
+    "example_fr": "j'ai raconté les tortures, les coups, les viols",
+    "example_en": "I told them about the torture, the blows, the rapes"
   },
   {
     "rank": 4305,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "protecteur",
+    "english": "protective, protector, guardian",
+    "example_fr": "sa mère était sa protectrice morale, physique et même matérielle",
+    "example_en": "his mother was his moral, physical, and even material protector"
   },
   {
     "rank": 4306,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "rayonnement",
+    "english": "radiance",
+    "example_fr": "le danger des rayonnements pour l' homme est réel",
+    "example_en": "radiation danger for humans is real"
   },
   {
     "rank": 4307,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "récolte",
+    "english": "harvest, crop",
+    "example_fr": "les récoltes de certains agriculteurs sont gelées",
+    "example_en": "some farmers' crops are frozen"
   },
   {
     "rank": 4308,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "valise",
+    "english": "suitcase",
+    "example_fr": "dépêche-toi de faire les valises",
+    "example_en": "hurry up and pack your suitcases"
   },
   {
     "rank": 4309,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "danseur",
+    "english": "dancer",
+    "example_fr": "quand elle était jeune, elle était danseuse",
+    "example_en": "when she was young, she was a dancer"
   },
   {
     "rank": 4310,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "expertise",
+    "english": "expertise",
+    "example_fr": "il y a également beaucoup d'expertise",
+    "example_en": "there is also much expertise"
   },
   {
     "rank": 4311,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "minier",
+    "english": "mining",
+    "example_fr": "les dépenses de prospection minière ont augmenté",
+    "example_en": "costs for mining exploration have risen"
   },
   {
     "rank": 4312,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "vitrine",
+    "english": "window, display cabinet",
+    "example_fr": "la marchandise est en vitrine",
+    "example_en": "the goods are in the display window"
   },
   {
     "rank": 4313,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "ébranler",
+    "english": "to shake, rattle",
+    "example_fr": "le train s'ébranla de nouveau",
+    "example_en": "the train shook once more"
   },
   {
     "rank": 4314,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "crâne",
+    "english": "skull",
+    "example_fr": "son crâne est à moitié couvert par ce bonnet noir",
+    "example_en": "his skull is half covered by this black bonnet"
   },
   {
     "rank": 4315,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "anéantir",
+    "english": "to annihilate, wipe out, ruin, vanish",
+    "example_fr": "vous êtes venus ici pour m'anéantir",
+    "example_en": "you came here to annihilate me"
   },
   {
     "rank": 4316,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "vocal",
+    "english": "vocal",
+    "example_fr": "empreinte vocale inconnue",
+    "example_en": "unknown voiceprint"
   },
   {
     "rank": 4317,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "unilatéral",
+    "english": "unilateral",
+    "example_fr": "c'est un plan de désengagement unilatéral",
+    "example_en": "it's a plan for unilateral withdrawal"
   },
   {
     "rank": 4318,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "combustible",
+    "english": "fuel, combustible",
+    "example_fr": "les importations de carburants et de combustibles liquides ont reculé",
+    "example_en": "imports of gas and liquid fuels retreated"
   },
   {
     "rank": 4319,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "économiser",
+    "english": "to save, save on, conserve",
+    "example_fr": "cela permettrait d'économiser beaucoup d'argent",
+    "example_en": "that would help save lots of money"
   },
   {
     "rank": 4320,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "tisser",
+    "english": "to weave",
+    "example_fr": "elle tisse des sacs en soie",
+    "example_en": "she weaves silk pouches"
   },
   {
     "rank": 4321,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "poule",
+    "english": "hen, chick",
+    "example_fr": "je ne suis pas ta poule, ok!",
+    "example_en": "I'm not your chick, OK!"
   },
   {
     "rank": 4322,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "punition",
+    "english": "punishment",
+    "example_fr": "la mort ne doit pas être une punition",
+    "example_en": "death should not be a punishment"
   },
   {
     "rank": 4323,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "hésitation",
+    "english": "hesitation",
+    "example_fr": "je n'ai aucune hésitation à lui parler",
+    "example_en": "I don't have any qualms about talking to him"
   },
   {
     "rank": 4324,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "rentable",
+    "english": "profitable",
+    "example_fr": "cette activité a été rapidement rentable",
+    "example_en": "this activity quickly became profitable"
   },
   {
     "rank": 4325,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "loyal",
+    "english": "loyal, faithful",
+    "example_fr": "tu as toujours été un ami loyal",
+    "example_en": "you were always a loyal friend"
   },
   {
     "rank": 4326,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "renfort",
+    "english": "help, back-up, support",
+    "example_fr": "encore quelques minutes. les renforts arrivent",
+    "example_en": "a few more minutes. the reinforcements are arriving"
   },
   {
     "rank": 4327,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "cohérence",
+    "english": "coherence, consistency",
+    "example_fr": "il faut assurer une cohérence entre les objectifs et les actions",
+    "example_en": "there must be consistency between the goals and the actions"
   },
   {
     "rank": 4328,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "souris",
+    "english": "mouse",
+    "example_fr": "le chat mange la souris",
+    "example_en": "the cat eats the mouse"
   },
   {
     "rank": 4329,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "bombarder",
+    "english": "to bomb",
+    "example_fr": "l'aviation gouvernementale bombarde deux villes contrôlées par les rebelles",
+    "example_en": "the government air forces are bombing two cities controlled by the rebels"
   },
   {
     "rank": 4330,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "éveiller",
+    "english": "to arouse, stimulate, awaken",
+    "example_fr": "la nuit, je restais éveillée dans mon lit",
+    "example_en": "during the night I remained awake in my bed"
   },
   {
     "rank": 4331,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "semestre",
+    "english": "semester, six-month period",
+    "example_fr": "ils faisaient un semestre d'intégration",
+    "example_en": "they did six months on-the-job training"
   },
   {
     "rank": 4332,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "croyant",
+    "english": "believer",
+    "example_fr": "que le croyant vive sa foi",
+    "example_en": "may the believer live his faith"
   },
   {
     "rank": 4333,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "réalisateur",
+    "english": "director",
+    "example_fr": "quand le réalisateur dit «écoutez», vous écoutez",
+    "example_en": "when the director says \"listen\", you listen"
   },
   {
     "rank": 4334,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "brutalement",
+    "english": "brutally",
+    "example_fr": "elle referma brutalement la porte",
+    "example_en": "she slammed the door shut"
   },
   {
     "rank": 4335,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "lourdement",
+    "english": "heavily",
+    "example_fr": "il m'examina lourdement de la tête aux pieds",
+    "example_en": "he gave me a thorough inspection from head to foot"
   },
   {
     "rank": 4336,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "tente",
+    "english": "tent",
+    "example_fr": "Fabrice et moi partagions la même tente",
+    "example_en": "Fabrice and I were sharing the same tent"
   },
   {
     "rank": 4337,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "goutte",
+    "english": "drop",
+    "example_fr": "tu transpirais à grosses gouttes",
+    "example_en": "you were sweating great drops"
   },
   {
     "rank": 4338,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "poussée",
+    "english": "push, rise, upsurge",
+    "example_fr": "une petite poussée dans n'importe quelle direction suffira",
+    "example_en": "a little push in any direction will be enough"
   },
   {
     "rank": 4339,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "moine",
+    "english": "monk, friar",
+    "example_fr": "il vit modestement, comme un moine",
+    "example_en": "he lives modestly, like a monk"
   },
   {
     "rank": 4340,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "modéré",
+    "english": "moderate, restrained, reasonable",
+    "example_fr": "j'espère que vous êtes modéré dans vos habitudes",
+    "example_en": "I hope you are steady in your habits"
   },
   {
     "rank": 4341,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "négligeable",
+    "english": "negligible, trivial",
+    "example_fr": "ça donne une force de frappe non négligeable",
+    "example_en": "it gives a strike force to be reckoned with"
   },
   {
     "rank": 4342,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "vice",
+    "english": "fault, defect, vice",
+    "example_fr": "ce vice mineur me reste, la familiarité",
+    "example_en": "I still have one minor vice: being too familiar"
   },
   {
     "rank": 4343,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "symboliser",
+    "english": "to symbolize",
+    "example_fr": "le papillon symbolisait l'âme",
+    "example_en": "the butterfly was symbolic of the soul"
   },
   {
     "rank": 4344,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "substituer",
+    "english": "to substitute",
+    "example_fr": "les insultes ne sauraient se substituer",
+    "example_en": "the insults can't be smoothed over"
   },
   {
     "rank": 4345,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "subtil",
+    "english": "subtle, nice",
+    "example_fr": "il faut les coincer de façon subtile",
+    "example_en": "wedge them together carefully"
   },
   {
     "rank": 4346,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "commandant",
+    "english": "commander",
+    "example_fr": "il s'est autoproclamé commandant en chef de l'organisation",
+    "example_en": "he named himself chief of the organization"
   },
   {
     "rank": 4347,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "chuter",
+    "english": "to fall",
+    "example_fr": "la tempête m'a fait chuter",
+    "example_en": "the storm made me fall"
   },
   {
     "rank": 4348,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "fidélité",
+    "english": "loyalty, faithfulness, accuracy, reliability",
+    "example_fr": "je tiens absolument à la fidélité",
+    "example_en": "I absolutely value loyalty"
   },
   {
     "rank": 4349,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "basculer",
+    "english": "to topple, fall over, knock off",
+    "example_fr": "je crus que la terre avait basculé sous mes pieds",
+    "example_en": "I thought the earth moved under my feet"
   },
   {
     "rank": 4350,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "gestionnaire",
+    "english": "administrator, administrative",
+    "example_fr": "je serai le gestionnaire assigné au dossier",
+    "example_en": "I will be the administrator assigned to the case"
   },
   {
     "rank": 4351,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "redoutable",
+    "english": "fearsome, formidable",
+    "example_fr": "tu as été notre plus redoutable ennemi",
+    "example_en": "you were our most formidable enemy"
   },
   {
     "rank": 4352,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "immigrant",
+    "english": "immigrant",
+    "example_fr": "nous avons aidé de nouveaux immigrants à s'établir",
+    "example_en": "we helped new immigrants to get settled"
   },
   {
     "rank": 4353,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "polémique",
+    "english": "controversial, controversy",
+    "example_fr": "c'est vrai que j'aime la polémique, le débat d'idées",
+    "example_en": "it's true that I like controversy, debating ideas"
   },
   {
     "rank": 4354,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "alourdir",
+    "english": "to weigh down, make heavy",
+    "example_fr": "je sens mes doigts s'alourdir",
+    "example_en": "I feel my fingers getting heavier"
   },
   {
     "rank": 4355,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "avancée",
+    "english": "advanced, overhung",
+    "example_fr": "reculez. vous empêchez notre avancée",
+    "example_en": "step back. you're blocking our way"
   },
   {
     "rank": 4356,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "sévi",
+    "english": "to act ruthlessly, be rife",
+    "example_fr": "la violence qui sévit dans ce pays nous inquiète aussi beaucoup",
+    "example_en": "the violence that is tearing this country apart also troubles us greatly"
   },
   {
     "rank": 4357,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "jumeau",
+    "english": "twin",
+    "example_fr": "les jumeaux ont besoin l'un de l'autre",
+    "example_en": "the twins need each other"
   },
   {
     "rank": 4358,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "piéger",
+    "english": "to trap, booby-trap",
+    "example_fr": "il a été hyper facile à piéger",
+    "example_en": "it was super-easy to trap him"
   },
   {
     "rank": 4359,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "confiant",
+    "english": "trusting, confident",
+    "example_fr": "vous êtes malgré tout confiant?",
+    "example_en": "you're confident in spite of it all?"
   },
   {
     "rank": 4360,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "pendre",
+    "english": "to hang down",
+    "example_fr": "ses immenses cheveux blonds pendaient jusqu' à terre",
+    "example_en": "her extremely thick blond hair hung right down to the ground"
   },
   {
     "rank": 4361,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "intact",
+    "english": "intact",
+    "example_fr": "elle le retrouvait intact dans cet hiver nocturne",
+    "example_en": "she found it intact in this dark winter"
   },
   {
     "rank": 4362,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "rapidité",
+    "english": "speed, quickness",
+    "example_fr": "je ne travaille pas avec la rapidité d'autrefois",
+    "example_en": "I don't work as quickly as I used to"
   },
   {
     "rank": 4363,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "localité",
+    "english": "town, village",
+    "example_fr": "ce sont toutes des petites localités",
+    "example_en": "they are all small localities"
   },
   {
     "rank": 4364,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "récupération",
+    "english": "recovery, retrieval, salvage",
+    "example_fr": "vous aurez besoin d'une récupération lente et salutaire",
+    "example_en": "you will need a slow and wholesome recovery"
   },
   {
     "rank": 4365,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "vigoureux",
+    "english": "vigorous",
+    "example_fr": "ces territoires suscitent une vigoureuse contrebande",
+    "example_en": "these territories support a vibrant black market"
   },
   {
     "rank": 4366,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "rentabilité",
+    "english": "profitability",
+    "example_fr": "la rentabilité n'a cessé de décroître",
+    "example_en": "profitability didn't stop decreasing"
   },
   {
     "rank": 4367,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "delà",
+    "english": "beyond, above, over",
+    "example_fr": "mais je n'irai pas au delà",
+    "example_en": "but I won't go any farther than that"
   },
   {
     "rank": 4368,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "incliner",
+    "english": "to tilt, tend towards",
+    "example_fr": "incline-toi devant moi",
+    "example_en": "bow before me"
   },
   {
     "rank": 4369,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "affreux",
+    "english": "dreadful, awful, horrible",
+    "example_fr": "j'ai fait un cauchemar affreux",
+    "example_en": "I had a horrible nightmare"
   },
   {
     "rank": 4370,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "révolter",
+    "english": "to revolt, rebel, outrage",
+    "example_fr": "ils se révolteront avec colère, une colère implacable",
+    "example_en": "they will rebel with anger, an implacable anger"
   },
   {
     "rank": 4371,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "conte",
+    "english": "tale",
+    "example_fr": "je vis un rêve, un conte de fées, un miracle",
+    "example_en": "I lived a dream, a fairy tale, a miracle"
   },
   {
     "rank": 4372,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "évasion",
+    "english": "escape, evasion",
+    "example_fr": "il lui parla longuement de l'évasion",
+    "example_en": "he spoke to her at length about the escape"
   },
   {
     "rank": 4373,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "repère",
+    "english": "reference, benchmark, landmark",
+    "example_fr": "les chrétiens ont besoin de repères, sinon ils sont perdus",
+    "example_en": "Christians need reference points, otherwise they're lost"
   },
   {
     "rank": 4374,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "philosophique",
+    "english": "philosophical",
+    "example_fr": "son travail philosophique porte sur la responsabilité",
+    "example_en": "his philosophical work focuses on responsability"
   },
   {
     "rank": 4375,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "arrivé",
+    "english": "arrived",
+    "example_fr": "des tas de choses étaient arrivées",
+    "example_en": "many things happened"
   },
   {
     "rank": 4376,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "ironie",
+    "english": "irony",
+    "example_fr": "son ironie me fit souffrir mille morts",
+    "example_en": "the irony of it killed me a thousand times over"
   },
   {
     "rank": 4377,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "serveur",
+    "english": "waiter, server",
+    "example_fr": "je ne suis pas une serveuse de bar",
+    "example_en": "I'm not a barmaid"
   },
   {
     "rank": 4378,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "bannir",
+    "english": "to banish, ban",
+    "example_fr": "la religion est bannie de chez nous",
+    "example_en": "religion is banished from our house"
   },
   {
     "rank": 4379,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "insuffisance",
+    "english": "inadequacy, insufficiency",
+    "example_fr": "nous voulons corriger les insuffisances actuelles",
+    "example_en": "we want to correct current inadequacies"
   },
   {
     "rank": 4380,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "librairie",
+    "english": "bookstore, bookshop",
+    "example_fr": "les prix, dans cette librairie, sont très compétitifs",
+    "example_en": "the prices in this bookstore are very competitive"
   },
   {
     "rank": 4381,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "parenthèse",
+    "english": "parenthesis, bracket, aside",
+    "example_fr": "je dirais en parenthèses que l'histoire présente est opaque",
+    "example_en": "I would add parenthetically that this story is opaque"
   },
   {
     "rank": 4382,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "miser",
+    "english": "to bet, stake",
+    "example_fr": "si vous allez miser pour moi...alors on sera quittes",
+    "example_en": "if you're going to bet for me...then we'll be even"
   },
   {
     "rank": 4383,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "stupéfiant",
+    "english": "drug, narcotic; stunning, astounding",
+    "example_fr": "on servit un repas stupéfiant",
+    "example_en": "we served a stunning meal"
   },
   {
     "rank": 4384,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "boursier",
+    "english": "grant-holder, scholarship holder; stock",
+    "example_fr": "en un an, sa valeur boursière a été divisée par 350",
+    "example_en": "in one year, its stock value sunk to 1/350 of its value"
   },
   {
     "rank": 4385,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "levée",
+    "english": "raising, levying, levee",
+    "example_fr": "la Commission européenne a voté la levée de cet embargo",
+    "example_en": "the European Commission voted to lift this embargo"
   },
   {
     "rank": 4386,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "déformer",
+    "english": "to bend, distort, deform",
+    "example_fr": "ils ont déformé les faits",
+    "example_en": "they have distorted the facts"
   },
   {
     "rank": 4387,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "menaçant",
+    "english": "threatening, menacing",
+    "example_fr": "elle le chasse en le menaçant avec un couteau",
+    "example_en": "she chased him brandishing a knife"
   },
   {
     "rank": 4388,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "nord-est",
+    "english": "north-east",
+    "example_fr": "le nord-est des Etats-Unis frappé par les pluies verglaçantes",
+    "example_en": "northeastern U.S. hit by freezing rains"
   },
   {
     "rank": 4389,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "substitution",
+    "english": "substitution, mix-up",
+    "example_fr": "il y a la substitution du dialogue homme/machine au dialogue homme/femme",
+    "example_en": "there is a substitution of man/machine dialog for man/woman dialogue"
   },
   {
     "rank": 4390,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "parer",
+    "english": "to adorn, put on; to ward off, parry",
+    "example_fr": "parez les équipements de sauvetage",
+    "example_en": "put on the lifesaving equipment"
   },
   {
     "rank": 4391,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "avantageux",
+    "english": "profitable, worthwhile, advantageous, attractive",
+    "example_fr": "les prix étaient plus avantageux",
+    "example_en": "the prices were more attractive"
   },
   {
     "rank": 4392,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "handicaper",
+    "english": "to handicap",
+    "example_fr": "la croissance mondiale risque d'handicaper leurs exportations",
+    "example_en": "worldwide growth threatens to handicap their exports"
   },
   {
     "rank": 4393,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "filmer",
+    "english": "to film, shoot",
+    "example_fr": "c'était filmé pour la télé",
+    "example_en": "it was filmed for TV"
   },
   {
     "rank": 4394,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "délinquant",
+    "english": "delinquent, offender",
+    "example_fr": "nous avons réclamé un registre des délinquants sexuels",
+    "example_en": "we have called for a sexual offenders registry"
   },
   {
     "rank": 4395,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "perdant",
+    "english": "losing, loser",
+    "example_fr": "je suis le plus grand perdant",
+    "example_en": "I'm the greatest loser"
   },
   {
     "rank": 4396,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "altitude",
+    "english": "altitude, height",
+    "example_fr": "il a plu à basse altitude",
+    "example_en": "it was raining at lower altitudes"
   },
   {
     "rank": 4397,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "imputer",
+    "english": "to impute to, attribute to",
+    "example_fr": "il est facile d'imputer aux autres sa propre mauvaise volonté",
+    "example_en": "it's easy to blame others for one's own ill will"
   },
   {
     "rank": 4398,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "plaisanter",
+    "english": "to joke",
+    "example_fr": "du calme, je plaisante",
+    "example_en": "take it easy, I'm joking"
   },
   {
     "rank": 4399,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "poétique",
+    "english": "poetic, poetical, poetics",
+    "example_fr": "le français est un langage poétique",
+    "example_en": "French is a poetic language"
   },
   {
     "rank": 4400,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "desservir",
+    "english": "to clear, go against, harm, serve",
+    "example_fr": "nous ne desservons pas adéquatement les auditeurs",
+    "example_en": "we don't adequately serve our listening audience"
   },
   {
     "rank": 4401,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "mensuel",
+    "english": "monthly",
+    "example_fr": "il touchait un salaire mensuel de 70.000 francs",
+    "example_en": "he earned a monthly salary of 70,000 francs"
   },
   {
     "rank": 4402,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "connerie",
+    "english": "crap, bullsh*t, stupidity",
+    "example_fr": "oui, mec. arrête tes conneries",
+    "example_en": "yeah, man. stop your bullsh*t"
   },
   {
     "rank": 4403,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "sanglant",
+    "english": "bloody, cruel, covered in blood",
+    "example_fr": "il avait un trou sanglant",
+    "example_en": "he had a bloody hole"
   },
   {
     "rank": 4404,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "coude",
+    "english": "elbow",
+    "example_fr": "j'ai mal au coude",
+    "example_en": "I have a sore elbow"
   },
   {
     "rank": 4405,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "ôter",
+    "english": "to remove, take away, take off, take out",
+    "example_fr": "j'ôtai donc ma veste et mes chaussures",
+    "example_en": "so I removed my jacket and my shoes"
   },
   {
     "rank": 4406,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "report",
+    "english": "postponement, deferment",
+    "example_fr": "nous sommes contre le report des élections",
+    "example_en": "we're against postponing the elections"
   },
   {
     "rank": 4407,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "créature",
+    "english": "creature",
+    "example_fr": "tu es la plus belle créature que j'aie jamais vue",
+    "example_en": "you are the most beautiful creature I have ever seen"
   },
   {
     "rank": 4408,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "aucunement",
+    "english": "in no way, not in the least, not at all",
+    "example_fr": "je ne me sens aucunement coupable",
+    "example_en": "I don't feel at all guilty"
   },
   {
     "rank": 4409,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "globalement",
+    "english": "globally",
+    "example_fr": "globalement, la réponse humanitaire a été positive",
+    "example_en": "the worldwide humanitarian response was positive"
   },
   {
     "rank": 4410,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "convenable",
+    "english": "suitable, appropriate, correct, proper, acceptable",
+    "example_fr": "ils ont droit à une retraite convenable",
+    "example_en": "they have the right to a reasonable retirement"
   },
   {
     "rank": 4411,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "itinéraire",
+    "english": "itinerary, route",
+    "example_fr": "leur itinéraire n'est pas encore fixé",
+    "example_en": "their itinerary is not yet set"
   },
   {
     "rank": 4412,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "purger",
+    "english": "to purge, bleed, drain",
+    "example_fr": "ça va purger son système en une nuit",
+    "example_en": "this will purge his system in one night"
   },
   {
     "rank": 4413,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "fâcher",
+    "english": "to anger, make angry, get angry",
+    "example_fr": "il est sûrement fâché contre moi",
+    "example_en": "he's surely upset with me"
   },
   {
     "rank": 4414,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "repasser",
+    "english": "to cross again, retake, show again, iron",
+    "example_fr": "si je te dérange je peux repasser",
+    "example_en": "if I'm disturbing you I can come back another time"
   },
   {
     "rank": 4415,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "alternatif",
+    "english": "alternate, alternating",
+    "example_fr": "le rock alternatif francophone est en train de mourir",
+    "example_en": "French alternative rock is dying out"
   },
   {
     "rank": 4416,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "palier",
+    "english": "landing, level, flat",
+    "example_fr": "j'allai sur le palier et frappai à sa porte",
+    "example_en": "I went onto the porch and knocked at her door"
   },
   {
     "rank": 4417,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "prochainement",
+    "english": "shortly, soon",
+    "example_fr": "prévoyez-vous d'autres séries de concert prochainement?",
+    "example_en": "are you planning other concert series soon?"
   },
   {
     "rank": 4418,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "réglementaire",
+    "english": "regulation, control, statutory",
+    "example_fr": "il démantèle la structure réglementaire de la loi actuellement en vigueur",
+    "example_en": "it dismantles the regulatory structure of the current law"
   },
   {
     "rank": 4419,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "costume",
+    "english": "suit, costume, dress",
+    "example_fr": "voici un très beau costume, en pure laine",
+    "example_en": "here's a very beautiful suit, made of pure wool"
   },
   {
     "rank": 4420,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "thérapie",
+    "english": "therapy",
+    "example_fr": "mon jardin c'est une thérapie",
+    "example_en": "my garden is a therapy"
   },
   {
     "rank": 4421,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "reproche",
+    "english": "reproach",
+    "example_fr": "ce sont surtout là les reproches des communistes",
+    "example_en": "that is mostly communist innuendo"
   },
   {
     "rank": 4422,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "curé",
+    "english": "parish priest",
+    "example_fr": "je me confesserai au curé",
+    "example_en": "I will confess to my parish priest"
   },
   {
     "rank": 4423,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "contrôleur",
+    "english": "inspector, controller",
+    "example_fr": "les contrôleurs en grève ont obtenu jeudi soir satisfaction",
+    "example_en": "the striking controllers reached agreement Thursday night"
   },
   {
     "rank": 4424,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "soulagement",
+    "english": "relief",
+    "example_fr": "j'ai besoin du soulagement",
+    "example_en": "I need relief"
   },
   {
     "rank": 4425,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "dissoudre",
+    "english": "to dissolve, disband, break up",
+    "example_fr": "je fis dissoudre dans le lait une poudre somnifère",
+    "example_en": "I dissolved some sleeping powder in the milk"
   },
   {
     "rank": 4426,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "avalanche",
+    "english": "avalanche",
+    "example_fr": "le danger d'avalanches est encore faible",
+    "example_en": "avalanche danger is still low"
   },
   {
     "rank": 4427,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "mark",
+    "english": "mark",
+    "example_fr": "sa monnaie de référence est le mark allemand",
+    "example_en": "its reference currency is the German mark"
   },
   {
     "rank": 4428,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "brèche",
+    "english": "breach, gap",
+    "example_fr": "c'était une brèche, dans la clôture, une large brèche",
+    "example_en": "it was a gap in the fence--a large gap"
   },
   {
     "rank": 4429,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "incitation",
+    "english": "incitement, incentive",
+    "example_fr": "il y a eu de l'incitation au piratage",
+    "example_en": "there was an incentive to engage in piracy"
   },
   {
     "rank": 4430,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "entraîneur",
+    "english": "coach, trainer",
+    "example_fr": "maintenant je travaille avec quelques entraîneurs",
+    "example_en": "now I work with some trainers"
   },
   {
     "rank": 4431,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "éditorial",
+    "english": "editorial",
+    "example_fr": "pourriez-vous nous parler de vos choix éditoriaux?",
+    "example_en": "could you talk about your editorial choices?"
   },
   {
     "rank": 4432,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "conjugal",
+    "english": "conjugal, married",
+    "example_fr": "ils vivent dans une relation conjugale",
+    "example_en": "they live in a conjugal relationship"
   },
   {
     "rank": 4433,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "pâle",
+    "english": "pale",
+    "example_fr": "monsieur, vous êtes pâle, vous avez l'air fatigué",
+    "example_en": "sir, your're pale, you look tired"
   },
   {
     "rank": 4434,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "relâcher",
+    "english": "to loosen, release, let go",
+    "example_fr": "le plus âgé a depuis été relâché",
+    "example_en": "the oldest one has since been let go"
   },
   {
     "rank": 4435,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "visa",
+    "english": "visa, stamp",
+    "example_fr": "il s'est avéré que le visa était faux",
+    "example_en": "it turned out that the visa was false"
   },
   {
     "rank": 4436,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "vingt-cinq",
+    "english": "twenty five",
+    "example_fr": "ils nous envoyaient quinze, vingt, vingt-cinq films de plus",
+    "example_en": "they sent us fifteen, twenty, twenty-five more films"
   },
   {
     "rank": 4437,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "péché",
+    "english": "sin",
+    "example_fr": "pardonnez-moi mon père car j'ai péché",
+    "example_en": "forgive me Father, for I have sinned"
   },
   {
     "rank": 4438,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "gendarme",
+    "english": "policeman",
+    "example_fr": "les gendarmes poursuivent leurs investigations",
+    "example_en": "the policemen are pursuing their investigations"
   },
   {
     "rank": 4439,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "sécheresse",
+    "english": "dryness, drought",
+    "example_fr": "après dix années de sécheresse, il pleut au Sahel",
+    "example_en": "after ten years, of drought, it's raining in the Sahel"
   },
   {
     "rank": 4440,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "score",
+    "english": "score",
+    "example_fr": "c'est vrai que les bons scores me font plaisir",
+    "example_en": "it's true that I enjoy good scores"
   },
   {
     "rank": 4441,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "goûter",
+    "english": "to taste, snack",
+    "example_fr": "je goûtai à la confiture",
+    "example_en": "I tasted the jam"
   },
   {
     "rank": 4442,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "renier",
+    "english": "to disown, repudiate, go back on",
+    "example_fr": "tu renies ton passé, notre amour, TA fille",
+    "example_en": "you're disowning your past, our love, YOUR daughter"
   },
   {
     "rank": 4443,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "juridiction",
+    "english": "jurisdiction, court of law",
+    "example_fr": "la haute juridiction a mis sa décision en délibéré",
+    "example_en": "the upper jurisdiction put its decision to debate"
   },
   {
     "rank": 4444,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "prostitution",
+    "english": "prostitution",
+    "example_fr": "on légalise la prostitution",
+    "example_en": "we're legalizing prostitution"
   },
   {
     "rank": 4445,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "fiche",
+    "english": "card, sheet, slip, form",
+    "example_fr": "mais je dois remplir cette fiche",
+    "example_en": "but I have to fill out this form"
   },
   {
     "rank": 4446,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "déséquilibre",
+    "english": "imbalance",
+    "example_fr": "mon budget personnel est en déséquilibre",
+    "example_en": "my personal budget is out of balance"
   },
   {
     "rank": 4447,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "probabilité",
+    "english": "probability, likelihood",
+    "example_fr": "t'es-tu intéressé à la théorie des probabilités?",
+    "example_en": "are you interested in probability theory?"
   },
   {
     "rank": 4448,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "entraver",
+    "english": "to hinder, hamper, get in the way of",
+    "example_fr": "son pantalon entravait la liberté de ses mouvements",
+    "example_en": "his trousers hampered his freedom of movement"
   },
   {
     "rank": 4449,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "sous-estimer",
+    "english": "to underestimate",
+    "example_fr": "ne sous-estimez pas votre charme",
+    "example_en": "don't underestimate your charm"
   },
   {
     "rank": 4450,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "embargo",
+    "english": "embargo",
+    "example_fr": "l'OTAN se préparent à décréter un embargo pétrolier",
+    "example_en": "NATO is preparing to announce an oil embargo"
   },
   {
     "rank": 4451,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "interdit",
+    "english": "prohibited, banned",
+    "example_fr": "l'entrée était strictement interdite",
+    "example_en": "entry was strictly forbidden"
   },
   {
     "rank": 4452,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "brouillard",
+    "english": "fog, mist, haze",
+    "example_fr": "peu à peu le brouillard se fait moins épais",
+    "example_en": "the fog gradually lifted"
   },
   {
     "rank": 4453,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "syrien",
+    "english": "Syrian",
+    "example_fr": "le président syrien avait confirmé cet entretien",
+    "example_en": "the Syrian president confirmed this interview"
   },
   {
     "rank": 4454,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "jet",
+    "english": "jet, throw, spray, nozzle",
+    "example_fr": "il traversait cet etat dans un jet privé",
+    "example_en": "he crossed this state in a private jet"
   },
   {
     "rank": 4455,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "trêve",
+    "english": "truce",
+    "example_fr": "nous rejetons toute idée de trêve ou de négociation politique",
+    "example_en": "we reject any idea of a truce or political negotiation"
   },
   {
     "rank": 4456,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "occupant",
+    "english": "occupant, occupier, occupying",
+    "example_fr": "le parlement négocie avec les occupants",
+    "example_en": "the parliament is negotiating with the occupants"
   },
   {
     "rank": 4457,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "ponctuel",
+    "english": "punctual",
+    "example_fr": "c'est à vous dégoûter d'être toujours ponctuel",
+    "example_en": "I'm always on time in order to annoy you"
   },
   {
     "rank": 4458,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "défini",
+    "english": "definite",
+    "example_fr": "vous n'avez aucun rôle défini dans ce partenariat",
+    "example_en": "you have no definite role in this partnership"
   },
   {
     "rank": 4459,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "détachement",
+    "english": "detachment",
+    "example_fr": "elle parle de tout avec un détachement singulier",
+    "example_en": "she talks about everything with remarkable indifference"
   },
   {
     "rank": 4460,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "manuscrit",
+    "english": "manuscript, handwritten",
+    "example_fr": "je jetterai au feu tous mes manuscrits",
+    "example_en": "I will toss all my manuscripts into the fire"
   },
   {
     "rank": 4461,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "panier",
+    "english": "basket",
+    "example_fr": "par terre s'empilaient encore des paniers et des caisses",
+    "example_en": "still more baskets and boxes were piling up on the ground"
   },
   {
     "rank": 4462,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "bouton",
+    "english": "button, knob, spot",
+    "example_fr": "elle pressa le bouton qui commande l'ouverture de la porte",
+    "example_en": "she pushed the button that opened the door"
   },
   {
     "rank": 4463,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "immobile",
+    "english": "still, motionless",
+    "example_fr": "je restais là, immobile",
+    "example_en": "I stayed there, motionless"
   },
   {
     "rank": 4464,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "fermeté",
+    "english": "firmness, solidness, steadiness",
+    "example_fr": "la patience, la tolérance et la fermeté sont nécessaires",
+    "example_en": "patience, tolerance, and firmness are necessary"
   },
   {
     "rank": 4465,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "véhiculer",
+    "english": "to transport, convey",
+    "example_fr": "je peux véhiculer ça sans aucun problème",
+    "example_en": "I can deliver this by vehicle, no problem"
   },
   {
     "rank": 4466,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "répliquer",
+    "english": "to reply",
+    "example_fr": "l'orateur répliqua que c'était presque fait",
+    "example_en": "the speaker responded that it was almost done"
   },
   {
     "rank": 4467,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "passionnant",
+    "english": "fascinating, exciting",
+    "example_fr": "j'aimais tant étudier que je trouvais passionnant d'enseigner",
+    "example_en": "I loved studying so much that I found teaching exciting"
   },
   {
     "rank": 4468,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "théologie",
+    "english": "theology",
+    "example_fr": "en théologie, on m'enseignait des choses intelligentes",
+    "example_en": "in theology I was taught intelligent things"
   },
   {
     "rank": 4469,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "advenir",
+    "english": "to happen that, happen to",
+    "example_fr": "on ignore ce qu'il est advenu de lui",
+    "example_en": "we have no idea what has become of him"
   },
   {
     "rank": 4470,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "immigrer",
+    "english": "to immigrate",
+    "example_fr": "mes grands-parents ont immigré au Canada",
+    "example_en": "my grandparents immigrated to Canada"
   },
   {
     "rank": 4471,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "tache",
+    "english": "stain, spot, mark",
+    "example_fr": "c'est une tache d'humidité, dis-je",
+    "example_en": "it's a humidity stain, I said"
   },
   {
     "rank": 4472,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "tendresse",
+    "english": "tenderness, fondness",
+    "example_fr": "la femme a plus de tendresse que l'homme",
+    "example_en": "women have more tenderness than men"
   },
   {
     "rank": 4473,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "privilégié",
+    "english": "privileged",
+    "example_fr": "j'ai eu une vie protégée et privilégiée",
+    "example_en": "I had a protected and privileged life"
   },
   {
     "rank": 4474,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "slogan",
+    "english": "slogan",
+    "example_fr": "quand je l'écoute, un slogan me vient en tête",
+    "example_en": "while listening to her, I thought of a motto"
   },
   {
     "rank": 4475,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "fromage",
+    "english": "cheese",
+    "example_fr": "je n'ai jamais vraiment aimé les fromages",
+    "example_en": "I have never really liked cheese"
   },
   {
     "rank": 4476,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "toxique",
+    "english": "toxic, toxin",
+    "example_fr": "attention aux produits de jardinage toxiques",
+    "example_en": "be careful of toxic gardening products"
   },
   {
     "rank": 4477,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "incapacité",
+    "english": "incompetence, incapability",
+    "example_fr": "tout démontre notre incapacité à prendre des décisions collectives",
+    "example_en": "everything demonstrates our inability to make collective decisions"
   },
   {
     "rank": 4478,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "pharmaceutique",
+    "english": "pharmaceutical",
+    "example_fr": "les compagnies pharmaceutiques sont très, très, très riches",
+    "example_en": "pharmaceutical companies are very, very, very rich"
   },
   {
     "rank": 4479,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "parfum",
+    "english": "perfume, scent, fragrance",
+    "example_fr": "divers sont les parfums des fleurs",
+    "example_en": "flowers' scents vary widely"
   },
   {
     "rank": 4480,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "antique",
+    "english": "antique, ancient",
+    "example_fr": "le château me semblait immense et antique",
+    "example_en": "the castle seemed immense and ancient to me"
   },
   {
     "rank": 4481,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "controversé",
+    "english": "much debated, controversial",
+    "example_fr": "des problèmes difficiles et controversés, mais tout aussi urgents",
+    "example_en": "difficult and controversial problems that are nonetheless urgent"
   },
   {
     "rank": 4482,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "instinct",
+    "english": "instinct",
+    "example_fr": "tu as tous les mauvais instincts",
+    "example_en": "you have all the wrong instincts"
   },
   {
     "rank": 4483,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "barreau",
+    "english": "bar",
+    "example_fr": "je me suis trouvé derrière les barreaux",
+    "example_en": "I found myself behind bars"
   },
   {
     "rank": 4484,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "insupportable",
+    "english": "intolerable",
+    "example_fr": "l'horreur de cette agonie était insupportable",
+    "example_en": "the horror of this agony was unbearable"
   },
   {
     "rank": 4485,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "opportun",
+    "english": "timely,",
+    "example_fr": "je n'ai pas trouvé le moment opportun",
+    "example_en": "I didn't find the right moment"
   },
   {
     "rank": 4486,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "parquet",
+    "english": "parquet floor, hardwood floor, prosecutor's office",
+    "example_fr": "une autopsie a été ordonnée par le parquet",
+    "example_en": "the prosecutor ordered an autopsy"
   },
   {
     "rank": 4487,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "navigation",
+    "english": "navigation",
+    "example_fr": "la navigation sur le Danube est bloquée depuis 18 mois",
+    "example_en": "navigation on the Danube has been blocked for 18 months"
   },
   {
     "rank": 4488,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "contrarier",
+    "english": "to annoy, bother, thwart",
+    "example_fr": "je les soupçonnais de vouloir me contrarier",
+    "example_en": "I suspected them of wanting to hassle me"
   },
   {
     "rank": 4489,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "nouer",
+    "english": "to knot, tie",
+    "example_fr": "l'estomac noué, j'oubliais la compétition",
+    "example_en": "my stomach in knots, I forgot the competition"
   },
   {
     "rank": 4490,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "frustration",
+    "english": "frustration",
+    "example_fr": "cela ne va pas sans frustration chez moi",
+    "example_en": "it's not without frustration on my part"
   },
   {
     "rank": 4491,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "cinquantaine",
+    "english": "about fifty",
+    "example_fr": "certains d'entre eux emploient une cinquantaine de salariés",
+    "example_en": "some of them have about fifty employees"
   },
   {
     "rank": 4492,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "improviser",
+    "english": "to improvise",
+    "example_fr": "je suis doué pour improviser",
+    "example_en": "I'm gifted at improvisation"
   },
   {
     "rank": 4493,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "désespéré",
+    "english": "desperate, hopeless",
+    "example_fr": "j'envoyai un regard désespéré à mon père",
+    "example_en": "I looked desperately at my father"
   },
   {
     "rank": 4494,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "auto",
+    "english": "car",
+    "example_fr": "des amis venaient nous chercher en auto",
+    "example_en": "friends came by car to pick us up"
   },
   {
     "rank": 4495,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "troupeau",
+    "english": "herd, flock",
+    "example_fr": "tu fais partie de mon troupeau, à présent. bienvenue",
+    "example_en": "you're part of my flock, now. welcome"
   },
   {
     "rank": 4496,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "gendarmerie",
+    "english": "police force, police station",
+    "example_fr": "ils ont aussitôt alerté la gendarmerie",
+    "example_en": "they immediately warned police headquarters"
   },
   {
     "rank": 4497,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "génétiquement",
+    "english": "genetically",
+    "example_fr": "nous consommons des aliments génétiquement modifiés",
+    "example_en": "we consume genetically modified foods"
   },
   {
     "rank": 4498,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "analogue",
+    "english": "similar, analogous",
+    "example_fr": "la situation est analogue sur le plan mondial",
+    "example_en": "the situation is similar on a worldwide scale"
   },
   {
     "rank": 4499,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
-  },
-  {
-    "rank": 4500,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "venu",
+    "english": "come",
+    "example_fr": "le moment venu, on allumera le phare de la liberté",
+    "example_en": "when the time comes, we will light the flame of liberty"
   },
   {
     "rank": 4501,
-    "french": "retenir",
-    "english": "to retain, hold back, remember",
-    "example_fr": "il faut retenir la leçon de cette faillite",
-    "example_en": "we must remember the lesson of this failure"
+    "french": "sanitaire",
+    "english": "health, sanitary, medical",
+    "example_fr": "il n'a pas respecté les règles sanitaires",
+    "example_en": "he didn't obey the sanitation rules"
   },
   {
     "rank": 4502,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "je peux jouer aux échecs",
-    "example_en": "I can play chess"
+    "french": "sonore",
+    "english": "sound, resonant, sonorous, voiced",
+    "example_fr": "il éclata d'un rire sonore",
+    "example_en": "he broke into a hearty laugh"
   },
   {
     "rank": 4503,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut y penser",
-    "example_en": "you have to think about it"
+    "french": "initier",
+    "english": "to initiate, introduce",
+    "example_fr": "j'ai commencé à m'initier à la Bible",
+    "example_en": "I started to become familiar with the Bible"
   },
   {
     "rank": 4504,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "mœurs",
+    "english": "morals, customs, habits, manners, ways",
+    "example_fr": "il avait des mœurs un peu bizarres",
+    "example_en": "his morals were somewhat bizarre"
   },
   {
     "rank": 4505,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "cessez-le-feu",
+    "english": "ceasefire",
+    "example_fr": "ces nouvelles violences menacent le fragile cessez-le-feu",
+    "example_en": "this new violence is threatening the fragile ceasefire"
   },
   {
     "rank": 4506,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "bénévole",
+    "english": "volunteer, voluntary, unpaid",
+    "example_fr": "je félicite le personnel et les bénévoles de l'UNICEF",
+    "example_en": "I congratulate the UNICEF employees and volunteers"
   },
   {
     "rank": 4507,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "boue",
+    "english": "mud",
+    "example_fr": "le trottoir était couvert d'une boue glacée",
+    "example_en": "the sidewalk was covered with frozen mud"
   },
   {
     "rank": 4508,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "empereur",
+    "english": "emperor",
+    "example_fr": "ton empereur te demande ta loyauté",
+    "example_en": "your emperor demands your loyalty"
   },
   {
     "rank": 4509,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "dissiper",
+    "english": "to dispel, disperse, clear away",
+    "example_fr": "le soleil avait dissipé les nuages",
+    "example_en": "the sun dispersed the clouds"
   },
   {
     "rank": 4510,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "déclin",
+    "english": "decline, deterioration",
+    "example_fr": "leur nombre est en déclin, mais ils sont encore assez nombreux",
+    "example_en": "their number is declining, but they are still numerous enough"
   },
   {
     "rank": 4511,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "liquider",
+    "english": "to liquidate, sell off, clear",
+    "example_fr": "sommes-nous en train de dissiper nos actifs les plus précieux?",
+    "example_en": "are we liquidating our most precious assets?"
   },
   {
     "rank": 4512,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "maintenance",
+    "english": "maintenance, servicing",
+    "example_fr": "la maintenance des bateaux est moins bien assurée",
+    "example_en": "upkeep of the boats is less certain"
   },
   {
     "rank": 4513,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "prévisible",
+    "english": "predictable, forseeable",
+    "example_fr": "le dénie est la plus prévisible des réponses humaines",
+    "example_en": "denial is the most predictable of human responses"
   },
   {
     "rank": 4514,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "pneu",
+    "english": "tire",
+    "example_fr": "je changerai le pneu",
+    "example_en": "I'll change the tire"
   },
   {
     "rank": 4515,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "fraude",
+    "english": "fraud",
+    "example_fr": "tu es coupable de fraude",
+    "example_en": "you're guilty of fraud"
   },
   {
     "rank": 4516,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "coton",
+    "english": "cotton",
+    "example_fr": "l'industrie du coton y est une source majeure de pollution",
+    "example_en": "the cotton industry is a major source of pollution"
   },
   {
     "rank": 4517,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "entrevoir",
+    "english": "to make out, catch a glimpse of, foresee",
+    "example_fr": "pour l'avenir, elle entrevoit des débouchés intéressants",
+    "example_en": "for the future, she anticipates interesting opportunities"
   },
   {
     "rank": 4518,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "stipuler",
+    "english": "to state, stipulate, specify",
+    "example_fr": "les voeux ne stipulent pas le bébé",
+    "example_en": "the vows don't stipulate the baby"
   },
   {
     "rank": 4519,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "remédier",
+    "english": "to cure, remedy, put right",
+    "example_fr": "pour remédier à cette affaire, il faut du courage",
+    "example_en": "to resolve this matter, courage will be necessary"
   },
   {
     "rank": 4520,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "flotter",
+    "english": "to float, hang, stream",
+    "example_fr": "j'étais équipée pour flotter par-dessus les nuages",
+    "example_en": "I was outfitted to float above the clouds"
   },
   {
     "rank": 4521,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "fraction",
+    "english": "fraction",
+    "example_fr": "tu fais une fraction de ce que tu suis",
+    "example_en": "you do a fraction of what you follow"
   },
   {
     "rank": 4522,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "impossibilité",
+    "english": "impossibility",
+    "example_fr": "c'est une impossibilité physiologique",
+    "example_en": "it's a physiological impossibility"
   },
   {
     "rank": 4523,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "conditionnel",
+    "english": "conditional",
+    "example_fr": "le meurtrier pourra demander une libération conditionnelle",
+    "example_en": "the murderer will be able to request parole"
   },
   {
     "rank": 4524,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "nuance",
+    "english": "shade, hue, nuance",
+    "example_fr": "vous ne pensez pas que c'est une belle nuance de bleu?",
+    "example_en": "don't you think it's a pretty shade of blue?"
   },
   {
     "rank": 4525,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "improbable",
+    "english": "unlikely, improbable",
+    "example_fr": "l'unanimité était assez improbable",
+    "example_en": "unanimity was rather improbable"
   },
   {
     "rank": 4526,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "enquêteur",
+    "english": "investigator, pollster",
+    "example_fr": "les enquêteurs ont nié vendredi avoir torturé le suspect",
+    "example_en": "on Friday the interrogators denied having tortured the suspect"
   },
   {
     "rank": 4527,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "conjointement",
+    "english": "jointly",
+    "example_fr": "nous devons conjointement exercer une pression",
+    "example_en": "we must exert pressure together"
   },
   {
     "rank": 4528,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "éclaircir",
+    "english": "to brighten up, clear up",
+    "example_fr": "le temps éclaircira ce mystère",
+    "example_en": "time will clear up this mystery"
   },
   {
     "rank": 4529,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "bordel",
+    "english": "brothel, mess, chaos",
+    "example_fr": "un jour, la patronne du bordel m'envoya chez un autre libertin",
+    "example_en": "one day, the madame of the brothel sent me to another libertine's place"
   },
   {
     "rank": 4530,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "impatient",
+    "english": "impatient",
+    "example_fr": "je suis impatiente de relever ces défis",
+    "example_en": "I'm eager to take up these challenges"
   },
   {
     "rank": 4531,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "versement",
+    "english": "payment",
+    "example_fr": "les versements aux hôpitaux publics progressent de 0,7 %",
+    "example_en": "payments to public hospitals increased by 0.7%"
   },
   {
     "rank": 4532,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "bosser",
+    "english": "to work, bash on",
+    "example_fr": "j'avais bossé dessus toute la nuit",
+    "example_en": "I had been working on it all night"
   },
   {
     "rank": 4533,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "articuler",
+    "english": "to articulate",
+    "example_fr": "il parlait lentement et articulait avec soin",
+    "example_en": "he spoke slowly and articulated carefully"
   },
   {
     "rank": 4534,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "successivement",
+    "english": "successively",
+    "example_fr": "mes recherches ont successivement porté sur deux domaines",
+    "example_en": "my research focused sequentially on two areas"
   },
   {
     "rank": 4535,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "assurément",
+    "english": "most certainly",
+    "example_fr": "la thèse se discute, assurément",
+    "example_en": "the argument is most assuredly being discussed"
   },
   {
     "rank": 4536,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "provision",
+    "english": "stock, supply",
+    "example_fr": "tu as acheté les provisions pour le repas de midi?",
+    "example_en": "did you buy supplies for lunch?"
   },
   {
     "rank": 4537,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "amplifier",
+    "english": "to amplify, magnify, expand",
+    "example_fr": "amplifiez le son",
+    "example_en": "amplify the sound"
   },
   {
     "rank": 4538,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "ceinture",
+    "english": "belt, waist",
+    "example_fr": "veuillez attacher votre ceinture",
+    "example_en": "please attach your seatbelt"
   },
   {
     "rank": 4539,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "intergouvernemental",
+    "english": "intergovernmental",
+    "example_fr": "l'esprit des accords intergouvernementaux conclus avec les provinces",
+    "example_en": "the spirit of intergovernmental agreements involving the provinces"
   },
   {
     "rank": 4540,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "délibération",
+    "english": "deliberation, debate, consideration",
+    "example_fr": "lisez la transcription des délibérations",
+    "example_en": "read the transcript of the debate"
   },
   {
     "rank": 4541,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "mexicain",
+    "english": "Mexican",
+    "example_fr": "j'étais couchée sur la couverture mexicaine",
+    "example_en": "I was lying down on the Mexican blanket"
   },
   {
     "rank": 4542,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "seigneur",
+    "english": "lord",
+    "example_fr": "le Seigneur est mon berger",
+    "example_en": "the Lord is my shepherd"
   },
   {
     "rank": 4543,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "saisonnier",
+    "english": "seasonal",
+    "example_fr": "le tourisme est une industrie saisonnière",
+    "example_en": "tourism is a seasonal industry"
   },
   {
     "rank": 4544,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "souterrain",
+    "english": "underground, underground passage",
+    "example_fr": "ils découvraient un corridor souterrain",
+    "example_en": "they discovered an underground corridor"
   },
   {
     "rank": 4545,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "merveille",
+    "english": "marvel, wonder",
+    "example_fr": "je suis une merveille de la nature",
+    "example_en": "I'm a wonder of nature"
   },
   {
     "rank": 4546,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "restituer",
+    "english": "to return, restore, refund",
+    "example_fr": "en cas de rupture, il ne restituera rien",
+    "example_en": "in case of breach of contract, he will not refund anything"
   },
   {
     "rank": 4547,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "démon",
+    "english": "demon, fiend",
+    "example_fr": "les démons aussi ont la foi",
+    "example_en": "devils have faith too"
   },
   {
     "rank": 4548,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "balancer",
+    "english": "to swing, sway",
+    "example_fr": "cela plie terriblement et se balance à la moindre brise",
+    "example_en": "this folds terribly and sways with the slightest breeze"
   },
   {
     "rank": 4549,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "disponibilité",
+    "english": "availability",
+    "example_fr": "les objectifs de disponibilité sont des facteurs importants",
+    "example_en": "goals for availability are important factors"
   },
   {
     "rank": 4550,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "infiniment",
+    "english": "infinitely",
+    "example_fr": "votre idée me fait infiniment plaisir",
+    "example_en": "your idea pleases me infinitely"
   },
   {
     "rank": 4551,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "acquis",
+    "english": "acquired, experience",
+    "example_fr": "comptez-vous consolider vos acquis en France?",
+    "example_en": "do you plan to consolidate your acquisitions in France?"
   },
   {
     "rank": 4552,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "récepteur",
+    "english": "receiver, receiving",
+    "example_fr": "il avait négligé de décrocher le récepteur",
+    "example_en": "he had forgotten to lift up the receiver"
   },
   {
     "rank": 4553,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "glissement",
+    "english": "sliding, slipping, skidding",
+    "example_fr": "des glissements de neige humide pourraient se produire",
+    "example_en": "wet snowslides could occur"
   },
   {
     "rank": 4554,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "auditeur",
+    "english": "auditor, listener",
+    "example_fr": "mais le choix appartient aux auditeurs",
+    "example_en": "but the choice belongs to the listener"
   },
   {
     "rank": 4555,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "indigène",
+    "english": "native, local",
+    "example_fr": "il reste à convaincre les indigènes de vendre leurs terres",
+    "example_en": "the natives still have to be convinced to sell their lands"
   },
   {
     "rank": 4556,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "chocolat",
+    "english": "chocolate",
+    "example_fr": "je t'ai apporté des chocolats",
+    "example_en": "I brought you some chocolates"
   },
   {
     "rank": 4557,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "indirectement",
+    "english": "indirectly",
+    "example_fr": "j'étais impliqué aussi bien directement qu'indirectement",
+    "example_en": "I was implicated as directly as I was indirectly"
   },
   {
     "rank": 4558,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "obtention",
+    "english": "obtaining, achievement",
+    "example_fr": "l'obtention d'un diplôme est une occasion spéciale",
+    "example_en": "obtaining a diploma is a special occasion"
   },
   {
     "rank": 4559,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "grandissant",
+    "english": "growing, increasing",
+    "example_fr": "l'insatisfaction grandissante exige une action rapide",
+    "example_en": "growing dissatisfaction requires a rapid response"
   },
   {
     "rank": 4560,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "chagrin",
+    "english": "grief, sorrow,",
+    "example_fr": "j'en ai eu des moments de chagrin dans ma vie",
+    "example_en": "I have had moments of sorrow in my life"
   },
   {
     "rank": 4561,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "prostitué",
+    "english": "prostitute",
+    "example_fr": "toutes deux étaient filles de prostituée",
+    "example_en": "both were daughters of a prostitute"
   },
   {
     "rank": 4562,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "lumineux",
+    "english": "luminous, illuminated; light",
+    "example_fr": "la salle est bruyante, très lumineuse",
+    "example_en": "the room is noisy, very bright"
   },
   {
     "rank": 4563,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "soupe",
+    "english": "soup",
+    "example_fr": "mange ta soupe, dis-je",
+    "example_en": "eat your soup, I said"
   },
   {
     "rank": 4564,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "bravo",
+    "english": "bravo, well done",
+    "example_fr": "j'ai de bonnes nouvelles. bravo. vos appels ont porté leurs fruits",
+    "example_en": "I have good news. congratulations. your appeals worked"
   },
   {
     "rank": 4565,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "appréhender",
+    "english": "to dread, apprehend",
+    "example_fr": "15.000 clandestins ont été appréhendés",
+    "example_en": "15,000 illegal immigrants were apprehended"
   },
   {
     "rank": 4566,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "concitoyen",
+    "english": "fellow citizen",
+    "example_fr": "mes chers concitoyens, je sais que vous êtes fatigués",
+    "example_en": "my dear fellow citizens, I know you're exhausted"
   },
   {
     "rank": 4567,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "flèche",
+    "english": "arrow",
+    "example_fr": "cette flèche indique l'ordre de traitement",
+    "example_en": "this arrow shows the order of processing"
   },
   {
     "rank": 4568,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "libéralisation",
+    "english": "liberalization",
+    "example_fr": "la libéralisation économique est désormais quasiment achevée",
+    "example_en": "economic freedom is henceforth largely achieved"
   },
   {
     "rank": 4569,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "complot",
+    "english": "plot, conspiracy",
+    "example_fr": "je n'aime pas les complots, les mystères",
+    "example_en": "I don't like conspiracies or mysteries"
   },
   {
     "rank": 4570,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "signataire",
+    "english": "signatory",
+    "example_fr": "je crois qu'il faut 30 signataires",
+    "example_en": "I think we need 30 signatures"
   },
   {
     "rank": 4571,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "ski",
+    "english": "ski, skiing",
+    "example_fr": "je fais du ski",
+    "example_en": "I ski"
   },
   {
     "rank": 4572,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "douanier",
+    "english": "customs officer",
+    "example_fr": "il n'y avait pas de contrôle douanier",
+    "example_en": "there was no customs check"
   },
   {
     "rank": 4573,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "syndrome",
+    "english": "syndrome",
+    "example_fr": "je souffre ... du syndrome du manque d'amour",
+    "example_en": "I suffer from lack-of-love syndrome"
   },
   {
     "rank": 4574,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "météo",
+    "english": "weather forecast",
+    "example_fr": "on nous annonçait la météo du lendemain",
+    "example_en": "the next day's weather forecast was given to us"
   },
   {
     "rank": 4575,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "borner",
+    "english": "to limit, confine",
+    "example_fr": "nous nous bornons à faire notre travail",
+    "example_en": "we confine ourselves to doing our work"
   },
   {
     "rank": 4576,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "triompher",
+    "english": "to triumph, beat",
+    "example_fr": "la démocratie finit toujours par triompher",
+    "example_en": "democracy always triumphs"
   },
   {
     "rank": 4577,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "concrétiser",
+    "english": "to materialise",
+    "example_fr": "j'espère vraiment concrétiser ce rêve un jour!",
+    "example_en": "I really hope to realize this dream one day!"
   },
   {
     "rank": 4578,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "soumission",
+    "english": "submission",
+    "example_fr": "le foulard symbolise la soumission à Dieu",
+    "example_en": "the head scarf symbolizes submission to God"
   },
   {
     "rank": 4579,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "continuellement",
+    "english": "continually, continuously",
+    "example_fr": "je dors continuellement, et j'ai de la fièvre",
+    "example_en": "I sleep constantly, and I have a fever"
   },
   {
     "rank": 4580,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "dérober",
+    "english": "to steal, hide",
+    "example_fr": "on leur déroba leurs valises",
+    "example_en": "their luggage was stolen"
   },
   {
     "rank": 4581,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "romancier",
+    "english": "novelist",
+    "example_fr": "un romancier raconte toujours une histoire, son histoire",
+    "example_en": "a novelist always tells a story, his story"
   },
   {
     "rank": 4582,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "sorcier",
+    "english": "sorcerer, witch",
+    "example_fr": "les sorcières aussi tombent malades?",
+    "example_en": "witches get sick too?"
   },
   {
     "rank": 4583,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "consigne",
+    "english": "deposit, orders, detention",
+    "example_fr": "il rappelle quelques consignes générales",
+    "example_en": "he recalls some general orders"
   },
   {
     "rank": 4584,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "harmonie",
+    "english": "harmony",
+    "example_fr": "nous devons travailler ensemble en parfaite harmonie",
+    "example_en": "we must work together in perfect harmony"
   },
   {
     "rank": 4585,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "blond",
+    "english": "blond, fair-haired",
+    "example_fr": "elle avait de jolis cheveux blonds",
+    "example_en": "she had pretty blonde hair"
   },
   {
     "rank": 4586,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "pleuvoir",
+    "english": "to rain",
+    "example_fr": "il trouve qu'il pleut tous les jours",
+    "example_en": "he finds that it rains every day"
   },
   {
     "rank": 4587,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "déplaire",
+    "english": "to displease, be unhappy",
+    "example_fr": "tout ce qui est superflu déplaît à Dieu et à la nature",
+    "example_en": "anything superfluous displeases God and nature"
   },
   {
     "rank": 4588,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "innombrable",
+    "english": "innumerable, countless",
+    "example_fr": "son existence résulte d'innombrables morts",
+    "example_en": "its existence stems from an untold number of deaths"
   },
   {
     "rank": 4589,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "félicitation",
+    "english": "congratulation",
+    "example_fr": "nous recevons de nombreuses lettres de félicitations",
+    "example_en": "we receive many letters of congratulation"
   },
   {
     "rank": 4590,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "inédit",
+    "english": "unpublished; original, new",
+    "example_fr": "dix-sept films inédits seront en compétition",
+    "example_en": "seventeen unedited films will be competing"
   },
   {
     "rank": 4591,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "lance",
+    "english": "lance",
+    "example_fr": "ils forgeront des charrues, des lances",
+    "example_en": "they will make chariots, lances"
   },
   {
     "rank": 4592,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "désireux",
+    "english": "avid for, anxious to, desirous of",
+    "example_fr": "beaucoup seraient désireux de vous rencontrer",
+    "example_en": "many people would be happy to meet you"
   },
   {
     "rank": 4593,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "diversifier",
+    "english": "to vary, diversify",
+    "example_fr": "on a un pays très diversifié",
+    "example_en": "we have a very diversified country"
   },
   {
     "rank": 4594,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "vélo",
+    "english": "bike, bicycle",
+    "example_fr": "elles se sont amenées hier en vélo",
+    "example_en": "they arrived here yesterday by bicycle"
   },
   {
     "rank": 4595,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "fatigue",
+    "english": "tiredness, fatigue",
+    "example_fr": "les gens sont peut-être fatigués",
+    "example_en": "the people are perhaps tired"
   },
   {
     "rank": 4596,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "instabilité",
+    "english": "instability",
+    "example_fr": "l'instabilité politique demeure",
+    "example_en": "political instability remains"
   },
   {
     "rank": 4597,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "pénaliser",
+    "english": "to penalize, punish",
+    "example_fr": "on est en train de pénaliser nos travailleurs",
+    "example_en": "we're punishing our workers"
   },
   {
     "rank": 4598,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "comte",
+    "english": "count",
+    "example_fr": "le mari était comte. l'amant était marquis",
+    "example_en": "the husband was a count. the lover was a marquis"
   },
   {
     "rank": 4599,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "amer",
+    "english": "bitter",
+    "example_fr": "une surprise amère l'attend",
+    "example_en": "a bitter surprise awaits her"
   },
   {
     "rank": 4600,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "orchestre",
+    "english": "orchestra",
+    "example_fr": "les orchestres ne veulent pas de ma musique",
+    "example_en": "orchestras don't want my music"
   },
   {
     "rank": 4601,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "foncier",
+    "english": "land-related, land, fundamental",
+    "example_fr": "le code foncier va permettre cela",
+    "example_en": "the land-use laws will allow that"
   },
   {
     "rank": 4602,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "dixième",
+    "english": "tenth",
+    "example_fr": "on ne comprend pas le dixième de ce que vous dites",
+    "example_en": "we don't understand a tenth of what you're saying"
   },
   {
     "rank": 4603,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "est",
+    "english": "east",
+    "example_fr": "toutes les églises sont tournées vers l'est",
+    "example_en": "all of the churches have turned their attention eastwards"
   },
   {
     "rank": 4604,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "envelopper",
+    "english": "to wrap, surround, veil",
+    "example_fr": "donne-moi quelque chose pour envelopper le petit",
+    "example_en": "give me something to wrap the infant in"
   },
   {
     "rank": 4605,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "troublant",
+    "english": "disturbing",
+    "example_fr": "c'est là quelque chose de très troublant",
+    "example_en": "something's very wrong here"
   },
   {
     "rank": 4606,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "irrégulier",
+    "english": "irregular, uneven",
+    "example_fr": "leurs revenus sont incertains et irréguliers",
+    "example_en": "their income is uncertain and irregular"
   },
   {
     "rank": 4607,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "fouet",
+    "english": "whip",
+    "example_fr": "il marchait sous le fouet du maître",
+    "example_en": "he walked under the whip of the master"
   },
   {
     "rank": 4608,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "baigner",
+    "english": "to bathe, wash, get a bath, go for a swim",
+    "example_fr": "je me baignai avec Anne, elle nageait doucement",
+    "example_en": "I swam with Anne; she was gently swimming"
   },
   {
     "rank": 4609,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "fixation",
+    "english": "fixation, fixing",
+    "example_fr": "le peintre procède alors à une fixation",
+    "example_en": "the painter then becomes fixated"
   },
   {
     "rank": 4610,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "encadrement",
+    "english": "training, framing, supervision",
+    "example_fr": "le personnel d'encadrement des ateliers est réduit",
+    "example_en": "supervisory staff in the workshops is reduced"
   },
   {
     "rank": 4611,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "déménager",
+    "english": "to move",
+    "example_fr": "on a déménagé dans un petit local",
+    "example_en": "we moved into a little nook"
   },
   {
     "rank": 4612,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "esthétique",
+    "english": "aesthetics, attractiveness; attractive",
+    "example_fr": "je ressens une passion esthétique",
+    "example_en": "I feel an aesthetic passion"
   },
   {
     "rank": 4613,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "photographier",
+    "english": "to photograph",
+    "example_fr": "allons nous faire photographier aux îles",
+    "example_en": "let's go get photographed in the islands"
   },
   {
     "rank": 4614,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "insensé",
+    "english": "insane",
+    "example_fr": "t'as un comportement insensé",
+    "example_en": "your behavior is crazy"
   },
   {
     "rank": 4615,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "moderniser",
+    "english": "to modernize",
+    "example_fr": "nous devons simplement moderniser ce système",
+    "example_en": "we must simply modernize the system"
   },
   {
     "rank": 4616,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "expérimental",
+    "english": "experimental",
+    "example_fr": "du point de vue expérimental, il est bon de vérifier",
+    "example_en": "from an experimental standpoint, it's good to double-check"
   },
   {
     "rank": 4617,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "incomber",
+    "english": "to be incumbent upon",
+    "example_fr": "ce rôle leur incombe maintenant",
+    "example_en": "this role falls to them now"
   },
   {
     "rank": 4618,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "retombée",
+    "english": "fallout, consequences, effects",
+    "example_fr": "je n'ai pas eu de mauvaises retombées",
+    "example_en": "I haven't had any bad effects"
   },
   {
     "rank": 4619,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "équivaloir",
+    "english": "to be equivalent, amount to",
+    "example_fr": "cela équivaut à une taxe sur les malades",
+    "example_en": "this amounts to a tax on sick people"
   },
   {
     "rank": 4620,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "différencier",
+    "english": "to differentiate",
+    "example_fr": "je sais différencier un compliment d'une flatterie",
+    "example_en": "I know the difference between a compliment and flattery"
   },
   {
     "rank": 4621,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "éventail",
+    "english": "fan, range",
+    "example_fr": "le gouvernement finance un éventail d'initiatives de recherche",
+    "example_en": "the government is financing a range of research initiatives"
   },
   {
     "rank": 4622,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "solde",
+    "english": "balance; pay; sale",
+    "example_fr": "tout est en solde dans Paris",
+    "example_en": "everything's on sale in Paris"
   },
   {
     "rank": 4623,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "gâcher",
+    "english": "to waste, spoil",
+    "example_fr": "je ne voulais pas gâcher votre fête",
+    "example_en": "I didn't want to ruin your party"
   },
   {
     "rank": 4624,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "régiment",
+    "english": "regiment",
+    "example_fr": "c'est le meilleur soldat du régiment",
+    "example_en": "he's the best soldier in the regiment"
   },
   {
     "rank": 4625,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "chiite",
+    "english": "Shiite",
+    "example_fr": "la conférence devait réunir des leaders chiites, sunnites et kurdes",
+    "example_en": "the conference was meant to bring together Shiite, Sunni, and Kurdish leaders"
   },
   {
     "rank": 4626,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "bouleversement",
+    "english": "upheaval",
+    "example_fr": "le bouleversement est profond autour de nous",
+    "example_en": "profond upheaval is all around us"
   },
   {
     "rank": 4627,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "relater",
+    "english": "to relate, recount",
+    "example_fr": "ils m'ont relaté des histoires cauchemardesques",
+    "example_en": "they recounted nightmarish stories"
   },
   {
     "rank": 4628,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "décent",
+    "english": "decent, proper",
+    "example_fr": "en surface, elle paraissait décente, prude et tout",
+    "example_en": "outwards, she appeared proper, prudish, and so on"
   },
   {
     "rank": 4629,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "éminent",
+    "english": "eminent, distinguished",
+    "example_fr": "je souscris volontiers au verdict d'un éminent psychanalyste",
+    "example_en": "I gladly concur with the verdict of a distinguished psychoanalyst"
   },
   {
     "rank": 4630,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "instituteur",
+    "english": "school teacher",
+    "example_fr": "l'instituteur feuilletait un manuel de sociologie",
+    "example_en": "the teacher paged through a sociology manual"
   },
   {
     "rank": 4631,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "rayer",
+    "english": "to scratch, streak, stripe; to erase, strike out",
+    "example_fr": "tu portes une chemise rayée et une cravate rayée",
+    "example_en": "you're wearing a striped shirt and a striped necktie"
   },
   {
     "rank": 4632,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "concrètement",
+    "english": "in concrete terms",
+    "example_fr": "je vous demande concrètement si vous allez prendre des mesures sérieuses",
+    "example_en": "I ask you concretely if you are going to take serious measures"
   },
   {
     "rank": 4633,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "coulisse",
+    "english": "backstage, wings, behind the scenes",
+    "example_fr": "car, en coulisse, on négocia",
+    "example_en": "for, behind the scenes, there were negotiations"
   },
   {
     "rank": 4634,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "enchaîner",
+    "english": "to chain up, connect, string together",
+    "example_fr": "tout semble s'enchaîner dans cette sinistre marche des événements",
+    "example_en": "everything seemed to link together in this sinister sequence of events"
   },
   {
     "rank": 4635,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "ratification",
+    "english": "ratification",
+    "example_fr": "le processus de ratification n'est pas mort",
+    "example_en": "the ratification process is not dead"
   },
   {
     "rank": 4636,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "emplacement",
+    "english": "site, location",
+    "example_fr": "les emplacements de camping sont séparés",
+    "example_en": "the camping sites are separated"
   },
   {
     "rank": 4637,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "copier",
+    "english": "to copy, reproduce",
+    "example_fr": "j'ai copié l'article",
+    "example_en": "I copied the article"
   },
   {
     "rank": 4638,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "inculper",
+    "english": "to charge",
+    "example_fr": "les preuves étaient insuffisantes pour l'inculper",
+    "example_en": "the evidence was insufficient to charge him"
   },
   {
     "rank": 4639,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "renouveau",
+    "english": "renewal",
+    "example_fr": "ce renouveau doit, naturellement, commencer par en haut",
+    "example_en": "this renewal of course has to come top-down"
   },
   {
     "rank": 4640,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "néerlandais",
+    "english": "Dutch",
+    "example_fr": "la multinationale néerlandaise a annoncé de nouvelles pertes",
+    "example_en": "the Dutch multinational announced new losses"
   },
   {
     "rank": 4641,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "intégral",
+    "english": "complete, unabridged",
+    "example_fr": "ils constituent un élément intégral de notre histoire",
+    "example_en": "they constitute an integral part of our history"
   },
   {
     "rank": 4642,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "spécification",
+    "english": "specification",
+    "example_fr": "il convient alors de respecter les spécifications supplémentaires",
+    "example_en": "then it would be appropriate to honour the supplementary specifications"
   },
   {
     "rank": 4643,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "documentation",
+    "english": "documentation, literature",
+    "example_fr": "j'écris aussi des documentations en français",
+    "example_en": "I also write documentation in French"
   },
   {
     "rank": 4644,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "logiquement",
+    "english": "logically",
+    "example_fr": "logiquement, il fallait que cette vie se termine",
+    "example_en": "logically, this life had to end"
   },
   {
     "rank": 4645,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "spectre",
+    "english": "spectrum, ghost",
+    "example_fr": "le spectre d'un conflit nucléaire généralisé s'écarte",
+    "example_en": "the threat of a widespread nuclear conflict is lessening"
   },
   {
     "rank": 4646,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "harmoniser",
+    "english": "to harmonize, harmonize with",
+    "example_fr": "il harmonise les règles",
+    "example_en": "he reconciled the rules"
   },
   {
     "rank": 4647,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "suédois",
+    "english": "Swedish, Swede",
+    "example_fr": "nous avons même un correspondant suédois",
+    "example_en": "we even have a Swedish correspondent"
   },
   {
     "rank": 4648,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "rouvrir",
+    "english": "to reopen",
+    "example_fr": "quant aux écoles militaires, elles étaient rouvertes sans délai",
+    "example_en": "the military schools were reopened without delay"
   },
   {
     "rank": 4649,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "débouché",
+    "english": "prospect, opportunity, opening",
+    "example_fr": "il existe de nombreux débouchés dans plusieurs branches",
+    "example_en": "there are several openings in many branches"
   },
   {
     "rank": 4650,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "croisé",
+    "english": "twill; alternate; crusader; crossed",
+    "example_fr": "nos chemins se sont croisés de façon intéressante",
+    "example_en": "our paths crossed in an interesting manner"
   },
   {
     "rank": 4651,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "fléau",
+    "english": "scourge, plague",
+    "example_fr": "la pauvreté est un fléau",
+    "example_en": "poverty is a plague"
   },
   {
     "rank": 4652,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "traversée",
+    "english": "crossing",
+    "example_fr": "la traversée avait duré juste trois heures",
+    "example_en": "it only took three hours to make the crossing"
   },
   {
     "rank": 4653,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "solaire",
+    "english": "solar",
+    "example_fr": "nous pensons que le système solaire est issu d'une étoile",
+    "example_en": "we think the solar system emerged from a star"
   },
   {
     "rank": 4654,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "secrétariat",
+    "english": "secretaryship, secretariat, secretarial offices, secretary's office",
+    "example_fr": "les clés seront au secrétariat",
+    "example_en": "the keys are at the secretary's office"
   },
   {
     "rank": 4655,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "mou",
+    "english": "soft",
+    "example_fr": "je devenais froide et molle comme un vieux cadavre",
+    "example_en": "I became cold and soft like an old cadaver"
   },
   {
     "rank": 4656,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "venger",
+    "english": "to avenge, take revenge",
+    "example_fr": "tu t'es vengé. réjouis-toi avant d'oublier",
+    "example_en": "you got your revenge. enjoy it before you forget"
   },
   {
     "rank": 4657,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "détenteur",
+    "english": "holder, possessor, bearer",
+    "example_fr": "cette carte plastifiée devrait permettre à son détenteur de voter",
+    "example_en": "this plastic card should allow the bearer to vote"
   },
   {
     "rank": 4658,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "basque",
+    "english": "Basque",
+    "example_fr": "il y avait un couple de jeunes basques aussi qui était venu au Sénégal",
+    "example_en": "there was also a couple of Basque youths who came to Senegal"
   },
   {
     "rank": 4659,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "soif",
+    "english": "thirst",
+    "example_fr": "si tu as soif, tu bois",
+    "example_en": "if you're thirsty, you drink"
   },
   {
     "rank": 4660,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "accumulation",
+    "english": "accumulation, amassing, storage, stockpiling, build-up",
+    "example_fr": "il y a de dangereuses accumulations de neige",
+    "example_en": "there are dangerous accumulations of snow"
   },
   {
     "rank": 4661,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "autoritaire",
+    "english": "authoritarian",
+    "example_fr": "c'est un régime extraordinairement autoritaire",
+    "example_en": "its an extraordinarily authoritative regime"
   },
   {
     "rank": 4662,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "essor",
+    "english": "expansion, development, flight",
+    "example_fr": "cette ville a pris un nouvel essor économique et touristique",
+    "example_en": "this city has made new strides in the economy and tourism"
   },
   {
     "rank": 4663,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "obséder",
+    "english": "to obsess, haunt",
+    "example_fr": "je ne suis pas obsédée du tout par la réussite",
+    "example_en": "I'm not at all obsessed by success"
   },
   {
     "rank": 4664,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "intolérable",
+    "english": "intolerable",
+    "example_fr": "leurs conditions de vie deviennent intolérables",
+    "example_en": "their living conditions are becoming intolerable"
   },
   {
     "rank": 4665,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "rébellion",
+    "english": "rebellion",
+    "example_fr": "la rébellion va éclater, des gouvernments vont tomber!",
+    "example_en": "rebellion will break out, governments will fall!"
   },
   {
     "rank": 4666,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "préventif",
+    "english": "preventive",
+    "example_fr": "les antibiotiques sont utilisés de façon préventive",
+    "example_en": "the antibiotics are used for prevention"
   },
   {
     "rank": 4667,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "désignation",
+    "english": "designation",
+    "example_fr": "une désignation rapide et positive est nécessaire",
+    "example_en": "a swift and positive designation is necessary"
   },
   {
     "rank": 4668,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "aimable",
+    "english": "pleasant, kind, nice",
+    "example_fr": "je voulais juste être aimable",
+    "example_en": "I just wanted to be likable"
   },
   {
     "rank": 4669,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "conformité",
+    "english": "conformity",
+    "example_fr": "on a un problème de conformité au niveau des registres",
+    "example_en": "we have a consistency problem with the books"
   },
   {
     "rank": 4670,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "pantalon",
+    "english": "trousers, pants",
+    "example_fr": "ôtez votre pantalon et entrez, je vais vous examiner",
+    "example_en": "take off your pants and come in, I'm going to examine you"
   },
   {
     "rank": 4671,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "anormal",
+    "english": "abnormal",
+    "example_fr": "c'est tout à fait anormal",
+    "example_en": "it's completely abnormal"
   },
   {
     "rank": 4672,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "inhérent",
+    "english": "inherent",
+    "example_fr": "nous reconnaissons le droit inhérent des autochtones",
+    "example_en": "we recognize the inherent rights of natives"
   },
   {
     "rank": 4673,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "réconcilier",
+    "english": "to reconcile",
+    "example_fr": "la mère et le fils se réconcilient",
+    "example_en": "mother and son reconciled"
   },
   {
     "rank": 4674,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "réservoir",
+    "english": "tank, reservoir",
+    "example_fr": "le réservoir ainsi formé est un immense lac",
+    "example_en": "the reservoir thus formed is an immense reservoir"
   },
   {
     "rank": 4675,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "aveu",
+    "english": "confession",
+    "example_fr": "je considère votre silence comme un aveu",
+    "example_en": "I take your silence to be a confession"
   },
   {
     "rank": 4676,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "emmerder",
+    "english": "to bug, bother",
+    "example_fr": "je serais bien emmerdé si tu attrapais une pneumonie",
+    "example_en": "I would be pissed off if you catch a cold"
   },
   {
     "rank": 4677,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "inondation",
+    "english": "flood, deluge",
+    "example_fr": "l'école est fermée pour inondation",
+    "example_en": "the school is closed due to flooding"
   },
   {
     "rank": 4678,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "câble",
+    "english": "cable, wire",
+    "example_fr": "le câble est bloqué",
+    "example_en": "the cable is blocked"
   },
   {
     "rank": 4679,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "poumon",
+    "english": "lung",
+    "example_fr": "ils respiraient à pleins poumons",
+    "example_en": "they breathed very deeply"
   },
   {
     "rank": 4680,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "humble",
+    "english": "humble, lowly",
+    "example_fr": "veuillez accepter mes humbles excuses",
+    "example_en": "please accept my humble apologies"
   },
   {
     "rank": 4681,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "perturbation",
+    "english": "disruption, disturbance",
+    "example_fr": "la circulation n'a pas connu d'importantes perturbations",
+    "example_en": "traffic hasn't been greatly affected"
   },
   {
     "rank": 4682,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "brouiller",
+    "english": "to mix-up, confuse, scramble",
+    "example_fr": "le récit des confessions brouille tout",
+    "example_en": "the written confession muddles up everything"
   },
   {
     "rank": 4683,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "illustration",
+    "english": "illustration",
+    "example_fr": "les illustrations sont originales",
+    "example_en": "the illustrations are original"
   },
   {
     "rank": 4684,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "appliqué",
+    "english": "assiduous, industrious, careful",
+    "example_fr": "oui, j'étais une élève appliquée",
+    "example_en": "yes, I was a diligent student"
   },
   {
     "rank": 4685,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "fermier",
+    "english": "farmer",
+    "example_fr": "les fermiers ont des journées très remplies",
+    "example_en": "farmers have very busy days"
   },
   {
     "rank": 4686,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "hanter",
+    "english": "to haunt",
+    "example_fr": "tu hantes mes rêves",
+    "example_en": "you haunt my dreams"
   },
   {
     "rank": 4687,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "cordon",
+    "english": "cord, string, lead",
+    "example_fr": "elle a sectionné le cordon avec ses dents",
+    "example_en": "she cut the cord with her teeth"
   },
   {
     "rank": 4688,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "néfaste",
+    "english": "harmful, ill-fated",
+    "example_fr": "ces polluants sont néfastes pour tous",
+    "example_en": "these pollutants are harmful to everyone"
   },
   {
     "rank": 4689,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "lasser",
+    "english": "to tire, weary, grow weary",
+    "example_fr": "je ne veux pas lasser le public",
+    "example_en": "I don't want to make the public weary"
   },
   {
     "rank": 4690,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "influer",
+    "english": "to influence, have an influence on",
+    "example_fr": "chaque vie, influe sur les autres",
+    "example_en": "each life influences others"
   },
   {
     "rank": 4691,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "présentement",
+    "english": "at present, presently",
+    "example_fr": "nous étudions ce besoin présentement",
+    "example_en": "we're currently studying this need"
   },
   {
     "rank": 4692,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "plate-forme",
+    "english": "platform",
+    "example_fr": "ils restèrent debout sur la plate-forme",
+    "example_en": "they remained standing on the platform"
   },
   {
     "rank": 4693,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "stopper",
+    "english": "to stop, halt",
+    "example_fr": "vous pourriez me stopper avec un seul mot",
+    "example_en": "you could stop me with one single word"
   },
   {
     "rank": 4694,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "kurde",
+    "english": "Kurd, Kurdish",
+    "example_fr": "la langue kurde est interdite à l'école",
+    "example_en": "the Kurdish language is forbidden at school"
   },
   {
     "rank": 4695,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "amusant",
+    "english": "funny, amusing, entertaining",
+    "example_fr": "j'avais trouvé une phrase amusante",
+    "example_en": "I had found a funny phrase"
   },
   {
     "rank": 4696,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "tremblement",
+    "english": "shiver, trembling, shaking",
+    "example_fr": "il y avait dans sa voix un tremblement",
+    "example_en": "there was trembling in her voice"
   },
   {
     "rank": 4697,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "rail",
+    "english": "rail, track",
+    "example_fr": "j'ai suivi les rails pour arriver ici",
+    "example_en": "I followed the tracks to get here"
   },
   {
     "rank": 4698,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "fondamentalement",
+    "english": "basically, fundamentally, inherently",
+    "example_fr": "telle est fondamentalement notre position",
+    "example_en": "fundamentally that is our position"
   },
   {
     "rank": 4699,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "lampe",
+    "english": "lamp, light",
+    "example_fr": "la scène est éclairée par une lampe à pétrole",
+    "example_en": "the scene was lit by a kerosene lamp"
   },
   {
     "rank": 4700,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "triple",
+    "english": "triple",
+    "example_fr": "t'as vu mon triple saut? je peux le refaire",
+    "example_en": "did you see my triple jump? I can do it again"
   },
   {
     "rank": 4701,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "inchangé",
+    "english": "unchanged",
+    "example_fr": "l'état de la route demeure inchangé",
+    "example_en": "road conditions remain unchanged"
   },
   {
     "rank": 4702,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "supplier",
+    "english": "to beg, implore",
+    "example_fr": "je t'en supplie, ne pars pas",
+    "example_en": "I beg you, don't leave"
   },
   {
     "rank": 4703,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "multiplication",
+    "english": "multiplication",
+    "example_fr": "j'avais prédit une multiplication de travail pour l'automne",
+    "example_en": "I predicted an increase in workload for the fall"
   },
   {
     "rank": 4704,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "camoufler",
+    "english": "to cover up, conceal, camouflage",
+    "example_fr": "certaines araignées changent leurs couleurs pour se camoufler",
+    "example_en": "some spiders change colours as camouflage"
   },
   {
     "rank": 4705,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "cliché",
+    "english": "cliché; negative",
+    "example_fr": "cette théorie est devenue un vieux cliché freudien",
+    "example_en": "this theory has become an old Freudian cliché"
   },
   {
     "rank": 4706,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "diamant",
+    "english": "diamond",
+    "example_fr": "c'est le plus beau diamant du monde",
+    "example_en": "it's the most beautiful diamond in the world"
   },
   {
     "rank": 4707,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "guerrier",
+    "english": "warrior; warlike",
+    "example_fr": "t'as une âme de guerrier",
+    "example_en": "you have a warrior's soul"
   },
   {
     "rank": 4708,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "figer",
+    "english": "to clot, coagulate, congeal, set",
+    "example_fr": "le pauvre animal resta figé sur place",
+    "example_en": "the poor animal remained frozen in its tracks"
   },
   {
     "rank": 4709,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "comique",
+    "english": "comical; comic, comedian",
+    "example_fr": "le malentendu serait plutôt comique",
+    "example_en": "the misunderstanding would be rather comical"
   },
   {
     "rank": 4710,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "planification",
+    "english": "planning",
+    "example_fr": "ils doivent payer pour la mauvaise planification",
+    "example_en": "they have to pay for bad planning"
   },
   {
     "rank": 4711,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "éloge",
+    "english": "praise",
+    "example_fr": "je ferai votre éloge",
+    "example_en": "I will sing your praises"
   },
   {
     "rank": 4712,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "regroupement",
+    "english": "regrouping, reassembly",
+    "example_fr": "ils inventent les regroupements de populations",
+    "example_en": "they create population regroupings"
   },
   {
     "rank": 4713,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "odieux",
+    "english": "hateful, odious",
+    "example_fr": "ces façons de parler sont odieuses",
+    "example_en": "these are heinous manners of speaking"
   },
   {
     "rank": 4714,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "désastreux",
+    "english": "disastrous",
+    "example_fr": "ce sera un mariage désastreux",
+    "example_en": "that will be a disastrous marriage"
   },
   {
     "rank": 4715,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "nocturne",
+    "english": "nocturnal, nocturne",
+    "example_fr": "ils ajustèrent leurs lunettes à vision nocturne",
+    "example_en": "they adjusted their night vision goggles"
   },
   {
     "rank": 4716,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "configuration",
+    "english": "configuration, layout",
+    "example_fr": "la configuration institutionnelle rendrait une partition très difficile",
+    "example_en": "the institutional configuration would render a partition very difficult"
   },
   {
     "rank": 4717,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "escompter",
+    "english": "to discount; to expect",
+    "example_fr": "cela n'a pas eu les résultats escomptés",
+    "example_en": "that didn't have the expected results"
   },
   {
     "rank": 4718,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "intensif",
+    "english": "intensive",
+    "example_fr": "une telle traduction représente un travail intensif",
+    "example_en": "a translation like this involves intense work"
   },
   {
     "rank": 4719,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "scepticisme",
+    "english": "scepticism",
+    "example_fr": "je vous concède que le scepticisme n'est pas très sexy",
+    "example_en": "I admit that scepticism isn't very sexy"
   },
   {
     "rank": 4720,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "croisière",
+    "english": "cruise",
+    "example_fr": "on a décidé de faire cette croisière en Mer Rouge",
+    "example_en": "we decided to take a Red Sea cruise"
   },
   {
     "rank": 4721,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "plénier",
+    "english": "plenary, full",
+    "example_fr": "l'assemblée plénière est tombée d'accord",
+    "example_en": "the plenary assembly came to agreement"
   },
   {
     "rank": 4722,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "athlète",
+    "english": "athlete",
+    "example_fr": "les athlètes doivent être de bons leaders",
+    "example_en": "athletes must be good leaders"
   },
   {
     "rank": 4723,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "poil",
+    "english": "hair, bristle",
+    "example_fr": "il est allergique au poil de chat",
+    "example_en": "he's allergic to cat hair"
   },
   {
     "rank": 4724,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "épanouir",
+    "english": "to bloom, blossom",
+    "example_fr": "elle est très vivante et s'épanouit de plus en plus",
+    "example_en": "she's very lively and is blossoming more and more"
   },
   {
     "rank": 4725,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "minimiser",
+    "english": "to minimize, play down",
+    "example_fr": "il tend donc à minimiser le problème",
+    "example_en": "so he tends to minimize the problem"
   },
   {
     "rank": 4726,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "inévitablement",
+    "english": "inevitably",
+    "example_fr": "le chômage augmenterait inévitablement",
+    "example_en": "unemployment would inevitably increase"
   },
   {
     "rank": 4727,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "informé",
+    "english": "informed",
+    "example_fr": "la population doit être mieux informée au sujet",
+    "example_en": "the population must be better informed on the subject"
   },
   {
     "rank": 4728,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "islam",
+    "english": "Islam",
+    "example_fr": "l'Islam est aujourd'hui la deuxième religion de France",
+    "example_en": "Islam is the second largest religion in France today"
   },
   {
     "rank": 4729,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "échéant",
+    "english": "if need be",
+    "example_fr": "c'est moi qui le cas échéant prendrai la décision",
+    "example_en": "I'm the one who will make the decision if necessary"
   },
   {
     "rank": 4730,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "murmurer",
+    "english": "to murmur",
+    "example_fr": "elle a murmuré dans mon oreille",
+    "example_en": "she mumbled into my ear"
   },
   {
     "rank": 4731,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "implantation",
+    "english": "implanting, setting up, establishment, implantation, installation",
+    "example_fr": "quelle est votre stratégie d'implantation?",
+    "example_en": "what is your installation strategy?"
   },
   {
     "rank": 4732,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "décerner",
+    "english": "to award, give, issue",
+    "example_fr": "en science, on ne décerne pas de distinction pour les redécouvertes",
+    "example_en": "in science nobody receives a prize for rediscovering something"
   },
   {
     "rank": 4733,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "replacer",
+    "english": "to replace, put back",
+    "example_fr": "il replaça le paquet dans sa poche",
+    "example_en": "he returned the package to his pocket"
   },
   {
     "rank": 4734,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "vêtir",
+    "english": "to clothe, dress, put on",
+    "example_fr": "c'était un vieil homme, vêtu bourgeoisement",
+    "example_en": "he was an old man, dressed simply"
   },
   {
     "rank": 4735,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "trottoir",
+    "english": "pavement",
+    "example_fr": "mets-moi sur le trottoir, je me débrouillerai",
+    "example_en": "put me on the sidewalk, I'll manage"
   },
   {
     "rank": 4736,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "vieillard",
+    "english": "old man",
+    "example_fr": "le vieillard haussa les épaules",
+    "example_en": "the old man shrugged his shoulders"
   },
   {
     "rank": 4737,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "fillette",
+    "english": "little girl, girl",
+    "example_fr": "certes la fillette semblait précoce",
+    "example_en": "the little girl certainly seemed precocious"
   },
   {
     "rank": 4738,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "enchanter",
+    "english": "to delight, enchant, rejoice",
+    "example_fr": "mais il est enchanté de me voir, hein?",
+    "example_en": "he's sure delighted to see me, eh?"
   },
   {
     "rank": 4739,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "singe",
+    "english": "monkey",
+    "example_fr": "ils imitent le cri des singes",
+    "example_en": "they're imitating the monkeys' scream"
   },
   {
     "rank": 4740,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "superficiel",
+    "english": "superficial, shallow",
+    "example_fr": "t'es un mec superficiel, un vrai nul",
+    "example_en": "you're a shallow guy, a real nobody"
   },
   {
     "rank": 4741,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "rigide",
+    "english": "rigid, stiff",
+    "example_fr": "il y a de rigides paramètres en place",
+    "example_en": "there are fixed parameters in place"
   },
   {
     "rank": 4742,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "démographique",
+    "english": "demographic",
+    "example_fr": "nous vivons en une époque d'évolution démographique",
+    "example_en": "we live in an era of demographic evolution"
   },
   {
     "rank": 4743,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "fourniture",
+    "english": "supply, provision",
+    "example_fr": "l'accord prévoit la fourniture de 3 millions de tonnes de pétrole",
+    "example_en": "the agreement anticipates a supply of 3 million tonnes of oil"
   },
   {
     "rank": 4744,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "taxer",
+    "english": "to tax",
+    "example_fr": "il est injuste de le taxer de caprice",
+    "example_en": "it's injust to tax indiscriminately"
   },
   {
     "rank": 4745,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "milice",
+    "english": "militia",
+    "example_fr": "les milices sont responsables de crimes contre l'humanité",
+    "example_en": "the militias are responsible for crimes against humanity"
   },
   {
     "rank": 4746,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "foire",
+    "english": "fair",
+    "example_fr": "hier, j'étais à la foire aux livres",
+    "example_en": "yesterday I was at the book fair"
   },
   {
     "rank": 4747,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "élégant",
+    "english": "elegant, stylish",
+    "example_fr": "les pauvres sont désormais plus élégants que les riches",
+    "example_en": "the poor are henceforth more elegant than the rich"
   },
   {
     "rank": 4748,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "crème",
+    "english": "cream",
+    "example_fr": "son père lui appliqua une crème désinfectante et lui banda la main",
+    "example_en": "his father applied some disinfectant cream and bandaged his hand"
   },
   {
     "rank": 4749,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "mentalité",
+    "english": "mentality",
+    "example_fr": "il faut instaurer une mentalité de gagnant et de bosseur",
+    "example_en": "we need to establish a winning and hard-working mentality"
   },
   {
     "rank": 4750,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "charité",
+    "english": "charity",
+    "example_fr": "beaucoup de laïcs ont plus de charité qu'eux",
+    "example_en": "many lay clergy have more charity than they do"
   },
   {
     "rank": 4751,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "borne",
+    "english": "milestone, boundary stone",
+    "example_fr": "je vous ai affirmé notre admiration sans bornes",
+    "example_en": "I have asserted to you our unqualified admiration"
   },
   {
     "rank": 4752,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "organique",
+    "english": "organic",
+    "example_fr": "une forme de vie organique vient à ma rescousse",
+    "example_en": "an organic life form came to my rescue"
   },
   {
     "rank": 4753,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "dévouer",
+    "english": "to devote, sacrifice oneself",
+    "example_fr": "elle se dévoua à la gloire de son ami",
+    "example_en": "she devoted herself to the glory of her friend"
   },
   {
     "rank": 4754,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "hâter",
+    "english": "to quicken, hasten",
+    "example_fr": "hâte-toi de revenir",
+    "example_en": "hurry back"
   },
   {
     "rank": 4755,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "mobilité",
+    "english": "mobility",
+    "example_fr": "la mobilité de la population a changé",
+    "example_en": "the mobility of the population has changed"
   },
   {
     "rank": 4756,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "exclu",
+    "english": "outcast",
+    "example_fr": "je ne me suis jamais senti exclu",
+    "example_en": "I never felt excluded"
   },
   {
     "rank": 4757,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "boucher",
+    "english": "butcher; to fill in, get clogged up",
+    "example_fr": "il faudra sans doute boucher des trous",
+    "example_en": "it will of course be necessary to plug the holes"
   },
   {
     "rank": 4758,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "bénéfique",
+    "english": "beneficial",
+    "example_fr": "les faits prouvent que le mariage est bénéfique pour les enfants",
+    "example_en": "the facts prove that marriage is beneficial for children"
   },
   {
     "rank": 4759,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "commencement",
+    "english": "beginning, start",
+    "example_fr": "ce n'est que le commencement et non la fin",
+    "example_en": "it's only the beginning and not the end"
   },
   {
     "rank": 4760,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "licenciement",
+    "english": "dismissal, sacking",
+    "example_fr": "on va vous notifier votre licenciement, par courrier",
+    "example_en": "we will notify you of your dismissal by mail"
   },
   {
     "rank": 4761,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "chancelier",
+    "english": "chancellor",
+    "example_fr": "le chancelier doit rencontrer le président du parlement",
+    "example_en": "the chancellor must meet the speaker of the parliament"
   },
   {
     "rank": 4762,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "retenue",
+    "english": "deduction; restraint, self-control",
+    "example_fr": "je me suis racontée sans aucune retenue",
+    "example_en": "I talked about myself without any restraint"
   },
   {
     "rank": 4763,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "visée",
+    "english": "aim, design, sighting",
+    "example_fr": "nous n'avons aucune visée sur l'Indochine",
+    "example_en": "we have no designs for Indochina"
   },
   {
     "rank": 4764,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "dénonciation",
+    "english": "denunciation",
+    "example_fr": "la dénonciation ne doit pas être acide ou sarcastique",
+    "example_en": "the denunciation need not be acerbic or sarcastic"
   },
   {
     "rank": 4765,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "plaie",
+    "english": "wound",
+    "example_fr": "il lavera et séchera nos plaies",
+    "example_en": "he will wash and dry our wounds"
   },
   {
     "rank": 4766,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "exiler",
+    "english": "to exile",
+    "example_fr": "il se lamentait d'être exilé",
+    "example_en": "he rued at being exiled"
   },
   {
     "rank": 4767,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "rocher",
+    "english": "rock, boulder",
+    "example_fr": "il a disparu derrière les rochers",
+    "example_en": "he disappeared behind the rocks"
   },
   {
     "rank": 4768,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "mortalité",
+    "english": "mortality, death rate",
+    "example_fr": "la mortalité par cancer continue à décroître aux Etats-Unis",
+    "example_en": "cancer deaths continue to decrease in the U.S."
   },
   {
     "rank": 4769,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "cruauté",
+    "english": "cruelty",
+    "example_fr": "c'est tout simplement un acte de cruauté",
+    "example_en": "it's simply an act of cruelty"
   },
   {
     "rank": 4770,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "regrettable",
+    "english": "unfortunate, regrettable",
+    "example_fr": "la perte d'une vie est toujours regrettable",
+    "example_en": "the loss of a life is always regrettable"
   },
   {
     "rank": 4771,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "droguer",
+    "english": "to drug, take drugs",
+    "example_fr": "je me suis déjà drogué",
+    "example_en": "I was already high on drugs"
   },
   {
     "rank": 4772,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "connecter",
+    "english": "to connect, go on-line",
+    "example_fr": "tous les pays sont connectés à Internet",
+    "example_en": "all countries are connected to the Internet"
   },
   {
     "rank": 4773,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "confort",
+    "english": "comfort",
+    "example_fr": "tout le monde vit dans le confort",
+    "example_en": "everyone lives in comfort"
   },
   {
     "rank": 4774,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "compréhensible",
+    "english": "comprehensible, understandable",
+    "example_fr": "il est compréhensible que le public soit inquiet",
+    "example_en": "it's understandable that the public is disturbed"
   },
   {
     "rank": 4775,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "tube",
+    "english": "tube",
+    "example_fr": "deux fois déjà le tube a été retiré puis remis",
+    "example_en": "twice already the tube was pulled out, then reinserted"
   },
   {
     "rank": 4776,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "coffre",
+    "english": "trunk, boot, chest",
+    "example_fr": "les bagages sont dans le coffre",
+    "example_en": "the suitcases are in the trunk"
   },
   {
     "rank": 4777,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "intimider",
+    "english": "to intimidate",
+    "example_fr": "il essayait de m'intimider",
+    "example_en": "he tried to intimidate me"
   },
   {
     "rank": 4778,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "huitième",
+    "english": "eighth",
+    "example_fr": "il a terminé la course huitième",
+    "example_en": "he finished the race in eighth place"
   },
   {
     "rank": 4779,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "forger",
+    "english": "to forge, contrive, make up",
+    "example_fr": "il nous faut forger des concepts inconcevables",
+    "example_en": "we need to invent inconceivable concepts"
   },
   {
     "rank": 4780,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "périr",
+    "english": "to perish",
+    "example_fr": "je périrais sans toi",
+    "example_en": "I would perish without you"
   },
   {
     "rank": 4781,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "notoire",
+    "english": "notorious, well-known",
+    "example_fr": "nous détenons en ce moment un meurtrier notoire",
+    "example_en": "at the moment we have a notorious murderer in custody"
   },
   {
     "rank": 4782,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "graphique",
+    "english": "graph, graphic",
+    "example_fr": "j'aimerais avoir un graphique ici",
+    "example_en": "I would like to have a graph here"
   },
   {
     "rank": 4783,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "annulation",
+    "english": "cancellation, annulment",
+    "example_fr": "l'annulation est due à la défection de certains partenaires",
+    "example_en": "the annulment results from the defection of some partners"
   },
   {
     "rank": 4784,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "acceptation",
+    "english": "acceptance",
+    "example_fr": "la foi suppose l'acceptation du mystère",
+    "example_en": "faith requires acceptance of the mystery"
   },
   {
     "rank": 4785,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "textile",
+    "english": "textile",
+    "example_fr": "mère, enfants travaillent dans le textile",
+    "example_en": "mother and children are working in the textile industry"
   },
   {
     "rank": 4786,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "hormis",
+    "english": "save, but",
+    "example_fr": "hormis vous, personne n'a vu ce gamin",
+    "example_en": "except for you, nobody saw this kid"
   },
   {
     "rank": 4787,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "chirurgien",
+    "english": "surgeon",
+    "example_fr": "les chirurgiens disent qu'il n'a pas souffert",
+    "example_en": "the surgeons say he didn't suffer"
   },
   {
     "rank": 4788,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "orage",
+    "english": "storm, thunderstorm",
+    "example_fr": "au loin un orage grondait",
+    "example_en": "in the distance a storm thundered"
   },
   {
     "rank": 4789,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "boule",
+    "english": "ball",
+    "example_fr": "je lui ai offert une boule à neige",
+    "example_en": "I offered her a snowball"
   },
   {
     "rank": 4790,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "médiation",
+    "english": "mediation, arbitration",
+    "example_fr": "les tentatives américaines de médiation ont continué",
+    "example_en": "American attempts at negotiation continued"
   },
   {
     "rank": 4791,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "réprimer",
+    "english": "to suppress, repress",
+    "example_fr": "vous réprimez ce que vous ressentez",
+    "example_en": "you're repressing what you feel"
   },
   {
     "rank": 4792,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "hall",
+    "english": "foyer, lobby",
+    "example_fr": "je l'ai rencontré dans le hall d'un immeuble",
+    "example_en": "I met him in the foyer of the building"
   },
   {
     "rank": 4793,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "visuel",
+    "english": "visual",
+    "example_fr": "mais garde le contact visuel",
+    "example_en": "but keep visual contact"
   },
   {
     "rank": 4794,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "semblant",
+    "english": "semblance, pretence",
+    "example_fr": "faites semblant d'être désespérée",
+    "example_en": "pretend to be desperate"
   },
   {
     "rank": 4795,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "jadis",
+    "english": "formerly, long ago",
+    "example_fr": "jadis, nous étions des esclaves",
+    "example_en": "long ago, we were slaves"
   },
   {
     "rank": 4796,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "rémunérer",
+    "english": "to remunerate, pay",
+    "example_fr": "il était rémunéré par une excellente nourriture",
+    "example_en": "he was paid with excellent food"
   },
   {
     "rank": 4797,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "fasciner",
+    "english": "to fascinate",
+    "example_fr": "c'est un sujet qui me fascine",
+    "example_en": "it's a subject that fascinates me"
   },
   {
     "rank": 4798,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "dilemme",
+    "english": "dilemma",
+    "example_fr": "c'est l'éternel dilemme de la carotte et du bâton",
+    "example_en": "it's the eternal dilemma of the carrot and the stick"
   },
   {
     "rank": 4799,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "progressiste",
+    "english": "progressive",
+    "example_fr": "on a un système scolaire progressiste",
+    "example_en": "we have a progressive school system"
   },
   {
     "rank": 4800,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "ours",
+    "english": "bear",
+    "example_fr": "cet ours polaire doit aller dormir",
+    "example_en": "this polar bear needs to go to sleep"
   },
   {
     "rank": 4801,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "décharger",
+    "english": "to unload",
+    "example_fr": "aidez Grégoire à décharger le van",
+    "example_en": "help Grégoire unload the van"
   },
   {
     "rank": 4802,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "excède",
+    "english": "to exceed",
+    "example_fr": "le total ne peut excéder 55 000 francs",
+    "example_en": "the total cannot exceed 55,000 francs"
   },
   {
     "rank": 4803,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "blâmer",
+    "english": "to blame, reprimand",
+    "example_fr": "il cherche quelqu'un d'autre à blâmer",
+    "example_en": "he's looking for someone else to blame"
   },
   {
     "rank": 4804,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "duc",
+    "english": "duke",
+    "example_fr": "un mari outragé, un duc, vient se plaindre",
+    "example_en": "an outraged husband, a duke, comes to complain"
   },
   {
     "rank": 4805,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "raciste",
+    "english": "racist",
+    "example_fr": "je ne tolère aucun comportement raciste à bord",
+    "example_en": "I don't tolerate any racist behavior on board"
   },
   {
     "rank": 4806,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "stress",
+    "english": "stress",
+    "example_fr": "le stress, ça rend un peu dingue",
+    "example_en": "stress makes you a little bit crazy"
   },
   {
     "rank": 4807,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "inexistant",
+    "english": "non-existent",
+    "example_fr": "la coopération entre pays voisins était quasiment inexistante",
+    "example_en": "cooperation between neighboring countries was practically non-existent"
   },
   {
     "rank": 4808,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "théoriquement",
+    "english": "theoretically",
+    "example_fr": "l'accès en resterait théoriquement interdit aux femmes seules",
+    "example_en": "access would theoretically remain forbidden to unaccompanied women"
   },
   {
     "rank": 4809,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "danois",
+    "english": "Danish, Dane",
+    "example_fr": "le compromis danois aura un statut équivalent",
+    "example_en": "the Danish compromise will have an equivalent status"
   },
   {
     "rank": 4810,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "concéder",
+    "english": "to grant, concede",
+    "example_fr": "le dollar a concédé une partie du terrain gagné",
+    "example_en": "the dollar lost some of the ground it had gained"
   },
   {
     "rank": 4811,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "retrancher",
+    "english": "to deduct, remove; to entrench",
+    "example_fr": "son air passif la retranchait du monde",
+    "example_en": "his passive attitude removed him from the rest of the world"
   },
   {
     "rank": 4812,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "renfermer",
+    "english": "to contain, shut, lock, enclose",
+    "example_fr": "c'est un homme renfermé et primitif, mais profondément loyal",
+    "example_en": "he's an uncommunicative, primitive man but deeply loyal"
   },
   {
     "rank": 4813,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "vieillesse",
+    "english": "old age",
+    "example_fr": "ce que jeunesse désire, vieillesse l'a en abondance",
+    "example_en": "what youth wants, old age has abundantly"
   },
   {
     "rank": 4814,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "navette",
+    "english": "shuttle",
+    "example_fr": "les navettes pour l'aéroport? elles sont là",
+    "example_en": "the airport shuttles? they're here"
   },
   {
     "rank": 4815,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "traditionnellement",
+    "english": "traditionally",
+    "example_fr": "traditionnellement, le cadre est un manager",
+    "example_en": "traditionally, the executive is a manager"
   },
   {
     "rank": 4816,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "batterie",
+    "english": "battery; drum set",
+    "example_fr": "ces batteries devraient avoir une longue durée de vie",
+    "example_en": "these batteries should have a long life"
   },
   {
     "rank": 4817,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "foie",
+    "english": "liver",
+    "example_fr": "souffrir de problèmes graves au foie",
+    "example_en": "to suffer from serious liver problems"
   },
   {
     "rank": 4818,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "gratuitement",
+    "english": "free, gratuitously",
+    "example_fr": "il nous a tout donné gratuitement",
+    "example_en": "he gave us everything for free"
   },
   {
     "rank": 4819,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "incompréhensible",
+    "english": "incomprehensible",
+    "example_fr": "je trouve cela incompréhensible et ignoble",
+    "example_en": "I find that unbelievable and disgraceful"
   },
   {
     "rank": 4820,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "détour",
+    "english": "bend, curve, detour",
+    "example_fr": "j'ai fait un détour pour sortir sans passer devant lui",
+    "example_en": "I went out of my way to avoid passing in front of him"
   },
   {
     "rank": 4821,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "boulevard",
+    "english": "boulevard",
+    "example_fr": "nous nous promenions sur les boulevards",
+    "example_en": "we were walking along the boulevards"
   },
   {
     "rank": 4822,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "blague",
+    "english": "joke",
+    "example_fr": "je ne raconte plus de blagues",
+    "example_en": "I don't tell jokes any more"
   },
   {
     "rank": 4823,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "mécontentement",
+    "english": "displeasure, dissatisfaction",
+    "example_fr": "les exemples de mécontentement sont nombreux et variés",
+    "example_en": "examples of dissatisfaction were numerous and wide-ranging"
   },
   {
     "rank": 4824,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "inaugurer",
+    "english": "to unveil, open",
+    "example_fr": "il inaugura les fêtes célébrant le centenaire de la Révolution",
+    "example_en": "he opened the Revolution Centennial celebrations"
   },
   {
     "rank": 4825,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "repli",
+    "english": "bend, twist, wrinkle, fold, fallback",
+    "example_fr": "c'est plutôt la saison d'un repli frileux",
+    "example_en": "it was instead the time for a chilly retreat"
   },
   {
     "rank": 4826,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "contrepartie",
+    "english": "counterpart, opposite, alternative",
+    "example_fr": "la solitude n'est pas la seule contrepartie de l'amitié",
+    "example_en": "loneliness isn't the only alternative to friendship"
   },
   {
     "rank": 4827,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "proportionnel",
+    "english": "proportional",
+    "example_fr": "dans le système proportionnel, chaque vote a la même valeur",
+    "example_en": "in the proportional system, each vote has the same value"
   },
   {
     "rank": 4828,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "aboutissement",
+    "english": "outcome, result",
+    "example_fr": "je suis l'aboutissement de tous ces instincts",
+    "example_en": "I'm the outcome of all of these instincts"
   },
   {
     "rank": 4829,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "triomphe",
+    "english": "triumph",
+    "example_fr": "tout mariage marque le triomphe de l'espoir sur l'expérience",
+    "example_en": "every marriage marks a triumph of hope over experience"
   },
   {
     "rank": 4830,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "libre-échange",
+    "english": "free trade",
+    "example_fr": "la concurrence et le libre-échange sont liés",
+    "example_en": "competition and free trade are connected"
   },
   {
     "rank": 4831,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "sincérité",
+    "english": "sincerity",
+    "example_fr": "je parle vraiment en toute sincérité",
+    "example_en": "I'm really talking with complete sincerity"
   },
   {
     "rank": 4832,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "serre",
+    "english": "greenhouse",
+    "example_fr": "l'effet de serre est un phénomène naturel",
+    "example_en": "the greenhouse effect is a natural phenomenon"
   },
   {
     "rank": 4833,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "doré",
+    "english": "golden",
+    "example_fr": "la jeunesse étudiante est encore une jeunesse dorée",
+    "example_en": "student youthfulness is still golden youthfulness"
   },
   {
     "rank": 4834,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "convoi",
+    "english": "convoy, train",
+    "example_fr": "de quel hangar part le convoi?",
+    "example_en": "the convoy is leaving from which hangar?"
   },
   {
     "rank": 4835,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "terrien",
+    "english": "earthling; landowner, countryman",
+    "example_fr": "le Terrien est sur le point de vomir",
+    "example_en": "the Earthling is about to vomit"
   },
   {
     "rank": 4836,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "psychologie",
+    "english": "psychology",
+    "example_fr": "il se spécialise en psychologie",
+    "example_en": "he specialized in psychology"
   },
   {
     "rank": 4837,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "maltraiter",
+    "english": "to manhandle, ill-treat, misuse, slight",
+    "example_fr": "vous me forcez vraiment à vous maltraiter",
+    "example_en": "you're really forcing me to mistreat you"
   },
   {
     "rank": 4838,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "puits",
+    "english": "well, shaft, pit",
+    "example_fr": "je suis tombé dans un puits abandonné",
+    "example_en": "I fell into an abandoned pit"
   },
   {
     "rank": 4839,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "intimité",
+    "english": "privacy, intimacy",
+    "example_fr": "il est gêné par l'intimité masculine",
+    "example_en": "he's troubled by masculine intimacy"
   },
   {
     "rank": 4840,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "équation",
+    "english": "equation",
+    "example_fr": "cette quantité se précise dans une équation",
+    "example_en": "this amount is figured out in an equation"
   },
   {
     "rank": 4841,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "humide",
+    "english": "moist, damp, humid, wet",
+    "example_fr": "il faisait froid et humide dans la cabine",
+    "example_en": "it was cold and humid in the cabin"
   },
   {
     "rank": 4842,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "bétail",
+    "english": "livestock, cattle",
+    "example_fr": "vos chevaux sont là-bas, avec votre bétail",
+    "example_en": "your horses are there, with your cattle"
   },
   {
     "rank": 4843,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "prophète",
+    "english": "prophet",
+    "example_fr": "demandons aux prophètes comment on devrait appeler ça",
+    "example_en": "let's ask the prophets what we should call this"
   },
   {
     "rank": 4844,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "micro",
+    "english": "mike, micro, microphone",
+    "example_fr": "venez donc parler dans le micro",
+    "example_en": "come and speak into the mike"
   },
   {
     "rank": 4845,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "gâteau",
+    "english": "cake",
+    "example_fr": "qui mange du gâteau d'anniversaire?",
+    "example_en": "who wants to eat some birthday cake?"
   },
   {
     "rank": 4846,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "continental",
+    "english": "continental",
+    "example_fr": "nous avons besoin d'un réseau routier continental",
+    "example_en": "we need a continental road network"
   },
   {
     "rank": 4847,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "réitérer",
+    "english": "to reiterate, repeat",
+    "example_fr": "il a réitéré sa demande aujourd'hui",
+    "example_en": "he reiterated his request today"
   },
   {
     "rank": 4848,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "énumérer",
+    "english": "to enumerate",
+    "example_fr": "il est bien inutile d'énumérer les obstacles",
+    "example_en": "it's totally useless to enumerate the obstacles"
   },
   {
     "rank": 4849,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "embauche",
+    "english": "job vacancy, hiring",
+    "example_fr": "les embauches ont repris au troisième trimestre",
+    "example_en": "hiring stepped up in the third quarter"
   },
   {
     "rank": 4850,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "verdict",
+    "english": "verdict",
+    "example_fr": "les jurés, avez-vous rendu votre verdict?",
+    "example_en": "members of the jury, have you arrived at a verdict?"
   },
   {
     "rank": 4851,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "dix-neuf",
+    "english": "nineteen",
+    "example_fr": "je suis entré chez les Jésuites à dix-neuf ans",
+    "example_en": "I became a Jesuit at the age of nineteen"
   },
   {
     "rank": 4852,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "guetter",
+    "english": "to watch over, watch out for",
+    "example_fr": "tu vas guetter les flics",
+    "example_en": "you're going to be on the lookout for the cops"
   },
   {
     "rank": 4853,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "frustrer",
+    "english": "to frustrate",
+    "example_fr": "j'ai cependant été frustré par un nouvel échec",
+    "example_en": "I was nonetheless frustrated by a new failure"
   },
   {
     "rank": 4854,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "anglo-saxon",
+    "english": "Anglo-Saxon",
+    "example_fr": "c'est un humour plus anglo-saxon que français",
+    "example_en": "that humor is more Anglo-Saxon than French"
   },
   {
     "rank": 4855,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "détente",
+    "english": "release, relaxation, détente, loosening",
+    "example_fr": "ce n'est pas un week-end de détente",
+    "example_en": "it's not a relaxing weekend"
   },
   {
     "rank": 4856,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "questionner",
+    "english": "to question",
+    "example_fr": "elle me questionnait sans cesse",
+    "example_en": "they questioned me continually"
   },
   {
     "rank": 4857,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "injecter",
+    "english": "to inject",
+    "example_fr": "nous avons injecté de l'argent dans le programme",
+    "example_en": "we injected money into the program"
   },
   {
     "rank": 4858,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "préjudice",
+    "english": "loss, harm, damage",
+    "example_fr": "avez-vous déjà subi des préjudices?",
+    "example_en": "have you already suffered any losses?"
   },
   {
     "rank": 4859,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "couramment",
+    "english": "fluently, commonly",
+    "example_fr": "elle parlait couramment deux autres langues aussi",
+    "example_en": "she also spoke two other languages fluently"
   },
   {
     "rank": 4860,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "exploration",
+    "english": "exploration, investigation, examination",
+    "example_fr": "rien ne vaut l'exploration du terrain",
+    "example_en": "nothing is worth the exploration of the land"
   },
   {
     "rank": 4861,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "caresser",
+    "english": "to fondle, caress",
+    "example_fr": "embrassez-moi et caressez-moi, mon cher époux",
+    "example_en": "kiss me and hug me, my dear husband"
   },
   {
     "rank": 4862,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "hymne",
+    "english": "hymn, anthem",
+    "example_fr": "j'ai chanté l'hymne national",
+    "example_en": "I sang the national anthem"
   },
   {
     "rank": 4863,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "sécuritaire",
+    "english": "safe",
+    "example_fr": "le niveau de décontamination sera totalement sécuritaire",
+    "example_en": "the contamination level will be perfectly safe"
   },
   {
     "rank": 4864,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "famine",
+    "english": "famine",
+    "example_fr": "une grande famine venait de dévaster la Chine",
+    "example_en": "a great famine devastated China"
   },
   {
     "rank": 4865,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "écrier",
+    "english": "to exclaim, cry out",
+    "example_fr": "venez, venez tous, s'écria-t-elle",
+    "example_en": "come here, everybody, she yelled"
   },
   {
     "rank": 4866,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "précipitation",
+    "english": "haste, precipitation",
+    "example_fr": "la précipitation est rarement une bonne conseillère",
+    "example_en": "haste is rarely a wise counselor"
   },
   {
     "rank": 4867,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "caution",
+    "english": "deposit, guarantee, bail",
+    "example_fr": "le prévenu doit également régler une caution de 80.000 euros",
+    "example_en": "the accused must also post a bail of 80,000 euros"
   },
   {
     "rank": 4868,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "affectation",
+    "english": "appointment, allocation; show, pretence",
+    "example_fr": "il bâilla avec affectation",
+    "example_en": "he made a show of yawning"
   },
   {
     "rank": 4869,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "salaud",
+    "english": "bastard",
+    "example_fr": "les hommes sont des salauds",
+    "example_en": "men are pigs"
   },
   {
     "rank": 4870,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "cave",
+    "english": "cellar, basement",
+    "example_fr": "il faut descendre dans la cave",
+    "example_en": "we had to go down into the cellar"
   },
   {
     "rank": 4871,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "bond",
+    "english": "leap, rebound",
+    "example_fr": "la richesse du pays a fait un bond",
+    "example_en": "the wealth of the country rebounded"
   },
   {
     "rank": 4872,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "enclin",
+    "english": "enclined, prone",
+    "example_fr": "je suis enclin à les laisser pourrir",
+    "example_en": "I'm inclined to let them rot"
   },
   {
     "rank": 4873,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "nettoyage",
+    "english": "cleaning, cleansing",
+    "example_fr": "j'ai un job spécial de nettoyage : tout le local à bateaux",
+    "example_en": "I have a special cleaning job: all of the boat docks"
   },
   {
     "rank": 4874,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "foudre",
+    "english": "lightning",
+    "example_fr": "vous avez été frappé par la foudre",
+    "example_en": "you were struck by lightning"
   },
   {
     "rank": 4875,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "justesse",
+    "english": "accuracy, precision",
+    "example_fr": "la question de la justesse se pose",
+    "example_en": "the question of correctness is relevant here"
   },
   {
     "rank": 4876,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "rente",
+    "english": "annuity, pension",
+    "example_fr": "l'accumulation des rentes est funeste pour le monde occidental",
+    "example_en": "the accumulation of income is deadly for the West"
   },
   {
     "rank": 4877,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "hépatite",
+    "english": "hepatitis",
+    "example_fr": "l'hépatite C est très différente du VIH",
+    "example_en": "hepatitis C is very different from HIV"
   },
   {
     "rank": 4878,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "blindé",
+    "english": "armoured",
+    "example_fr": "la majorité de nos véhicules blindés sont des blindés légers",
+    "example_en": "most of our armored vehicles are light tanks"
   },
   {
     "rank": 4879,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "clan",
+    "english": "clan",
+    "example_fr": "j'ai besoin de savoir à quel clan la personne appartient",
+    "example_en": "I need to know what clan the person belonged to"
   },
   {
     "rank": 4880,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "accélération",
+    "english": "acceleration",
+    "example_fr": "l'accélération de la mondialisation économique",
+    "example_en": "the acceleration of economic globalization"
   },
   {
     "rank": 4881,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "garage",
+    "english": "garage",
+    "example_fr": "allez au garage chercher des voitures",
+    "example_en": "go to the garage to get some cars"
   },
   {
     "rank": 4882,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "résolument",
+    "english": "resolutely",
+    "example_fr": "il faut se tourner résolument vers l'avenir",
+    "example_en": "you need to be forward-looking"
   },
   {
     "rank": 4883,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "négociateur",
+    "english": "negotiator",
+    "example_fr": "les négociateurs restent pratiquement muets",
+    "example_en": "the negotiators are practically keeping mum"
   },
   {
     "rank": 4884,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "romantique",
+    "english": "romantic",
+    "example_fr": "les romantiques, justement, désiraient toujours au-delà",
+    "example_en": "exactly: romanticists always wanted more"
   },
   {
     "rank": 4885,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "obscurité",
+    "english": "darkness",
+    "example_fr": "elle commença dans l'obscurité à monter l'escalier",
+    "example_en": "she started to climb the stairs in the dark"
   },
   {
     "rank": 4886,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "vulgaire",
+    "english": "vulgar, common, popular",
+    "example_fr": "tu es vulgaire",
+    "example_en": "you're vulgar"
   },
   {
     "rank": 4887,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "soixante-dix",
+    "english": "seventy",
+    "example_fr": "quand tu auras soixante-dix ans, tu seras toujours toi",
+    "example_en": "when you're seventy years old, you'll still be yourself"
   },
   {
     "rank": 4888,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "féroce",
+    "english": "ferocious, fierce",
+    "example_fr": "son regard était noir et féroce",
+    "example_en": "his glare was dark and ferocious"
   },
   {
     "rank": 4889,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "perpétuel",
+    "english": "perpetual, everlasting, never-ending",
+    "example_fr": "elle est une tension perpétuelle",
+    "example_en": "she is highly strung"
   },
   {
     "rank": 4890,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "militer",
+    "english": "to militate",
+    "example_fr": "nous avons toujours milité contre l'exploitation",
+    "example_en": "we have always mobilized against exploitation"
   },
   {
     "rank": 4891,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "jungle",
+    "english": "jungle",
+    "example_fr": "les rebelles ont opéré depuis la jungle",
+    "example_en": "the rebels were operating from the jungle"
   },
   {
     "rank": 4892,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "case",
+    "english": "box, hut, field",
+    "example_fr": "je vous laisse choisir la case qui me convient le mieux",
+    "example_en": "I'll let you choose the box that will fit me the best"
   },
   {
     "rank": 4893,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "craquer",
+    "english": "to creak, squeak, crackle, give in, strike",
+    "example_fr": "les livres neufs craquaient entre les doigts",
+    "example_en": "the new books were crisp between his fingers"
   },
   {
     "rank": 4894,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "clarifier",
+    "english": "to clarify",
+    "example_fr": "il faut clarifier ces questions maintenant",
+    "example_en": "these questions must be clarified now"
   },
   {
     "rank": 4895,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "crête",
+    "english": "crest, top, ridge",
+    "example_fr": "un grand nuage noir emmitoufle la crête des montagnes",
+    "example_en": "a large black cloud hugged the crest of the mountains"
   },
   {
     "rank": 4896,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "traite",
+    "english": "trade, draft, stretch, milking",
+    "example_fr": "je l'ai lue d'une traite",
+    "example_en": "I read it in one sitting"
   },
   {
     "rank": 4897,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "démarrage",
+    "english": "start, moving off",
+    "example_fr": "généralement le démarrage d'un livre se passe très bien",
+    "example_en": "generally, starting a book goes very well"
   },
   {
     "rank": 4898,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "oubli",
+    "english": "forgetting, leaving behind, missing",
+    "example_fr": "mais certaines choses méritent l'oubli",
+    "example_en": "some things deserve to be forgotten"
   },
   {
     "rank": 4899,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "procès-verbal",
+    "english": "minutes, statement",
+    "example_fr": "cette intervention ne figure pas dans le procès-verbal",
+    "example_en": "this speech isn't included in the transcript"
   },
   {
     "rank": 4900,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "formalité",
+    "english": "formality",
+    "example_fr": "oubliez ces formalités, mon enfant",
+    "example_en": "forget these formalities, my child"
   },
   {
     "rank": 4901,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "insensible",
+    "english": "insensitive",
+    "example_fr": "vous êtes insensible à la raison",
+    "example_en": "you're unmoved by reason"
   },
   {
     "rank": 4902,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "distant",
+    "english": "far-off, distant, faraway",
+    "example_fr": "il me fit un salut distant",
+    "example_en": "he waved at me from afar"
   },
   {
     "rank": 4903,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "émetteur",
+    "english": "transmitter, issuer",
+    "example_fr": "on va s'acheter un émetteur et on va se promener dans une van",
+    "example_en": "we're going to buy a transmitter and drive around in a van"
   },
   {
     "rank": 4904,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "montage",
+    "english": "assembly, setting, pitching, putting, editing",
+    "example_fr": "tout le montage du film s'est fait en digital",
+    "example_en": "all of the editing of the film was done digitally"
   },
   {
     "rank": 4905,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "énergique",
+    "english": "energetic",
+    "example_fr": "je suis très énergique et passionnée",
+    "example_en": "I'm very energetic and passionate"
   },
   {
     "rank": 4906,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "claquer",
+    "english": "to flap, bang, slam, snap",
+    "example_fr": "j'avais envie de claquer violemment la porte derrière lui",
+    "example_en": "I wanted to slam the door violently behind him"
   },
   {
     "rank": 4907,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "simplicité",
+    "english": "simplicity, straightforwardness",
+    "example_fr": "la simplicité de ces adieux le toucha",
+    "example_en": "the simplicity of this farewell touched him"
   },
   {
     "rank": 4908,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "buter",
+    "english": "to stumble, trip, run into, prop up, score",
+    "example_fr": "elle s'est butée à toutes sortes de délais",
+    "example_en": "she stumbled into all kinds of delays"
   },
   {
     "rank": 4909,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "bulle",
+    "english": "bubble",
+    "example_fr": "ce gouvernement est dans une bulle qui lui cache la réalité",
+    "example_en": "this government is in a bubble that hides it from reality"
   },
   {
     "rank": 4910,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "défavorable",
+    "english": "unfavorable",
+    "example_fr": "le climat était trop défavorable",
+    "example_en": "the climate was too unfavorable"
   },
   {
     "rank": 4911,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "promoteur",
+    "english": "promoter, instigator, developer",
+    "example_fr": "les promoteurs croient que les salles seront remplies",
+    "example_en": "the promoters think the shows will be sold out"
   },
   {
     "rank": 4912,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "albanais",
+    "english": "Albanian",
+    "example_fr": "des snipers albanais avaient ouvert le feu",
+    "example_en": "the Albanian snipers had opened fire"
   },
   {
     "rank": 4913,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "obsession",
+    "english": "obsession",
+    "example_fr": "je suis devenue son obsession",
+    "example_en": "I became his obsession"
   },
   {
     "rank": 4914,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "exciter",
+    "english": "to arouse, waken, excite, turn on",
+    "example_fr": "je suis très excitée d'aller voter",
+    "example_en": "I'm very excited to go and vote"
   },
   {
     "rank": 4915,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "voisinage",
+    "english": "neighborhood",
+    "example_fr": "tout le voisinage en parle",
+    "example_en": "the whole neighborhood is talking about it"
   },
   {
     "rank": 4916,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "savoir-faire",
+    "english": "know-how",
+    "example_fr": "mon papa est le roi du savoir-faire!",
+    "example_en": "my daddy knows how to do everything!"
   },
   {
     "rank": 4917,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "sévèrement",
+    "english": "severely, harshly",
+    "example_fr": "mon père m'aurait sévèrement corrigé",
+    "example_en": "my father would have severely disciplined me"
   },
   {
     "rank": 4918,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "écrasant",
+    "english": "crushing, overwhelming",
+    "example_fr": "ce sont des pertes écrasantes pour n'importe quel pays",
+    "example_en": "those would be crushing losses for any country"
   },
   {
     "rank": 4919,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "vendu",
+    "english": "sold, bribed",
+    "example_fr": "122.000 billets ont été vendus",
+    "example_en": "122,000 tickets were sold"
   },
   {
     "rank": 4920,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "munition",
+    "english": "ammunition, supplies",
+    "example_fr": "j'ai acheté toutes les munitions que je voulais",
+    "example_en": "I bought all the ammunition that I wanted"
   },
   {
     "rank": 4921,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "capturer",
+    "english": "to capture, catch",
+    "example_fr": "il faut capturer ce type à tout prix",
+    "example_en": "this guy must be caught at any price"
   },
   {
     "rank": 4922,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "compliment",
+    "english": "compliment",
+    "example_fr": "merci pour le compliment",
+    "example_en": "thanks for the compliment"
   },
   {
     "rank": 4923,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "allouer",
+    "english": "to allocate",
+    "example_fr": "cinq minutes sont allouées pour deux questions",
+    "example_en": "five minutes are allocated for two questions"
   },
   {
     "rank": 4924,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "scandaliser",
+    "english": "to shock, scandalize",
+    "example_fr": "chaque Américain devrait aussi être scandalisé",
+    "example_en": "every American should also be scandalized"
   },
   {
     "rank": 4925,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "cassette",
+    "english": "cassette",
+    "example_fr": "la cassette vidéo a été retrouvée",
+    "example_en": "the video cassette was found"
   },
   {
     "rank": 4926,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "résident",
+    "english": "foreign national, foreign resident",
+    "example_fr": "j'ai rencontré presque tous les résidents",
+    "example_en": "I met almost all the residents"
   },
   {
     "rank": 4927,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "empresser",
+    "english": "to bustle about, hasten to do",
+    "example_fr": "ils se sont empressés d'obéir",
+    "example_en": "they hastened to obey"
   },
   {
     "rank": 4928,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "inonder",
+    "english": "to flood",
+    "example_fr": "il faut inonder les jeunes de messages préventifs",
+    "example_en": "youth must be flooded with preventive messages"
   },
   {
     "rank": 4929,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "réglementer",
+    "english": "to regulate, control",
+    "example_fr": "une drogue est plus ou moins réglementée",
+    "example_en": "a drug is more or less controlled"
   },
   {
     "rank": 4930,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "sonder",
+    "english": "to probe, poll, sound out",
+    "example_fr": "je viens sonder, pour une sondation",
+    "example_en": "I'm here to take a poll, for a poll"
   },
   {
     "rank": 4931,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "vigilant",
+    "english": "vigilant, watchful",
+    "example_fr": "nous devons rester vigilants et critiques",
+    "example_en": "we must remain vigilant and critical"
   },
   {
     "rank": 4932,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "rhétorique",
+    "english": "rhetorical, rhetoric",
+    "example_fr": "la rhétorique des moralistes latins refleurissait",
+    "example_en": "the rhetoric of the Latin moralists blossomed anew"
   },
   {
     "rank": 4933,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "cage",
+    "english": "cage",
+    "example_fr": "on devrait les mettre en cage et faire payer l'entrée",
+    "example_en": "we should put them in a cage and make them pay the entrance fee"
   },
   {
     "rank": 4934,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "réglé",
+    "english": "regular, steady, well-ordered, ruled",
+    "example_fr": "si tout est réglé, on peut y aller",
+    "example_en": "if everything's set up, we can go"
   },
   {
     "rank": 4935,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "téléspectateur",
+    "english": "TV viewer",
+    "example_fr": "il y avait des millions de téléspectateurs",
+    "example_en": "there were millions of TV viewers"
   },
   {
     "rank": 4936,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "golf",
+    "english": "golf, golf course",
+    "example_fr": "ils jouent au golf ensemble",
+    "example_en": "they play golf together"
   },
   {
     "rank": 4937,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "forestier",
+    "english": "forest, forester",
+    "example_fr": "l'industrie forestière est très importante",
+    "example_en": "the forest industry is very important"
   },
   {
     "rank": 4938,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "hum",
+    "english": "um, uh",
+    "example_fr": "hum, je suis nerveux, seulement",
+    "example_en": "uh, I'm just nervous"
   },
   {
     "rank": 4939,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "ravager",
+    "english": "to ravage, devastate",
+    "example_fr": "la peste ravage Londres, mais Paris est épargnée",
+    "example_en": "the plague ravages London, but Paris is spared"
   },
   {
     "rank": 4940,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "réveil",
+    "english": "waking up, awakening, alarm clock",
+    "example_fr": "sur ma table de nuit, le réveil indiquait cinq heures",
+    "example_en": "on my night table, the alarm clock indicated five o'clock"
   },
   {
     "rank": 4941,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "racial",
+    "english": "racial",
+    "example_fr": "la préférence raciale joue depuis longtemps dans le recrutement",
+    "example_en": "racial preference has long figured in recruitment"
   },
   {
     "rank": 4942,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "ensuivre",
+    "english": "to follow, result, ensue",
+    "example_fr": "il dit qu'il va s'ensuivre une augmentation du tourisme",
+    "example_en": "he says that an increase in tourism is going to follow"
   },
   {
     "rank": 4943,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "relevé",
+    "english": "statement, list; relieved; put in relief; rolled up",
+    "example_fr": "navré, mais vous êtes relevé de vos fonctions",
+    "example_en": "so sorry, but you're relieved of your functions"
   },
   {
     "rank": 4944,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "ajourner",
+    "english": "to adjourn, defer, postpone",
+    "example_fr": "je suis prête à ajourner le débat",
+    "example_en": "I'm ready to adjourn the debate"
   },
   {
     "rank": 4945,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "détérioration",
+    "english": "deterioration",
+    "example_fr": "la poste vous dédommagera de la détérioration des colis",
+    "example_en": "the post office will reimburse you for damaged packages"
   },
   {
     "rank": 4946,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "viable",
+    "english": "viable, workable",
+    "example_fr": "la négociation est le seul moyen viable de résoudre le conflit",
+    "example_en": "negotiation is the only viable means to resolve this conflict"
   },
   {
     "rank": 4947,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "cochon",
+    "english": "pig",
+    "example_fr": "on mange comme des cochons",
+    "example_en": "we're eating like pigs"
   },
   {
     "rank": 4948,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "barbare",
+    "english": "barbaric; barbarian",
+    "example_fr": "je viens de voir les barbares détruire un continent",
+    "example_en": "I have just seen barbarians destroying a continent"
   },
   {
     "rank": 4949,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "atroce",
+    "english": "atrocious",
+    "example_fr": "tu as couché avec cet atroce barbu?",
+    "example_en": "you had sex with that atrocious bearded loser?"
   },
   {
     "rank": 4950,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "civique",
+    "english": "civil; civics",
+    "example_fr": "les droits civiques sont accordés aux 336.000 Arabes israéliens",
+    "example_en": "civil rights are granted to the 336,000 Israeli Arabs"
   },
   {
     "rank": 4951,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "ancrer",
+    "english": "to anchor",
+    "example_fr": "ces valeurs sont fermement ancrées dans notre héritage",
+    "example_en": "these values are firmly anchored in our heritage"
   },
   {
     "rank": 4952,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "raccrocher",
+    "english": "to hang up",
+    "example_fr": "j'ai décidé de raccrocher ma toge",
+    "example_en": "I decided to hang up my toga"
   },
   {
     "rank": 4953,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "cirque",
+    "english": "circus; cirque",
+    "example_fr": "nous allâmes en excursion au cirque",
+    "example_en": "we went on an outing to the circus"
   },
   {
     "rank": 4954,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "législature",
+    "english": "legislature",
+    "example_fr": "cette nouvelle législature a une occasion unique dans l'histoire",
+    "example_en": "this new legislature has a unique occasion in history"
   },
   {
     "rank": 4955,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "audiovisuel",
+    "english": "audio-visual",
+    "example_fr": "depuis cette date, le paysage audiovisuel français a changé",
+    "example_en": "since that date, the French audiovisual landscape has changed"
   },
   {
     "rank": 4956,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "confiner",
+    "english": "to confine",
+    "example_fr": "le plasma reste confiné à la surface du solide",
+    "example_en": "the plasma remains confined to the surface of the solid"
   },
   {
     "rank": 4957,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "agrandir",
+    "english": "to enlarge, extend",
+    "example_fr": "cliquez sur l'image pour agrandir la carte",
+    "example_en": "click on the picture to enlarge the map"
   },
   {
     "rank": 4958,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "occasionner",
+    "english": "to cause, give rise to",
+    "example_fr": "le conflit occasionne des pertes énormes",
+    "example_en": "the conflict is causing enormous losses"
   },
   {
     "rank": 4959,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "allégement",
+    "english": "lightening, unweighting, reduction",
+    "example_fr": "il a effectué un allégement général des impôts",
+    "example_en": "he implemented overall tax relief"
   },
   {
     "rank": 4960,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "malin",
+    "english": "smart, shrewd, cunning",
+    "example_fr": "enfin, il faut être malin, très malin",
+    "example_en": "well, you have to be shrewd, very shrewd"
   },
   {
     "rank": 4961,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "performant",
+    "english": "productive, efficient",
+    "example_fr": "je veux rester performant et ne pas avoir une fin de carrière",
+    "example_en": "I want to stay productive and not have my career end"
   },
   {
     "rank": 4962,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "sérénité",
+    "english": "serenity, peacefulness",
+    "example_fr": "le temps était d'une sérénité désespérante",
+    "example_en": "time had a desperate clarity"
   },
   {
     "rank": 4963,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "cuire",
+    "english": "to cook, bake, roast",
+    "example_fr": "on dit que le spaghetti est cuit s'il reste collé",
+    "example_en": "they say that spaghetti is cooked if it sticks together"
   },
   {
     "rank": 4964,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "raser",
+    "english": "to shave, raze",
+    "example_fr": "ils avaient tous le crâne rasé",
+    "example_en": "they all had shaved heads"
   },
   {
     "rank": 4965,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "ha",
+    "english": "oh",
+    "example_fr": "ha. ha. très drôle",
+    "example_en": "ha. ha. very funny"
   },
   {
     "rank": 4966,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "revivre",
+    "english": "to live again, come back life, revive",
+    "example_fr": "il lui faut un souvenir pour revivre l'événement",
+    "example_en": "he needs a souvenir to relive the event"
   },
   {
     "rank": 4967,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "piano",
+    "english": "piano",
+    "example_fr": "elle retournait au piano et recommençait à jouer",
+    "example_en": "she returned to the piano and resumed playing"
   },
   {
     "rank": 4968,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "concertation",
+    "english": "meeting, consultation",
+    "example_fr": "il faut travailler ensemble plus, en concertation",
+    "example_en": "we must work together more, in consultation"
   },
   {
     "rank": 4969,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "vaisseau",
+    "english": "ship, vessel",
+    "example_fr": "faites un diagnostic complet du vaisseau",
+    "example_en": "perform a complete check of the ship"
   },
   {
     "rank": 4970,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "interaction",
+    "english": "interaction",
+    "example_fr": "on est en interaction avec les membres de l'équipe des émissions",
+    "example_en": "we're interacting with the members of the broadcast team"
   },
   {
     "rank": 4971,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "pessimiste",
+    "english": "pessimistic; pessimist",
+    "example_fr": "je ne suis pas aussi pessimiste que lui",
+    "example_en": "I'm not as pessimistic as he is"
   },
   {
     "rank": 4972,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "sillage",
+    "english": "wake, slipstream",
+    "example_fr": "j'étais dans le sillage de Nicolas Sarkozy",
+    "example_en": "I was in the wake of Nicolas Sarkozy"
   },
   {
     "rank": 4973,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "synonyme",
+    "english": "synonymous; synonym",
+    "example_fr": "la Communauté européenne n'est plus synonyme de l'Europe",
+    "example_en": "the European Union is no longer synonymous with Europe"
   },
   {
     "rank": 4974,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "hisser",
+    "english": "to hoist, raise up",
+    "example_fr": "nous voulons maintenant hisser la barre encore plus haut",
+    "example_en": "now we want to raise the bar even higher"
   },
   {
     "rank": 4975,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "agréer",
+    "english": "to accept, approve of",
+    "example_fr": "veuillez agréer, monsieur, mes salutations distinguées",
+    "example_en": "sincerely yours"
   },
   {
     "rank": 4976,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "comble",
+    "english": "despair; summit, overmeasure; roof",
+    "example_fr": "comble du malheur, COOL-FM a changé d'orientation",
+    "example_en": "depths of unhappiness: COOL-FM has changed its orientation"
   },
   {
     "rank": 4977,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "bosniaque",
+    "english": "Bosnian",
+    "example_fr": "le gouvernement bosniaque a accepté le plan de paix",
+    "example_en": "the Bosnian government accepted the peace plan"
   },
   {
     "rank": 4978,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "insignifiant",
+    "english": "insignificant, unimportant",
+    "example_fr": "nous parlions de choses insignifiantes, avec gaieté",
+    "example_en": "we were merrily talking of insignificant things"
   },
   {
     "rank": 4979,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "décoller",
+    "english": "to take off; to loosen, unstick",
+    "example_fr": "s'ils décollent, les otages sont morts",
+    "example_en": "if they take off, the hostages are dead"
   },
   {
     "rank": 4980,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "solidaire",
+    "english": "interdependent, jointly dependent",
+    "example_fr": "on cesse de se sentir responsable et solidaire d'autrui",
+    "example_en": "we're ceasing to feel responsible for others and interdependent with them"
   },
   {
     "rank": 4981,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "ferroviaire",
+    "english": "railway, rail",
+    "example_fr": "le trafic ferroviaire régional a été interrompu",
+    "example_en": "regional railway traffic has been interrupted"
   },
   {
     "rank": 4982,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "dépouiller",
+    "english": "to skin, strip away, deprive, analyze",
+    "example_fr": "il faut savoir se dépouiller de très belles choses",
+    "example_en": "you have to know how to rid yourself of very pretty things"
   },
   {
     "rank": 4983,
-    "french": "mêle",
-    "english": "mix",
-    "example_fr": "elle se mêle de mes affaires",
-    "example_en": "she meddles in my business"
+    "french": "céréale",
+    "english": "cereal",
+    "example_fr": "les céréales sont le premier solde excédentaire de la France",
+    "example_en": "cereals are the leading surplus commodity of France"
   },
   {
     "rank": 4984,
-    "french": "joueur",
-    "english": "player",
-    "example_fr": "c'est un bon joueur",
-    "example_en": "he is a good player"
+    "french": "aménager",
+    "english": "to develop, plan, fit, adjust",
+    "example_fr": "l'avion aménagé en hôpital volant était attendu mercredi",
+    "example_en": "the airplane outfitted as a flying hospital was expected Wednesday"
   },
   {
     "rank": 4985,
-    "french": "lourdement",
-    "english": "heavily",
-    "example_fr": "il a lourdement chuté",
-    "example_en": "he fell heavily"
+    "french": "agitation",
+    "english": "agitation, excitement",
+    "example_fr": "il semble indifférent à l'agitation dont il est cause",
+    "example_en": "he seems unaffected by the agitation he has caused"
   },
   {
     "rank": 4986,
-    "french": "génie",
-    "english": "genius",
-    "example_fr": "il a un génie créateur",
-    "example_en": "he has a creative genius"
+    "french": "exode",
+    "english": "exodus",
+    "example_fr": "je contemple l'énorme exode des campagnards",
+    "example_en": "I'm pondering the enormous exodus of country-dwellers"
   },
   {
     "rank": 4987,
-    "french": "mépris",
-    "english": "contempt, scorn, disdain",
-    "example_fr": "il a du mépris",
-    "example_en": "he has contempt"
+    "french": "aire",
+    "english": "surface, area",
+    "example_fr": "les déchets de l'aire métropolitaine continueront de s'accumuler",
+    "example_en": "the trash from the metropolitain area will continue to accumulate"
   },
   {
     "rank": 4988,
-    "french": "jouer",
-    "english": "to play",
-    "example_fr": "il joue un rôle secondaire",
-    "example_en": "he plays a secondary role"
+    "french": "orgueil",
+    "english": "pride",
+    "example_fr": "ça flatte ton orgueil de mâle, ça, hein?",
+    "example_en": "that strokes your male ego, eh?"
   },
   {
     "rank": 4989,
-    "french": "penser",
-    "english": "to think, believe",
-    "example_fr": "il faut penser à tout",
-    "example_en": "you have to think of everything"
+    "french": "socialisme",
+    "english": "socialism",
+    "example_fr": "c'est le grand défi du socialisme du XXIe siècle",
+    "example_en": "it's the grand challenge for socialism in the 21st century"
   },
   {
     "rank": 4990,
-    "french": "rattraper",
-    "english": "to recapture, recover, catch up, make up for",
-    "example_fr": "il faut le rattraper",
-    "example_en": "he must be caught"
+    "french": "harmonisation",
+    "english": "harmonization",
+    "example_fr": "il y aura aussi un régime d'harmonisation des lois environnementales",
+    "example_en": "there will also be a system for harmonizing environmental laws"
   },
   {
     "rank": 4991,
-    "french": "façon",
-    "english": "way, manner",
-    "example_fr": "c'est une bonne façon de faire",
-    "example_en": "it's a good way to do things"
+    "french": "provisoirement",
+    "english": "temporarily, provisionally",
+    "example_fr": "je décidai provisoirement de m'en contenter",
+    "example_en": "I decided to be happy with it for the time being"
   },
   {
     "rank": 4992,
-    "french": "chapeau",
-    "english": "hat",
-    "example_fr": "il a son chapeau",
-    "example_en": "he has his hat"
+    "french": "cocktail",
+    "english": "cocktail, cocktail party",
+    "example_fr": "tu es capable de faire des cocktails assez élaborés?",
+    "example_en": "are you able to make fairly fancy cocktails?"
   },
   {
     "rank": 4993,
-    "french": "touriste",
-    "english": "tourist",
-    "example_fr": "il n'y a pas de touristes",
-    "example_en": "there are no tourists"
+    "french": "moyenne",
+    "english": "average",
+    "example_fr": "les chercheurs font en moyenne une carrière beaucoup plus courte",
+    "example_en": "researchers on average have a much shorter career"
   },
   {
     "rank": 4994,
-    "french": "frapper",
-    "english": "to strike, hit, knock",
-    "example_fr": "il a frappé un mur",
-    "example_en": "he hit a wall"
+    "french": "rigoler",
+    "english": "to laugh,",
+    "example_fr": "ça rigole pas au labo!",
+    "example_en": "no laughing in the lab!"
   },
   {
     "rank": 4995,
-    "french": "lancement",
-    "english": "launch",
-    "example_fr": "le lancement est réussi",
-    "example_en": "the launch is successful"
+    "french": "compression",
+    "english": "compression; cutback, reduction",
+    "example_fr": "toutes les compressions ont eu un prix très élevé",
+    "example_en": "all of the cutbacks have exacted a very heavy price"
   },
   {
     "rank": 4996,
-    "french": "flou",
-    "english": "fuzzy, blurred, hazy",
-    "example_fr": "son discours est flou",
-    "example_en": "his speech is vague"
+    "french": "réfléchi",
+    "english": "thoughtful, well thought out",
+    "example_fr": "nous devrions agir de façon réfléchie et responsable",
+    "example_en": "we should act in a thoughtful and responsible manner"
   },
   {
     "rank": 4997,
-    "french": "mécontentement",
-    "english": "dissatisfaction, discontent",
-    "example_fr": "le mécontentement est palpable",
-    "example_en": "dissatisfaction is palpable"
+    "french": "expérimenter",
+    "english": "to experiment",
+    "example_fr": "les skieurs peu expérimentés devraient renoncer aux courses",
+    "example_en": "inexperienced skiers should forego racing"
   },
   {
     "rank": 4998,
-    "french": "désarmement",
-    "english": "disarmament",
-    "example_fr": "la nécessité du désarmement",
-    "example_en": "the need for disarmament"
+    "french": "détériorer",
+    "english": "to deteriorate",
+    "example_fr": "il a laissé nos routes se détériorer et se désintégrer",
+    "example_en": "he has let our roads deteriorate and disintegrate"
   },
   {
     "rank": 4999,
-    "french": "tourner",
-    "english": "to turn, revolve, shoot",
-    "example_fr": "il a tourné la tête",
-    "example_en": "he turned his head"
+    "french": "exprès",
+    "english": "deliberately, on purpose, intentionally",
+    "example_fr": "je ne le fais pas exprès ou plutôt ce n'est pas conscient",
+    "example_en": "I don't do it on purpose, or rather it's not conscious"
   },
   {
     "rank": 5000,
-    "french": "faillite",
-    "english": "bankruptcy, collapse, failure",
-    "example_fr": "il est au bord de la faillite",
-    "example_en": "he is on the verge of bankruptcy"
+    "french": "écrouler",
+    "english": "to collapse, tumble",
+    "example_fr": "on le trouva mort, écroulé dans les W.C.",
+    "example_en": "they found him dead, collapsed in the restroom"
   }
 ]
