@@ -261,6 +261,64 @@ function App() {
         return now + (daysToAdd * oneDay);
     };
 
+    // --- ANKI ALGORITHM (SM-2 Variation) ---
+    const calculateAnkiStats = (currentStats, quality) => {
+        // quality: 0 = Again, 1 = Hard, 2 = Good, 3 = Easy
+        
+        let { interval, ease, repetitions } = currentStats || { interval: 0, ease: 2.5, repetitions: 0 };
+        
+        // 1. Next Interval berechnen
+        let nextInterval;
+        let nextRepetitions = repetitions + 1;
+
+        if (quality === 0) {
+            // Again: Reset
+            nextInterval = 0; // 0 Tage = < 1 Minute (sofort wieder)
+            nextRepetitions = 0;
+        } else if (interval === 0) {
+            // Erstes Mal richtig
+            nextInterval = 1; // Morgen
+        } else if (interval === 1) {
+            // Zweites Mal richtig
+            nextInterval = (quality === 1) ? 2 : (quality === 3) ? 4 : 3;
+        } else {
+            // Danach: Intervall * Ease Factor
+            let bonus = (quality === 3) ? 1.3 : 1.0; // Bonus für Easy
+            let hardPenalty = (quality === 1) ? 1.2 : ease; // Langsamerer Anstieg bei Hard
+            
+            nextInterval = Math.ceil(interval * (quality === 1 ? 1.2 : (ease * bonus)));
+        }
+
+        // 2. Ease Factor anpassen (Nur wenn nicht "Again")
+        // Formel: EF' = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
+        // Wir vereinfachen es leicht für die App:
+        let nextEase = ease;
+        if (quality !== 0) {
+            if (quality === 1) nextEase -= 0.15; // Hard straft Ease ab
+            if (quality === 2) nextEase += 0.00; // Good hält Ease
+            if (quality === 3) nextEase += 0.15; // Easy erhöht Ease
+        } else {
+            nextEase -= 0.20; // Again straft härter ab
+        }
+        
+        if (nextEase < 1.3) nextEase = 1.3; // Minimum Ease
+
+        return { 
+            interval: nextInterval, 
+            ease: nextEase, 
+            repetitions: nextRepetitions,
+            // Zeitstempel berechnen:
+            nextReview: Date.now() + (nextInterval * 24 * 60 * 60 * 1000) 
+        };
+    };
+
+    // Helper für Button-Labels (z.B. "10m", "4d")
+    const formatInterval = (days) => {
+        if (days === 0) return "<1m";
+        if (days >= 365) return Math.round(days / 365) + "y";
+        if (days >= 30) return Math.round(days / 30) + "mo";
+        return days + "d";
+    };
     const getStatsForRange = (limit) => {
         const wordsInRange = vocabulary.filter(w => w.rank <= limit);
         if (wordsInRange.length === 0) return 0;
@@ -295,50 +353,60 @@ function App() {
     const startSmartSession = () => {
         const now = Date.now();
         const sessionSize = smartConfig.sessionSize; 
-        let sessionWords = [];
-
-        // DEBUG CHECK 1: Sind überhaupt Vokabeln geladen?
+        
         if (!vocabulary || vocabulary.length === 0) {
-            alert("Fehler: Keine Vokabeln gefunden! Bitte überprüfe die Datei 'vocab.js' oder importiere eine Liste unter Settings.");
+            alert("No vocabulary loaded.");
             return;
         }
 
-        // SCHRITT 1: Erstmal nur Wörter im gewählten Bereich holen
-        const pool = vocabulary.filter(w => w.rank >= smartConfig.rangeStart && w.rank <= smartConfig.rangeEnd);
+        // 1. Basis-Pool filtern (Range)
+        const rangePool = vocabulary.filter(w => w.rank >= smartConfig.rangeStart && w.rank <= smartConfig.rangeEnd);
 
-        // DEBUG CHECK 2: Ist der gewählte Bereich leer?
-        if (pool.length === 0) {
-            alert(`Keine Wörter im Bereich ${smartConfig.rangeStart} bis ${smartConfig.rangeEnd} gefunden. Bitte wähle einen anderen Bereich in den Einstellungen.`);
-            return;
-        }
-
-        // SCHRITT 2: Aus DIESEM Pool die fälligen Wörter suchen (Wiederholungen)
-        const dueWords = pool.filter(word => {
-            const progress = userProgress[word.rank];
-            return progress && progress.nextReview <= now;
+        // 2. Fällige Wörter (Reviews) - Diese haben VORRANG
+        // Wir nehmen Wörter, die gelernt sind (interval > 0) und fällig sind
+        const dueWords = rangePool.filter(word => {
+            const p = userProgress[word.rank];
+            // Entweder alte Logik (box) oder neue Logik (interval) unterstützen
+            const reviewTime = p?.nextReview || 0;
+            return p && (p.box > 0 || p.interval > 0) && reviewTime <= now;
+        }).sort((a, b) => {
+            // Sortieren nach Überfälligkeit (älteste zuerst)
+            return (userProgress[a.rank]?.nextReview || 0) - (userProgress[b.rank]?.nextReview || 0);
         });
 
-        // SCHRITT 3: Aus DIESEM Pool neue Wörter suchen (die noch nie gelernt wurden)
-        const newWords = pool
-            .filter(word => !userProgress[word.rank])
-            .sort((a, b) => a.rank - b.rank); 
+        // 3. Neue Wörter ("Fuzzy Pool" Logik)
+        let newWords = [];
+        if (dueWords.length < sessionSize) {
+            const needed = sessionSize - dueWords.length;
+            
+            // Finde alle UNGELERNTEN Wörter im Bereich
+            const unlearnedPool = rangePool
+                .filter(word => !userProgress[word.rank] || (!userProgress[word.rank].box && !userProgress[word.rank].interval))
+                .sort((a, b) => a.rank - b.rank); // Erstmal nach Rang sortieren
 
-        // Zusammenstellen: Erst Wiederholungen, dann neue Wörter auffüllen
-        sessionWords = [...dueWords];
-        
-        if (sessionWords.length < sessionSize) {
-            const needed = sessionSize - sessionWords.length;
-            sessionWords = [...sessionWords, ...newWords.slice(0, needed)];
+            // FUZZY LOGIC: Nimm die Top 50 der Unbekannten...
+            const candidates = unlearnedPool.slice(0, 50);
+            
+            // ...und mische sie zufällig
+            for (let i = candidates.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+            }
+
+            // Nimm die benötigte Anzahl aus dem gemischten Topf
+            newWords = candidates.slice(0, needed);
         }
+
+        // Zusammenfügen: Erst Reviews, dann Neue
+        let sessionWords = [...dueWords, ...newWords];
         
-        // Begrenzen auf Session-Größe (falls zu viele fällig sind)
+        // Finales Limit (falls Reviews die Session sprengen)
         if (sessionWords.length > sessionSize) {
             sessionWords = sessionWords.slice(0, sessionSize);
         }
 
-        // Wenn am Ende immer noch 0 Wörter da sind, hast du wirklich alles in diesem Bereich gelernt
         if (sessionWords.length === 0) {
-            alert("Großartig! Du bist in diesem Rang-Bereich auf dem neuesten Stand. Es gibt aktuell nichts zu lernen oder zu wiederholen.");
+            alert("All caught up! Great job.");
             return;
         }
 
@@ -422,71 +490,64 @@ function App() {
         setView('test-session'); // Wir nutzen test-session für reines Abfragen
     };
 
-    const handleResult = (known) => {
-        setAiExamples(null); // <--- NEU: Reset beim Weiterklicken
-        setLoadingExamples(false); // <--- NEU: Reset
+    const handleResult = (quality) => { 
+        // Quality: 0=Again, 1=Hard, 2=Good, 3=Easy
+        // (Für Test-Mode nutzen wir true/false Mapping: false->0, true->2)
+        
+        setAiExamples(null);
+        setLoadingExamples(false);
+
         if (view === 'smart-session') {
             const currentWord = sessionQueue[0];
-            setUserProgress(prev => {
-                const currentStats = prev[currentWord.rank] || { box: 0, correctCount: 0, wrongCount: 0 }; // Neu: wrongCount
-                let newBox = currentStats.box;
-                let newCorrectCount = currentStats.correctCount;
-                let newWrongCount = currentStats.wrongCount || 0;
+            
+            // Neue Stats berechnen
+            const oldStats = userProgress[currentWord.rank];
+            const newStats = calculateAnkiStats(oldStats, quality);
 
-                if (known) {
-                    // Richtig: Eine Box hoch (max 5)
-                    newBox = Math.min(newBox + 1, 5); 
-                    newCorrectCount += 1;
-                    setGeneratedSentences([]); // <--- HIER EINFÜGEN (Reset)
-                    setIsFlipped(false);
-                } else {
-                    // FALSCH: Harte Strafe! Zurück auf Box 1 (oder 0), damit es sofort wiederholt wird.
-                    // Das ist dein "Weak Topf".
-                    newBox = 1; 
-                    newWrongCount += 1; 
-                    setGeneratedSentences([]); // <--- UND HIER EINFÜGEN (Reset)
-                    setIsFlipped(false);// Wir merken uns, dass dieses Wort schwer fällt
-                }
+            // State Update
+            setUserProgress(prev => ({
+                ...prev,
+                [currentWord.rank]: newStats
+            }));
 
-                return {
-                    ...prev,
-                    [currentWord.rank]: {
-                        box: newBox,
-                        nextReview: getNextReviewTime(newBox),
-                        correctCount: newCorrectCount,
-                        wrongCount: newWrongCount // Speichern
-                    }
-                };
-            });
-
-            if (known) {
+            // Queue Management
+            if (quality === 0) {
+                // AGAIN: Karte hinten anstellen (bleibt in der Session)
+                const newQueue = [...sessionQueue.slice(1), currentWord];
+                setSessionResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
+                setGeneratedSentences([]);
+                setIsFlipped(false);
+                setSessionQueue(newQueue);
+            } else {
+                // HARD/GOOD/EASY: Karte ist für heute fertig
                 const newQueue = sessionQueue.slice(1);
+                setSessionResults(prev => ({ ...prev, correct: prev.correct + 1 }));
+                
                 if (newQueue.length === 0) {
-                    setSessionResults(prev => ({ ...prev, correct: prev.correct + 1 }));
                     setView('results');
                 } else {
-                    setSessionResults(prev => ({ ...prev, correct: prev.correct + 1 }));
+                    setGeneratedSentences([]);
                     setIsFlipped(false);
                     setSessionQueue(newQueue);
                 }
-            } else {
-                const newQueue = [...sessionQueue.slice(1), currentWord];
-                setSessionResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
-                setIsFlipped(false);
-                setSessionQueue(newQueue);
             }
         } else {
+            // --- TEST MODE LOGIC (Bleibt simpel) ---
+            // Wir mappen boolean inputs falls sie noch kommen
+            const isCorrect = quality >= 2; 
+            
             setSessionResults(prev => ({
                 ...prev,
-                correct: known ? prev.correct + 1 : prev.correct,
-                wrong: !known ? prev.wrong + 1 : prev.wrong
+                correct: isCorrect ? prev.correct + 1 : prev.correct,
+                wrong: !isCorrect ? prev.wrong + 1 : prev.wrong
             }));
 
             if (currentIndex < activeSession.length - 1) {
-                setIsFlipped(false);
-                setTimeout(() => setCurrentIndex(currentIndex + 1), 150);
-                setGeneratedSentences([]); // <--- UND HIER EINFÜGEN (Reset)
-                setIsFlipped(false);
+                setTimeout(() => {
+                    setCurrentIndex(currentIndex + 1);
+                    setGeneratedSentences([]);
+                    setIsFlipped(false);
+                }, 150);
             } else {
                 setView('results');
             }
@@ -930,15 +991,41 @@ function App() {
                             </div>
                             {/* --- ENDE AI GENERATOR --- */}
 
-                            {/* Bewertungs-Buttons */}
-                            <div className="grid grid-cols-2 gap-4 w-full px-2">
-                                <button onClick={() => handleResult(false)} className="bg-red-50 hover:bg-red-100 active:scale-95 text-red-600 border border-red-100 p-4 rounded-2xl font-bold flex flex-col items-center justify-center gap-1 transition-all h-24">
-                                    <X size={24} /> <span>Missed</span>
-                                </button>
-                                <button onClick={() => handleResult(true)} className="bg-green-50 hover:bg-green-100 active:scale-95 text-green-600 border border-green-100 p-4 rounded-2xl font-bold flex flex-col items-center justify-center gap-1 transition-all h-24">
-                                    <Check size={24} /> <span>Got it</span>
-                                </button>
-                            </div>
+                            {isSmartMode ? (
+                                <div className="grid grid-cols-4 gap-2 w-full px-1">
+                                    {[
+                                        { q: 0, label: "Again", color: "bg-red-50 text-red-600 border-red-200", sub: "Recap" },
+                                        { q: 1, label: "Hard", color: "bg-amber-50 text-amber-600 border-amber-200", sub: "" },
+                                        { q: 2, label: "Good", color: "bg-green-50 text-green-600 border-green-200", sub: "" },
+                                        { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200", sub: "" }
+                                    ].map((btn) => {
+                                        // Vorausberechnung für das Label (z.B. "3d")
+                                        const stats = calculateAnkiStats(userProgress[word.rank], btn.q);
+                                        const timeLabel = formatInterval(stats.interval);
+                                        
+                                        return (
+                                            <button 
+                                                key={btn.label}
+                                                onClick={() => handleResult(btn.q)} 
+                                                className={`${btn.color} border p-2 rounded-xl flex flex-col items-center justify-center transition-all active:scale-95 h-20 shadow-sm`}
+                                            >
+                                                <span className="text-xs font-bold uppercase tracking-tighter opacity-60 mb-1">{timeLabel}</span>
+                                                <span className="font-bold text-sm leading-none">{btn.label}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                // --- TEST MODE BUTTONS (Nur 2) ---
+                                <div className="grid grid-cols-2 gap-4 w-full px-2">
+                                    <button onClick={() => handleResult(0)} className="bg-red-50 text-red-600 border border-red-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-20">
+                                        <X size={20} /> Missed
+                                    </button>
+                                    <button onClick={() => handleResult(2)} className="bg-green-50 text-green-600 border border-green-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-20">
+                                        <Check size={20} /> Got it
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
