@@ -715,61 +715,178 @@ function App() {
     };
 
     // --- RENDERERS ---
-    const renderHome = () => (
-        <div className="space-y-6 animate-in fade-in duration-500 pt-4 pb-20">
-            {/* GAMIFICATION HEADER (Platzhalter Logik) */}
-            <div className="flex justify-between items-end mb-2 px-1">
-                <div>
-                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">THURSDAY, NOV 27</div>
-                    <h1 className="text-3xl font-bold text-slate-800">Bonne après-midi!</h1>
-                </div>
-                <div className="flex gap-2">
-                    <div className="flex items-center gap-1 bg-orange-50 text-orange-600 px-3 py-1.5 rounded-full font-bold text-xs border border-orange-100">
-                        <Flame size={14} fill="currentColor" /> 5
-                    </div>
-                    <div className="flex items-center gap-1 bg-yellow-50 text-yellow-600 px-3 py-1.5 rounded-full font-bold text-xs border border-yellow-100">
-                        <Trophy size={14} /> 1250
-                    </div>
-                </div>
-            </div>
+    const renderHome = () => {
+        // --- 1. DATEN BERECHNEN ---
+        const safeVocab = vocabulary || [];
+        // Zählt Wörter, die mindestens einmal gelernt wurden (box > 0)
+        const totalLearned = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
+        
+        // Suche nach schwachen Wörtern für die Repair-Card
+        const weakWords = safeVocab.filter(w => {
+            const p = userProgress[w.rank];
+            return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
+        });
+        const hasWeakWords = weakWords.length > 0;
 
-            {/* HERO: SMART LOOP */}
-            <button onClick={() => setView('smart-config')} className="w-full bg-indigo-600 text-white p-6 rounded-3xl shadow-lg shadow-indigo-200 transition-transform active:scale-[0.98] flex flex-col items-center text-center relative overflow-hidden group">
-                <div className="bg-white/20 p-4 rounded-full mb-3 group-hover:scale-110 transition-transform"><Play size={32} fill="currentColor" /></div>
-                <div>
-                    <div className="font-bold text-2xl">Start Daily Loop</div>
-                    <div className="text-indigo-100 text-sm mt-1 opacity-90">20 words due for review</div>
-                </div>
-                <GraduationCap size={140} className="absolute -right-6 -bottom-6 opacity-10 rotate-[-15deg]" />
-            </button>
+        // --- 2. MEILENSTEIN LOGIK ---
+        const milestones = [
+            { limit: 100, label: "Foundation", color: "bg-indigo-500" },
+            { limit: 500, label: "Essentials", color: "bg-blue-500" },
+            { limit: 1000, label: "Base", color: "bg-cyan-500" },
+            { limit: 2000, label: "Extension", color: "bg-teal-500" },
+            { limit: 5000, label: "Mastery", color: "bg-emerald-500" },
+        ];
 
-            {/* QUICK ACTIONS ROW */}
-            <div className="grid grid-cols-2 gap-3">
-                <button onClick={() => setView('test-config')} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] flex flex-col justify-between h-28 text-left">
-                    <div className="bg-sky-50 w-10 h-10 flex items-center justify-center rounded-xl text-sky-600"><BookOpen size={20} /></div>
-                    <div><div className="font-bold text-slate-700">Quick Test</div><div className="text-[10px] text-slate-400">Quiz Mode</div></div>
+        let currentMilestone = milestones[0];
+        for (let m of milestones) {
+            if (totalLearned < (m.limit * 0.95)) { 
+                currentMilestone = m;
+                break;
+            }
+            currentMilestone = m; 
+        }
+        
+        const progressPercent = Math.min(100, (totalLearned / currentMilestone.limit) * 100);
+
+        // --- 3. GRAMMAR TIP ---
+        const GRAMMAR_TIPS = [
+            { title: "C'est vs. Il est", text: "Use 'C'est' for nouns (C'est un docteur). Use 'Il est' for adjectives (Il est gentil)." },
+            { title: "Pas de vs. Pas du", text: "After a negative (ne...pas), always use 'de', never 'du' or 'des'. (Je n'ai pas de chien)." },
+            { title: "Endings -er verbs", text: "Regular -er verbs sound the same in singular: Je parle, Tu parles, Il parle. The 's' is silent!" },
+            { title: "Gender of words", text: "Words ending in -age are usually masculine (le fromage), words in -tion are feminine (la nation)." }
+        ];
+        const dayOfYear = Math.floor(Date.now() / 86400000);
+        const dailyTip = GRAMMAR_TIPS[dayOfYear % GRAMMAR_TIPS.length];
+
+        return (
+            <div className="space-y-5 animate-in fade-in duration-500 pt-6 pb-24 px-1">
+                
+                {/* 1. HEADER (Begrüßung) */}
+                <div className="flex justify-between items-end mb-1 px-2">
+                    <div>
+                        <h1 className="text-3xl font-bold text-slate-800">Bonjour! 👋</h1>
+                        <p className="text-slate-400 text-xs font-medium mt-1">Let's reach the next level.</p>
+                    </div>
+                </div>
+
+                {/* 2. PROGRESS CARD (Der zurückgekehrte Balken) */}
+                <div className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden">
+                    <div className="flex justify-between items-end mb-3 relative z-10">
+                        <div>
+                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Current Goal</div>
+                            <h2 className="text-xl font-bold text-slate-700 flex items-center gap-2">
+                                <Trophy size={18} className="text-amber-500" />
+                                {currentMilestone.label}
+                            </h2>
+                        </div>
+                        <div className="text-right">
+                            <span className="text-2xl font-bold text-slate-800">{totalLearned}</span>
+                            <span className="text-xs text-slate-400 font-bold ml-1">/ {currentMilestone.limit}</span>
+                        </div>
+                    </div>
+                    {/* Balken */}
+                    <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden relative z-10">
+                        <div 
+                            className={`h-full rounded-full transition-all duration-1000 ease-out ${currentMilestone.color}`} 
+                            style={{ width: `${progressPercent}%` }}
+                        ></div>
+                    </div>
+                </div>
+
+                {/* 3. HERO: START LOOP */}
+                <button 
+                    onClick={() => setView('smart-config')} 
+                    className="w-full h-44 bg-gradient-to-br from-indigo-600 to-violet-600 text-white p-6 rounded-[2rem] shadow-xl shadow-indigo-200 transition-transform active:scale-[0.98] flex flex-col justify-between relative overflow-hidden group"
+                >
+                    <div className="relative z-10 flex justify-between items-start w-full">
+                        <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
+                            <Play size={28} fill="currentColor" />
+                        </div>
+                        <div className="bg-indigo-500/30 px-3 py-1 rounded-full text-xs font-medium backdrop-blur-md border border-white/10">
+                            Priority
+                        </div>
+                    </div>
+                    <div className="relative z-10 text-left">
+                        <h2 className="text-2xl font-bold mb-1">Start Daily Loop</h2>
+                        <p className="text-indigo-100 text-sm font-medium opacity-90">Continue your streak.</p>
+                    </div>
+                    <GraduationCap size={140} className="absolute -right-6 -bottom-6 text-white opacity-10 rotate-[-15deg] group-hover:scale-110 transition-transform duration-500" />
                 </button>
-                <button onClick={() => {
-                    // Quick Repair Logik inline oder via Funktion
-                    const difficultWords = vocabulary.filter(w => {
-                        const p = userProgress[w.rank];
-                        return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
-                    });
-                    if (difficultWords.length > 0) {
-                        setSessionQueue(difficultWords.slice(0, 20));
-                        setIsFlipped(false);
-                        setSessionResults({ correct: 0, wrong: 0 });
-                        setView('smart-session');
-                    } else {
-                        alert("No difficult words found right now!");
-                    }
-                }} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] flex flex-col justify-between h-28 text-left">
-                    <div className="bg-red-50 w-10 h-10 flex items-center justify-center rounded-xl text-red-600"><Activity size={20} /></div>
-                    <div><div className="font-bold text-slate-700">Quick Repair</div><div className="text-[10px] text-slate-400">Fix Weak Words</div></div>
+
+                {/* 4. REPAIR CARD (Intelligent: Rot oder Grün) */}
+                <button 
+                    onClick={() => {
+                        if (hasWeakWords) {
+                            setSessionQueue(weakWords.slice(0, 20));
+                            setIsFlipped(false);
+                            setSessionResults({ correct: 0, wrong: 0 });
+                            setView('smart-session');
+                        } else {
+                            alert("All words are healthy! Great job.");
+                        }
+                    }} 
+                    className={`w-full p-5 rounded-[2rem] flex items-center justify-between group active:scale-[0.98] transition-all relative overflow-hidden shadow-sm border ${
+                        hasWeakWords 
+                        ? 'bg-rose-50 border-rose-100' 
+                        : 'bg-emerald-50/50 border-emerald-100/50'
+                    }`}
+                >
+                    <div className="flex items-center gap-4 z-10">
+                        <div className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-colors ${
+                            hasWeakWords ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'
+                        }`}>
+                            {hasWeakWords ? <Activity size={24} /> : <Check size={24} />}
+                        </div>
+                        <div className="text-left">
+                            <h3 className={`font-bold text-lg ${hasWeakWords ? 'text-rose-900' : 'text-emerald-900'}`}>
+                                {hasWeakWords ? 'Weak Words' : 'All Good!'}
+                            </h3>
+                            <p className={`text-xs font-medium ${hasWeakWords ? 'text-rose-700/70' : 'text-emerald-700/70'}`}>
+                                {hasWeakWords ? `${weakWords.length} words need repair` : 'No weak words found'}
+                            </p>
+                        </div>
+                    </div>
+                    {hasWeakWords && <ChevronRight size={24} className="text-rose-300 z-10" />}
                 </button>
+
+                {/* 5. DAILY CHALLENGE */}
+                <button 
+                    onClick={() => {
+                        setTestConfig({ startRank: 1, endRank: 2000, count: 10 }); 
+                        startTestSession();
+                    }} 
+                    className="w-full bg-white border border-slate-100 p-5 rounded-[2rem] shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="bg-amber-100 w-12 h-12 flex items-center justify-center rounded-2xl text-amber-600">
+                            <Flame size={24} fill="currentColor" />
+                        </div>
+                        <div className="text-left">
+                            <h3 className="font-bold text-slate-800 text-lg">Daily Challenge</h3>
+                            <p className="text-slate-400 text-xs font-medium">Earn quick XP • 10 Words</p>
+                        </div>
+                    </div>
+                    <ChevronRight size={24} className="text-slate-200 group-hover:text-amber-400 transition-colors" />
+                </button>
+
+                {/* 6. GRAMMAR TIP */}
+                <button 
+                    onClick={() => setView('skills')} 
+                    className="w-full bg-slate-50 border border-slate-200 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative"
+                >
+                    <div className="flex items-center gap-2 mb-3">
+                        <div className="bg-slate-200 text-slate-500 p-1.5 rounded-lg">
+                            <BookOpen size={14} />
+                        </div>
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Tip of the day</span>
+                    </div>
+                    <h3 className="font-bold text-slate-700 text-lg mb-1">{dailyTip.title}</h3>
+                    <p className="text-slate-500 text-sm leading-relaxed">{dailyTip.text}</p>
+                </button>
+
             </div>
-        </div>
-    );
+        );
+    };
     const renderExplore = () => (
         <div className="space-y-8 animate-in fade-in duration-500 pt-4 pb-24">
             <div className="flex items-center gap-3 mb-2 px-1">
@@ -955,35 +1072,10 @@ function App() {
                             <div className="text-red-400 text-xs mt-1">Fix words you got wrong often.</div>
                         </div>
                     </button>
-
-                    {/* MANUAL SECTION - Jetzt groß und bedienbar */}
-                     <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-5">
-                         <div className="flex items-center gap-2 mb-4 text-slate-500">
-                             <Settings size={18} />
-                             <span className="font-bold text-sm uppercase tracking-wide">Custom Range</span>
-                         </div>
-                         
-                         <div className="flex items-center gap-3 mb-4">
-                            <div className="flex-1">
-                                <div className="text-[10px] text-slate-400 font-bold mb-1 ml-1">FROM</div>
-                                <input type="number" value={smartConfig.rangeStart} onChange={(e) => setSmartConfig({...smartConfig, rangeStart: parseInt(e.target.value)})} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-center text-lg font-bold font-mono focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
-                            </div>
-                            <span className="text-slate-300 font-bold text-xl mt-4">-</span>
-                            <div className="flex-1">
-                                <div className="text-[10px] text-slate-400 font-bold mb-1 ml-1">TO</div>
-                                <input type="number" value={smartConfig.rangeEnd} onChange={(e) => setSmartConfig({...smartConfig, rangeEnd: parseInt(e.target.value)})} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-center text-lg font-bold font-mono focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
-                            </div>
-                         </div>
-
-                         <button onClick={startSmartSession} className="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-600 py-3 rounded-xl font-bold transition-colors flex justify-center items-center gap-2">
-                            Start Custom Session <ChevronRight size={16} />
-                         </button>
-                    </div>
-
                 </div>
             </div>
         );
-    };  
+    };
 
     const renderTestConfig = () => {
         const levels = [
