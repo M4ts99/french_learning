@@ -716,82 +716,117 @@ function App() {
 
     // --- RENDERERS ---
     const renderHome = () => {
-        // --- 1. DATEN BERECHNEN ---
+        // --- 1. FORTSCHRITT DATEN ---
         const safeVocab = vocabulary || [];
-        // Zählt Wörter, die mindestens einmal gelernt wurden (box > 0)
         const totalLearned = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
         
-        // Suche nach schwachen Wörtern für die Repair-Card
+        // Repair Logic
         const weakWords = safeVocab.filter(w => {
             const p = userProgress[w.rank];
             return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
         });
         const hasWeakWords = weakWords.length > 0;
 
-        // --- 2. MEILENSTEIN LOGIK ---
-        const milestones = [
-            { limit: 100, label: "Foundation", color: "bg-indigo-500" },
-            { limit: 500, label: "Essentials", color: "bg-blue-500" },
-            { limit: 1000, label: "Base", color: "bg-cyan-500" },
-            { limit: 2000, label: "Extension", color: "bg-teal-500" },
-            { limit: 5000, label: "Mastery", color: "bg-emerald-500" },
+        // --- 2. SMART HEADER LOGIC (Datum & Facts) ---
+        const now = new Date();
+        const hour = now.getHours();
+        const dateKey = `${now.getDate()}-${now.getMonth() + 1}`; // z.B. "14-7" für 14. Juli
+
+        // A. Datum auf Französisch formatieren (z.B. "JEUDI 27 NOVEMBRE")
+        const dateString = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
+
+        // B. Feiertage & Events
+        const SPECIAL_DATES = {
+            "1-1": { title: "Bonne Année ! 🎉", sub: "Happy New Year from France." },
+            "1-5": { title: "Fête du Travail ! 🌿", sub: "It's Labor Day. Take a break!" },
+            "21-6": { title: "Fête de la Musique ! 🎵", sub: "Music is playing everywhere today." },
+            "14-7": { title: "C'est le 14 Juillet ! 🎆", sub: "Bastille Day - La Fête Nationale." },
+            "25-12": { title: "Joyeux Noël ! 🎄", sub: "Merry Christmas!" },
+        };
+
+        // C. Zufällige Frankreich-Fakten (für normale Tage)
+        const FRANCE_FACTS = [
+            "Did you know? French is spoken in 29 countries.",
+            "Paris has over 400 parks and gardens.",
+            "The Louvre is the most visited museum in the world.",
+            "French has no word for 'cheap' (only 'bon marché').",
+            "Croissants were actually invented in Austria.",
+            "There are over 400 types of cheese in France.",
+            "About 45% of modern English words come from French.",
+            "Louis XIX was King of France for just 20 minutes.",
+            "Turning a baguette upside down is considered unlucky."
         ];
-
-        let currentMilestone = milestones[0];
-        for (let m of milestones) {
-            if (totalLearned < (m.limit * 0.95)) { 
-                currentMilestone = m;
-                break;
-            }
-            currentMilestone = m; 
-        }
         
-        const progressPercent = Math.min(100, (totalLearned / currentMilestone.limit) * 100);
+        // Wir wählen einen Fakt basierend auf dem Tag des Jahres (damit er sich nicht bei jedem Klick ändert)
+        const dayOfYear = Math.floor(Date.now() / 86400000);
+        const dailyFact = FRANCE_FACTS[dayOfYear % FRANCE_FACTS.length];
 
-        // --- 3. GRAMMAR TIP ---
+        // D. Begrüßung nach Tageszeit
+        let greeting = hour < 12 ? "Bon matin ! ☕" : hour < 18 ? "Bonne après-midi ! ☀️" : "Bonsoir ! 🌙";
+        let subText = dailyFact;
+
+        // E. Override: Wenn heute ein Feiertag ist, nimm den!
+        if (SPECIAL_DATES[dateKey]) {
+            greeting = SPECIAL_DATES[dateKey].title;
+            subText = SPECIAL_DATES[dateKey].sub;
+        }
+
+        // --- 3. GRAMMAR TIP (Unten) ---
         const GRAMMAR_TIPS = [
             { title: "C'est vs. Il est", text: "Use 'C'est' for nouns (C'est un docteur). Use 'Il est' for adjectives (Il est gentil)." },
             { title: "Pas de vs. Pas du", text: "After a negative (ne...pas), always use 'de', never 'du' or 'des'. (Je n'ai pas de chien)." },
-            { title: "Endings -er verbs", text: "Regular -er verbs sound the same in singular: Je parle, Tu parles, Il parle. The 's' is silent!" },
-            { title: "Gender of words", text: "Words ending in -age are usually masculine (le fromage), words in -tion are feminine (la nation)." }
+            { title: "Endings -er verbs", text: "Regular -er verbs sound the same in singular: Je parle, Tu parles, Il parle. The 's' is silent!" }
         ];
-        const dayOfYear = Math.floor(Date.now() / 86400000);
         const dailyTip = GRAMMAR_TIPS[dayOfYear % GRAMMAR_TIPS.length];
 
         return (
             <div className="space-y-5 animate-in fade-in duration-500 pt-6 pb-24 px-1">
                 
-                {/* 1. HEADER (Begrüßung) */}
-                <div className="flex justify-between items-end mb-1 px-2">
+                {/* 1. SMART HEADER */}
+                <div className="flex justify-between items-start mb-2 px-2">
                     <div>
-                        <h1 className="text-3xl font-bold text-slate-800">Bonjour! 👋</h1>
-                        <p className="text-slate-400 text-xs font-medium mt-1">Let's reach the next level.</p>
+                        <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">{dateString}</div>
+                        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 leading-tight">{greeting}</h1>
+                        <p className="text-slate-400 text-xs font-medium mt-1 max-w-[250px] leading-relaxed">{subText}</p>
+                    </div>
+                    {/* Fortschritts-Bubble */}
+                    <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-2xl border border-slate-100 shadow-sm shrink-0">
+                        <Trophy size={18} className="text-amber-500" />
+                        <span className="font-bold text-slate-700 text-sm">{totalLearned}</span>
                     </div>
                 </div>
 
-                {/* 2. PROGRESS CARD (Der zurückgekehrte Balken) */}
-                <div className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden">
-                    <div className="flex justify-between items-end mb-3 relative z-10">
-                        <div>
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Current Goal</div>
-                            <h2 className="text-xl font-bold text-slate-700 flex items-center gap-2">
-                                <Trophy size={18} className="text-amber-500" />
-                                {currentMilestone.label}
-                            </h2>
+                {/* 2. PROGRESS CARD (Meilenstein) */}
+                {(() => {
+                    const milestones = [
+                        { limit: 100, label: "Foundation", color: "bg-indigo-500" },
+                        { limit: 500, label: "Essentials", color: "bg-blue-500" },
+                        { limit: 1000, label: "Base", color: "bg-cyan-500" },
+                        { limit: 2000, label: "Extension", color: "bg-teal-500" },
+                        { limit: 5000, label: "Mastery", color: "bg-emerald-500" },
+                    ];
+                    let cm = milestones[0];
+                    for (let m of milestones) { if (totalLearned < (m.limit * 0.95)) { cm = m; break; } cm = m; }
+                    const pct = Math.min(100, (totalLearned / cm.limit) * 100);
+
+                    return (
+                        <div className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden">
+                            <div className="flex justify-between items-end mb-3 relative z-10">
+                                <div>
+                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Next Goal</div>
+                                    <h2 className="text-lg font-bold text-slate-700">{cm.label}</h2>
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-xl font-bold text-slate-800">{totalLearned}</span>
+                                    <span className="text-xs text-slate-400 font-bold ml-1">/ {cm.limit}</span>
+                                </div>
+                            </div>
+                            <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden relative z-10">
+                                <div className={`h-full rounded-full transition-all duration-1000 ease-out ${cm.color}`} style={{ width: `${pct}%` }}></div>
+                            </div>
                         </div>
-                        <div className="text-right">
-                            <span className="text-2xl font-bold text-slate-800">{totalLearned}</span>
-                            <span className="text-xs text-slate-400 font-bold ml-1">/ {currentMilestone.limit}</span>
-                        </div>
-                    </div>
-                    {/* Balken */}
-                    <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden relative z-10">
-                        <div 
-                            className={`h-full rounded-full transition-all duration-1000 ease-out ${currentMilestone.color}`} 
-                            style={{ width: `${progressPercent}%` }}
-                        ></div>
-                    </div>
-                </div>
+                    );
+                })()}
 
                 {/* 3. HERO: START LOOP */}
                 <button 
@@ -803,7 +838,7 @@ function App() {
                             <Play size={28} fill="currentColor" />
                         </div>
                         <div className="bg-indigo-500/30 px-3 py-1 rounded-full text-xs font-medium backdrop-blur-md border border-white/10">
-                            Priority
+                            Daily Focus
                         </div>
                     </div>
                     <div className="relative z-10 text-left">
@@ -813,7 +848,7 @@ function App() {
                     <GraduationCap size={140} className="absolute -right-6 -bottom-6 text-white opacity-10 rotate-[-15deg] group-hover:scale-110 transition-transform duration-500" />
                 </button>
 
-                {/* 4. REPAIR CARD (Intelligent: Rot oder Grün) */}
+                {/* 4. REPAIR CARD */}
                 <button 
                     onClick={() => {
                         if (hasWeakWords) {
@@ -826,24 +861,16 @@ function App() {
                         }
                     }} 
                     className={`w-full p-5 rounded-[2rem] flex items-center justify-between group active:scale-[0.98] transition-all relative overflow-hidden shadow-sm border ${
-                        hasWeakWords 
-                        ? 'bg-rose-50 border-rose-100' 
-                        : 'bg-emerald-50/50 border-emerald-100/50'
+                        hasWeakWords ? 'bg-rose-50 border-rose-100' : 'bg-emerald-50/50 border-emerald-100/50'
                     }`}
                 >
                     <div className="flex items-center gap-4 z-10">
-                        <div className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-colors ${
-                            hasWeakWords ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'
-                        }`}>
+                        <div className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-colors ${hasWeakWords ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}`}>
                             {hasWeakWords ? <Activity size={24} /> : <Check size={24} />}
                         </div>
                         <div className="text-left">
-                            <h3 className={`font-bold text-lg ${hasWeakWords ? 'text-rose-900' : 'text-emerald-900'}`}>
-                                {hasWeakWords ? 'Weak Words' : 'All Good!'}
-                            </h3>
-                            <p className={`text-xs font-medium ${hasWeakWords ? 'text-rose-700/70' : 'text-emerald-700/70'}`}>
-                                {hasWeakWords ? `${weakWords.length} words need repair` : 'No weak words found'}
-                            </p>
+                            <h3 className={`font-bold text-lg ${hasWeakWords ? 'text-rose-900' : 'text-emerald-900'}`}>{hasWeakWords ? 'Weak Words' : 'All Good!'}</h3>
+                            <p className={`text-xs font-medium ${hasWeakWords ? 'text-rose-700/70' : 'text-emerald-700/70'}`}>{hasWeakWords ? `${weakWords.length} words need repair` : 'No weak words found'}</p>
                         </div>
                     </div>
                     {hasWeakWords && <ChevronRight size={24} className="text-rose-300 z-10" />}
@@ -858,9 +885,7 @@ function App() {
                     className="w-full bg-white border border-slate-100 p-5 rounded-[2rem] shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
                 >
                     <div className="flex items-center gap-4">
-                        <div className="bg-amber-100 w-12 h-12 flex items-center justify-center rounded-2xl text-amber-600">
-                            <Flame size={24} fill="currentColor" />
-                        </div>
+                        <div className="bg-amber-100 w-12 h-12 flex items-center justify-center rounded-2xl text-amber-600"><Flame size={24} fill="currentColor" /></div>
                         <div className="text-left">
                             <h3 className="font-bold text-slate-800 text-lg">Daily Challenge</h3>
                             <p className="text-slate-400 text-xs font-medium">Earn quick XP • 10 Words</p>
@@ -869,15 +894,13 @@ function App() {
                     <ChevronRight size={24} className="text-slate-200 group-hover:text-amber-400 transition-colors" />
                 </button>
 
-                {/* 6. GRAMMAR TIP */}
+                {/* 6. GRAMMAR TIP (Footer) */}
                 <button 
                     onClick={() => setView('skills')} 
                     className="w-full bg-slate-50 border border-slate-200 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative"
                 >
                     <div className="flex items-center gap-2 mb-3">
-                        <div className="bg-slate-200 text-slate-500 p-1.5 rounded-lg">
-                            <BookOpen size={14} />
-                        </div>
+                        <div className="bg-slate-200 text-slate-500 p-1.5 rounded-lg"><BookOpen size={14} /></div>
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Tip of the day</span>
                     </div>
                     <h3 className="font-bold text-slate-700 text-lg mb-1">{dailyTip.title}</h3>
