@@ -816,7 +816,6 @@ function App() {
         const isSmartMode = view === 'smart-session';
         const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
         
-        // Sicherheitscheck, falls mal kein Wort da ist
         if (!word) return <div>Loading...</div>;
 
         let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
@@ -833,47 +832,33 @@ function App() {
                     <div className="w-6"></div> 
                 </div>
                 
-                {/* Fortschrittsbalken (nur im Test-Modus) */}
                 {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-6"><div className="bg-indigo-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }}></div></div>}
                 
                 {/* DIE KARTE */}
                 <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-6 flex flex-col items-center justify-center min-h-[350px] relative transition-all animate-in fade-in zoom-in duration-300">
                     
-                    {/* Rang Anzeige oben rechts */}
                     <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Rank #{word.rank}</div>
-                    {/* Box Anzeige oben links (nur Smart Mode) */}
                     {isSmartMode && userProgress[word.rank] && <div className="absolute top-4 left-4 bg-indigo-50 text-indigo-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
 
                     {/* --- FRONT: FRANZÖSISCH --- */}
                     <div className="mb-6 text-center w-full relative">
                         <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">French</div>
                         
-                        {/* Hauptwort + Audio Button */}
                         <div className="flex items-center justify-center gap-3 mb-6">
                             <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words text-center leading-tight">{word.french}</h2>
                             <button 
-                                onClick={(e) => { 
-                                    e.stopPropagation(); // WICHTIG: Verhindert Karten-Drehung
-                                    speak(word.french); 
-                                }} 
+                                onClick={(e) => { e.stopPropagation(); speak(word.french); }} 
                                 className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 active:scale-90 transition-all shadow-sm shrink-0"
-                                title="Listen"
                             >
                                 <Volume2 size={24} />
                             </button>
                         </div>
                         
-                        {/* Französischer Beispielsatz + Audio */}
                         {word.example_fr && (
                             <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl text-left relative group mx-2">
-                                <p className="text-slate-600 italic text-lg leading-relaxed pr-8">
-                                    "{word.example_fr}"
-                                </p>
+                                <p className="text-slate-600 italic text-lg leading-relaxed pr-8">"{word.example_fr}"</p>
                                 <button 
-                                    onClick={(e) => { 
-                                        e.stopPropagation(); 
-                                        speak(word.example_fr); 
-                                    }}
+                                    onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }}
                                     className="absolute right-2 top-2 p-2 text-slate-300 hover:text-indigo-600 hover:bg-white rounded-full transition-colors"
                                 >
                                     <Volume2 size={18} />
@@ -882,9 +867,8 @@ function App() {
                         )}
                     </div>
 
-                    {/* --- INTERAKTION --- */}
+                    {/* --- INTERAKTION / RÜCKSEITE --- */}
                     {!isFlipped ? (
-                        /* ZUSTAND 1: Button zum Anzeigen */
                         <button 
                             onClick={() => setIsFlipped(true)} 
                             className="mt-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-200 transition-all flex items-center gap-2"
@@ -892,31 +876,67 @@ function App() {
                             <BookOpen size={20} /> Show Translation
                         </button>
                     ) : (
-                        /* ZUSTAND 2: Lösung + Buttons */
                         <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center border-t border-slate-100 pt-6 mt-2">
                             
                             {/* ENGLISCH */}
-                            <div className="text-center mb-8 w-full">
+                            <div className="text-center mb-6 w-full">
                                 <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
                                 <h3 className="text-3xl font-bold text-indigo-900 mb-2 leading-tight">{word.english || word.german}</h3>
-                                
-                                {/* Englischer Beispielsatz */}
-                                {word.example_en && (
-                                    <p className="text-indigo-400 italic text-sm mt-2 px-4">
-                                        "{word.example_en}"
-                                    </p>
+                                {word.example_en && <p className="text-indigo-400 italic text-sm mt-2 px-4">"{word.example_en}"</p>}
+                            </div>
+
+                            {/* --- HIER WAR DER FEHLENDE TEIL: AI GENERATOR --- */}
+                            <div className="w-full mb-6 px-2">
+                                {/* 1. Button anzeigen (wenn noch nichts geladen) */}
+                                {!aiExamples && !loadingExamples && (
+                                    <button 
+                                        onClick={() => fetchAiExamples(word.french)}
+                                        className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <Sparkles size={16} /> Generate AI Context
+                                    </button>
+                                )}
+
+                                {/* 2. Lade-Animation */}
+                                {loadingExamples && (
+                                    <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2">
+                                        <RotateCcw className="animate-spin" size={16}/> Asking Gemini...
+                                    </div>
+                                )}
+
+                                {/* 3. Ergebnisse anzeigen (inkl. Vorlesen) */}
+                                {aiExamples && (
+                                    <div className="space-y-3 animate-in fade-in duration-500">
+                                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center mb-1">
+                                            AI Generated Examples
+                                        </div>
+                                        {aiExamples.map((ex, idx) => (
+                                            <div key={idx} className="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-left relative">
+                                                <div className="flex justify-between items-start gap-2">
+                                                    <p className="text-slate-700 font-medium text-sm leading-snug pr-6">{ex.fr}</p>
+                                                    {/* Vorlese-Button für generierte Sätze */}
+                                                    <button 
+                                                        onClick={() => speak(ex.fr)} 
+                                                        className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors"
+                                                    >
+                                                        <Volume2 size={16} />
+                                                    </button>
+                                                </div>
+                                                <p className="text-slate-400 text-xs italic mt-1 border-t border-slate-50 pt-1">{ex.en}</p>
+                                            </div>
+                                        ))}
+                                    </div>
                                 )}
                             </div>
+                            {/* --- ENDE AI GENERATOR --- */}
 
                             {/* Bewertungs-Buttons */}
                             <div className="grid grid-cols-2 gap-4 w-full px-2">
                                 <button onClick={() => handleResult(false)} className="bg-red-50 hover:bg-red-100 active:scale-95 text-red-600 border border-red-100 p-4 rounded-2xl font-bold flex flex-col items-center justify-center gap-1 transition-all h-24">
-                                    <X size={24} /> 
-                                    <span>Missed</span>
+                                    <X size={24} /> <span>Missed</span>
                                 </button>
                                 <button onClick={() => handleResult(true)} className="bg-green-50 hover:bg-green-100 active:scale-95 text-green-600 border border-green-100 p-4 rounded-2xl font-bold flex flex-col items-center justify-center gap-1 transition-all h-24">
-                                    <Check size={24} /> 
-                                    <span>Got it</span>
+                                    <Check size={24} /> <span>Got it</span>
                                 </button>
                             </div>
                         </div>
