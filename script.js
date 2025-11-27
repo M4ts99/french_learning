@@ -41,19 +41,21 @@ const Volume2 = (p) => <Icon {...p} path={<><path d="M11 5L6 9H2v6h4l5 4V5z"/><p
 const Trash2 = (p) => <Icon {...p} path={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />;
 const ArrowLeftRight = (p) => <Icon {...p} path={<><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></>} />;
 const MessageSquare = (p) => <Icon {...p} path={<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>} />;
-//const INITIAL_DATA = vocab_List;
+// Neue Icons für die 4-Tab Struktur (Korrigiert mit <>)
+const Compass = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></>} />;
+const Dumbbell = (p) => <Icon {...p} path={<><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></>} />;
+const Trophy = (p) => <Icon {...p} path={<><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></>} />;
+const Flame = (p) => <Icon {...p} path={<><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></>} />;//const INITIAL_DATA = vocab_List;
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
         { id: 'home', label: 'Home', icon: <HomeIcon size={24} /> },
-        { id: 'practice', label: 'Practice', icon: <BookCheck size={24} /> }, // NEU: Statt Library
-        { id: 'grammar', label: 'Translator', icon: <PenTool size={24} /> },
-        { id: 'profile', label: 'Profile', icon: <User size={24} /> }, // Umbenannt zu Profile
+        { id: 'explore', label: 'Explore', icon: <Compass size={24} /> }, // Content & Themen
+        { id: 'skills', label: 'Skills', icon: <Dumbbell size={24} /> }, // Grammatik & Tools
+        { id: 'profile', label: 'Profile', icon: <User size={24} /> },
     ];
-// ... rest of component ...
 
     return (
-        /* pb-safe sorgt für Abstand zum unteren Bildschirmrand (iPhone Strich) */
-        <div className="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-slate-200 px-6 pt-3 pb-2 pb-safe shadow-[0_-5px_20px_rgba(0,0,0,0.03)] z-50 transition-transform duration-300">
+        <div className="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-slate-200 px-6 pt-3 pb-2 pb-safe shadow-[0_-5px_20px_rgba(0,0,0,0.03)] z-50">
             <div className="flex justify-between items-center max-w-md mx-auto">
                 {tabs.map((tab) => {
                     const isActive = activeTab === tab.id;
@@ -714,52 +716,91 @@ function App() {
 
     // --- RENDERERS ---
     const renderHome = () => (
-        <div className="space-y-8 animate-in fade-in duration-500 pt-4 pb-8">
-            {/* 1. HEADER & INFO */}
-            <div>
-                <h1 className="text-3xl font-bold text-slate-800 mb-4">Bonjour! 👋</h1>
-                <div className="bg-indigo-50 border border-indigo-100 p-5 rounded-2xl relative overflow-hidden">
-                    <div className="relative z-10">
-                        <div className="flex items-center gap-2 text-indigo-700 font-bold mb-1 text-xs uppercase tracking-wide">
-                            <Info size={14} /> Why Frequency?
-                        </div>
-                        <p className="text-indigo-900/80 text-sm leading-relaxed font-medium">
-                            The top <strong className="text-indigo-900">2,000 words</strong> make up <strong className="text-indigo-900">80%</strong> of French text. Master the foundation first.
-                        </p>
+        <div className="space-y-6 animate-in fade-in duration-500 pt-4 pb-20">
+            {/* GAMIFICATION HEADER (Platzhalter Logik) */}
+            <div className="flex justify-between items-end mb-2 px-1">
+                <div>
+                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">THURSDAY, NOV 27</div>
+                    <h1 className="text-3xl font-bold text-slate-800">Bonne après-midi!</h1>
+                </div>
+                <div className="flex gap-2">
+                    <div className="flex items-center gap-1 bg-orange-50 text-orange-600 px-3 py-1.5 rounded-full font-bold text-xs border border-orange-100">
+                        <Flame size={14} fill="currentColor" /> 5
                     </div>
-                    {/* Deko im Hintergrund */}
-                    <div className="absolute -right-6 -bottom-10 opacity-10 text-indigo-900 rotate-12">
-                         <BarChart3 size={100} />
+                    <div className="flex items-center gap-1 bg-yellow-50 text-yellow-600 px-3 py-1.5 rounded-full font-bold text-xs border border-yellow-100">
+                        <Trophy size={14} /> 1250
                     </div>
                 </div>
             </div>
 
-            {/* 2. MAIN ACTIONS (Training & Test) */}
-            <div className="grid grid-cols-2 gap-4">
-                 <button onClick={() => setView('smart-config')} className="col-span-2 bg-indigo-600 text-white p-6 rounded-3xl shadow-lg shadow-indigo-200 transition-transform active:scale-[0.98] flex flex-col items-center text-center relative overflow-hidden group">
-                    <div className="bg-white/20 p-3 rounded-full mb-3 group-hover:scale-110 transition-transform"><Play size={28} fill="currentColor" /></div>
-                    <div>
-                        <div className="font-bold text-xl">Start Loop</div>
-                        <div className="text-indigo-100 text-xs mt-0.5">Personalized Training</div>
-                    </div>
-                    <GraduationCap size={120} className="absolute -left-4 -bottom-4 opacity-10 rotate-[-15deg]" />
-                </button>
+            {/* HERO: SMART LOOP */}
+            <button onClick={() => setView('smart-config')} className="w-full bg-indigo-600 text-white p-6 rounded-3xl shadow-lg shadow-indigo-200 transition-transform active:scale-[0.98] flex flex-col items-center text-center relative overflow-hidden group">
+                <div className="bg-white/20 p-4 rounded-full mb-3 group-hover:scale-110 transition-transform"><Play size={32} fill="currentColor" /></div>
+                <div>
+                    <div className="font-bold text-2xl">Start Daily Loop</div>
+                    <div className="text-indigo-100 text-sm mt-1 opacity-90">20 words due for review</div>
+                </div>
+                <GraduationCap size={140} className="absolute -right-6 -bottom-6 opacity-10 rotate-[-15deg]" />
+            </button>
 
-                <button onClick={() => setView('test-config')} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-transform">
-                    <div className="bg-amber-100 w-10 h-10 flex items-center justify-center rounded-xl text-amber-600 mb-3"><BookOpen size={20} /></div>
-                    <div className="font-bold text-slate-700">Quick Test</div>
+            {/* QUICK ACTIONS ROW */}
+            <div className="grid grid-cols-2 gap-3">
+                <button onClick={() => setView('test-config')} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] flex flex-col justify-between h-28 text-left">
+                    <div className="bg-sky-50 w-10 h-10 flex items-center justify-center rounded-xl text-sky-600"><BookOpen size={20} /></div>
+                    <div><div className="font-bold text-slate-700">Quick Test</div><div className="text-[10px] text-slate-400">Quiz Mode</div></div>
                 </button>
-                
-                <button onClick={() => setView('stats')} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-transform">
-                    <div className="bg-emerald-100 w-10 h-10 flex items-center justify-center rounded-xl text-emerald-600 mb-3"><BarChart3 size={20} /></div>
-                    <div className="font-bold text-slate-700">My Stats</div>
+                <button onClick={() => {
+                    // Quick Repair Logik inline oder via Funktion
+                    const difficultWords = vocabulary.filter(w => {
+                        const p = userProgress[w.rank];
+                        return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
+                    });
+                    if (difficultWords.length > 0) {
+                        setSessionQueue(difficultWords.slice(0, 20));
+                        setIsFlipped(false);
+                        setSessionResults({ correct: 0, wrong: 0 });
+                        setView('smart-session');
+                    } else {
+                        alert("No difficult words found right now!");
+                    }
+                }} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] flex flex-col justify-between h-28 text-left">
+                    <div className="bg-red-50 w-10 h-10 flex items-center justify-center rounded-xl text-red-600"><Activity size={20} /></div>
+                    <div><div className="font-bold text-slate-700">Quick Repair</div><div className="text-[10px] text-slate-400">Fix Weak Words</div></div>
+                </button>
+            </div>
+        </div>
+    );
+    const renderExplore = () => (
+        <div className="space-y-8 animate-in fade-in duration-500 pt-4 pb-24">
+            <div className="flex items-center gap-3 mb-2 px-1">
+                 <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Compass size={24} /></div>
+                 <h2 className="text-2xl font-bold text-slate-800">Explore</h2>
+            </div>
+
+            {/* 1. MEDIA CARDS (Stories & News) */}
+            <div className="grid grid-cols-2 gap-3">
+                <button onClick={() => setView('reader')} className="bg-amber-100 p-5 rounded-3xl text-left flex flex-col justify-between h-40 relative overflow-hidden group transition-all active:scale-[0.98]">
+                    <div className="relative z-10">
+                        <BookCheck size={28} className="text-amber-600 mb-3" />
+                        <div className="font-bold text-amber-900 text-lg">Stories</div>
+                        <div className="text-amber-700/70 text-xs">Read & Listen</div>
+                    </div>
+                    <BookOpen size={80} className="absolute -right-4 -bottom-4 text-amber-200 opacity-50 rotate-12"/>
+                </button>
+                <button onClick={() => setView('culture')} className="bg-rose-100 p-5 rounded-3xl text-left flex flex-col justify-between h-40 relative overflow-hidden group transition-all active:scale-[0.98]">
+                    <div className="relative z-10">
+                        <Activity size={28} className="text-rose-600 mb-3" />
+                        <div className="font-bold text-rose-900 text-lg">News</div>
+                        <div className="text-rose-700/70 text-xs">Culture Feed</div>
+                    </div>
+                    <Sparkles size={80} className="absolute -right-4 -bottom-4 text-rose-200 opacity-50 rotate-12"/>
                 </button>
             </div>
 
-            {/* 3. NEW: GRAMMAR TYPES (Horizontal Scroll) */}
+            {/* 2. GRAMMAR TYPES (Slider) - Aus altem Home */}
             <div>
                 <div className="flex items-center justify-between mb-3 px-1">
-                    <h3 className="font-bold text-slate-700 text-lg">By Type</h3>
+                    <h3 className="font-bold text-slate-700 text-lg">Vocabulary Sets</h3>
                 </div>
                 <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
                     {COLLECTIONS.grammar.map((c) => (
@@ -778,10 +819,10 @@ function App() {
                 </div>
             </div>
 
-            {/* 4. NEW: TOPICS (Horizontal Scroll) */}
+            {/* 3. TOPICS (Slider) */}
             <div>
                 <div className="flex items-center justify-between mb-3 px-1">
-                    <h3 className="font-bold text-slate-700 text-lg">By Topic</h3>
+                    <h3 className="font-bold text-slate-700 text-lg">Real Life Topics</h3>
                 </div>
                 <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
                     {COLLECTIONS.topics.map((c) => (
@@ -798,7 +839,54 @@ function App() {
             </div>
         </div>
     );
-    
+    const renderSkills = () => (
+        <div className="space-y-8 animate-in fade-in duration-500 pt-4 pb-24">
+            <div className="flex items-center gap-3 mb-2 px-1">
+                 <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Dumbbell size={24} /></div>
+                 <h2 className="text-2xl font-bold text-slate-800">Skill Gym</h2>
+            </div>
+
+            {/* SECTION 1: AI TOOLS */}
+            <div>
+                <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-4 px-1">AI Tools</h3>
+                <div className="bg-slate-50 p-1 rounded-3xl border border-slate-100">
+                    {/* Wir betten den ModernTranslator direkt ein, aber vereinfacht oder als Link */}
+                    {/* Für den Anfang zeigen wir den Translator einfach direkt hier an */}
+                    <ModernTranslator />
+                </div>
+            </div>
+
+            {/* SECTION 2: GRAMMAR DRILLS (Placeholder für dein "Topic Hub") */}
+            <div>
+                <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-4 px-1">Grammar Drills</h3>
+                <div className="space-y-3">
+                    {/* Placeholder Card 1 */}
+                    <button onClick={() => alert("Grammar Hub coming soon!")} className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
+                        <div className="flex items-center gap-4">
+                            <div className="bg-purple-100 text-purple-600 w-12 h-12 rounded-xl flex items-center justify-center font-bold">V</div>
+                            <div className="text-left">
+                                <div className="font-bold text-slate-800">Le Passé Composé</div>
+                                <div className="text-xs text-slate-400">Past Tense • Avoir/Être</div>
+                            </div>
+                        </div>
+                        <div className="bg-slate-50 px-3 py-1 rounded-lg text-xs font-bold text-slate-400 group-hover:bg-purple-50 group-hover:text-purple-600 transition-colors">Start</div>
+                    </button>
+
+                    {/* Placeholder Card 2 */}
+                    <button onClick={() => alert("Coming soon!")} className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all opacity-60">
+                        <div className="flex items-center gap-4">
+                            <div className="bg-blue-100 text-blue-600 w-12 h-12 rounded-xl flex items-center justify-center font-bold">S</div>
+                            <div className="text-left">
+                                <div className="font-bold text-slate-800">Le Subjonctif</div>
+                                <div className="text-xs text-slate-400">Moods • Triggers</div>
+                            </div>
+                        </div>
+                        <ChevronRight size={20} className="text-slate-300"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
     const renderSmartConfig = () => {
         const setMode = (mode) => {
             if (mode === 'new') {
@@ -1668,33 +1756,30 @@ function App() {
     // Helper: Content basierend auf dem Tab rendern (wenn wir nicht in einer Session sind)
     const renderTabContent = () => {
         switch (view) {
+            // TAB 1: HOME
             case 'home':
-            case 'smart-config':
-            case 'test-config':
+            case 'smart-config': // Overlay im Home Context
+            case 'test-config':  // Overlay im Home Context
                 return renderHome();
             
-            // NEU: Practice Tab
-            case 'practice':
-                return renderPractice(); 
+            // TAB 2: EXPLORE
+            case 'explore':
+            case 'reader':       // Reader gehört zu Explore
+            case 'culture':      // News gehört zu Explore
+                return renderExplore();
             
-            // NEU: Profile (enthält Stats + Library)
+            // TAB 3: SKILLS
+            case 'skills':
+            case 'grammar':      // Fallback
+                return renderSkills();
+
+            // TAB 4: PROFILE
             case 'profile':
-            case 'stats': // Fallback für alte Links
-            case 'library': // Fallback
-            case 'learned-section': // Fallback
-                return renderProfile(); 
-
-            // Detail View für Wörter (bleibt gleich)
-            case 'word-detail':
-                return renderWordDetail();
-
-            case 'settings':
-            case 'grammar':
-                return renderGrammar();
-            
+            case 'word-detail':  // Detailansicht gehört logisch zum Profil/Library
             case 'data-mgmt':
-                return renderDataMgmt();
+                return renderProfile(); 
             
+            // Session Views (Full Screen, keine Tabs)
             default:
                 return renderHome();
         }
