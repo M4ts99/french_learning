@@ -262,10 +262,15 @@ function App() {
     };
 
     // --- ANKI ALGORITHM (SM-2 Variation) ---
+// --- ANKI ALGORITHM (SM-2 Variation) ---
     const calculateAnkiStats = (currentStats, quality) => {
         // quality: 0 = Again, 1 = Hard, 2 = Good, 3 = Easy
         
-        let { interval, ease, repetitions } = currentStats || { interval: 0, ease: 2.5, repetitions: 0 };
+        // FIX: Wir prüfen sicher mit "?." und "??", ob Werte da sind.
+        // Wenn "interval" fehlt (weil es ein altes Wort ist), nehmen wir 0.
+        let interval = currentStats?.interval ?? 0;
+        let ease = currentStats?.ease ?? 2.5;
+        let repetitions = currentStats?.repetitions ?? 0;
         
         // 1. Next Interval berechnen
         let nextInterval;
@@ -273,48 +278,50 @@ function App() {
 
         if (quality === 0) {
             // Again: Reset
-            nextInterval = 0; // 0 Tage = < 1 Minute (sofort wieder)
+            nextInterval = 0; // < 1 Tag
             nextRepetitions = 0;
         } else if (interval === 0) {
             // Erstes Mal richtig
-            nextInterval = 1; // Morgen
+            nextInterval = 1; // 1 Tag
         } else if (interval === 1) {
             // Zweites Mal richtig
             nextInterval = (quality === 1) ? 2 : (quality === 3) ? 4 : 3;
         } else {
             // Danach: Intervall * Ease Factor
-            let bonus = (quality === 3) ? 1.3 : 1.0; // Bonus für Easy
-            let hardPenalty = (quality === 1) ? 1.2 : ease; // Langsamerer Anstieg bei Hard
+            let bonus = (quality === 3) ? 1.3 : 1.0; 
             
+            // Berechnung sicherstellen (Math.ceil verhindert krumme Kommazahlen)
             nextInterval = Math.ceil(interval * (quality === 1 ? 1.2 : (ease * bonus)));
         }
 
-        // 2. Ease Factor anpassen (Nur wenn nicht "Again")
-        // Formel: EF' = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
-        // Wir vereinfachen es leicht für die App:
+        // 2. Ease Factor anpassen
         let nextEase = ease;
         if (quality !== 0) {
-            if (quality === 1) nextEase -= 0.15; // Hard straft Ease ab
-            if (quality === 2) nextEase += 0.00; // Good hält Ease
-            if (quality === 3) nextEase += 0.15; // Easy erhöht Ease
+            if (quality === 1) nextEase -= 0.15;
+            if (quality === 2) nextEase += 0.00;
+            if (quality === 3) nextEase += 0.15;
         } else {
-            nextEase -= 0.20; // Again straft härter ab
+            nextEase -= 0.20;
         }
         
-        if (nextEase < 1.3) nextEase = 1.3; // Minimum Ease
+        if (nextEase < 1.3) nextEase = 1.3; // Minimum
 
         return { 
             interval: nextInterval, 
             ease: nextEase, 
             repetitions: nextRepetitions,
-            // Zeitstempel berechnen:
+            // Hier auch Fallback für alte Daten: Wenn "box" da ist, nutzen wir das als Basis, sonst Date.now()
             nextReview: Date.now() + (nextInterval * 24 * 60 * 60 * 1000) 
         };
     };
 
     // Helper für Button-Labels (z.B. "10m", "4d")
+    // Helper für Button-Labels
     const formatInterval = (days) => {
-        if (days === 0) return "<1m";
+        // Sicherheitscheck: Wenn days keine Zahl ist, zeige "1d" als Fallback
+        if (typeof days !== 'number' || isNaN(days)) return "1d";
+
+        if (days <= 0) return "<1m"; // Wiederholung sofort
         if (days >= 365) return Math.round(days / 365) + "y";
         if (days >= 30) return Math.round(days / 30) + "mo";
         return days + "d";
@@ -922,7 +929,7 @@ function App() {
                                     onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }}
                                     className="absolute right-2 top-2 p-2 text-slate-300 hover:text-indigo-600 hover:bg-white rounded-full transition-colors"
                                 >
-                                    <Volume2 size={18} />
+                                    <Volume2 size={25} />
                                 </button>
                             </div>
                         )}
@@ -974,7 +981,7 @@ function App() {
                                         {aiExamples.map((ex, idx) => (
                                             <div key={idx} className="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-left relative">
                                                 <div className="flex justify-between items-start gap-2">
-                                                    <p className="text-slate-700 font-medium text-sm leading-snug pr-6">{ex.fr}</p>
+                                                    <p className="text-slate-700 font-medium text-base leading-snug pr-6">{ex.fr}</p>
                                                     {/* Vorlese-Button für generierte Sätze */}
                                                     <button 
                                                         onClick={() => speak(ex.fr)} 
@@ -983,7 +990,7 @@ function App() {
                                                         <Volume2 size={32} />
                                                     </button>
                                                 </div>
-                                                <p className="text-slate-400 text-xs italic mt-1 border-t border-slate-50 pt-1">{ex.en}</p>
+                                                <p className="text-slate-400 text-sm italic mt-1 border-t border-slate-50 pt-1">{ex.en}</p>
                                             </div>
                                         ))}
                                     </div>
