@@ -46,6 +46,13 @@ const Compass = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><pol
 const Dumbbell = (p) => <Icon {...p} path={<><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></>} />;
 const Trophy = (p) => <Icon {...p} path={<><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></>} />;
 const Flame = (p) => <Icon {...p} path={<><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></>} />;//const INITIAL_DATA = vocab_List;
+const Crown = (p) => <Icon {...p} path={<><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></>} />;
+const Zap = (p) => <Icon {...p} path={<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>} />;
+const Shield = (p) => <Icon {...p} path={<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>} />;
+const Medal = (p) => <Icon {...p} path={<><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></>} />;
+const ArrowLeft = (p) => <Icon {...p} path={<><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></>} />;
+
+
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
         { id: 'home', label: 'Home', icon: <HomeIcon size={24} /> },
@@ -336,6 +343,7 @@ function App() {
     const [showStats, setShowStats] = useState(false);
     const [exploreMode, setExploreMode] = useState('main');
     const [expandedCategory, setExpandedCategory] = useState(null);
+    
     
     
     // Session State
@@ -1057,7 +1065,7 @@ function App() {
                         onClick={() => setExploreMode('main')}
                         className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
                     >
-                        <RotateCcw size={20} className="rotate-[-90deg]" /* Kleiner Hack: Pfeil nach links drehen, falls Rotate genutzt wird, sonst nimm ArrowLeft icon */ />
+                        <ArrowLeft size={20} className="rotate-[-90deg]" /* Kleiner Hack: Pfeil nach links drehen, falls Rotate genutzt wird, sonst nimm ArrowLeft icon */ />
                     </button>
                     <h2 className="text-2xl font-bold text-slate-800">{pageTitle}</h2>
                 </div>
@@ -1277,7 +1285,7 @@ function App() {
 
                     {/* OPTION 2: REVIEW */}
                     <button onClick={() => setMode('review')} className="w-full group bg-white hover:bg-slate-50 border border-slate-200 p-5 rounded-3xl shadow-sm transition-all text-left active:scale-[0.98] flex items-center gap-4">
-                        <div className="bg-emerald-100 text-emerald-600 p-3 rounded-2xl shrink-0"><RotateCcw size={24} /></div>
+                        <div className="bg-emerald-100 text-emerald-600 p-3 rounded-2xl shrink-0"><ArrowLeft size={24} /></div>
                         <div>
                             <div className="font-bold text-slate-700 text-lg leading-tight">Review Due Words</div>
                             <div className="text-slate-400 text-xs mt-1">Keep your memory fresh.</div>
@@ -1317,7 +1325,7 @@ function App() {
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-6 pl-1">
                     <button onClick={() => setView('home')} className="p-2 -ml-2 hover:bg-slate-200 rounded-full transition-colors">
-                        <RotateCcw size={20} className="text-slate-500" />
+                        <ArrowLeft size={20} className="text-slate-500" />
                     </button>
                     <div>
                         <h2 className="text-2xl font-bold text-slate-800">Quick Test</h2>
@@ -1401,7 +1409,7 @@ function App() {
                     onClick={() => setView('skills')}
                     className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
                 >
-                    <RotateCcw size={20} className="rotate-[-90deg]" />
+                    <ArrowLeft size={20} className="rotate-[-90deg]" />
                 </button>
                 <div>
                     <h2 className="text-2xl font-bold text-slate-800">AI Tools</h2>
@@ -1456,7 +1464,7 @@ function App() {
                         }} 
                         className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors"
                     >
-                        <div className="p-2 bg-white border border-slate-200 rounded-full"><RotateCcw size={16} /></div>
+                        <div className="p-2 bg-white border border-slate-200 rounded-full"><ArrowLeft size={16} /></div>
                         <span className="font-bold text-sm">Back to Library</span>
                     </button>
                 </div>
@@ -1500,7 +1508,7 @@ function App() {
                                         <Sparkles size={32} /> More examples...
                                     </button>
                                 )}
-                                {loadingExamples && <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2"><RotateCcw className="animate-spin" size={16}/> generating...</div>}
+                                {loadingExamples && <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2"><ArrowLeft className="animate-spin" size={16}/> generating...</div>}
                                 {aiExamples && (
                                     <div className="space-y-3 animate-in fade-in duration-500 text-left">
                                         {aiExamples.map((ex, idx) => (
@@ -1782,113 +1790,215 @@ function App() {
     );
     
     const renderProfile = () => {
-        // HINWEIS: Wenn du "showStats" in der App() definiert hast,
-        // lösche diese Zeile hier. Wenn nicht, lass sie stehen.
-        
-        
-        // FIX: Wir zeigen keinen Loading-Screen mehr, sondern rendern einfach, was da ist.
-        // Wir nehmen sicherheitshalber ein leeres Array, falls vocabulary null ist.
+        // --- 1. DATEN BERECHNEN (Kein useState!) ---
         const safeVocab = vocabulary || [];
+        // Zähle Wörter, die gelernt sind (box > 0)
+        const learnedCount = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
+        
+        // Level Berechnung
+        let levelTitle = "Tourist";
+        let levelColor = "from-slate-400 to-slate-600";
+        let nextLevelAt = 100;
 
-        // 1. Daten filtern (Nur gelernt)
-        const learnedList = safeVocab.filter(w => {
-            const p = userProgress[w.rank];
-            // Sicherer Zugriff mit "?."
-            return p && p.box > 0;
-        });
+        if (learnedCount >= 100 && learnedCount < 500) {
+            levelTitle = "Explorer";
+            levelColor = "from-blue-400 to-blue-600";
+            nextLevelAt = 500;
+        } else if (learnedCount >= 500 && learnedCount < 1000) {
+            levelTitle = "Citizen";
+            levelColor = "from-indigo-400 to-indigo-600";
+            nextLevelAt = 1000;
+        } else if (learnedCount >= 1000 && learnedCount < 2000) {
+            levelTitle = "Diplomat";
+            levelColor = "from-purple-400 to-purple-600";
+            nextLevelAt = 2000;
+        } else if (learnedCount >= 2000) {
+            levelTitle = "Native Speaker";
+            levelColor = "from-amber-400 to-amber-600";
+            nextLevelAt = 5000;
+        }
 
-        // 2. Suche und Sortierung
-        const filteredList = learnedList.filter(w => {
-            const search = (librarySearch || '').toLowerCase(); 
-            const fr = (w.french || '').toLowerCase();
-            const en = (w.english || '').toLowerCase();
-            const de = w.german ? w.german.toLowerCase() : ''; 
-            return fr.includes(search) || en.includes(search) || de.includes(search);
-        }).sort((a, b) => a.rank - b.rank);
+        const levelProgress = Math.min(100, (learnedCount / nextLevelAt) * 100);
 
-        // Daten für die Statistik
-        const milestones = [
-            { limit: 100, label: "Foundation", desc: "Survival", color: "bg-indigo-400" },
-            { limit: 500, label: "Essentials", desc: "Daily Life", color: "bg-indigo-500" },
-            { limit: 1000, label: "Base", desc: "Understanding", color: "bg-violet-500" },
-            { limit: 2000, label: "Extension", desc: "Fluent", color: "bg-fuchsia-500" },
-            { limit: 5000, label: "Mastery", desc: "Native", color: "bg-pink-500" },
+        // Badges Logik (Berechnet)
+        const badges = [
+            { id: 1, icon: <Zap size={18}/>, label: "First Step", active: learnedCount > 0, color: "text-yellow-500 bg-yellow-50" },
+            { id: 2, icon: <Shield size={18}/>, label: "Foundation", active: learnedCount >= 100, color: "text-blue-500 bg-blue-50" },
+            { id: 3, icon: <Medal size={18}/>, label: "Half K", active: learnedCount >= 500, color: "text-indigo-500 bg-indigo-50" },
+            { id: 4, icon: <Crown size={18}/>, label: "Mastery", active: learnedCount >= 2000, color: "text-amber-500 bg-amber-50" },
+            { id: 5, icon: <Flame size={18}/>, label: "On Fire", active: false, color: "text-orange-500 bg-orange-50" }, // Platzhalter für Streak
+            { id: 6, icon: <BookCheck size={18}/>, label: "Scholar", active: false, color: "text-emerald-500 bg-emerald-50" } // Platzhalter
         ];
 
-        const handleHardReset = () => {
-            if (window.confirm("Delete ALL progress? This cannot be undone.")) {
-                const pin = window.prompt("Enter PIN to confirm:");
-                if (pin === "1999") {
-                    setUserProgress({});
-                    localStorage.removeItem('vocabApp_progress');
-                    alert("System Reset: Done.");
-                    setView('home');
-                }
-            }
-        };
-
         return (
-            <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in duration-500 pt-2 pb-24">
+            <div className="space-y-6 animate-in fade-in duration-500 pt-6 pb-24 px-1">
                 
-                {/* 1. HEADER & TOGGLE (Immer sichtbar!) */}
-                <div className="flex items-center justify-between px-1">
-                    <div>
-                        <h2 className="text-2xl font-bold text-slate-800">My Profile</h2>
-                        <p className="text-slate-400 text-xs">{learnedList.length} words learned</p>
+                {/* HEADER */}
+                <div className="flex items-center justify-between mb-2 px-1">
+                    <h2 className="text-2xl font-bold text-slate-800">My Identity</h2>
+                    <div className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">
+                        Level {Math.floor(learnedCount / 50) + 1}
                     </div>
-                    <button 
-                        onClick={() => setShowStats(!showStats)}
-                        className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all ${showStats ? 'bg-indigo-100 text-indigo-700' : 'bg-white border border-slate-200 text-slate-600'}`}
-                    >
-                        <BarChart3 size={16} /> 
-                        {showStats ? 'Hide Stats' : 'Frequency Profile'}
-                    </button>
                 </div>
 
-                {/* 2. STATS SECTION (Collapsible) */}
-                {showStats && (
-                    <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-6 animate-in slide-in-from-top-2 fade-in">
-                        {milestones.map((m) => {
-                            const pct = getStatsForRange(m.limit);
-                            return (
-                                <div key={m.limit}>
-                                    <div className="flex justify-between items-end mb-2">
-                                        <div className="font-bold text-slate-700 text-sm">{m.label} <span className="text-[10px] text-slate-400">Top {m.limit}</span></div>
-                                        <div className="font-bold text-sm text-slate-800">{pct}%</div>
-                                    </div>
-                                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                        <div className={`h-full rounded-full transition-all duration-1000 ${m.color}`} style={{ width: `${pct}%` }}></div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                        
-                        <div className="pt-4 border-t border-slate-100">
-                            <button onClick={handleHardReset} className="text-xs text-red-400 hover:text-red-600 flex items-center gap-1 mx-auto">
-                                <Trash2 size={12}/> Reset Progress
-                            </button>
+                {/* 1. IDENTITY CARD */}
+                <div className={`w-full p-6 rounded-[2rem] shadow-xl text-white bg-gradient-to-br ${levelColor} relative overflow-hidden group`}>
+                    <div className="relative z-10 flex items-center gap-5">
+                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 text-3xl shadow-inner">
+                            {levelTitle === "Tourist" ? "📷" : levelTitle === "Explorer" ? "🧭" : levelTitle === "Citizen" ? "🏡" : "👑"}
+                        </div>
+                        <div>
+                            <div className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Current Title</div>
+                            <h3 className="text-2xl font-bold">{levelTitle}</h3>
+                            <p className="text-white/80 text-xs font-medium mt-1">{learnedCount} / {nextLevelAt} words to next rank</p>
                         </div>
                     </div>
-                )}
+                    
+                    {/* Level Progress Bar */}
+                    <div className="mt-6 bg-black/20 h-2 rounded-full overflow-hidden backdrop-blur-sm">
+                        <div className="bg-white h-full rounded-full opacity-90" style={{ width: `${levelProgress}%` }}></div>
+                    </div>
 
-                {/* 3. LIBRARY SEARCH BAR (Immer sichtbar!) */}
-                <div className="relative sticky top-2 z-20">
+                    {/* Deko */}
+                    <User size={120} className="absolute -right-6 -bottom-8 text-white opacity-10 rotate-12"/>
+                </div>
+
+                {/* 2. HALL OF FAME (Badges) */}
+                <div>
+                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Hall of Fame</h3>
+                    <div className="grid grid-cols-3 gap-3">
+                        {badges.map(b => (
+                            <div key={b.id} className={`aspect-square rounded-2xl flex flex-col items-center justify-center gap-2 border transition-all ${
+                                b.active ? `bg-white border-slate-100 shadow-sm opacity-100` : `bg-slate-50 border-slate-100 opacity-50 grayscale`
+                            }`}>
+                                <div className={`p-2 rounded-full ${b.active ? b.color : 'bg-slate-200 text-slate-400'}`}>
+                                    {b.icon}
+                                </div>
+                                <span className="text-[10px] font-bold text-slate-600">{b.label}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* 3. MENU & DATA */}
+                <div>
+                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Data & Settings</h3>
+                    <div className="space-y-3">
+                        {/* Library Button */}
+                        <button 
+                            onClick={() => setView('library')} 
+                            className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="bg-indigo-50 text-indigo-600 w-10 h-10 rounded-xl flex items-center justify-center"><BookOpen size={20}/></div>
+                                <div className="text-left">
+                                    <div className="font-bold text-slate-800">Word Library</div>
+                                    <div className="text-xs text-slate-400">View & Search Collection</div>
+                                </div>
+                            </div>
+                            <ChevronRight size={20} className="text-slate-300 group-hover:text-indigo-400"/>
+                        </button>
+
+                        {/* Stats Button (nutzt jetzt den existierenden 'showStats' State von oben, aber wir bauen es hier als Button zum Toggle oder neue View) */}
+                        {/* Da wir 'showStats' oben haben, können wir es hier toggeln oder in eine eigene View gehen. 
+                            Lass uns der Einfachheit halber die Statistik hier INLINE einblenden, wenn man klickt. */}
+                        <button 
+                            onClick={() => setShowStats(!showStats)} 
+                            className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="bg-sky-50 text-sky-600 w-10 h-10 rounded-xl flex items-center justify-center"><BarChart3 size={20}/></div>
+                                <div className="text-left">
+                                    <div className="font-bold text-slate-800">Frequency Profile</div>
+                                    <div className="text-xs text-slate-400">{showStats ? 'Tap to hide' : 'View Progress Bars'}</div>
+                                </div>
+                            </div>
+                            <ChevronRight size={20} className={`text-slate-300 transition-transform ${showStats ? 'rotate-90' : ''}`}/>
+                        </button>
+
+                        {/* Inline Stats (Wenn offen) */}
+                        {showStats && (
+                             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 animate-in slide-in-from-top-2 fade-in">
+                                 {/* Wir nutzen hier lokalen Code statt renderStats() aufzurufen, um den State-Fehler zu vermeiden */}
+                                 {[
+                                    { l: 100, c: "bg-indigo-500" }, { l: 500, c: "bg-blue-500" }, { l: 1000, c: "bg-cyan-500" }, { l: 2000, c: "bg-teal-500" }, { l: 5000, c: "bg-emerald-500" }
+                                 ].map(m => {
+                                     const pct = getStatsForRange(m.l);
+                                     return (
+                                        <div key={m.l} className="mb-3 last:mb-0">
+                                            <div className="flex justify-between text-xs mb-1 font-bold text-slate-500">
+                                                <span>Top {m.l}</span>
+                                                <span>{pct}%</span>
+                                            </div>
+                                            <div className="w-full bg-slate-200 h-1.5 rounded-full"><div className={`h-full rounded-full ${m.c}`} style={{width: `${pct}%`}}></div></div>
+                                        </div>
+                                     );
+                                 })}
+                             </div>
+                        )}
+
+                        {/* Settings / Reset */}
+                        <button 
+                            onClick={() => setView('data-mgmt')} 
+                            className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="bg-slate-100 text-slate-500 w-10 h-10 rounded-xl flex items-center justify-center"><Settings size={20}/></div>
+                                <div className="text-left">
+                                    <div className="font-bold text-slate-800">Settings & Data</div>
+                                    <div className="text-xs text-slate-400">Import / Reset</div>
+                                </div>
+                            </div>
+                            <ChevronRight size={20} className="text-slate-300"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+    // Umbenannt von renderLearnedSection zu renderLibrary für Klarheit
+    const renderLibrary = () => {
+        // Vokabular laden
+        const safeVocab = vocabulary || [];
+        const learnedList = safeVocab.filter(w => userProgress[w.rank]?.box > 0);
+        
+        // Suche
+        const filteredList = learnedList.filter(w => 
+            w.french.toLowerCase().includes(librarySearch.toLowerCase()) || 
+            (w.english && w.english.toLowerCase().includes(librarySearch.toLowerCase()))
+        ).sort((a, b) => a.rank - b.rank);
+
+        return (
+            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+                
+                {/* Header mit Zurück-Button */}
+                <div className="flex items-center gap-3 mb-6 px-1">
+                    <button 
+                        onClick={() => setView('profile')} // Zurück zum Profil
+                        className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
+                    >
+                        <ArrowLeft size={20} className="rotate-[0deg]" />
+                    </button>
+                    <div>
+                        <h2 className="text-2xl font-bold text-slate-800">Collection</h2>
+                        <p className="text-slate-400 text-sm">{learnedList.length} words collected</p>
+                    </div>
+                </div>
+
+                {/* Suchleiste */}
+                <div className="relative mb-4">
                     <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input 
                         type="text" 
                         value={librarySearch}
                         onChange={(e) => setLibrarySearch(e.target.value)}
-                        placeholder="Search your collection..." 
-                        className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-4 text-sm focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm transition-all"
+                        placeholder="Search collection..." 
+                        className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-4 text-sm focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm"
                     />
-                    {librarySearch && (
-                        <button onClick={() => setLibrarySearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                            <X size={14} />
-                        </button>
-                    )}
+                    {librarySearch && <button onClick={() => setLibrarySearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"><X size={14}/></button>}
                 </div>
 
-                {/* 4. WORD LIST */}
+                {/* Liste */}
                 {learnedList.length > 0 ? (
                     <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100">
                         {filteredList.slice(0, 100).map(word => (
@@ -1900,181 +2010,28 @@ function App() {
                                     setAiExamples(null);
                                     setView('word-detail');
                                 }}
-                                className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors text-left group"
+                                className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors text-left"
                             >
                                 <div className="flex items-center gap-4">
                                     <span className="text-xs font-mono text-slate-300 w-8">#{word.rank}</span>
                                     <div>
                                         <div className="font-bold text-slate-800">{word.french}</div>
-                                        <div className="text-xs text-slate-500 truncate max-w-[150px] opacity-70">
-                                            {word.english || word.german}
-                                        </div>
+                                        <div className="text-xs text-slate-500">{word.english || word.german}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-[10px] font-bold text-slate-300 bg-slate-50 px-2 py-1 rounded-lg group-hover:bg-indigo-50 group-hover:text-indigo-400 transition-colors">
-                                        {/* Sicherer Zugriff auf Box */}
+                                    <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">
                                         Box {userProgress[word.rank]?.box || '?'}
                                     </span>
-                                    <ChevronRight size={16} className="text-slate-200 group-hover:text-indigo-300" />
+                                    <ChevronRight size={16} className="text-slate-200" />
                                 </div>
                             </button>
                         ))}
-                        {filteredList.length === 0 && (
-                            <div className="p-8 text-center text-slate-400 text-sm">No matches found.</div>
-                        )}
-                        {filteredList.length > 100 && (
-                            <div className="p-3 text-center text-xs text-slate-400 bg-slate-50">
-                                ...and {filteredList.length - 100} more
-                            </div>
-                        )}
+                        {filteredList.length === 0 && <div className="p-8 text-center text-slate-400 text-sm">No matches found.</div>}
                     </div>
                 ) : (
-                    // 5. EMPTY STATE (Dies wird angezeigt, wenn noch nichts gelernt wurde)
                     <div className="text-center p-10 bg-white rounded-3xl border border-dashed border-slate-200 text-slate-400">
-                        <div className="bg-slate-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                            <BookOpen size={20} />
-                        </div>
-                        <p className="text-sm">Your collection is empty.</p>
-                        <p className="text-xs opacity-70 mb-4">Start learning to fill your library.</p>
-                        <button onClick={() => setView('smart-config')} className="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl font-bold text-sm hover:bg-indigo-100 transition-colors">
-                            Start Learning
-                        </button>
-                    </div>
-                )}
-            </div>
-        );
-    };
-    const renderLearnedSection = () => {
-        // 1. Daten filtern
-        const learnedList = vocabulary.filter(w => userProgress[w.rank] && userProgress[w.rank].box > 0);
-        
-        // Such-Logik
-        const filteredList = learnedList.filter(w => 
-            w.french.toLowerCase().includes(librarySearch.toLowerCase()) || 
-            (w.english && w.english.toLowerCase().includes(librarySearch.toLowerCase())) ||
-            (w.german && w.german.toLowerCase().includes(librarySearch.toLowerCase()))
-        ).sort((a, b) => a.rank - b.rank);
-
-        return (
-            <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in duration-500 pt-2 pb-24">
-                
-                {/* HEADER & SUCHE */}
-                <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 sticky top-2 z-30">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                            <button onClick={() => setView('home')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full"><RotateCcw size={20} className="text-slate-500" /></button>
-                            <h2 className="text-xl font-bold text-slate-800">Library</h2>
-                        </div>
-                        {/* Kleiner Review Button */}
-                        {learnedList.length > 5 && (
-                            <button 
-                                onClick={() => setShowReviewModal(true)}
-                                className="bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-emerald-200 transition-colors"
-                            >
-                                <Play size={14} fill="currentColor"/> Review
-                            </button>
-                        )}
-                    </div>
-
-                    {/* Suchleiste */}
-                    <div className="relative">
-                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <input 
-                            type="text" 
-                            value={librarySearch}
-                            onChange={(e) => setLibrarySearch(e.target.value)}
-                            placeholder="Search French or English..." 
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                        />
-                        {librarySearch && (
-                            <button onClick={() => setLibrarySearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                                <X size={14} />
-                            </button>
-                        )}
-                    </div>
-                </div>
-
-                {/* REVIEW MODAL (Popup) */}
-                {showReviewModal && (
-                    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in">
-                        <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl animate-in zoom-in-95">
-                            <div className="flex justify-between items-center mb-6">
-                                <h3 className="font-bold text-lg text-slate-800">Start Review</h3>
-                                <button onClick={() => setShowReviewModal(false)} className="p-2 bg-slate-100 rounded-full hover:bg-slate-200"><X size={18}/></button>
-                            </div>
-                            
-                            <div className="mb-6">
-                                <div className="flex justify-between text-sm mb-2">
-                                    <span className="text-slate-500">Words count</span>
-                                    <span className="font-bold text-emerald-600">{reviewCount}</span>
-                                </div>
-                                <input 
-                                    type="range" min="5" max={Math.min(50, learnedList.length)} step="5" 
-                                    value={reviewCount} onChange={(e) => setReviewCount(parseInt(e.target.value))} 
-                                    className="w-full accent-emerald-600 h-2 bg-slate-100 rounded-lg" 
-                                />
-                            </div>
-
-                            <button 
-                                onClick={() => { setShowReviewModal(false); startReviewSession(); }} 
-                                className="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors flex justify-center items-center gap-2"
-                            >
-                                <Play size={18} fill="currentColor"/> Let's Go
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {/* LISTE */}
-                {learnedList.length > 0 ? (
-                    <div className="space-y-2">
-                        <div className="px-2 text-xs font-bold text-slate-400 uppercase tracking-wide flex justify-between">
-                            <span>{filteredList.length} Results</span>
-                            <span>Total: {learnedList.length}</span>
-                        </div>
-                        
-                        {filteredList.length > 0 ? (
-                            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100">
-                                {filteredList.slice(0, 100).map(word => ( // Begrenzt auf 100 für Performance
-                                    <button 
-                                        key={word.rank} 
-                                        onClick={() => {
-                                            setSelectedWord(word);
-                                            setIsFlipped(false);
-                                            setAiExamples(null);
-                                            setView('word-detail');
-                                        }}
-                                        className="w-full flex items-center justify-between p-4 hover:bg-indigo-50/50 transition-colors text-left group"
-                                    >
-                                        <div className="flex items-center gap-4">
-                                            <span className="text-xs font-mono text-slate-400 w-8">#{word.rank}</span>
-                                            <div>
-                                                <div className="font-bold text-slate-800">{word.french}</div>
-                                                <div className="text-xs text-slate-500 truncate max-w-[150px] md:max-w-xs opacity-70 group-hover:opacity-100 transition-opacity">
-                                                    {word.english || word.german}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <ChevronRight size={16} className="text-slate-200 group-hover:text-indigo-300" />
-                                    </button>
-                                ))}
-                                {filteredList.length > 100 && (
-                                    <div className="p-3 text-center text-xs text-slate-400 italic">
-                                        ...and {filteredList.length - 100} more matches. Keep searching!
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="text-center py-10 text-slate-400">
-                                <Search size={32} className="mx-auto mb-2 opacity-20"/>
-                                <p>No words found matching "{librarySearch}"</p>
-                            </div>
-                        )}
-                    </div>
-                ) : (
-                    <div className="text-center p-8 bg-slate-50 rounded-2xl border border-dashed border-slate-300 text-slate-500">
-                        Library is empty. <br/>Start training to fill it!
+                        <p>Your collection is empty.</p>
                     </div>
                 )}
             </div>
@@ -2088,32 +2045,26 @@ function App() {
     // Helper: Content basierend auf dem Tab rendern (wenn wir nicht in einer Session sind)
     const renderTabContent = () => {
         switch (view) {
-            // ... Home & Explore Cases wie vorher ...
-            case 'home':
-            case 'smart-config':
-            case 'test-config':
-                return renderHome();
-            
-            case 'explore':
-            case 'reader':
-            case 'culture':
-                return renderExplore();
-            
-            // --- SKILLS BEREICH ---
-            case 'skills':
-                return renderSkills();
-            
-            case 'translator': // <--- NEU: Hierhin leitet der Button im Skills-Tab
-                return renderTranslator();
+            // ... Home, Explore, Skills Cases wie vorher ...
+            case 'home': case 'smart-config': case 'test-config': return renderHome();
+            case 'explore': case 'reader': case 'culture': return renderExplore();
+            case 'skills': case 'translator': return renderSkills();
 
-            // ... Profile Cases wie vorher ...
+            // --- PROFILE AREA ---
             case 'profile':
-            case 'word-detail':
+                return renderProfile(); // Das neue Dashboard
+            
+            case 'library': // <--- WIRD JETZT HIER GEHANDELT
+            case 'learned-section':
+                return renderLibrary(); 
+            
             case 'data-mgmt':
-                return renderProfile();
+                return renderDataMgmt();
+            
+            case 'word-detail':
+                return renderWordDetail();
 
-            default:
-                return renderHome();
+            default: return renderHome();
         }
     };
 
