@@ -208,6 +208,9 @@ function App() {
     const [vocabulary, setVocabulary] = useState([]); // Startet leer, useEffect füllt es sofort
     const [userProgress, setUserProgress] = useState({}); 
     const [generatedSentences, setGeneratedSentences] = useState([]); // <--- NEU
+    const [librarySearch, setLibrarySearch] = useState(''); // Suche in der Library
+    const [showReviewModal, setShowReviewModal] = useState(false); // Modal für Review-Start
+    const [selectedWord, setSelectedWord] = useState(null); // Welches Wort wir gerade anschauen
     
     // Session State
     const [activeSession, setActiveSession] = useState([]);
@@ -263,54 +266,56 @@ function App() {
 
     // --- ANKI ALGORITHM (SM-2 Variation) ---
 // --- ANKI ALGORITHM (SM-2 Variation) ---
+    // --- ANKI ALGORITHM (SM-2 Variation) ---
     const calculateAnkiStats = (currentStats, quality) => {
-        // quality: 0 = Again, 1 = Hard, 2 = Good, 3 = Easy
+        // quality: 0=Again, 1=Hard, 2=Good, 3=Easy
         
-        // FIX: Wir prüfen sicher mit "?." und "??", ob Werte da sind.
-        // Wenn "interval" fehlt (weil es ein altes Wort ist), nehmen wir 0.
         let interval = currentStats?.interval ?? 0;
         let ease = currentStats?.ease ?? 2.5;
         let repetitions = currentStats?.repetitions ?? 0;
         
-        // 1. Next Interval berechnen
         let nextInterval;
         let nextRepetitions = repetitions + 1;
 
-        if (quality === 0) {
-            // Again: Reset
-            nextInterval = 0; // < 1 Tag
-            nextRepetitions = 0;
-        } else if (interval === 0) {
-            // Erstes Mal richtig
-            nextInterval = 1; // 1 Tag
-        } else if (interval === 1) {
-            // Zweites Mal richtig
-            nextInterval = (quality === 1) ? 2 : (quality === 3) ? 4 : 3;
-        } else {
-            // Danach: Intervall * Ease Factor
-            let bonus = (quality === 3) ? 1.3 : 1.0; 
-            
-            // Berechnung sicherstellen (Math.ceil verhindert krumme Kommazahlen)
-            nextInterval = Math.ceil(interval * (quality === 1 ? 1.2 : (ease * bonus)));
+        // --- SONDERFALL: NEUES WORT (oder Reset) ---
+        if (interval === 0) {
+            if (quality === 0) {
+                nextInterval = 0; // Again: Sofort
+                nextRepetitions = 0;
+            } else if (quality === 1) {
+                nextInterval = 0; // Hard: Auch sofort nochmal zeigen (oder morgen, je nach Geschmack. Hier: Sofort)
+            } else if (quality === 2) {
+                nextInterval = 1; // Good: 1 Tag (Standard)
+            } else {
+                nextInterval = 4; // Easy: Direkt 4 Tage Pause! (Das fixt dein "alles ist 1d" Problem)
+            }
+        } 
+        // --- NORMALFALL: WIEDERHOLUNG ---
+        else {
+            if (quality === 0) {
+                nextInterval = 0; // Reset
+                nextRepetitions = 0;
+            } else {
+                // Ease Factor Anpassung
+                // 1=Hard(-0.15), 2=Good(0), 3=Easy(+0.15)
+                let easeMod = (quality === 1) ? -0.20 : (quality === 3) ? 0.15 : 0;
+                let nextEase = Math.max(1.3, ease + easeMod);
+                
+                // Intervall Berechnung
+                // Hard = Intervall mal 1.2
+                // Good = Intervall mal Ease
+                // Easy = Intervall mal Ease * 1.3 (Bonus)
+                let factor = (quality === 1) ? 1.2 : (quality === 3 ? nextEase * 1.3 : nextEase);
+                
+                nextInterval = Math.ceil(interval * factor);
+                ease = nextEase; // Ease speichern
+            }
         }
-
-        // 2. Ease Factor anpassen
-        let nextEase = ease;
-        if (quality !== 0) {
-            if (quality === 1) nextEase -= 0.15;
-            if (quality === 2) nextEase += 0.00;
-            if (quality === 3) nextEase += 0.15;
-        } else {
-            nextEase -= 0.20;
-        }
-        
-        if (nextEase < 1.3) nextEase = 1.3; // Minimum
 
         return { 
             interval: nextInterval, 
-            ease: nextEase, 
+            ease: ease, 
             repetitions: nextRepetitions,
-            // Hier auch Fallback für alte Daten: Wenn "box" da ist, nutzen wir das als Basis, sonst Date.now()
             nextReview: Date.now() + (nextInterval * 24 * 60 * 60 * 1000) 
         };
     };
@@ -366,20 +371,21 @@ function App() {
             return;
         }
 
-        // 1. Basis-Pool filtern (Range)
+        // 1. Basis-Pool filtern
         const rangePool = vocabulary.filter(w => w.rank >= smartConfig.rangeStart && w.rank <= smartConfig.rangeEnd);
 
-        // 2. Fällige Wörter (Reviews) - Diese haben VORRANG
-        // Wir nehmen Wörter, die gelernt sind (interval > 0) und fällig sind
-        const dueWords = rangePool.filter(word => {
+        // 2. Fällige Wörter (Reviews)
+        let dueWords = rangePool.filter(word => {
             const p = userProgress[word.rank];
-            // Entweder alte Logik (box) oder neue Logik (interval) unterstützen
             const reviewTime = p?.nextReview || 0;
             return p && (p.box > 0 || p.interval > 0) && reviewTime <= now;
-        }).sort((a, b) => {
-            // Sortieren nach Überfälligkeit (älteste zuerst)
-            return (userProgress[a.rank]?.nextReview || 0) - (userProgress[b.rank]?.nextReview || 0);
         });
+
+        // WICHTIG: Reviews auch mischen! (Damit nicht immer Rank 1, 2, 3 zuerst kommen)
+        for (let i = dueWords.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [dueWords[i], dueWords[j]] = [dueWords[j], dueWords[i]];
+        }
 
         // 3. Neue Wörter ("Fuzzy Pool" Logik)
         let newWords = [];
@@ -389,12 +395,12 @@ function App() {
             // Finde alle UNGELERNTEN Wörter im Bereich
             const unlearnedPool = rangePool
                 .filter(word => !userProgress[word.rank] || (!userProgress[word.rank].box && !userProgress[word.rank].interval))
-                .sort((a, b) => a.rank - b.rank); // Erstmal nach Rang sortieren
+                .sort((a, b) => a.rank - b.rank); 
 
-            // FUZZY LOGIC: Nimm die Top 50 der Unbekannten...
-            const candidates = unlearnedPool.slice(0, 50);
+            // FUZZY LOGIC: Wir nehmen die Top 100 (statt 50) für mehr Varianz
+            const candidates = unlearnedPool.slice(0, 100);
             
-            // ...und mische sie zufällig
+            // ...und mischen diese Kandidaten gut durch
             for (let i = candidates.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
@@ -404,13 +410,22 @@ function App() {
             newWords = candidates.slice(0, needed);
         }
 
-        // Zusammenfügen: Erst Reviews, dann Neue
+        // Zusammenfügen
         let sessionWords = [...dueWords, ...newWords];
         
-        // Finales Limit (falls Reviews die Session sprengen)
+        // Finales Limit und erneutes Mischen der Gesamtsession (damit Reviews und Neue gemischt sind)
         if (sessionWords.length > sessionSize) {
             sessionWords = sessionWords.slice(0, sessionSize);
         }
+        
+        // Optional: Die fertige Session nochmal mischen, damit "Neue" und "Reviews" durcheinander kommen
+        // (Wenn du lieber erst alle Reviews willst, kommentiere die nächste Schleife aus)
+        /*
+        for (let i = sessionWords.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [sessionWords[i], sessionWords[j]] = [sessionWords[j], sessionWords[i]];
+        }
+        */
 
         if (sessionWords.length === 0) {
             alert("All caught up! Great job.");
@@ -880,6 +895,88 @@ function App() {
             setLoadingExamples(false);
         }
     };
+    const renderWordDetail = () => {
+        if (!selectedWord) return null;
+        const word = selectedWord;
+
+        return (
+            <div className="flex flex-col h-full max-w-xl mx-auto w-full pt-4 animate-in fade-in zoom-in duration-300">
+                {/* Header: Zurück zur Library */}
+                <div className="flex items-center justify-between mb-4 pl-1">
+                    <button 
+                        onClick={() => {
+                            setSelectedWord(null); 
+                            setView('learned-section'); // Zurück zur Liste
+                            setAiExamples(null); // Reset AI
+                            setIsFlipped(false);
+                        }} 
+                        className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors"
+                    >
+                        <div className="p-2 bg-white border border-slate-200 rounded-full"><RotateCcw size={16} /></div>
+                        <span className="font-bold text-sm">Back to Library</span>
+                    </button>
+                </div>
+
+                {/* DIE KARTE (Wiederverwendetes Design) */}
+                <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-6 flex flex-col items-center justify-center min-h-[400px] relative transition-all">
+                    <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Rank #{word.rank}</div>
+
+                    {/* FRONT */}
+                    <div className="mb-6 text-center w-full relative">
+                        <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">French</div>
+                        <div className="flex items-center justify-center gap-3 mb-6">
+                            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words text-center leading-tight">{word.french}</h2>
+                            <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all shadow-sm shrink-0"><Volume2 size={24} /></button>
+                        </div>
+                        {word.example_fr && (
+                            <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl text-left relative group mx-2">
+                                <p className="text-slate-600 italic text-lg leading-relaxed pr-8">"{word.example_fr}"</p>
+                                <button onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }} className="absolute right-2 top-2 p-2 text-slate-300 hover:text-indigo-600 hover:bg-white rounded-full transition-colors"><Volume2 size={18} /></button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* BACK / INTERACTION */}
+                    {!isFlipped ? (
+                        <button onClick={() => setIsFlipped(true)} className="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg transition-all flex items-center gap-2">
+                            <BookOpen size={20} /> Show Details
+                        </button>
+                    ) : (
+                        <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center border-t border-slate-100 pt-6 mt-2 w-full">
+                            <div className="text-center mb-6 w-full">
+                                <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
+                                <h3 className="text-3xl font-bold text-indigo-900 mb-2 leading-tight">{word.english || word.german}</h3>
+                                {word.example_en && <p className="text-indigo-400 italic text-sm mt-2 px-4">"{word.example_en}"</p>}
+                            </div>
+
+                            {/* AI GENERATOR (Funktioniert auch hier!) */}
+                            <div className="w-full px-2">
+                                {!aiExamples && !loadingExamples && (
+                                    <button onClick={() => fetchAiExamples(word.french)} className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2">
+                                        <Sparkles size={16} /> Generate AI Context
+                                    </button>
+                                )}
+                                {loadingExamples && <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2"><RotateCcw className="animate-spin" size={16}/> Asking Gemini...</div>}
+                                {aiExamples && (
+                                    <div className="space-y-3 animate-in fade-in duration-500 text-left">
+                                        {aiExamples.map((ex, idx) => (
+                                            <div key={idx} className="bg-white border border-slate-200 p-3 rounded-xl shadow-sm relative">
+                                                <div className="flex justify-between items-start gap-2">
+                                                    <p className="text-slate-700 font-medium text-sm leading-snug pr-6">{ex.fr}</p>
+                                                    <button onClick={() => speak(ex.fr)} className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors"><Volume2 size={16} /></button>
+                                                </div>
+                                                <p className="text-slate-400 text-xs italic mt-1 border-t border-slate-50 pt-1">{ex.en}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    };
     const renderFlashcard = () => {
         const isSmartMode = view === 'smart-session';
         const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
@@ -1137,91 +1234,135 @@ function App() {
         );
     };
     const renderLearnedSection = () => {
-        // Filtere die gelernten Wörter
+        // 1. Daten filtern
         const learnedList = vocabulary.filter(w => userProgress[w.rank] && userProgress[w.rank].box > 0);
-        // Sortiere sie nach Rang (optional)
-        const sortedList = [...learnedList].sort((a, b) => a.rank - b.rank);
+        
+        // Such-Logik
+        const filteredList = learnedList.filter(w => 
+            w.french.toLowerCase().includes(librarySearch.toLowerCase()) || 
+            (w.english && w.english.toLowerCase().includes(librarySearch.toLowerCase())) ||
+            (w.german && w.german.toLowerCase().includes(librarySearch.toLowerCase()))
+        ).sort((a, b) => a.rank - b.rank);
 
         return (
-            <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in duration-500">
-                {/* Header */}
-                <div className="flex items-center gap-3">
-                    <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full"><RotateCcw size={20} className="text-slate-500" /></button>
-                    <h2 className="text-2xl font-bold text-slate-800">My Collection</h2>
-                </div>
-
-                {/* Stats Card */}
-                <div className="bg-emerald-600 text-white p-6 rounded-3xl shadow-lg shadow-emerald-100 relative overflow-hidden">
-                    <div className="relative z-10">
-                        <div className="text-emerald-100 font-medium mb-1">Total Words Learned</div>
-                        <div className="text-5xl font-bold">{learnedList.length}</div>
-                        <div className="mt-4 text-sm text-emerald-100 bg-emerald-700/30 inline-block px-3 py-1 rounded-full">
-                            {((learnedList.length / 5000) * 100).toFixed(1)}% of top 5000
+            <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in duration-500 pt-2 pb-24">
+                
+                {/* HEADER & SUCHE */}
+                <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 sticky top-2 z-30">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                            <button onClick={() => setView('home')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full"><RotateCcw size={20} className="text-slate-500" /></button>
+                            <h2 className="text-xl font-bold text-slate-800">Library</h2>
                         </div>
+                        {/* Kleiner Review Button */}
+                        {learnedList.length > 5 && (
+                            <button 
+                                onClick={() => setShowReviewModal(true)}
+                                className="bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-emerald-200 transition-colors"
+                            >
+                                <Play size={14} fill="currentColor"/> Review
+                            </button>
+                        )}
                     </div>
-                    <BookCheck size={140} className="absolute -right-6 -bottom-8 opacity-20 rotate-12" />
+
+                    {/* Suchleiste */}
+                    <div className="relative">
+                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input 
+                            type="text" 
+                            value={librarySearch}
+                            onChange={(e) => setLibrarySearch(e.target.value)}
+                            placeholder="Search French or English..." 
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                        />
+                        {librarySearch && (
+                            <button onClick={() => setLibrarySearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                <X size={14} />
+                            </button>
+                        )}
+                    </div>
                 </div>
 
-                {/* Review Config Section */}
-                {learnedList.length > 0 ? (
-                    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                        <h3 className="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
-                            <RotateCcw size={18} className="text-emerald-600" /> Review Session
-                        </h3>
-                        <div className="mb-6">
-                            <label className="block text-sm font-medium text-slate-700 mb-2">How many words to review?</label>
-                            <input 
-                                type="range" 
-                                min="5" 
-                                max={Math.min(50, learnedList.length)} 
-                                step="5" 
-                                value={reviewCount} 
-                                onChange={(e) => setReviewCount(parseInt(e.target.value))} 
-                                className="w-full accent-emerald-600 h-12" 
-                            />
-                            <div className="flex justify-between mt-2 text-xs text-slate-400">
-                                <span>5</span>
-                                <span className="text-emerald-600 font-bold text-lg">{reviewCount} Words</span>
-                                <span>{Math.min(50, learnedList.length)}</span>
+                {/* REVIEW MODAL (Popup) */}
+                {showReviewModal && (
+                    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in">
+                        <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl animate-in zoom-in-95">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="font-bold text-lg text-slate-800">Start Review</h3>
+                                <button onClick={() => setShowReviewModal(false)} className="p-2 bg-slate-100 rounded-full hover:bg-slate-200"><X size={18}/></button>
                             </div>
+                            
+                            <div className="mb-6">
+                                <div className="flex justify-between text-sm mb-2">
+                                    <span className="text-slate-500">Words count</span>
+                                    <span className="font-bold text-emerald-600">{reviewCount}</span>
+                                </div>
+                                <input 
+                                    type="range" min="5" max={Math.min(50, learnedList.length)} step="5" 
+                                    value={reviewCount} onChange={(e) => setReviewCount(parseInt(e.target.value))} 
+                                    className="w-full accent-emerald-600 h-2 bg-slate-100 rounded-lg" 
+                                />
+                            </div>
+
+                            <button 
+                                onClick={() => { setShowReviewModal(false); startReviewSession(); }} 
+                                className="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors flex justify-center items-center gap-2"
+                            >
+                                <Play size={18} fill="currentColor"/> Let's Go
+                            </button>
                         </div>
-                        <button onClick={startReviewSession} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-xl font-bold shadow-lg shadow-emerald-100 transition-all flex justify-center items-center gap-2">
-                            <Play size={20} fill="currentColor" /> Start Random Review
-                        </button>
-                    </div>
-                ) : (
-                    <div className="text-center p-8 bg-slate-50 rounded-2xl border border-dashed border-slate-300 text-slate-500">
-                        You haven't mastered any words yet! <br/>Start your Personal Training to fill this list.
                     </div>
                 )}
 
-                {/* Word List Preview (Die letzten 50 gelernten oder alle) */}
-                {learnedList.length > 0 && (
-                    <div className="space-y-3">
-                        <h3 className="font-bold text-slate-700 px-1">Your Library (Top {Math.min(100, learnedList.length)})</h3>
-                        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                            <div className="max-h-[400px] overflow-y-auto">
-                                <table className="w-full text-left text-sm">
-                                    <thead className="bg-slate-50 text-slate-500 sticky top-0">
-                                        <tr>
-                                            <th className="p-4 font-medium">Rank</th>
-                                            <th className="p-4 font-medium">French</th>
-                                            <th className="p-4 font-medium">English</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-slate-100">
-                                        {sortedList.slice(0, 100).map(word => (
-                                            <tr key={word.rank} className="hover:bg-slate-50">
-                                                <td className="p-4 text-slate-400">#{word.rank}</td>
-                                                <td className="p-4 font-bold text-slate-700">{word.french}</td>
-                                                <td className="p-4 text-slate-600">{word.english || word.german}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            {learnedList.length > 100 && <div className="p-3 text-center text-xs text-slate-400 bg-slate-50 border-t border-slate-100">...and {learnedList.length - 100} more</div>}
+                {/* LISTE */}
+                {learnedList.length > 0 ? (
+                    <div className="space-y-2">
+                        <div className="px-2 text-xs font-bold text-slate-400 uppercase tracking-wide flex justify-between">
+                            <span>{filteredList.length} Results</span>
+                            <span>Total: {learnedList.length}</span>
                         </div>
+                        
+                        {filteredList.length > 0 ? (
+                            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100">
+                                {filteredList.slice(0, 100).map(word => ( // Begrenzt auf 100 für Performance
+                                    <button 
+                                        key={word.rank} 
+                                        onClick={() => {
+                                            setSelectedWord(word);
+                                            setIsFlipped(false);
+                                            setAiExamples(null);
+                                            setView('word-detail');
+                                        }}
+                                        className="w-full flex items-center justify-between p-4 hover:bg-indigo-50/50 transition-colors text-left group"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <span className="text-xs font-mono text-slate-400 w-8">#{word.rank}</span>
+                                            <div>
+                                                <div className="font-bold text-slate-800">{word.french}</div>
+                                                <div className="text-xs text-slate-500 truncate max-w-[150px] md:max-w-xs opacity-70 group-hover:opacity-100 transition-opacity">
+                                                    {word.english || word.german}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ChevronRight size={16} className="text-slate-200 group-hover:text-indigo-300" />
+                                    </button>
+                                ))}
+                                {filteredList.length > 100 && (
+                                    <div className="p-3 text-center text-xs text-slate-400 italic">
+                                        ...and {filteredList.length - 100} more matches. Keep searching!
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-center py-10 text-slate-400">
+                                <Search size={32} className="mx-auto mb-2 opacity-20"/>
+                                <p>No words found matching "{librarySearch}"</p>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className="text-center p-8 bg-slate-50 rounded-2xl border border-dashed border-slate-300 text-slate-500">
+                        Library is empty. <br/>Start training to fill it!
                     </div>
                 )}
             </div>
@@ -1253,6 +1394,12 @@ function App() {
                 return renderGrammar();
             case 'data-mgmt':
                 return renderDataMgmt(); // Oder ein erweitertes Settings-Menü
+            case 'word-detail': // <--- NEU
+                return renderWordDetail();
+
+            case 'library':
+            case 'learned-section':
+                return renderLearnedSection();
             
             default:
                 return renderHome();
