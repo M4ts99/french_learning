@@ -207,6 +207,7 @@ function App() {
     const [view, setView] = useState('home'); 
     const [vocabulary, setVocabulary] = useState([]); // Startet leer, useEffect füllt es sofort
     const [userProgress, setUserProgress] = useState({}); 
+    const [generatedSentences, setGeneratedSentences] = useState([]); // <--- NEU
     
     // Session State
     const [activeSession, setActiveSession] = useState([]);
@@ -436,11 +437,15 @@ function App() {
                     // Richtig: Eine Box hoch (max 5)
                     newBox = Math.min(newBox + 1, 5); 
                     newCorrectCount += 1;
+                    setGeneratedSentences([]); // <--- HIER EINFÜGEN (Reset)
+                    setIsFlipped(false);
                 } else {
                     // FALSCH: Harte Strafe! Zurück auf Box 1 (oder 0), damit es sofort wiederholt wird.
                     // Das ist dein "Weak Topf".
                     newBox = 1; 
-                    newWrongCount += 1; // Wir merken uns, dass dieses Wort schwer fällt
+                    newWrongCount += 1; 
+                    setGeneratedSentences([]); // <--- UND HIER EINFÜGEN (Reset)
+                    setIsFlipped(false);// Wir merken uns, dass dieses Wort schwer fällt
                 }
 
                 return {
@@ -480,6 +485,8 @@ function App() {
             if (currentIndex < activeSession.length - 1) {
                 setIsFlipped(false);
                 setTimeout(() => setCurrentIndex(currentIndex + 1), 150);
+                setGeneratedSentences([]); // <--- UND HIER EINFÜGEN (Reset)
+                setIsFlipped(false);
             } else {
                 setView('results');
             }
