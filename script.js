@@ -212,6 +212,7 @@ function App() {
     const [showReviewModal, setShowReviewModal] = useState(false); // Modal für Review-Start
     const [selectedWord, setSelectedWord] = useState(null); // Welches Wort wir gerade anschauen
     
+    
     // Session State
     const [activeSession, setActiveSession] = useState([]);
     const [sessionQueue, setSessionQueue] = useState([]); 
@@ -219,8 +220,10 @@ function App() {
     const [isFlipped, setIsFlipped] = useState(false);
     const [sessionResults, setSessionResults] = useState({ correct: 0, wrong: 0 });
 
-    // Configurations
-// Configurations
+    // AI & Cache State (HIER SIND DIE ÄNDERUNGEN)
+    const [exampleCache, setExampleCache] = useState({}); // Speichert Beispiele pro Wort-Rank
+    const [examplesVisible, setExamplesVisible] = useState(false); // Klappt Beispiele auf/zu
+    // Session State
     const [testConfig, setTestConfig] = useState({ startRank: 1, endRank: 50, count: 20 });
     const [smartConfig, setSmartConfig] = useState({ sessionSize: 15, rangeStart: 1, rangeEnd: 5000 });
     const [reviewCount, setReviewCount] = useState(20);
@@ -254,6 +257,11 @@ function App() {
     useEffect(() => {
         localStorage.setItem('vocabApp_progress', JSON.stringify(userProgress));
     }, [userProgress]);
+    useEffect(() => {
+        setExamplesVisible(false); // Klappt die AI-Beispiele zu
+        setLoadingExamples(false); // Stoppt Lade-Animationen
+        setIsFlipped(false);       // Dreht Karte auf die Vorderseite
+    }, [currentIndex, view, activeSession]);
 
     // --- HELPERS ---
     const getNextReviewTime = (box) => {
@@ -266,6 +274,7 @@ function App() {
 
     // --- ANKI ALGORITHM (SM-2 Variation) ---
 // --- ANKI ALGORITHM (SM-2 Variation) ---
+    // --- ANKI ALGORITHM (SM-2 Variation) ---
     // --- ANKI ALGORITHM (SM-2 Variation) ---
     const calculateAnkiStats = (currentStats, quality) => {
         // quality: 0=Again, 1=Hard, 2=Good, 3=Easy
@@ -280,14 +289,14 @@ function App() {
         // --- SONDERFALL: NEUES WORT (oder Reset) ---
         if (interval === 0) {
             if (quality === 0) {
-                nextInterval = 0; // Again: Sofort
+                nextInterval = 0; // Again
                 nextRepetitions = 0;
             } else if (quality === 1) {
-                nextInterval = 0; // Hard: Auch sofort nochmal zeigen (oder morgen, je nach Geschmack. Hier: Sofort)
+                nextInterval = 0; // Hard: Bleibt auf 0 -> Zählt NICHT als gelernt
             } else if (quality === 2) {
-                nextInterval = 1; // Good: 1 Tag (Standard)
+                nextInterval = 1; // Good: 1 Tag -> Zählt als gelernt
             } else {
-                nextInterval = 4; // Easy: Direkt 4 Tage Pause! (Das fixt dein "alles ist 1d" Problem)
+                nextInterval = 4; // Easy: 4 Tage -> Zählt als gelernt
             }
         } 
         // --- NORMALFALL: WIEDERHOLUNG ---
@@ -297,23 +306,21 @@ function App() {
                 nextRepetitions = 0;
             } else {
                 // Ease Factor Anpassung
-                // 1=Hard(-0.15), 2=Good(0), 3=Easy(+0.15)
                 let easeMod = (quality === 1) ? -0.20 : (quality === 3) ? 0.15 : 0;
                 let nextEase = Math.max(1.3, ease + easeMod);
                 
                 // Intervall Berechnung
-                // Hard = Intervall mal 1.2
-                // Good = Intervall mal Ease
-                // Easy = Intervall mal Ease * 1.3 (Bonus)
                 let factor = (quality === 1) ? 1.2 : (quality === 3 ? nextEase * 1.3 : nextEase);
-                
                 nextInterval = Math.ceil(interval * factor);
-                ease = nextEase; // Ease speichern
+                ease = nextEase;
             }
         }
 
         return { 
-            interval: nextInterval, 
+            interval: nextInterval,
+            // WICHTIG: Wir speichern interval auch als "box", damit Stats & Library funktionieren!
+            // Wenn interval 0 ist (bei Hard/Again), ist box 0 -> nicht in Statistik.
+            box: nextInterval, 
             ease: ease, 
             repetitions: nextRepetitions,
             nextReview: Date.now() + (nextInterval * 24 * 60 * 60 * 1000) 
@@ -874,23 +881,28 @@ function App() {
             </div>
         );
     };
-    const fetchAiExamples = async (wordText) => {
+    const fetchAiExamples = async (wordObj) => {
+        // Wort-Objekt übergeben statt nur Text, damit wir den Rank haben
         setLoadingExamples(true);
         try {
             const res = await fetch('/api/examples', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ word: wordText })
+                body: JSON.stringify({ word: wordObj.french })
             });
             const data = await res.json();
+            
             if (Array.isArray(data)) {
-                setAiExamples(data);
-            } else {
-                console.error("No valid JSON array received", data);
+                // Speichere Ergebnis im Cache unter der ID des Wortes
+                setExampleCache(prev => ({
+                    ...prev,
+                    [wordObj.rank]: data
+                }));
+                setExamplesVisible(true); // Direkt anzeigen nach Generierung
             }
         } catch (e) {
             console.error(e);
-            alert("Could not load examples. Check connection.");
+            alert("Could not load examples.");
         } finally {
             setLoadingExamples(false);
         }
@@ -953,19 +965,19 @@ function App() {
                             <div className="w-full px-2">
                                 {!aiExamples && !loadingExamples && (
                                     <button onClick={() => fetchAiExamples(word.french)} className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2">
-                                        <Sparkles size={16} /> Generate AI Context
+                                        <Sparkles size={32} /> More examples...
                                     </button>
                                 )}
-                                {loadingExamples && <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2"><RotateCcw className="animate-spin" size={16}/> Asking Gemini...</div>}
+                                {loadingExamples && <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2"><RotateCcw className="animate-spin" size={16}/> generating...</div>}
                                 {aiExamples && (
                                     <div className="space-y-3 animate-in fade-in duration-500 text-left">
                                         {aiExamples.map((ex, idx) => (
                                             <div key={idx} className="bg-white border border-slate-200 p-3 rounded-xl shadow-sm relative">
                                                 <div className="flex justify-between items-start gap-2">
-                                                    <p className="text-slate-700 font-medium text-sm leading-snug pr-6">{ex.fr}</p>
+                                                    <p className="text-slate-700 font-medium text-base leading-snug pr-6">{ex.fr}</p>
                                                     <button onClick={() => speak(ex.fr)} className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors"><Volume2 size={16} /></button>
                                                 </div>
-                                                <p className="text-slate-400 text-xs italic mt-1 border-t border-slate-50 pt-1">{ex.en}</p>
+                                                <p className="text-slate-400 text-sm italic mt-1 border-t border-slate-50 pt-1">{ex.en}</p>
                                             </div>
                                         ))}
                                     </div>
@@ -1050,48 +1062,66 @@ function App() {
                                 {word.example_en && <p className="text-indigo-400 italic text-sm mt-2 px-4">"{word.example_en}"</p>}
                             </div>
 
-                            {/* --- HIER WAR DER FEHLENDE TEIL: AI GENERATOR --- */}
+                            {/* --- SMART AI GENERATOR --- */}
                             <div className="w-full mb-6 px-2">
-                                {/* 1. Button anzeigen (wenn noch nichts geladen) */}
-                                {!aiExamples && !loadingExamples && (
-                                    <button 
-                                        onClick={() => fetchAiExamples(word.french)}
-                                        className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2"
-                                    >
-                                        <Sparkles size={16} /> More examples
-                                    </button>
-                                )}
+                                {(() => {
+                                    // Prüfen, ob wir für dieses Wort schon was im Speicher haben
+                                    const cachedExamples = exampleCache[word.rank];
 
-                                {/* 2. Lade-Animation */}
-                                {loadingExamples && (
-                                    <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2">
-                                        <RotateCcw className="animate-spin" size={16}/> generating...
-                                    </div>
-                                )}
-
-                                {/* 3. Ergebnisse anzeigen (inkl. Vorlesen) */}
-                                {aiExamples && (
-                                    <div className="space-y-3 animate-in fade-in duration-500">
-                                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center mb-1">
-                                            AI Generated Examples
-                                        </div>
-                                        {aiExamples.map((ex, idx) => (
-                                            <div key={idx} className="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-left relative">
-                                                <div className="flex justify-between items-start gap-2">
-                                                    <p className="text-slate-700 font-medium text-base leading-snug pr-6">{ex.fr}</p>
-                                                    {/* Vorlese-Button für generierte Sätze */}
-                                                    <button 
-                                                        onClick={() => speak(ex.fr)} 
-                                                        className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors"
-                                                    >
-                                                        <Volume2 size={32} />
-                                                    </button>
-                                                </div>
-                                                <p className="text-slate-400 text-sm italic mt-1 border-t border-slate-50 pt-1">{ex.en}</p>
+                                    // FALL 1: Lädt gerade
+                                    if (loadingExamples) {
+                                        return (
+                                            <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2">
+                                                <RotateCcw className="animate-spin" size={16}/> Asking Gemini...
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
+                                        );
+                                    }
+
+                                    // FALL 2: Noch nie generiert -> "Generate" Button
+                                    if (!cachedExamples) {
+                                        return (
+                                            <button 
+                                                onClick={() => fetchAiExamples(word)}
+                                                className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2"
+                                            >
+                                                <Sparkles size={16} /> Generate AI Context
+                                            </button>
+                                        );
+                                    }
+
+                                    // FALL 3: Generiert, aber eingeklappt -> "Show" Button
+                                    if (!examplesVisible) {
+                                        return (
+                                            <button 
+                                                onClick={() => setExamplesVisible(true)}
+                                                className="w-full py-3 bg-indigo-50 text-indigo-600 rounded-xl font-bold text-sm border border-indigo-100 hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2"
+                                            >
+                                                <BookOpen size={16} /> Show Generated Examples ({cachedExamples.length})
+                                            </button>
+                                        );
+                                    }
+
+                                    // FALL 4: Angezeigt -> Liste rendern
+                                    return (
+                                        <div className="space-y-3 animate-in fade-in duration-500">
+                                            <div className="flex justify-between items-end mb-1 px-1">
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">AI Context</span>
+                                                <button onClick={() => setExamplesVisible(false)} className="text-[10px] text-indigo-400 font-bold hover:underline">Hide</button>
+                                            </div>
+                                            {cachedExamples.map((ex, idx) => (
+                                                <div key={idx} className="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-left relative">
+                                                    <div className="flex justify-between items-start gap-2">
+                                                        <p className="text-slate-700 font-medium text-sm leading-snug pr-6">{ex.fr}</p>
+                                                        <button onClick={() => speak(ex.fr)} className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors">
+                                                            <Volume2 size={16} />
+                                                        </button>
+                                                    </div>
+                                                    <p className="text-slate-400 text-xs italic mt-1 border-t border-slate-50 pt-1">{ex.en}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    );
+                                })()}
                             </div>
                             {/* --- ENDE AI GENERATOR --- */}
 
