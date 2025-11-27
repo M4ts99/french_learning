@@ -98,6 +98,7 @@ const COLLECTIONS = {
 
 
 // --- NEW COMPONENTS ---
+// --- NEW COMPONENTS ---
 const ModernTranslator = () => {
     const [mode, setMode] = useState('translate'); // 'translate' oder 'coach'
     const [direction, setDirection] = useState('fr-en'); // 'fr-en' (Französisch -> Englisch) oder 'en-fr'
@@ -154,96 +155,118 @@ const ModernTranslator = () => {
         }
     };
 
+    // --- NEU: Custom Switcher Button Design ---
+    const SwitcherButton = () => {
+        const isFrToEn = direction === 'fr-en';
+        
+        return (
+            <div className="flex items-center gap-2 p-1 bg-white rounded-xl shadow-sm border border-slate-200">
+                {/* Linke Sprache (Quelle) */}
+                <div className="px-4 py-2 bg-slate-50 rounded-lg text-slate-700 font-bold text-sm flex items-center gap-2 transition-all">
+                    {isFrToEn ? '🇫🇷 French' : '🇬🇧/🇩🇪 English/German'}
+                </div>
+                
+                {/* Swap Icon */}
+                <button 
+                    onClick={() => setDirection(prev => prev === 'en-fr' ? 'fr-en' : 'en-fr')}
+                    className="p-2 rounded-full hover:bg-slate-100 text-indigo-500 active:scale-90 transition-all"
+                >
+                    <RotateCcw size={20} className="text-indigo-600" />
+                </button>
+                
+                {/* Rechte Sprache (Ziel) */}
+                <div className="px-4 py-2 bg-slate-50 rounded-lg text-slate-700 font-bold text-sm flex items-center gap-2 transition-all">
+                    {isFrToEn ? '🇬🇧 English' : '🇫🇷 French'}
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div className="w-full max-w-xl mx-auto space-y-6">
             
             {/* 1. MODE SWITCHER (Tabs) */}
-            <div className="bg-slate-200 p-1 rounded-2xl flex">
+            <div className="bg-slate-200 p-1 rounded-2xl flex shadow-sm">
                 <button 
                     onClick={() => { setMode('translate'); setInput(''); setTranslationData(null); }}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'translate' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}
+                    className={`flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'translate' ? 'bg-white text-indigo-600 shadow-sm scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}
                 >
-                    <ArrowLeftRight size={16}/> Translator
+                    <ArrowLeftRight size={18}/> Translator
                 </button>
                 <button 
                     onClick={() => { setMode('coach'); setInput(''); setCorrectionData(null); }}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'coach' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500'}`}
+                    className={`flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'coach' ? 'bg-white text-emerald-600 shadow-sm scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}
                 >
-                    <MessageSquare size={16}/> Writing Coach
+                    <MessageSquare size={18}/> Writing Coach
                 </button>
             </div>
 
             {/* 2. INPUT CARD */}
-            <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden">
                 
                 {/* Header mit Controls */}
-                <div className="bg-slate-50 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
+                <div className="bg-slate-50/80 px-4 py-3 border-b border-slate-100 flex justify-between items-center backdrop-blur-sm">
                     {mode === 'translate' ? (
-                        <button 
-                            onClick={() => setDirection(prev => prev === 'en-fr' ? 'fr-en' : 'en-fr')}
-                            className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-slate-500 hover:text-indigo-600 transition-colors"
-                        >
-                            {direction === 'en-fr' ? '🇬🇧/🇩🇪 ➝ 🇫🇷 French' : '🇫🇷 French ➝ 🇬🇧 English'}
-                            <RotateCcw size={12} />
-                        </button>
+                        // HIER IST DER NEUE SWITCHER
+                        <SwitcherButton />
                     ) : (
-                        <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-2">
-                            <PenTool size={14}/> Write in French
+                        <span className="text-sm font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-lg">
+                            <PenTool size={16}/> Write in French
                         </span>
                     )}
                     
-                    {input && <button onClick={() => setInput('')}><X size={16} className="text-slate-400"/></button>}
+                    {input && <button onClick={() => setInput('')} className="p-2 bg-slate-200 rounded-full hover:bg-slate-300 text-slate-500 transition-colors"><X size={16}/></button>}
                 </div>
 
                 <textarea 
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder={mode === 'translate' ? "Enter text..." : "Ecrivez quelque chose en français..."}
-                    className="w-full h-32 p-4 text-lg text-slate-700 outline-none resize-none bg-transparent"
+                    placeholder={mode === 'translate' ? "Enter text here..." : "Ecrivez quelque chose en français..."}
+                    className="w-full h-40 p-5 text-lg text-slate-700 outline-none resize-none bg-transparent placeholder-slate-400 font-medium"
                 />
 
-                <div className="px-4 py-3 border-t border-slate-50 flex justify-end bg-slate-50/50">
+                <div className="px-4 py-4 border-t border-slate-50 flex justify-end bg-slate-50/50">
                     <button 
                         onClick={mode === 'translate' ? handleTranslate : handleCorrection} 
                         disabled={loading || !input}
-                        className={`rounded-xl px-6 py-2.5 font-bold text-white transition-all flex items-center gap-2 ${
+                        className={`rounded-xl px-8 py-3 font-bold text-white transition-all flex items-center gap-2 text-base ${
                             loading || !input 
                             ? 'bg-slate-300 cursor-not-allowed' 
-                            : mode === 'translate' ? 'bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200' : 'bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200'
+                            : mode === 'translate' ? 'bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 active:scale-[0.98]' : 'bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200 active:scale-[0.98]'
                         }`}
                     >
-                        {loading ? <RotateCcw className="animate-spin" size={18}/> : <Play size={18} fill="currentColor"/>}
+                        {loading ? <RotateCcw className="animate-spin" size={20}/> : <Play size={20} fill="currentColor"/>}
                         {mode === 'translate' ? 'Translate' : 'Check Grammar'}
                     </button>
                 </div>
             </div>
 
-            {/* 3. RESULTS AREA */}
+            {/* 3. RESULTS AREA (Unverändert, sieht schon gut aus) */}
             
             {/* A) TRANSLATOR RESULT */}
             {mode === 'translate' && translationData && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
                     {/* Main Translation */}
-                    <div className="bg-indigo-50 rounded-3xl border border-indigo-100 p-6 relative">
-                        <button onClick={() => speak(translationData.translation)} className="absolute top-4 right-4 p-2 text-indigo-400 hover:text-indigo-700"><Volume2 size={20}/></button>
+                    <div className="bg-indigo-50 rounded-3xl border border-indigo-100 p-6 relative shadow-sm">
+                        <button onClick={() => speak(translationData.translation)} className="absolute top-4 right-4 p-2 text-indigo-400 hover:text-indigo-700 bg-indigo-100 rounded-full transition-colors"><Volume2 size={20}/></button>
                         <span className="text-xs font-bold text-indigo-300 uppercase tracking-wide block mb-2">Translation</span>
-                        <p className="text-2xl text-indigo-900 font-serif">{translationData.translation}</p>
+                        <p className="text-3xl text-indigo-900 font-serif leading-snug">{translationData.translation}</p>
                     </div>
 
                     {/* Auto-Examples */}
                     {translationData.examples && (
-                        <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-sm">
-                            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 flex items-center gap-2">
-                                <Sparkles size={14}/> Context Examples
+                        <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-md shadow-slate-100/50">
+                            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-4 flex items-center gap-2">
+                                <Sparkles size={16} className="text-amber-400"/> Context Examples
                             </h4>
                             <div className="space-y-3">
                                 {translationData.examples.map((ex, idx) => (
-                                    <div key={idx} className="flex justify-between items-start gap-3 pb-3 border-b border-slate-50 last:border-0 last:pb-0">
-                                        <div>
-                                            <p className="text-slate-800 font-medium text-sm">{ex.fr}</p>
-                                            <p className="text-slate-400 text-xs italic">{ex.en}</p>
+                                    <div key={idx} className="bg-slate-50 p-4 rounded-xl relative group hover:bg-indigo-50 transition-colors">
+                                        <div className="pr-8">
+                                            <p className="text-slate-800 font-bold text-lg leading-snug mb-1">{ex.fr}</p>
+                                            <p className="text-slate-500 text-sm italic">{ex.en}</p>
                                         </div>
-                                        <button onClick={() => speak(ex.fr)} className="text-slate-300 hover:text-indigo-500"><Volume2 size={16}/></button>
+                                        <button onClick={() => speak(ex.fr)} className="absolute right-3 top-3 p-2 text-slate-400 group-hover:text-indigo-600 bg-white rounded-full shadow-sm transition-all opacity-0 group-hover:opacity-100"><Volume2 size={18}/></button>
                                     </div>
                                 ))}
                             </div>
@@ -256,14 +279,15 @@ const ModernTranslator = () => {
             {mode === 'coach' && correctionData && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
                     {/* Correction */}
-                    <div className="bg-emerald-50 rounded-3xl border border-emerald-100 p-6">
-                        <span className="text-xs font-bold text-emerald-400 uppercase tracking-wide block mb-2">Corrected Version</span>
-                        <p className="text-xl text-emerald-900 font-medium">{correctionData.corrected}</p>
+                    <div className="bg-emerald-50 rounded-3xl border border-emerald-100 p-6 shadow-sm relative">
+                        <button onClick={() => speak(correctionData.corrected)} className="absolute top-4 right-4 p-2 text-emerald-400 hover:text-emerald-700 bg-emerald-100 rounded-full transition-colors"><Volume2 size={20}/></button>
+                        <span className="text-xs font-bold text-emerald-400 uppercase tracking-wide block mb-2 flex items-center gap-2"><Check size={16}/> Corrected Version</span>
+                        <p className="text-3xl text-emerald-900 font-medium leading-snug">{correctionData.corrected}</p>
                     </div>
                     {/* Explanation */}
-                    <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-2">Teacher's Note</span>
-                        <p className="text-slate-600 text-sm leading-relaxed">{correctionData.explanation}</p>
+                    <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-md shadow-slate-100/50">
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-2 flex items-center gap-2"><Info size={16}/> Teacher's Note</span>
+                        <p className="text-slate-700 text-base leading-relaxed bg-slate-50 p-4 rounded-xl border-l-4 border-indigo-400">{correctionData.explanation}</p>
                     </div>
                 </div>
             )}
@@ -457,52 +481,65 @@ function App() {
             return p && (p.box > 0 || p.interval > 0) && reviewTime <= now;
         });
 
-        // WICHTIG: Reviews auch mischen! (Damit nicht immer Rank 1, 2, 3 zuerst kommen)
+        // Reviews mischen
         for (let i = dueWords.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [dueWords[i], dueWords[j]] = [dueWords[j], dueWords[i]];
         }
 
-        // 3. Neue Wörter ("Fuzzy Pool" Logik)
+        // 3. Neue Wörter ("Dynamic Fuzzy Pool" Logik)
         let newWords = [];
         if (dueWords.length < sessionSize) {
             const needed = sessionSize - dueWords.length;
             
-            // Finde alle UNGELERNTEN Wörter im Bereich
+            // Finde alle UNGELERNTEN Wörter, sortiert nach Rang (1, 2, 3...)
             const unlearnedPool = rangePool
                 .filter(word => !userProgress[word.rank] || (!userProgress[word.rank].box && !userProgress[word.rank].interval))
                 .sort((a, b) => a.rank - b.rank); 
 
-            // FUZZY LOGIC: Wir nehmen die Top 100 (statt 50) für mehr Varianz
-            const candidates = unlearnedPool.slice(0, 100);
-            
-            // ...und mischen diese Kandidaten gut durch
-            for (let i = candidates.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
-            }
+            if (unlearnedPool.length > 0) {
+                // HIER IST DIE NEUE LOGIK:
+                // Wir schauen uns das allererste ungelernte Wort an, um zu wissen, wo der Nutzer steht.
+                const currentRankPosition = unlearnedPool[0].rank;
+                let lookaheadWindow = 100; // Standard
 
-            // Nimm die benötigte Anzahl aus dem gemischten Topf
-            newWords = candidates.slice(0, needed);
+                // Deine gewünschte Progression:
+                if (currentRankPosition < 10) {
+                    lookaheadWindow = 3; // Ganz am Anfang: Nur die nächsten 3 mischen (sehr strikt)
+                } else if (currentRankPosition < 30) {
+                    lookaheadWindow = 10; // 10-30: Kleines Fenster
+                } else if (currentRankPosition < 100) {
+                    lookaheadWindow = 20; // 30-100: Etwas mehr Varianz
+                } else if (currentRankPosition < 200) {
+                    lookaheadWindow = 50; // 100-200: Erweitern
+                } else if (currentRankPosition < 1000) {
+                    lookaheadWindow = 100; // Bis 1000: 100er Schritte
+                } else {
+                    lookaheadWindow = 200; // Ab 1000: Große 200er Schritte
+                }
+
+                // Wir nehmen nur den Ausschnitt (das Fenster) aus dem Pool
+                const candidates = unlearnedPool.slice(0, lookaheadWindow);
+                
+                // ...und mischen NUR diese Kandidaten
+                for (let i = candidates.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+                }
+
+                // Nimm die benötigte Anzahl
+                newWords = candidates.slice(0, needed);
+            }
         }
 
         // Zusammenfügen
         let sessionWords = [...dueWords, ...newWords];
         
-        // Finales Limit und erneutes Mischen der Gesamtsession (damit Reviews und Neue gemischt sind)
+        // Finales Limit
         if (sessionWords.length > sessionSize) {
             sessionWords = sessionWords.slice(0, sessionSize);
         }
         
-        // Optional: Die fertige Session nochmal mischen, damit "Neue" und "Reviews" durcheinander kommen
-        // (Wenn du lieber erst alle Reviews willst, kommentiere die nächste Schleife aus)
-        /*
-        for (let i = sessionWords.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [sessionWords[i], sessionWords[j]] = [sessionWords[j], sessionWords[i]];
-        }
-        */
-
         if (sessionWords.length === 0) {
             alert("All caught up! Great job.");
             return;
@@ -520,8 +557,7 @@ function App() {
             return;
         }
 
-        // 2. Wörter anhand der IDs aus dem Vokabular picken
-        // Wir nutzen ein "Set" für schnellere Suche, falls die Liste lang ist
+        // 2. Wörter anhand der IDs holen
         const idSet = new Set(collectionIds);
         const selectedWords = vocabulary.filter(w => idSet.has(w.rank));
 
@@ -537,12 +573,17 @@ function App() {
             [pool[i], pool[j]] = [pool[j], pool[i]];
         }
 
-        // 4. Session starten (wie Test-Session)
-        setActiveSession(pool);
+        // 4. Session als SMART SESSION starten
+        // Wir nutzen sessionQueue statt activeSession, damit die Smart-Logik greift
+        setSessionQueue(pool); 
+        
         setCurrentIndex(0);
         setIsFlipped(false);
         setSessionResults({ correct: 0, wrong: 0 });
-        setView('test-session'); // Wir nutzen den Test-Modus Ansicht
+        
+        // WICHTIG: Hier schalten wir auf den Smart-Modus um!
+        // Dadurch erscheinen automatisch die 4 Anki-Buttons und der Fortschritt wird gespeichert.
+        setView('smart-session'); 
     };
     const startTestSession = () => {
         let pool = vocabulary.filter(w => w.rank >= testConfig.startRank && w.rank <= testConfig.endRank);
