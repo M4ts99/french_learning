@@ -37,6 +37,7 @@ const Activity = (p) => <Icon {...p} path={<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
 const Box = (p) => <Icon {...p} path={<><path d="M21 16.5A2.5 2.5 0 0 1 18.5 19H5.5A2.5 2.5 0 0 1 3 16.5v-5C3 10.1 4.1 9 5.5 9H18.5c1.4 0 2.5 1.1 2.5 2.5v5z"/><path d="M7.5 9V5.5A2.5 2.5 0 0 1 10 3h4a2.5 2.5 0 0 1 2.5 2.5V9"/></>} />;
 const Palette = (p) => <Icon {...p} path={<><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></>} />;// --- MOCK DATA ---
 const Sparkles = (p) => <Icon {...p} path={<><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></>} />;
+const Volume2 = (p) => <Icon {...p} path={<><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></>} />;
 //const INITIAL_DATA = vocab_List;
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
@@ -267,6 +268,26 @@ function App() {
             return progress && progress.box > 0;
         });
         return Math.round((knownWords.length / wordsInRange.length) * 100);
+    };
+    // --- AUDIO HELPER ---
+    const speak = (text) => {
+        if (!text) return;
+        
+        // Stoppt vorherige Sprachausgabe (falls man schnell klickt)
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'fr-FR'; // WICHTIG: Französisch erzwingen
+        utterance.rate = 0.9;     // Etwas langsamer (0.9x), damit man es gut versteht
+        utterance.pitch = 1;      // Normale Tonhöhe
+
+        // Optional: Versuch, eine "Google" oder "Siri" Stimme zu finden (klingt besser)
+        const voices = window.speechSynthesis.getVoices();
+        // Wir suchen nach Stimmen die "fr" (französisch) im Code haben
+        const frVoice = voices.find(v => v.lang.includes('fr'));
+        if (frVoice) utterance.voice = frVoice;
+
+        window.speechSynthesis.speak(utterance);
     };
 
     // --- SESSION LOGIC ---
@@ -785,121 +806,118 @@ function App() {
         }
     };
     const renderFlashcard = () => {
-            const isSmartMode = view === 'smart-session';
-            const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
-            let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
-            let progressPercent = !isSmartMode ? (currentIndex / activeSession.length) * 100 : 0;
+        const isSmartMode = view === 'smart-session';
+        const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
+        
+        // Sicherheitscheck, falls mal kein Wort da ist
+        if (!word) return <div>Loading...</div>;
 
-            return (
-                <div className="flex flex-col h-full max-w-xl mx-auto w-full">
-                    {/* Header mit Fortschritt - Abstände (mb) verringert, damit es hochrutscht */}
-                    <div className="flex items-center justify-between mb-2">
-                        <button onClick={() => setView('home')} className="p-2 -ml-2 text-slate-400 hover:text-slate-600"><X size={24} /></button>
-                        <div className="text-sm font-medium text-slate-500">{progressText}</div>
-                        <div className="w-6"></div> 
-                    </div>
-                    
-                    {/* Fortschrittsbalken (nur im Test-Modus) - Abstand nach unten verringert */}
-                    {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-4"><div className="bg-indigo-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }}></div></div>}
-                    
-                    {/* HIER WURDE DAS STACK LOOP BADGE ENTFERNT */}
+        let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
+        let progressPercent = !isSmartMode ? (currentIndex / activeSession.length) * 100 : 0;
 
-                    {/* DIE KARTE */}
-                    {/* min-h wurde von 400px auf 300px reduziert, damit sie kompakter startet */}
-                    <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-6 flex flex-col items-center justify-center min-h-[300px] relative transition-all">
+        return (
+            <div className="flex flex-col h-full max-w-xl mx-auto w-full pt-4">
+                {/* Header mit Fortschritt */}
+                <div className="flex items-center justify-between mb-2 pl-1">
+                    <button onClick={() => setView('home')} className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
+                        <X size={24} />
+                    </button>
+                    <div className="text-sm font-medium text-slate-500 font-mono">{progressText}</div>
+                    <div className="w-6"></div> 
+                </div>
+                
+                {/* Fortschrittsbalken (nur im Test-Modus) */}
+                {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-6"><div className="bg-indigo-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }}></div></div>}
+                
+                {/* DIE KARTE */}
+                <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-6 flex flex-col items-center justify-center min-h-[350px] relative transition-all animate-in fade-in zoom-in duration-300">
+                    
+                    {/* Rang Anzeige oben rechts */}
+                    <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Rank #{word.rank}</div>
+                    {/* Box Anzeige oben links (nur Smart Mode) */}
+                    {isSmartMode && userProgress[word.rank] && <div className="absolute top-4 left-4 bg-indigo-50 text-indigo-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
+
+                    {/* --- FRONT: FRANZÖSISCH --- */}
+                    <div className="mb-6 text-center w-full relative">
+                        <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">French</div>
                         
-                        {/* Rang Anzeige oben rechts */}
-                        <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-xs px-2 py-1 rounded-md">Rank #{word.rank}</div>
-                        {/* Box Anzeige oben links (nur Smart Mode) */}
-                        {isSmartMode && userProgress[word.rank] && <div className="absolute top-4 left-4 bg-indigo-50 text-indigo-400 text-xs px-2 py-1 rounded-md flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
-
-                        {/* --- FRONT: FRANZÖSISCH --- */}
-                        <div className="mb-4 text-center w-full">
-                            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">French</div>
-                            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words mb-4">{word.french}</h2>
-                            
-                            {/* Französischer Beispielsatz */}
-                            {word.example_fr && (
-                                <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl text-slate-600 italic text-lg leading-relaxed">
-                                    "{word.example_fr}"
-                                </div>
-                            )}
-                        </div>
-
-                        {/* --- INTERAKTION --- */}
-                        {!isFlipped ? (
-                            /* ZUSTAND 1: Button zum Anzeigen */
+                        {/* Hauptwort + Audio Button */}
+                        <div className="flex items-center justify-center gap-3 mb-6">
+                            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words text-center leading-tight">{word.french}</h2>
                             <button 
-                                onClick={() => setIsFlipped(true)} 
-                                className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 flex items-center gap-2"
+                                onClick={(e) => { 
+                                    e.stopPropagation(); // WICHTIG: Verhindert Karten-Drehung
+                                    speak(word.french); 
+                                }} 
+                                className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 active:scale-90 transition-all shadow-sm shrink-0"
+                                title="Listen"
                             >
-                                <BookOpen size={20} /> Show Translation
+                                <Volume2 size={24} />
                             </button>
-                        ) : (
-                /* ZUSTAND 2: Lösung + Buttons */
-                        <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center pb-2">
-                            <div className="w-full h-px bg-slate-100 my-4"></div> 
+                        </div>
+                        
+                        {/* Französischer Beispielsatz + Audio */}
+                        {word.example_fr && (
+                            <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl text-left relative group mx-2">
+                                <p className="text-slate-600 italic text-lg leading-relaxed pr-8">
+                                    "{word.example_fr}"
+                                </p>
+                                <button 
+                                    onClick={(e) => { 
+                                        e.stopPropagation(); 
+                                        speak(word.example_fr); 
+                                    }}
+                                    className="absolute right-2 top-2 p-2 text-slate-300 hover:text-indigo-600 hover:bg-white rounded-full transition-colors"
+                                >
+                                    <Volume2 size={18} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* --- INTERAKTION --- */}
+                    {!isFlipped ? (
+                        /* ZUSTAND 1: Button zum Anzeigen */
+                        <button 
+                            onClick={() => setIsFlipped(true)} 
+                            className="mt-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-200 transition-all flex items-center gap-2"
+                        >
+                            <BookOpen size={20} /> Show Translation
+                        </button>
+                    ) : (
+                        /* ZUSTAND 2: Lösung + Buttons */
+                        <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center border-t border-slate-100 pt-6 mt-2">
                             
-                            {/* ENGLISCH / DEUTSCH */}
-                            <div className="text-center mb-6 w-full">
-                                <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">Translation</div>
-                                <h3 className="text-3xl font-bold text-indigo-600 mb-2">{word.english || word.german}</h3>
+                            {/* ENGLISCH */}
+                            <div className="text-center mb-8 w-full">
+                                <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
+                                <h3 className="text-3xl font-bold text-indigo-900 mb-2 leading-tight">{word.english || word.german}</h3>
                                 
-                                {/* Standard Beispielsatz (Statisch) */}
+                                {/* Englischer Beispielsatz */}
                                 {word.example_en && (
-                                    <p className="text-indigo-400 italic mb-4">"{word.example_en}"</p>
+                                    <p className="text-indigo-400 italic text-sm mt-2 px-4">
+                                        "{word.example_en}"
+                                    </p>
                                 )}
-
-                                {/* --- NEU: KI BEISPIELE BEREICH --- */}
-                                <div className="mt-4">
-                                    {!aiExamples && !loadingExamples && (
-                                        <button 
-                                            onClick={() => fetchAiExamples(word.french)}
-                                            className="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-4 py-2 rounded-full text-sm font-bold transition-colors flex items-center justify-center gap-2 mx-auto"
-                                        >
-                                            <Sparkles size={16} /> More Examples
-                                        </button>
-                                    )}
-
-                                    {loadingExamples && (
-                                        <div className="text-slate-400 text-sm animate-pulse flex items-center justify-center gap-2">
-                                            <RotateCcw size={14} className="animate-spin"/> Generating sentences...
-                                        </div>
-                                    )}
-
-                                    {aiExamples && (
-                                        <div className="text-left space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-100 mt-2 animate-in fade-in zoom-in duration-300">
-                                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 flex items-center gap-1">
-                                                <Sparkles size={12} /> 
-                                            </div>
-                                            {aiExamples.map((ex, i) => (
-                                                <div key={i} className="text-sm">
-                                                    <div className="font-medium text-slate-700">{ex.fr}</div>
-                                                    <div className="text-slate-500 italic">{ex.en}</div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                                {/* --- ENDE NEU --- */}
-
                             </div>
 
-                            {/* Bewertungs-Buttons (Unverändert) */}
-                            <div className="grid grid-cols-2 gap-3 w-full mt-2">
-                                <button onClick={() => handleResult(false)} className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 p-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
-                                    <X size={20} /> Missed
+                            {/* Bewertungs-Buttons */}
+                            <div className="grid grid-cols-2 gap-4 w-full px-2">
+                                <button onClick={() => handleResult(false)} className="bg-red-50 hover:bg-red-100 active:scale-95 text-red-600 border border-red-100 p-4 rounded-2xl font-bold flex flex-col items-center justify-center gap-1 transition-all h-24">
+                                    <X size={24} /> 
+                                    <span>Missed</span>
                                 </button>
-                                <button onClick={() => handleResult(true)} className="bg-green-50 hover:bg-green-100 text-green-600 border border-green-200 p-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
-                                    <Check size={20} /> Got it
+                                <button onClick={() => handleResult(true)} className="bg-green-50 hover:bg-green-100 active:scale-95 text-green-600 border border-green-100 p-4 rounded-2xl font-bold flex flex-col items-center justify-center gap-1 transition-all h-24">
+                                    <Check size={24} /> 
+                                    <span>Got it</span>
                                 </button>
                             </div>
                         </div>
                     )}
-                    </div>
                 </div>
-            );
-        };
+            </div>
+        );
+    };
 
     const renderResults = () => (
         <div className="text-center max-w-md mx-auto py-10 animate-in zoom-in duration-300">
