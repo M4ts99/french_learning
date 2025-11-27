@@ -97,6 +97,33 @@ const COLLECTIONS = {
         { id: 'prof', label: 'Professions', sub: 'Work', icon: <Briefcase size={24}/>, ids: [204, 268, 386, 457, 483, 640, 684, 688, 690, 762, 783, 827, 901, 909, 917, 1098, 1150, 1188, 1203, 1232, 1259, 1264, 1323, 1328, 1337, 1341, 1343, 1406, 1411, 1499, 1546, 1552, 1631, 1706, 1722, 1737, 1738, 1789, 1797, 1861, 1876, 1924, 1957, 1961, 2039, 2049, 2089, 2100, 2101, 2119, 2176, 2183, 2201, 2233, 2248, 2276, 2307, 2404, 2415, 2430, 2436, 2443, 2461, 2523, 2587, 2645, 2741, 2768, 2824, 2848, 2906, 2928, 2954, 2963, 2981, 2995, 3003, 3042, 3048, 3072, 3081, 3085, 3100, 3118, 3163, 3167, 3189, 3223, 3241, 3251, 3262, 3283, 3327, 3350, 3371, 3446, 3494, 3503, 3518, 3630, 3745, 3767, 3886, 4052, 4131, 4261, 4282, 4346, 4430, 4422, 4463, 4787, 4309, 4253, 827, 640, 1264] },
     ]
 };
+// --- GRAMMAR DATA ---
+const GRAMMAR_MODULES = [
+    { 
+        id: 'basics', 
+        title: 'The Basics', 
+        sub: 'Nouns, Articles & Numbers',
+        icon: <Box size={24}/>, 
+        color: 'bg-blue-50 text-blue-600',
+        topics: ['Articles (le/la)', 'Plural Forms', 'Adjectives', 'Numbers 1-100'] 
+    },
+    { 
+        id: 'tenses', 
+        title: 'Time Travel', 
+        sub: 'Verbs & Tenses',
+        icon: <RotateCcw size={24}/>, 
+        color: 'bg-purple-50 text-purple-600',
+        topics: ['Le Présent', 'Avoir & Être', 'Passé Composé', 'Imparfait', 'Le Futur'] 
+    },
+    { 
+        id: 'structure', 
+        title: 'Architecture', 
+        sub: 'Sentence Building',
+        icon: <Layers size={24}/>, 
+        color: 'bg-emerald-50 text-emerald-600',
+        topics: ['Asking Questions', 'Negation (ne...pas)', 'Pronouns', 'Prepositions'] 
+    }
+];
 
 
 // --- NEW COMPONENTS ---
@@ -307,6 +334,8 @@ function App() {
     const [showReviewModal, setShowReviewModal] = useState(false); // Modal für Review-Start
     const [selectedWord, setSelectedWord] = useState(null); // Welches Wort wir gerade anschauen
     const [showStats, setShowStats] = useState(false);
+    const [exploreMode, setExploreMode] = useState('main');
+    const [expandedCategory, setExpandedCategory] = useState(null);
     
     
     // Session State
@@ -910,123 +939,291 @@ function App() {
             </div>
         );
     };
-    const renderExplore = () => (
-        <div className="space-y-8 animate-in fade-in duration-500 pt-4 pb-24">
-            <div className="flex items-center gap-3 mb-2 px-1">
-                 <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Compass size={24} /></div>
-                 <h2 className="text-2xl font-bold text-slate-800">Explore</h2>
-            </div>
+    const renderExplore = () => {
+        // Lokaler State für die Navigation innerhalb von Explore
+        // 'main' = Hauptmenü, 'grammar' = Vokabel-Sets Liste, 'topics' = Themen Liste
+        
 
-            {/* 1. MEDIA CARDS (Stories & News) */}
-            <div className="grid grid-cols-2 gap-3">
-                <button onClick={() => setView('reader')} className="bg-amber-100 p-5 rounded-3xl text-left flex flex-col justify-between h-40 relative overflow-hidden group transition-all active:scale-[0.98]">
-                    <div className="relative z-10">
-                        <BookCheck size={28} className="text-amber-600 mb-3" />
-                        <div className="font-bold text-amber-900 text-lg">Stories</div>
-                        <div className="text-amber-700/70 text-xs">Read & Listen</div>
-                    </div>
-                    <BookOpen size={80} className="absolute -right-4 -bottom-4 text-amber-200 opacity-50 rotate-12"/>
-                </button>
-                <button onClick={() => setView('culture')} className="bg-rose-100 p-5 rounded-3xl text-left flex flex-col justify-between h-40 relative overflow-hidden group transition-all active:scale-[0.98]">
-                    <div className="relative z-10">
-                        <Activity size={28} className="text-rose-600 mb-3" />
-                        <div className="font-bold text-rose-900 text-lg">News</div>
-                        <div className="text-rose-700/70 text-xs">Culture Feed</div>
-                    </div>
-                    <Sparkles size={80} className="absolute -right-4 -bottom-4 text-rose-200 opacity-50 rotate-12"/>
-                </button>
-            </div>
+        // Helper: Berechnet den Fortschritt für eine Kategorie (z.B. "Tiere")
+        const getCategoryProgress = (ids) => {
+            if (!ids || ids.length === 0) return 0;
+            const safeVocab = vocabulary || [];
+            // Zähle Wörter in dieser Kategorie, die gelernt sind (box > 0)
+            const learnedCount = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
+            return Math.round((learnedCount / ids.length) * 100);
+        };
 
-            {/* 2. GRAMMAR TYPES (Slider) - Aus altem Home */}
-            <div>
-                <div className="flex items-center justify-between mb-3 px-1">
-                    <h3 className="font-bold text-slate-700 text-lg">Vocabulary Sets</h3>
-                </div>
-                <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-                    {COLLECTIONS.grammar.map((c) => (
-                        <button 
-                            key={c.id}
-                            onClick={() => startCollectionSession(c.ids)}
-                            className={`min-w-[140px] p-4 rounded-2xl border transition-all active:scale-95 text-left flex flex-col justify-between h-32 ${c.color}`}
-                        >
-                            <div className="bg-white/60 w-fit p-2 rounded-lg backdrop-blur-sm">{c.icon}</div>
+        // Helper: Berechnet wie viele Wörter gelernt sind (z.B. "12/50")
+        const getCategoryStats = (ids) => {
+            if (!ids || ids.length === 0) return "0/0";
+            const safeVocab = vocabulary || [];
+            const learnedCount = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
+            return `${learnedCount}/${ids.length}`;
+        };
+
+        // --- ANSICHT 1: HAUPTMENÜ (Vertical Stack) ---
+        if (exploreMode === 'main') {
+            return (
+                <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-500 pt-6 pb-24 px-1">
+                    {/* Header */}
+                    <div className="flex items-center gap-3 mb-2 px-1">
+                        <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Compass size={24} /></div>
+                        <h2 className="text-2xl font-bold text-slate-800">Explore</h2>
+                    </div>
+
+                    {/* 1. STORIES (Buch-Design) */}
+                    <button 
+                        onClick={() => setView('reader')} 
+                        className="w-full bg-amber-50 border border-amber-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm"
+                    >
+                        <div className="relative z-10 flex items-start gap-4">
+                            <div className="bg-white p-3 rounded-2xl text-amber-500 shadow-sm">
+                                <BookCheck size={28} />
+                            </div>
                             <div>
-                                <div className="font-bold leading-tight">{c.label}</div>
-                                <div className="text-[10px] opacity-70 mt-1">{c.sub}</div>
+                                <h3 className="font-bold text-amber-900 text-xl">Reading Room</h3>
+                                <p className="text-amber-700/70 text-sm font-medium mt-1">Interactive Stories • A1-B1</p>
                             </div>
-                        </button>
-                    ))}
+                        </div>
+                        <BookOpen size={100} className="absolute -right-4 -bottom-6 text-amber-100 opacity-60 rotate-12 group-hover:scale-110 transition-transform"/>
+                    </button>
+
+                    {/* 2. NEWS (Zeitungs-Design) */}
+                    <button 
+                        onClick={() => setView('culture')} 
+                        className="w-full bg-rose-50 border border-rose-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm"
+                    >
+                        <div className="relative z-10 flex items-start gap-4">
+                            <div className="bg-white p-3 rounded-2xl text-rose-500 shadow-sm">
+                                <Activity size={28} />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-rose-900 text-xl">Culture Feed</h3>
+                                <p className="text-rose-700/70 text-sm font-medium mt-1">News & Memes from France</p>
+                            </div>
+                        </div>
+                        <Sparkles size={100} className="absolute -right-4 -bottom-6 text-rose-100 opacity-60 rotate-12 group-hover:scale-110 transition-transform"/>
+                    </button>
+
+                    {/* 3. VOCAB SETS (Grammatik-Design) */}
+                    <button 
+                        onClick={() => setExploreMode('grammar')} 
+                        className="w-full bg-indigo-50 border border-indigo-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm"
+                    >
+                        <div className="relative z-10 flex items-start gap-4">
+                            <div className="bg-white p-3 rounded-2xl text-indigo-500 shadow-sm">
+                                <Layers size={28} />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-indigo-900 text-xl">Vocabulary Sets</h3>
+                                <p className="text-indigo-700/70 text-sm font-medium mt-1">Verbs, Nouns, Adjectives</p>
+                            </div>
+                        </div>
+                        <ChevronRight size={24} className="absolute right-6 top-1/2 -translate-y-1/2 text-indigo-200" />
+                    </button>
+
+                    {/* 4. TOPICS (Buntes Design) */}
+                    <button 
+                        onClick={() => setExploreMode('topics')} 
+                        className="w-full bg-emerald-50 border border-emerald-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm"
+                    >
+                        <div className="relative z-10 flex items-start gap-4">
+                            <div className="bg-white p-3 rounded-2xl text-emerald-500 shadow-sm">
+                                <User size={28} />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-emerald-900 text-xl">Real Life Topics</h3>
+                                <p className="text-emerald-700/70 text-sm font-medium mt-1">Food, Travel, Work & more</p>
+                            </div>
+                        </div>
+                        <ChevronRight size={24} className="absolute right-6 top-1/2 -translate-y-1/2 text-emerald-200" />
+                    </button>
+                </div>
+            );
+        }
+
+        // --- ANSICHT 2: LISTEN (Grammar oder Topics) ---
+        // Wir wählen die richtige Liste basierend auf dem Modus
+        const activeCollection = exploreMode === 'grammar' ? COLLECTIONS.grammar : COLLECTIONS.topics;
+        const pageTitle = exploreMode === 'grammar' ? "Vocab Sets" : "Real Life Topics";
+        const themeColor = exploreMode === 'grammar' ? "indigo" : "emerald";
+
+        return (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
+                
+                {/* Header mit Zurück-Button */}
+                <div className="flex items-center gap-3 mb-2 px-1">
+                    <button 
+                        onClick={() => setExploreMode('main')}
+                        className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
+                    >
+                        <RotateCcw size={20} className="rotate-[-90deg]" /* Kleiner Hack: Pfeil nach links drehen, falls Rotate genutzt wird, sonst nimm ArrowLeft icon */ />
+                    </button>
+                    <h2 className="text-2xl font-bold text-slate-800">{pageTitle}</h2>
+                </div>
+
+                {/* Die Liste */}
+                <div className="grid gap-3">
+                    {activeCollection.map((item) => {
+                        const progress = getCategoryProgress(item.ids);
+                        const stats = getCategoryStats(item.ids);
+                        
+                        return (
+                            <button 
+                                key={item.id}
+                                onClick={() => startCollectionSession(item.ids)}
+                                className="w-full bg-white p-4 rounded-3xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all flex items-center gap-4 group"
+                            >
+                                {/* Icon Container */}
+                                <div className={`w-14 h-14 flex items-center justify-center rounded-2xl shrink-0 ${
+                                    exploreMode === 'grammar' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'
+                                }`}>
+                                    {item.icon}
+                                </div>
+
+                                {/* Text & Progress */}
+                                <div className="flex-1 text-left">
+                                    <div className="flex justify-between items-center mb-1">
+                                        <h3 className="font-bold text-slate-800">{item.label}</h3>
+                                        <span className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">{stats}</span>
+                                    </div>
+                                    
+                                    <div className="text-xs text-slate-400 mb-2">{item.sub}</div>
+                                    
+                                    {/* Mini Progress Bar */}
+                                    <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                        <div 
+                                            className={`h-full rounded-full transition-all duration-1000 ${
+                                                exploreMode === 'grammar' ? 'bg-indigo-500' : 'bg-emerald-500'
+                                            }`} 
+                                            style={{ width: `${progress}%` }}
+                                        ></div>
+                                    </div>
+                                </div>
+
+                                <ChevronRight size={20} className="text-slate-200 group-hover:text-slate-400 transition-colors"/>
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
+        );
+    };
+    const renderSkills = () => {
+        // Lokaler State für das Akkordeon (welche Kategorie ist offen?)
+        
 
-            {/* 3. TOPICS (Slider) */}
-            <div>
-                <div className="flex items-center justify-between mb-3 px-1">
-                    <h3 className="font-bold text-slate-700 text-lg">Real Life Topics</h3>
+        const toggleCategory = (id) => {
+            setExpandedCategory(expandedCategory === id ? null : id);
+        };
+
+        return (
+            <div className="space-y-8 animate-in fade-in duration-500 pt-4 pb-24">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-2 px-1">
+                     <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Dumbbell size={24} /></div>
+                     <h2 className="text-2xl font-bold text-slate-800">Skill Gym</h2>
                 </div>
-                <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-                    {COLLECTIONS.topics.map((c) => (
+
+                {/* 1. HERO: AI CONVERSATION (Chat) */}
+                <button 
+                    onClick={() => alert("AI Chat coming soon! Imagine chatting with a virtual barista here.")} 
+                    className="w-full h-40 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white p-6 rounded-[2rem] shadow-xl shadow-fuchsia-200 transition-transform active:scale-[0.98] relative overflow-hidden group text-left"
+                >
+                    <div className="relative z-10">
+                        <div className="bg-white/20 w-12 h-12 flex items-center justify-center rounded-2xl mb-3 backdrop-blur-md">
+                            <MessageSquare size={24} fill="currentColor" />
+                        </div>
+                        <h3 className="font-bold text-2xl">Conversation Coach</h3>
+                        <p className="text-fuchsia-100 text-sm font-medium opacity-90">Roleplay: Ordering Coffee</p>
+                    </div>
+                    {/* Deko */}
+                    <div className="absolute -right-4 -bottom-8 opacity-20 rotate-12 group-hover:scale-110 transition-transform duration-700">
+                         <MessageSquare size={120} fill="currentColor"/>
+                    </div>
+                </button>
+
+                {/* 2. TOOLS ROW */}
+                <div>
+                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">The Toolbox</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                        {/* Link zum Translator */}
                         <button 
-                            key={c.id}
-                            onClick={() => startCollectionSession(c.ids)}
-                            className="min-w-[110px] bg-white p-3 rounded-2xl border border-slate-100 shadow-sm active:scale-95 transition-all text-center flex flex-col items-center gap-3 h-28 justify-center"
+                            onClick={() => setView('translator')} 
+                            className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] flex flex-col justify-between h-32 text-left group hover:border-indigo-200 transition-all"
                         >
-                            <div className="text-slate-400 bg-slate-50 p-3 rounded-full">{c.icon}</div>
-                            <div className="font-bold text-sm text-slate-700 leading-tight">{c.label}</div>
+                            <div className="bg-indigo-50 w-10 h-10 flex items-center justify-center rounded-xl text-indigo-600 group-hover:scale-110 transition-transform">
+                                <PenTool size={20} />
+                            </div>
+                            <div>
+                                <div className="font-bold text-slate-700">Translator</div>
+                                <div className="text-[10px] text-slate-400">Context & Fixes</div>
+                            </div>
                         </button>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-    const renderSkills = () => (
-        <div className="space-y-8 animate-in fade-in duration-500 pt-4 pb-24">
-            <div className="flex items-center gap-3 mb-2 px-1">
-                 <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Dumbbell size={24} /></div>
-                 <h2 className="text-2xl font-bold text-slate-800">Skill Gym</h2>
-            </div>
 
-            {/* SECTION 1: AI TOOLS */}
-            <div>
-                <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-4 px-1">AI Tools</h3>
-                <div className="bg-slate-50 p-1 rounded-3xl border border-slate-100">
-                    {/* Wir betten den ModernTranslator direkt ein, aber vereinfacht oder als Link */}
-                    {/* Für den Anfang zeigen wir den Translator einfach direkt hier an */}
-                    <ModernTranslator />
-                </div>
-            </div>
-
-            {/* SECTION 2: GRAMMAR DRILLS (Placeholder für dein "Topic Hub") */}
-            <div>
-                <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-4 px-1">Grammar Drills</h3>
-                <div className="space-y-3">
-                    {/* Placeholder Card 1 */}
-                    <button onClick={() => alert("Grammar Hub coming soon!")} className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
-                        <div className="flex items-center gap-4">
-                            <div className="bg-purple-100 text-purple-600 w-12 h-12 rounded-xl flex items-center justify-center font-bold">V</div>
-                            <div className="text-left">
-                                <div className="font-bold text-slate-800">Le Passé Composé</div>
-                                <div className="text-xs text-slate-400">Past Tense • Avoir/Être</div>
+                        {/* Placeholder Conjugator */}
+                        <button 
+                            onClick={() => alert("Conjugator coming soon!")} 
+                            className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] flex flex-col justify-between h-32 text-left group hover:border-emerald-200 transition-all opacity-70"
+                        >
+                            <div className="bg-emerald-50 w-10 h-10 flex items-center justify-center rounded-xl text-emerald-600">
+                                <Layers size={20} />
                             </div>
-                        </div>
-                        <div className="bg-slate-50 px-3 py-1 rounded-lg text-xs font-bold text-slate-400 group-hover:bg-purple-50 group-hover:text-purple-600 transition-colors">Start</div>
-                    </button>
-
-                    {/* Placeholder Card 2 */}
-                    <button onClick={() => alert("Coming soon!")} className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all opacity-60">
-                        <div className="flex items-center gap-4">
-                            <div className="bg-blue-100 text-blue-600 w-12 h-12 rounded-xl flex items-center justify-center font-bold">S</div>
-                            <div className="text-left">
-                                <div className="font-bold text-slate-800">Le Subjonctif</div>
-                                <div className="text-xs text-slate-400">Moods • Triggers</div>
+                            <div>
+                                <div className="font-bold text-slate-700">Conjugator</div>
+                                <div className="text-[10px] text-slate-400">Verb Tables</div>
                             </div>
-                        </div>
-                        <ChevronRight size={20} className="text-slate-300"/>
-                    </button>
+                        </button>
+                    </div>
+                </div>
+
+                {/* 3. GRAMMAR LIBRARY (Accordion) */}
+                <div>
+                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Grammar Modules</h3>
+                    <div className="space-y-3">
+                        {GRAMMAR_MODULES.map((module) => {
+                            const isOpen = expandedCategory === module.id;
+                            return (
+                                <div key={module.id} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300">
+                                    
+                                    {/* Main Card (Click to Expand) */}
+                                    <button 
+                                        onClick={() => toggleCategory(module.id)}
+                                        className="w-full p-5 flex items-center gap-4 text-left active:bg-slate-50 transition-colors"
+                                    >
+                                        <div className={`w-12 h-12 flex items-center justify-center rounded-2xl ${module.color}`}>
+                                            {module.icon}
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="font-bold text-slate-800 text-lg">{module.title}</h4>
+                                            <p className="text-xs text-slate-400">{module.sub}</p>
+                                        </div>
+                                        <ChevronRight size={20} className={`text-slate-300 transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`} />
+                                    </button>
+
+                                    {/* Accordion Content (Sub-List) */}
+                                    {isOpen && (
+                                        <div className="bg-slate-50 border-t border-slate-100 animate-in slide-in-from-top-2 fade-in duration-200">
+                                            {module.topics.map((topic, idx) => (
+                                                <button 
+                                                    key={idx}
+                                                    onClick={() => alert(`Starting drill for: ${topic}`)} 
+                                                    className="w-full p-4 pl-[5rem] text-left flex justify-between items-center text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0"
+                                                >
+                                                    {topic}
+                                                    <Play size={14} className="opacity-0 hover:opacity-100 text-indigo-400" />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    };
     const renderSmartConfig = () => {
         const setMode = (mode) => {
             if (mode === 'new') {
@@ -1196,6 +1393,26 @@ function App() {
             </div>
         );
     };
+    const renderTranslator = () => (
+        <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
+            {/* Header mit Zurück-Button */}
+            <div className="flex items-center gap-3 mb-6 px-1">
+                <button 
+                    onClick={() => setView('skills')}
+                    className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
+                >
+                    <RotateCcw size={20} className="rotate-[-90deg]" />
+                </button>
+                <div>
+                    <h2 className="text-2xl font-bold text-slate-800">AI Tools</h2>
+                    <p className="text-slate-400 text-sm">Translation & Correction</p>
+                </div>
+            </div>
+
+            {/* Deine existierende Translator Komponente */}
+            <ModernTranslator />
+        </div>
+    );
     const fetchAiExamples = async (wordObj) => {
         // Wort-Objekt übergeben statt nur Text, damit wir den Rank haben
         setLoadingExamples(true);
@@ -1871,30 +2088,30 @@ function App() {
     // Helper: Content basierend auf dem Tab rendern (wenn wir nicht in einer Session sind)
     const renderTabContent = () => {
         switch (view) {
-            // TAB 1: HOME
+            // ... Home & Explore Cases wie vorher ...
             case 'home':
-            case 'smart-config': // Overlay im Home Context
-            case 'test-config':  // Overlay im Home Context
+            case 'smart-config':
+            case 'test-config':
                 return renderHome();
             
-            // TAB 2: EXPLORE
             case 'explore':
-            case 'reader':       // Reader gehört zu Explore
-            case 'culture':      // News gehört zu Explore
+            case 'reader':
+            case 'culture':
                 return renderExplore();
             
-            // TAB 3: SKILLS
+            // --- SKILLS BEREICH ---
             case 'skills':
-            case 'grammar':      // Fallback
                 return renderSkills();
-
-            // TAB 4: PROFILE
-            case 'profile':
-            case 'word-detail':  // Detailansicht gehört logisch zum Profil/Library
-            case 'data-mgmt':
-                return renderProfile(); 
             
-            // Session Views (Full Screen, keine Tabs)
+            case 'translator': // <--- NEU: Hierhin leitet der Button im Skills-Tab
+                return renderTranslator();
+
+            // ... Profile Cases wie vorher ...
+            case 'profile':
+            case 'word-detail':
+            case 'data-mgmt':
+                return renderProfile();
+
             default:
                 return renderHome();
         }
