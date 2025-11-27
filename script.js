@@ -38,6 +38,9 @@ const Box = (p) => <Icon {...p} path={<><path d="M21 16.5A2.5 2.5 0 0 1 18.5 19H
 const Palette = (p) => <Icon {...p} path={<><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></>} />;// --- MOCK DATA ---
 const Sparkles = (p) => <Icon {...p} path={<><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></>} />;
 const Volume2 = (p) => <Icon {...p} path={<><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></>} />;
+const Trash2 = (p) => <Icon {...p} path={<><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></>} />;
+const ArrowLeftRight = (p) => <Icon {...p} path={<><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></>} />;
+const MessageSquare = (p) => <Icon {...p} path={<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>} />;
 //const INITIAL_DATA = vocab_List;
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
@@ -96,109 +99,175 @@ const COLLECTIONS = {
 
 // --- NEW COMPONENTS ---
 const ModernTranslator = () => {
+    const [mode, setMode] = useState('translate'); // 'translate' oder 'coach'
+    const [direction, setDirection] = useState('fr-en'); // 'fr-en' (Französisch -> Englisch) oder 'en-fr'
     const [input, setInput] = useState('');
-    const [result, setResult] = useState('');
+    
+    // Ergebnis States
+    const [translationData, setTranslationData] = useState(null); // Für Translator
+    const [correctionData, setCorrectionData] = useState(null);   // Für Coach
+    
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
 
+    // --- LOGIC: TRANSLATE ---
     const handleTranslate = async () => {
         if (!input.trim()) return;
-        
         setLoading(true);
-        setError(null);
-        setResult(''); // Altes Ergebnis löschen
-
+        setTranslationData(null); // Reset
+        
         try {
+            // Wir sagen dem Backend, in welche Sprache es gehen soll
+            const target = direction === 'en-fr' ? 'fr' : 'en';
+            
             const res = await fetch('/api/translate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: input.trim() })
+                body: JSON.stringify({ text: input.trim(), targetLang: target })
             });
-            
             const data = await res.json();
-
-            if (data.error) throw new Error(data.error);
-            setResult(data.translation);
+            setTranslationData(data); // Erwartet: { translation: "...", examples: [...] }
         } catch (err) {
-            setError("Oops! Something went wrong. Please try again.");
-            console.error(err);
+            alert("Translation failed. Check connection.");
         } finally {
             setLoading(false);
         }
     };
 
-    // Enter-Taste Support (Strg+Enter zum Senden)
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-            handleTranslate();
+    // --- LOGIC: CORRECT ---
+    const handleCorrection = async () => {
+        if (!input.trim()) return;
+        setLoading(true);
+        setCorrectionData(null); // Reset
+
+        try {
+            const res = await fetch('/api/correct', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: input.trim() })
+            });
+            const data = await res.json();
+            setCorrectionData(data); // Erwartet: { corrected: "...", explanation: "..." }
+        } catch (err) {
+            alert("Correction failed.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="w-full max-w-xl mx-auto space-y-4">
+        <div className="w-full max-w-xl mx-auto space-y-6">
             
-            {/* INPUT CARD */}
-            <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden transition-shadow focus-within:shadow-md focus-within:border-indigo-300">
-                <div className="bg-slate-50 px-4 py-2 border-b border-slate-100 flex justify-between items-center">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Input (German/English)</span>
-                    {input && (
-                        <button onClick={() => {setInput(''); setResult('');}} className="text-slate-400 hover:text-slate-600">
-                            <X size={16} />
+            {/* 1. MODE SWITCHER (Tabs) */}
+            <div className="bg-slate-200 p-1 rounded-2xl flex">
+                <button 
+                    onClick={() => { setMode('translate'); setInput(''); setTranslationData(null); }}
+                    className={`flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'translate' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}
+                >
+                    <ArrowLeftRight size={16}/> Translator
+                </button>
+                <button 
+                    onClick={() => { setMode('coach'); setInput(''); setCorrectionData(null); }}
+                    className={`flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'coach' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500'}`}
+                >
+                    <MessageSquare size={16}/> Writing Coach
+                </button>
+            </div>
+
+            {/* 2. INPUT CARD */}
+            <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                
+                {/* Header mit Controls */}
+                <div className="bg-slate-50 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
+                    {mode === 'translate' ? (
+                        <button 
+                            onClick={() => setDirection(prev => prev === 'en-fr' ? 'fr-en' : 'en-fr')}
+                            className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-slate-500 hover:text-indigo-600 transition-colors"
+                        >
+                            {direction === 'en-fr' ? '🇬🇧/🇩🇪 ➝ 🇫🇷 French' : '🇫🇷 French ➝ 🇬🇧 English'}
+                            <RotateCcw size={12} />
                         </button>
+                    ) : (
+                        <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-2">
+                            <PenTool size={14}/> Write in French
+                        </span>
                     )}
+                    
+                    {input && <button onClick={() => setInput('')}><X size={16} className="text-slate-400"/></button>}
                 </div>
+
                 <textarea 
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Type something to translate..."
-                    className="w-full h-32 p-4 text-lg text-slate-700 placeholder-slate-300 outline-none resize-none bg-transparent"
+                    placeholder={mode === 'translate' ? "Enter text..." : "Ecrivez quelque chose en français..."}
+                    className="w-full h-32 p-4 text-lg text-slate-700 outline-none resize-none bg-transparent"
                 />
-                <div className="px-4 py-3 bg-white border-t border-slate-50 flex justify-end">
+
+                <div className="px-4 py-3 border-t border-slate-50 flex justify-end bg-slate-50/50">
                     <button 
-                        onClick={handleTranslate} 
+                        onClick={mode === 'translate' ? handleTranslate : handleCorrection} 
                         disabled={loading || !input}
                         className={`rounded-xl px-6 py-2.5 font-bold text-white transition-all flex items-center gap-2 ${
                             loading || !input 
-                            ? 'bg-slate-200 text-slate-400 cursor-not-allowed' 
-                            : 'bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 active:scale-95'
+                            ? 'bg-slate-300 cursor-not-allowed' 
+                            : mode === 'translate' ? 'bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200' : 'bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200'
                         }`}
                     >
-                        {loading ? (
-                            <><RotateCcw className="animate-spin" size={18}/> Translating...</>
-                        ) : (
-                            <><PenTool size={18}/> Translate</>
-                        )}
+                        {loading ? <RotateCcw className="animate-spin" size={18}/> : <Play size={18} fill="currentColor"/>}
+                        {mode === 'translate' ? 'Translate' : 'Check Grammar'}
                     </button>
                 </div>
             </div>
 
-            {/* ERROR MESSAGE */}
-            {error && (
-                <div className="bg-red-50 text-red-600 p-4 rounded-2xl text-sm border border-red-100 flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
-                    <Activity size={18} /> {error}
+            {/* 3. RESULTS AREA */}
+            
+            {/* A) TRANSLATOR RESULT */}
+            {mode === 'translate' && translationData && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                    {/* Main Translation */}
+                    <div className="bg-indigo-50 rounded-3xl border border-indigo-100 p-6 relative">
+                        <button onClick={() => speak(translationData.translation)} className="absolute top-4 right-4 p-2 text-indigo-400 hover:text-indigo-700"><Volume2 size={20}/></button>
+                        <span className="text-xs font-bold text-indigo-300 uppercase tracking-wide block mb-2">Translation</span>
+                        <p className="text-2xl text-indigo-900 font-serif">{translationData.translation}</p>
+                    </div>
+
+                    {/* Auto-Examples */}
+                    {translationData.examples && (
+                        <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-sm">
+                            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 flex items-center gap-2">
+                                <Sparkles size={14}/> Context Examples
+                            </h4>
+                            <div className="space-y-3">
+                                {translationData.examples.map((ex, idx) => (
+                                    <div key={idx} className="flex justify-between items-start gap-3 pb-3 border-b border-slate-50 last:border-0 last:pb-0">
+                                        <div>
+                                            <p className="text-slate-800 font-medium text-sm">{ex.fr}</p>
+                                            <p className="text-slate-400 text-xs italic">{ex.en}</p>
+                                        </div>
+                                        <button onClick={() => speak(ex.fr)} className="text-slate-300 hover:text-indigo-500"><Volume2 size={16}/></button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
 
-            {/* RESULT CARD (Nur sichtbar wenn Ergebnis da ist) */}
-            {result && (
-                <div className="bg-indigo-50 rounded-3xl border border-indigo-100 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div className="bg-indigo-100/50 px-4 py-2 border-b border-indigo-100 flex justify-between items-center">
-                        <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">French Translation</span>
-                        <button 
-                            onClick={() => navigator.clipboard.writeText(result)} 
-                            className="text-indigo-400 hover:text-indigo-600 text-xs font-bold flex items-center gap-1"
-                        >
-                            <Save size={14} /> Copy
-                        </button>
+            {/* B) COACH RESULT */}
+            {mode === 'coach' && correctionData && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                    {/* Correction */}
+                    <div className="bg-emerald-50 rounded-3xl border border-emerald-100 p-6">
+                        <span className="text-xs font-bold text-emerald-400 uppercase tracking-wide block mb-2">Corrected Version</span>
+                        <p className="text-xl text-emerald-900 font-medium">{correctionData.corrected}</p>
                     </div>
-                    <div className="p-6">
-                        <p className="text-2xl md:text-3xl text-indigo-900 font-serif leading-relaxed">
-                            {result}
-                        </p>
+                    {/* Explanation */}
+                    <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm">
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-2">Teacher's Note</span>
+                        <p className="text-slate-600 text-sm leading-relaxed">{correctionData.explanation}</p>
                     </div>
                 </div>
             )}
+
         </div>
     );
 };
@@ -276,8 +345,9 @@ function App() {
 // --- ANKI ALGORITHM (SM-2 Variation) ---
     // --- ANKI ALGORITHM (SM-2 Variation) ---
     // --- ANKI ALGORITHM (SM-2 Variation) ---
+    // --- ANKI ALGORITHM (SM-2 Variation) ---
     const calculateAnkiStats = (currentStats, quality) => {
-        // quality: 0=Again, 1=Hard, 2=Good, 3=Easy
+        // quality: 0=Again (Missed), 1=Hard, 2=Good, 3=Easy
         
         let interval = currentStats?.interval ?? 0;
         let ease = currentStats?.ease ?? 2.5;
@@ -286,40 +356,39 @@ function App() {
         let nextInterval;
         let nextRepetitions = repetitions + 1;
 
-        // --- SONDERFALL: NEUES WORT (oder Reset) ---
-        if (interval === 0) {
-            if (quality === 0) {
-                nextInterval = 0; // Again
-                nextRepetitions = 0;
-            } else if (quality === 1) {
-                nextInterval = 0; // Hard: Bleibt auf 0 -> Zählt NICHT als gelernt
-            } else if (quality === 2) {
-                nextInterval = 1; // Good: 1 Tag -> Zählt als gelernt
-            } else {
-                nextInterval = 4; // Easy: 4 Tage -> Zählt als gelernt
-            }
+        // --- SZENARIO 1: RESET (Vergessen) ---
+        if (quality === 0) {
+            nextInterval = 0; // Zurück auf "Neu"
+            nextRepetitions = 0; // Zähler resetten
+            ease = Math.max(1.3, ease - 0.2); // Strafe: Das Wort gilt als schwieriger (Ease sinkt)
+        }
+        // --- SZENARIO 2: NEUES WORT (Erstes Lernen) ---
+        else if (interval === 0) {
+            if (quality === 1) nextInterval = 0; // Hard bleibt bei Neu (nochmal üben)
+            else if (quality === 2) nextInterval = 1; // Good = 1 Tag
+            else nextInterval = 4; // Easy = 4 Tage
         } 
-        // --- NORMALFALL: WIEDERHOLUNG ---
+        // --- SZENARIO 3: WIEDERHOLUNG (Review) ---
         else {
-            if (quality === 0) {
-                nextInterval = 0; // Reset
-                nextRepetitions = 0;
-            } else {
-                // Ease Factor Anpassung
-                let easeMod = (quality === 1) ? -0.20 : (quality === 3) ? 0.15 : 0;
-                let nextEase = Math.max(1.3, ease + easeMod);
-                
-                // Intervall Berechnung
-                let factor = (quality === 1) ? 1.2 : (quality === 3 ? nextEase * 1.3 : nextEase);
-                nextInterval = Math.ceil(interval * factor);
-                ease = nextEase;
-            }
+            // Ease Factor anpassen
+            // Hard(-0.15), Good(0), Easy(+0.15)
+            let easeMod = (quality === 1) ? -0.15 : (quality === 3) ? 0.15 : 0;
+            let nextEase = Math.max(1.3, ease + easeMod);
+            
+            // Intervall Berechnung (Exponential)
+            // Hard: x1.2
+            // Good: x Ease (z.B. x2.5)
+            // Easy: x Ease x 1.3 (z.B. x3.25)
+            let factor = (quality === 1) ? 1.2 : (quality === 3 ? nextEase * 1.3 : nextEase);
+            
+            nextInterval = Math.ceil(interval * factor);
+            ease = nextEase;
         }
 
         return { 
             interval: nextInterval,
-            // WICHTIG: Wir speichern interval auch als "box", damit Stats & Library funktionieren!
-            // Wenn interval 0 ist (bei Hard/Again), ist box 0 -> nicht in Statistik.
+            // WICHTIG: Wenn nextInterval 0 ist (bei Missed), ist auch box 0.
+            // Die Statistik zählt nur box > 0. Damit fliegt es raus!
             box: nextInterval, 
             ease: ease, 
             repetitions: nextRepetitions,
@@ -1222,13 +1291,33 @@ function App() {
             { limit: 5000, label: "Mastery", desc: "Native-like Nuance", color: "bg-pink-500" },
         ];
 
+        // --- RESET LOGIC ---
+        const handleHardReset = () => {
+            // 1. Sicherheitsabfrage
+            if (window.confirm("DEBUG: Are you sure you want to delete ALL learning progress? This cannot be undone.")) {
+                // 2. PIN Abfrage
+                const pin = window.prompt("Enter Debug PIN to confirm reset:");
+                
+                if (pin === "1999") {
+                    setUserProgress({}); // State komplett leeren
+                    localStorage.removeItem('vocabApp_progress'); // Speicher leeren
+                    alert("System Reset: All words set to 'unknown'. Stats cleared.");
+                    setView('home'); // Zurück zum Start
+                } else if (pin !== null) {
+                    alert("❌ Access Denied: Wrong PIN.");
+                }
+            }
+        };
+
         return (
-            <div className="space-y-6 animate-in fade-in duration-500 pt-4">
-                <div className="flex items-center gap-3 mb-2">
+            <div className="space-y-6 animate-in fade-in duration-500 pt-4 pb-24">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-2 px-1">
                      <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><BarChart3 size={24} /></div>
                      <h2 className="text-2xl font-bold text-slate-800">Frequency Profile</h2>
                 </div>
 
+                {/* Progress Bars */}
                 <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-6">
                     {milestones.map((m) => {
                         const pct = getStatsForRange(m.limit);
@@ -1255,10 +1344,22 @@ function App() {
                     })}
                 </div>
                 
+                {/* Quote */}
                 <div className="text-center p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
                     <p className="text-xs text-slate-500 italic">
                         "Focus on the Foundation first. The first 1000 words account for 85% of daily speech."
                     </p>
+                </div>
+
+                {/* --- DEBUG SECTION (Danger Zone) --- */}
+                <div className="mt-8 pt-8 border-t border-slate-200 px-2">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 text-center">Developer Zone</p>
+                    <button 
+                        onClick={handleHardReset}
+                        className="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 p-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-colors"
+                    >
+                        <Trash2 size={18} /> Factory Reset App
+                    </button>
                 </div>
             </div>
         );
