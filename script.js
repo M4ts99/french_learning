@@ -45,11 +45,11 @@ const MessageSquare = (p) => <Icon {...p} path={<path d="M21 15a2 2 0 0 1-2 2H7l
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
         { id: 'home', label: 'Home', icon: <HomeIcon size={24} /> },
-        { id: 'library', label: 'Library', icon: <BookOpen size={24} /> },
-        { id: 'grammar', label: 'Translator', icon: <PenTool size={24} /> }, // <--- NEU
-        { id: 'stats', label: 'Profile', icon: <User size={24} /> },
-        
+        { id: 'practice', label: 'Practice', icon: <BookCheck size={24} /> }, // NEU: Statt Library
+        { id: 'grammar', label: 'Translator', icon: <PenTool size={24} /> },
+        { id: 'profile', label: 'Profile', icon: <User size={24} /> }, // Umbenannt zu Profile
     ];
+// ... rest of component ...
 
     return (
         /* pb-safe sorgt für Abstand zum unteren Bildschirmrand (iPhone Strich) */
@@ -304,6 +304,7 @@ function App() {
     const [librarySearch, setLibrarySearch] = useState(''); // Suche in der Library
     const [showReviewModal, setShowReviewModal] = useState(false); // Modal für Review-Start
     const [selectedWord, setSelectedWord] = useState(null); // Welches Wort wir gerade anschauen
+    const [showStats, setShowStats] = useState(false);
     
     
     // Session State
@@ -797,6 +798,7 @@ function App() {
             </div>
         </div>
     );
+    
     const renderSmartConfig = () => {
         const setMode = (mode) => {
             if (mode === 'new') {
@@ -1309,6 +1311,42 @@ function App() {
             <ModernTranslator />
         </div>
     );
+    const renderPractice = () => (
+        <div className="space-y-6 animate-in fade-in duration-500 pt-4 pb-24">
+            <div className="flex items-center gap-3 mb-2 px-1">
+                 <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><BookCheck size={24} /></div>
+                 <h2 className="text-2xl font-bold text-slate-800">Practice Room</h2>
+            </div>
+            
+            <p className="text-slate-500 px-1">Apply your knowledge in real context.</p>
+
+            <div className="grid gap-4">
+                {/* STORIES CARD (Placeholder) */}
+                <button className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 text-left flex items-center gap-4 group hover:border-indigo-200 transition-all active:scale-[0.98]">
+                    <div className="bg-amber-100 w-12 h-12 flex items-center justify-center rounded-2xl text-amber-600 group-hover:scale-110 transition-transform">
+                        <BookOpen size={24} />
+                    </div>
+                    <div>
+                        <h3 className="font-bold text-slate-800 text-lg">Stories</h3>
+                        <p className="text-slate-400 text-xs">Read adaptive short stories.</p>
+                    </div>
+                    <div className="ml-auto bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-1 rounded">SOON</div>
+                </button>
+
+                {/* NEWS CARD (Placeholder) */}
+                <button className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 text-left flex items-center gap-4 group hover:border-indigo-200 transition-all active:scale-[0.98] opacity-60">
+                    <div className="bg-blue-100 w-12 h-12 flex items-center justify-center rounded-2xl text-blue-600">
+                        <Activity size={24} />
+                    </div>
+                    <div>
+                        <h3 className="font-bold text-slate-800 text-lg">News Feed</h3>
+                        <p className="text-slate-400 text-xs">Real french headlines.</p>
+                    </div>
+                    <div className="ml-auto"><ChevronRight size={20} className="text-slate-300"/></div>
+                </button>
+            </div>
+        </div>
+    );
     const renderDataMgmt = () => (
         <div className="max-w-2xl mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
             <div className="flex items-center gap-3 mb-6">
@@ -1323,85 +1361,167 @@ function App() {
         </div>
     );
     
-    const renderStats = () => {
+    const renderProfile = () => {
+        // HINWEIS: Wenn du "showStats" in der App() definiert hast,
+        // lösche diese Zeile hier. Wenn nicht, lass sie stehen.
+        
+        
+        // FIX: Wir zeigen keinen Loading-Screen mehr, sondern rendern einfach, was da ist.
+        // Wir nehmen sicherheitshalber ein leeres Array, falls vocabulary null ist.
+        const safeVocab = vocabulary || [];
+
+        // 1. Daten filtern (Nur gelernt)
+        const learnedList = safeVocab.filter(w => {
+            const p = userProgress[w.rank];
+            // Sicherer Zugriff mit "?."
+            return p && p.box > 0;
+        });
+
+        // 2. Suche und Sortierung
+        const filteredList = learnedList.filter(w => {
+            const search = (librarySearch || '').toLowerCase(); 
+            const fr = (w.french || '').toLowerCase();
+            const en = (w.english || '').toLowerCase();
+            const de = w.german ? w.german.toLowerCase() : ''; 
+            return fr.includes(search) || en.includes(search) || de.includes(search);
+        }).sort((a, b) => a.rank - b.rank);
+
+        // Daten für die Statistik
         const milestones = [
-            { limit: 100, label: "Foundation", desc: "Survival Vocabulary", color: "bg-indigo-400" },
-            { limit: 500, label: "Essentials", desc: "Daily Conversation", color: "bg-indigo-500" },
-            { limit: 1000, label: "Base", desc: "Solid Understanding", color: "bg-violet-500" },
-            { limit: 2000, label: "Extension", desc: "Fluent Expression", color: "bg-fuchsia-500" },
-            { limit: 5000, label: "Mastery", desc: "Native-like Nuance", color: "bg-pink-500" },
+            { limit: 100, label: "Foundation", desc: "Survival", color: "bg-indigo-400" },
+            { limit: 500, label: "Essentials", desc: "Daily Life", color: "bg-indigo-500" },
+            { limit: 1000, label: "Base", desc: "Understanding", color: "bg-violet-500" },
+            { limit: 2000, label: "Extension", desc: "Fluent", color: "bg-fuchsia-500" },
+            { limit: 5000, label: "Mastery", desc: "Native", color: "bg-pink-500" },
         ];
 
-        // --- RESET LOGIC ---
         const handleHardReset = () => {
-            // 1. Sicherheitsabfrage
-            if (window.confirm("DEBUG: Are you sure you want to delete ALL learning progress? This cannot be undone.")) {
-                // 2. PIN Abfrage
-                const pin = window.prompt("Enter Debug PIN to confirm reset:");
-                
+            if (window.confirm("Delete ALL progress? This cannot be undone.")) {
+                const pin = window.prompt("Enter PIN to confirm:");
                 if (pin === "1999") {
-                    setUserProgress({}); // State komplett leeren
-                    localStorage.removeItem('vocabApp_progress'); // Speicher leeren
-                    alert("System Reset: All words set to 'unknown'. Stats cleared.");
-                    setView('home'); // Zurück zum Start
-                } else if (pin !== null) {
-                    alert("❌ Access Denied: Wrong PIN.");
+                    setUserProgress({});
+                    localStorage.removeItem('vocabApp_progress');
+                    alert("System Reset: Done.");
+                    setView('home');
                 }
             }
         };
 
         return (
-            <div className="space-y-6 animate-in fade-in duration-500 pt-4 pb-24">
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-2 px-1">
-                     <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><BarChart3 size={24} /></div>
-                     <h2 className="text-2xl font-bold text-slate-800">Frequency Profile</h2>
-                </div>
-
-                {/* Progress Bars */}
-                <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-6">
-                    {milestones.map((m) => {
-                        const pct = getStatsForRange(m.limit);
-                        return (
-                            <div key={m.limit}>
-                                <div className="flex justify-between items-end mb-2">
-                                    <div>
-                                        <div className="font-bold text-slate-700 flex items-center gap-2">
-                                            {m.label} 
-                                            <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">Top {m.limit}</span>
-                                        </div>
-                                        <div className="text-xs text-slate-400">{m.desc}</div>
-                                    </div>
-                                    <div className="font-bold text-lg text-slate-800">{pct}%</div>
-                                </div>
-                                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-                                    <div 
-                                        className={`h-full rounded-full transition-all duration-1000 ${m.color}`} 
-                                        style={{ width: `${pct}%` }}
-                                    ></div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
+            <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in duration-500 pt-2 pb-24">
                 
-                {/* Quote */}
-                <div className="text-center p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                    <p className="text-xs text-slate-500 italic">
-                        "Focus on the Foundation first. The first 1000 words account for 85% of daily speech."
-                    </p>
-                </div>
-
-                {/* --- DEBUG SECTION (Danger Zone) --- */}
-                <div className="mt-8 pt-8 border-t border-slate-200 px-2">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 text-center">Developer Zone</p>
+                {/* 1. HEADER & TOGGLE (Immer sichtbar!) */}
+                <div className="flex items-center justify-between px-1">
+                    <div>
+                        <h2 className="text-2xl font-bold text-slate-800">My Profile</h2>
+                        <p className="text-slate-400 text-xs">{learnedList.length} words learned</p>
+                    </div>
                     <button 
-                        onClick={handleHardReset}
-                        className="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 p-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-colors"
+                        onClick={() => setShowStats(!showStats)}
+                        className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all ${showStats ? 'bg-indigo-100 text-indigo-700' : 'bg-white border border-slate-200 text-slate-600'}`}
                     >
-                        <Trash2 size={18} /> Factory Reset App
+                        <BarChart3 size={16} /> 
+                        {showStats ? 'Hide Stats' : 'Frequency Profile'}
                     </button>
                 </div>
+
+                {/* 2. STATS SECTION (Collapsible) */}
+                {showStats && (
+                    <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-6 animate-in slide-in-from-top-2 fade-in">
+                        {milestones.map((m) => {
+                            const pct = getStatsForRange(m.limit);
+                            return (
+                                <div key={m.limit}>
+                                    <div className="flex justify-between items-end mb-2">
+                                        <div className="font-bold text-slate-700 text-sm">{m.label} <span className="text-[10px] text-slate-400">Top {m.limit}</span></div>
+                                        <div className="font-bold text-sm text-slate-800">{pct}%</div>
+                                    </div>
+                                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                        <div className={`h-full rounded-full transition-all duration-1000 ${m.color}`} style={{ width: `${pct}%` }}></div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        
+                        <div className="pt-4 border-t border-slate-100">
+                            <button onClick={handleHardReset} className="text-xs text-red-400 hover:text-red-600 flex items-center gap-1 mx-auto">
+                                <Trash2 size={12}/> Reset Progress
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* 3. LIBRARY SEARCH BAR (Immer sichtbar!) */}
+                <div className="relative sticky top-2 z-20">
+                    <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input 
+                        type="text" 
+                        value={librarySearch}
+                        onChange={(e) => setLibrarySearch(e.target.value)}
+                        placeholder="Search your collection..." 
+                        className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-4 text-sm focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm transition-all"
+                    />
+                    {librarySearch && (
+                        <button onClick={() => setLibrarySearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                            <X size={14} />
+                        </button>
+                    )}
+                </div>
+
+                {/* 4. WORD LIST */}
+                {learnedList.length > 0 ? (
+                    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100">
+                        {filteredList.slice(0, 100).map(word => (
+                            <button 
+                                key={word.rank} 
+                                onClick={() => {
+                                    setSelectedWord(word);
+                                    setIsFlipped(false);
+                                    setAiExamples(null);
+                                    setView('word-detail');
+                                }}
+                                className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors text-left group"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <span className="text-xs font-mono text-slate-300 w-8">#{word.rank}</span>
+                                    <div>
+                                        <div className="font-bold text-slate-800">{word.french}</div>
+                                        <div className="text-xs text-slate-500 truncate max-w-[150px] opacity-70">
+                                            {word.english || word.german}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[10px] font-bold text-slate-300 bg-slate-50 px-2 py-1 rounded-lg group-hover:bg-indigo-50 group-hover:text-indigo-400 transition-colors">
+                                        {/* Sicherer Zugriff auf Box */}
+                                        Box {userProgress[word.rank]?.box || '?'}
+                                    </span>
+                                    <ChevronRight size={16} className="text-slate-200 group-hover:text-indigo-300" />
+                                </div>
+                            </button>
+                        ))}
+                        {filteredList.length === 0 && (
+                            <div className="p-8 text-center text-slate-400 text-sm">No matches found.</div>
+                        )}
+                        {filteredList.length > 100 && (
+                            <div className="p-3 text-center text-xs text-slate-400 bg-slate-50">
+                                ...and {filteredList.length - 100} more
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    // 5. EMPTY STATE (Dies wird angezeigt, wenn noch nichts gelernt wurde)
+                    <div className="text-center p-10 bg-white rounded-3xl border border-dashed border-slate-200 text-slate-400">
+                        <div className="bg-slate-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <BookOpen size={20} />
+                        </div>
+                        <p className="text-sm">Your collection is empty.</p>
+                        <p className="text-xs opacity-70 mb-4">Start learning to fill your library.</p>
+                        <button onClick={() => setView('smart-config')} className="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl font-bold text-sm hover:bg-indigo-100 transition-colors">
+                            Start Learning
+                        </button>
+                    </div>
+                )}
             </div>
         );
     };
@@ -1549,29 +1669,31 @@ function App() {
     const renderTabContent = () => {
         switch (view) {
             case 'home':
-            case 'smart-config': // Config gehört logisch zum Home-Tab flow
+            case 'smart-config':
             case 'test-config':
-                return renderHome(); // Dein bestehendes Home, ggf. angepasst
+                return renderHome();
             
-            case 'library':
-            case 'learned-section':
-                // Hier könntest du renderLearnedSection() direkt aufrufen oder ein Untermenü bauen
-                return renderLearnedSection(); 
+            // NEU: Practice Tab
+            case 'practice':
+                return renderPractice(); 
             
-            case 'stats':
-                return renderStats();
+            // NEU: Profile (enthält Stats + Library)
+            case 'profile':
+            case 'stats': // Fallback für alte Links
+            case 'library': // Fallback
+            case 'learned-section': // Fallback
+                return renderProfile(); 
+
+            // Detail View für Wörter (bleibt gleich)
+            case 'word-detail':
+                return renderWordDetail();
 
             case 'settings':
             case 'grammar':
                 return renderGrammar();
+            
             case 'data-mgmt':
-                return renderDataMgmt(); // Oder ein erweitertes Settings-Menü
-            case 'word-detail': // <--- NEU
-                return renderWordDetail();
-
-            case 'library':
-            case 'learned-section':
-                return renderLearnedSection();
+                return renderDataMgmt();
             
             default:
                 return renderHome();
