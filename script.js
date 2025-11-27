@@ -893,14 +893,14 @@ function App() {
                                         onClick={() => fetchAiExamples(word.french)}
                                         className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2"
                                     >
-                                        <Sparkles size={16} /> Generate AI Context
+                                        <Sparkles size={16} /> More examples
                                     </button>
                                 )}
 
                                 {/* 2. Lade-Animation */}
                                 {loadingExamples && (
                                     <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2">
-                                        <RotateCcw className="animate-spin" size={16}/> Asking Gemini...
+                                        <RotateCcw className="animate-spin" size={16}/> generating...
                                     </div>
                                 )}
 
@@ -919,7 +919,7 @@ function App() {
                                                         onClick={() => speak(ex.fr)} 
                                                         className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors"
                                                     >
-                                                        <Volume2 size={16} />
+                                                        <Volume2 size={32} />
                                                     </button>
                                                 </div>
                                                 <p className="text-slate-400 text-xs italic mt-1 border-t border-slate-50 pt-1">{ex.en}</p>
