@@ -2231,20 +2231,29 @@ function App() {
                         </button>
                     </div>
 
+                    {/* STORY CONTAINER */}
                     <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-100">
                         <h2 className="text-2xl font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">{currentStory.title}</h2>
-                        <div className="text-lg text-slate-700 leading-loose font-serif">
-                            {currentStory.text.split(' ').map((word, i) => {
-                                // HIER GEÄNDERT: Keine Farb-Logik mehr, alles ist normaler Text, aber klickbar
+                        
+                        <div className="text-lg text-slate-700 leading-loose font-serif text-justify">
+                            {currentStory.text.split(' ').map((wordRaw, i) => {
+                                // 1. Sternchen (**) und Unterstriche (__) gnadenlos entfernen für die Anzeige
+                                const displayText = wordRaw.replace(/[\*_]/g, "");
+                                
+                                // 2. Bereinigtes Wort für den Vergleich (ohne Satzzeichen)
+                                const compareWord = displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
+                                
                                 return (
                                     <span 
                                         key={i} 
-                                        onClick={(e) => handleWordClick(e, word)}
-                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 ${
-                                            clickedWord?.french === word.replace(/[.,!?;:]/g, "").toLowerCase() ? 'bg-yellow-200' : ''
+                                        // Wir übergeben das rohe Wort, damit die Klick-Logik Satzzeichen handeln kann
+                                        onClick={(e) => handleWordClick(e, wordRaw)}
+                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 hover:text-indigo-600 ${
+                                            // Gelb markieren wenn angeklickt
+                                            clickedWord?.french === compareWord ? 'bg-yellow-200 text-slate-900' : ''
                                         }`}
                                     >
-                                        {word}
+                                        {displayText}
                                     </span>
                                 );
                             })}
