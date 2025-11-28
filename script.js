@@ -794,188 +794,196 @@ function App() {
         });
         const hasWeakWords = weakWords.length > 0;
 
-        // --- 2. SMART HEADER INHALTE ---
+        // --- 2. MEILENSTEIN LOGIK ---
+        const milestones = [
+            { limit: 100, label: "Foundation", color: "bg-indigo-500" },
+            { limit: 500, label: "Essentials", color: "bg-blue-500" },
+            { limit: 1000, label: "Base", color: "bg-cyan-500" },
+            { limit: 2000, label: "Extension", color: "bg-teal-500" },
+            { limit: 5000, label: "Mastery", color: "bg-emerald-500" },
+        ];
+
+        let currentMilestone = milestones[0];
+        for (let m of milestones) {
+            if (totalLearned < (m.limit * 0.95)) { 
+                currentMilestone = m;
+                break;
+            }
+            currentMilestone = m; 
+        }
+        const progressPercent = Math.min(100, (totalLearned / currentMilestone.limit) * 100);
+
+        // --- 3. HEADER INHALTE ---
         const now = new Date();
         const hour = now.getHours();
         const dateKey = `${now.getDate()}-${now.getMonth() + 1}`; 
         const dateString = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
 
         const SPECIAL_DATES = {
-            "1-1": { title: "Bonne Année ! 🎉", sub: "Happy New Year from France." },
-            "14-7": { title: "C'est le 14 Juillet ! 🎆", sub: "Bastille Day - La Fête Nationale." },
-            "25-12": { title: "Joyeux Noël ! 🎄", sub: "Merry Christmas!" },
+            "1-1": { title: "Bonne Année !", icon: "🎉" },
+            "14-7": { title: "Fête Nationale !", icon: "🎆" },
+            "25-12": { title: "Joyeux Noël !", icon: "🎄" },
         };
 
+        let greeting = hour < 12 ? "Bon matin" : hour < 18 ? "Bonne après-midi" : "Bonsoir";
+        let icon = hour < 12 ? "☕" : hour < 18 ? "☀️" : "🌙";
+
+        if (SPECIAL_DATES[dateKey]) {
+            greeting = SPECIAL_DATES[dateKey].title;
+            icon = SPECIAL_DATES[dateKey].icon;
+        }
+        
+        // Fakten & Tipps
         const FRANCE_FACTS = [
             "Did you know? French is spoken in 29 countries.",
             "Paris has over 400 parks and gardens.",
             "The Louvre is the most visited museum in the world.",
             "French has no word for 'cheap' (only 'bon marché').",
-            "There are over 400 types of cheese in France."
+            "Croissants were actually invented in Austria."
         ];
         const dayOfYear = Math.floor(Date.now() / 86400000);
         const dailyFact = FRANCE_FACTS[dayOfYear % FRANCE_FACTS.length];
 
-        let greeting = hour < 12 ? "Bon matin" : hour < 18 ? "Bonne après-midi" : "Bonsoir";
-        let subText = dailyFact;
-        let greetingIcon = hour < 12 ? "☕" : hour < 18 ? "☀️" : "🌙";
-
-        if (SPECIAL_DATES[dateKey]) {
-            greeting = SPECIAL_DATES[dateKey].title;
-            subText = SPECIAL_DATES[dateKey].sub;
-            greetingIcon = ""; // Icon ist im Titel
-        }
-
-        // Grammar Tip Logic
         const GRAMMAR_TIPS = [
             { title: "C'est vs. Il est", text: "Use 'C'est' for nouns. Use 'Il est' for adjectives." },
             { title: "Pas de vs. Pas du", text: "After a negative (ne...pas), always use 'de', never 'du'." },
-            { title: "Silent Letters", text: "Final consonants (s, t, d, x) are usually silent in French." }
+            { title: "Endings -er verbs", text: "Regular -er verbs sound the same in singular: Je parle, Tu parles, Il parle." }
         ];
         const dailyTip = GRAMMAR_TIPS[dayOfYear % GRAMMAR_TIPS.length];
 
         return (
-            <div className="space-y-5 animate-in fade-in duration-500 pt-4 pb-24 px-1">
+            <div className="pb-24">
                 
-                {/* 1. NEUER SMART DASHBOARD HEADER (Weiße Karte) */}
-                <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 relative overflow-hidden">
+                {/* --- STICKY HEADER MIT FORTSCHRITT --- */}
+                <div className="sticky top-0 z-40 bg-slate-50/95 backdrop-blur-xl border-b border-slate-200 -mx-5 -mt-6 px-6 pt-12 pb-0 mb-6 shadow-sm">
                     
-                    {/* Top Row: Datum & Streak */}
-                    <div className="flex justify-between items-center mb-4">
-                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded-lg">
+                    {/* Obere Zeile: Datum & Streak */}
+                    <div className="flex justify-between items-center mb-2">
+                        <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest opacity-90">
                             {dateString}
                         </div>
-                        {/* STREAK ANZEIGE */}
-                        <div className="flex items-center gap-1.5 bg-orange-50 text-orange-600 px-3 py-1 rounded-full border border-orange-100 shadow-sm">
-                            <Flame size={14} fill="currentColor" className="animate-pulse" />
-                            <span className="font-bold text-sm">{streak} Day Streak</span>
+                        <div className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-full border border-slate-200 shadow-sm shrink-0">
+                            <Flame size={14} className="text-orange-500 fill-orange-500 animate-pulse" />
+                            <span className="font-bold text-slate-700 text-xs">{streak}</span>
                         </div>
                     </div>
 
-                    {/* Middle: Begrüßung */}
-                    <div className="mb-2 relative z-10">
-                        <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-600 leading-tight">
-                            {greeting} <span className="text-2xl text-slate-800">{greetingIcon}</span>
+                    {/* Begrüßung */}
+                    <div className="flex justify-between items-end mb-4">
+                        <h1 className="text-2xl font-extrabold text-slate-800 leading-tight">
+                            {greeting} <span className="ml-1">{icon}</span>
                         </h1>
                     </div>
 
-                    {/* Bottom: Fact */}
-                    <div className="relative z-10">
-                        <div className="inline-flex items-start gap-2">
-                            <div className="min-w-[3px] h-8 bg-indigo-400 rounded-full mt-1"></div>
-                            <p className="text-slate-500 text-xs font-medium leading-relaxed italic">
-                                "{subText}"
-                            </p>
+                    {/* PROGRESS SECTION (Integriert) */}
+                    <div className="pb-4">
+                        <div className="flex justify-between items-end mb-1.5 px-0.5">
+                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                                <Trophy size={12} className="text-amber-500"/>
+                                {currentMilestone.label}
+                            </div>
+                            <div className="text-xs font-bold text-slate-600">
+                                {totalLearned} <span className="text-slate-300 font-normal">/ {currentMilestone.limit}</span>
+                            </div>
+                        </div>
+                        {/* Der schmale Balken */}
+                        <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                            <div 
+                                className={`h-full rounded-full transition-all duration-1000 ease-out ${currentMilestone.color}`} 
+                                style={{ width: `${progressPercent}%` }}
+                            ></div>
                         </div>
                     </div>
-
-                    {/* Deko Hintergrund (Ganz subtil) */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full mix-blend-multiply filter blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2"></div>
                 </div>
 
-                {/* 2. PROGRESS (Minimalistisch unter dem Header) */}
-                {(() => {
-                    const milestones = [
-                        { limit: 100, label: "Foundation", color: "bg-indigo-500" },
-                        { limit: 500, label: "Essentials", color: "bg-blue-500" },
-                        { limit: 1000, label: "Base", color: "bg-cyan-500" },
-                        { limit: 5000, label: "Mastery", color: "bg-emerald-500" },
-                    ];
-                    let cm = milestones[0];
-                    for (let m of milestones) { if (totalLearned < (m.limit * 0.95)) { cm = m; break; } cm = m; }
-                    const pct = Math.min(100, (totalLearned / cm.limit) * 100);
+                {/* --- SCROLLABLE CONTENT --- */}
+                <div className="space-y-5 px-1">
 
-                    return (
-                        <div className="flex items-center gap-3 px-2">
-                            <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
-                                <div className={`h-full rounded-full ${cm.color}`} style={{ width: `${pct}%` }}></div>
+                    {/* Daily Fact (Jetzt als dezenter Text hier, da aus Header raus) */}
+                    <p className="text-center text-xs text-slate-400 italic px-4">
+                        💡 "{dailyFact}"
+                    </p>
+
+                    {/* 1. HERO: START LOOP */}
+                    <button 
+                        onClick={() => setView('smart-config')} 
+                        className="w-full h-44 bg-gradient-to-br from-indigo-600 to-violet-600 text-white p-6 rounded-[2rem] shadow-xl shadow-indigo-200 transition-transform active:scale-[0.98] flex flex-col justify-between relative overflow-hidden group"
+                    >
+                        <div className="relative z-10 flex justify-between items-start w-full">
+                            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
+                                <Play size={28} fill="currentColor" />
                             </div>
-                            <div className="text-[10px] font-bold text-slate-400 whitespace-nowrap">
-                                {totalLearned} / {cm.limit} Words
+                            <div className="bg-indigo-500/30 px-3 py-1 rounded-full text-xs font-medium backdrop-blur-md border border-white/10">
+                                Priority
                             </div>
                         </div>
-                    );
-                })()}
-
-                {/* 3. HERO: START LOOP */}
-                <button 
-                    onClick={() => setView('smart-config')} 
-                    className="w-full h-44 bg-gradient-to-br from-indigo-600 to-violet-600 text-white p-6 rounded-[2rem] shadow-xl shadow-indigo-200 transition-transform active:scale-[0.98] flex flex-col justify-between relative overflow-hidden group"
-                >
-                    <div className="relative z-10 flex justify-between items-start w-full">
-                        <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
-                            <Play size={28} fill="currentColor" />
+                        <div className="relative z-10 text-left">
+                            <h2 className="text-2xl font-bold mb-1">Start Daily Loop</h2>
+                            <p className="text-indigo-100 text-sm font-medium opacity-90">Continue your streak.</p>
                         </div>
-                        <div className="bg-indigo-500/30 px-3 py-1 rounded-full text-xs font-medium backdrop-blur-md border border-white/10">
-                            Priority
-                        </div>
-                    </div>
-                    <div className="relative z-10 text-left">
-                        <h2 className="text-2xl font-bold mb-1">Start Daily Loop</h2>
-                        <p className="text-indigo-100 text-sm font-medium opacity-90">Continue your streak.</p>
-                    </div>
-                    <GraduationCap size={140} className="absolute -right-6 -bottom-6 text-white opacity-10 rotate-[-15deg] group-hover:scale-110 transition-transform duration-500" />
-                </button>
+                        <GraduationCap size={140} className="absolute -right-6 -bottom-6 text-white opacity-10 rotate-[-15deg] group-hover:scale-110 transition-transform duration-500" />
+                    </button>
 
-                {/* 4. REPAIR CARD */}
-                <button 
-                    onClick={() => {
-                        if (hasWeakWords) {
-                            setSessionQueue(weakWords.slice(0, 20));
-                            setIsFlipped(false);
-                            setSessionResults({ correct: 0, wrong: 0 });
-                            setView('smart-session');
-                        } else {
-                            alert("All words are healthy! Great job.");
-                        }
-                    }} 
-                    className={`w-full p-5 rounded-[2rem] flex items-center justify-between group active:scale-[0.98] transition-all relative overflow-hidden shadow-sm border ${
-                        hasWeakWords ? 'bg-rose-50 border-rose-100' : 'bg-emerald-50/50 border-emerald-100/50'
-                    }`}
-                >
-                    <div className="flex items-center gap-4 z-10">
-                        <div className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-colors ${hasWeakWords ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}`}>
-                            {hasWeakWords ? <Activity size={24} /> : <Check size={24} />}
+                    {/* 2. REPAIR CARD */}
+                    <button 
+                        onClick={() => {
+                            if (hasWeakWords) {
+                                setSessionQueue(weakWords.slice(0, 20));
+                                setIsFlipped(false);
+                                setSessionResults({ correct: 0, wrong: 0 });
+                                setView('smart-session');
+                            } else {
+                                alert("All words are healthy! Great job.");
+                            }
+                        }} 
+                        className={`w-full p-5 rounded-[2rem] flex items-center justify-between group active:scale-[0.98] transition-all relative overflow-hidden shadow-sm border ${
+                            hasWeakWords ? 'bg-rose-50 border-rose-100' : 'bg-emerald-50/50 border-emerald-100/50'
+                        }`}
+                    >
+                        <div className="flex items-center gap-4 z-10">
+                            <div className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-colors ${hasWeakWords ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                                {hasWeakWords ? <Activity size={24} /> : <Check size={24} />}
+                            </div>
+                            <div className="text-left">
+                                <h3 className={`font-bold text-lg ${hasWeakWords ? 'text-rose-900' : 'text-emerald-900'}`}>{hasWeakWords ? 'Weak Words' : 'All Good!'}</h3>
+                                <p className={`text-xs font-medium ${hasWeakWords ? 'text-rose-700/70' : 'text-emerald-700/70'}`}>{hasWeakWords ? `${weakWords.length} words need repair` : 'No weak words found'}</p>
+                            </div>
                         </div>
-                        <div className="text-left">
-                            <h3 className={`font-bold text-lg ${hasWeakWords ? 'text-rose-900' : 'text-emerald-900'}`}>{hasWeakWords ? 'Weak Words' : 'All Good!'}</h3>
-                            <p className={`text-xs font-medium ${hasWeakWords ? 'text-rose-700/70' : 'text-emerald-700/70'}`}>{hasWeakWords ? `${weakWords.length} words need repair` : 'No weak words found'}</p>
+                        {hasWeakWords && <ChevronRight size={24} className="text-rose-300 z-10" />}
+                    </button>
+
+                    {/* 3. DAILY CHALLENGE */}
+                    <button 
+                        onClick={() => {
+                            setTestConfig({ startRank: 1, endRank: 2000, count: 10 }); 
+                            startTestSession();
+                        }} 
+                        className="w-full bg-white border border-slate-100 p-5 rounded-[2rem] shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="bg-amber-100 w-12 h-12 flex items-center justify-center rounded-2xl text-amber-600"><Flame size={24} fill="currentColor" /></div>
+                            <div className="text-left">
+                                <h3 className="font-bold text-slate-800 text-lg">Daily Challenge</h3>
+                                <p className="text-slate-400 text-xs font-medium">Earn quick XP • 10 Words</p>
+                            </div>
                         </div>
-                    </div>
-                    {hasWeakWords && <ChevronRight size={24} className="text-rose-300 z-10" />}
-                </button>
+                        <ChevronRight size={24} className="text-slate-200 group-hover:text-amber-400 transition-colors" />
+                    </button>
 
-                {/* 5. DAILY CHALLENGE */}
-                <button 
-                    onClick={() => {
-                        setTestConfig({ startRank: 1, endRank: 2000, count: 10 }); 
-                        startTestSession();
-                    }} 
-                    className="w-full bg-white border border-slate-100 p-5 rounded-[2rem] shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
-                >
-                    <div className="flex items-center gap-4">
-                        <div className="bg-amber-100 w-12 h-12 flex items-center justify-center rounded-2xl text-amber-600"><Flame size={24} fill="currentColor" /></div>
-                        <div className="text-left">
-                            <h3 className="font-bold text-slate-800 text-lg">Daily Challenge</h3>
-                            <p className="text-slate-400 text-xs font-medium">Earn quick XP • 10 Words</p>
+                    {/* 4. GRAMMAR TIP */}
+                    <button 
+                        onClick={() => setView('skills')} 
+                        className="w-full bg-slate-50 border border-slate-200 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative"
+                    >
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="bg-slate-200 text-slate-500 p-1.5 rounded-lg"><BookOpen size={14} /></div>
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Tip of the day</span>
                         </div>
-                    </div>
-                    <ChevronRight size={24} className="text-slate-200 group-hover:text-amber-400 transition-colors" />
-                </button>
+                        <h3 className="font-bold text-slate-700 text-lg mb-1">{dailyTip.title}</h3>
+                        <p className="text-slate-500 text-sm leading-relaxed">{dailyTip.text}</p>
+                    </button>
 
-                {/* 6. GRAMMAR TIP */}
-                <button 
-                    onClick={() => setView('skills')} 
-                    className="w-full bg-slate-50 border border-slate-200 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative"
-                >
-                    <div className="flex items-center gap-2 mb-3">
-                        <div className="bg-slate-200 text-slate-500 p-1.5 rounded-lg"><BookOpen size={14} /></div>
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Tip of the day</span>
-                    </div>
-                    <h3 className="font-bold text-slate-700 text-lg mb-1">{dailyTip.title}</h3>
-                    <p className="text-slate-500 text-sm leading-relaxed">{dailyTip.text}</p>
-                </button>
-
+                </div>
             </div>
         );
     };
