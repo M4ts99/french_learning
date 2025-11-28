@@ -783,37 +783,16 @@ function App() {
 
     // --- RENDERERS ---
     const renderHome = () => {
-        // --- 1. DATEN BERECHNEN ---
+        // --- DATEN ---
         const safeVocab = vocabulary || [];
         const totalLearned = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
         
-        // Repair Logic
         const weakWords = safeVocab.filter(w => {
             const p = userProgress[w.rank];
             return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
         });
         const hasWeakWords = weakWords.length > 0;
 
-        // --- 2. MEILENSTEIN LOGIK ---
-        const milestones = [
-            { limit: 100, label: "Foundation", color: "bg-indigo-500" },
-            { limit: 500, label: "Essentials", color: "bg-blue-500" },
-            { limit: 1000, label: "Base", color: "bg-cyan-500" },
-            { limit: 2000, label: "Extension", color: "bg-teal-500" },
-            { limit: 5000, label: "Mastery", color: "bg-emerald-500" },
-        ];
-
-        let currentMilestone = milestones[0];
-        for (let m of milestones) {
-            if (totalLearned < (m.limit * 0.95)) { 
-                currentMilestone = m;
-                break;
-            }
-            currentMilestone = m; 
-        }
-        const progressPercent = Math.min(100, (totalLearned / currentMilestone.limit) * 100);
-
-        // --- 3. HEADER INHALTE ---
         const now = new Date();
         const hour = now.getHours();
         const dateKey = `${now.getDate()}-${now.getMonth() + 1}`; 
@@ -832,79 +811,96 @@ function App() {
             greeting = SPECIAL_DATES[dateKey].title;
             icon = SPECIAL_DATES[dateKey].icon;
         }
-        
-        // Fakten & Tipps
+
+        // Facts
         const FRANCE_FACTS = [
             "Did you know? French is spoken in 29 countries.",
             "Paris has over 400 parks and gardens.",
             "The Louvre is the most visited museum in the world.",
             "French has no word for 'cheap' (only 'bon marché').",
-            "Croissants were actually invented in Austria."
+            "Croissants were actually invented in Austria.",
+            "Louis XIX was King of France for just 20 minutes."
         ];
         const dayOfYear = Math.floor(Date.now() / 86400000);
         const dailyFact = FRANCE_FACTS[dayOfYear % FRANCE_FACTS.length];
 
+        // Grammar Tip
         const GRAMMAR_TIPS = [
             { title: "C'est vs. Il est", text: "Use 'C'est' for nouns. Use 'Il est' for adjectives." },
-            { title: "Pas de vs. Pas du", text: "After a negative (ne...pas), always use 'de', never 'du'." },
-            { title: "Endings -er verbs", text: "Regular -er verbs sound the same in singular: Je parle, Tu parles, Il parle." }
+            { title: "Pas de vs. Pas du", text: "After a negative (ne...pas), always use 'de', never 'du'." }
         ];
         const dailyTip = GRAMMAR_TIPS[dayOfYear % GRAMMAR_TIPS.length];
 
         return (
             <div className="pb-24">
                 
-                {/* --- STICKY HEADER MIT FORTSCHRITT --- */}
-                <div className="sticky top-0 z-40 bg-slate-50/95 backdrop-blur-xl border-b border-slate-200 -mx-5 -mt-6 px-6 pt-12 pb-0 mb-6 shadow-sm">
+                {/* --- STICKY HEADER (Mit Fact) --- */}
+                <div className="sticky top-0 z-40 bg-slate-50/95 backdrop-blur-xl border-b border-slate-200 -mx-5 -mt-6 px-6 pt-12 pb-4 mb-5 shadow-sm">
                     
-                    {/* Obere Zeile: Datum & Streak */}
-                    <div className="flex justify-between items-center mb-2">
-                        <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest opacity-90">
-                            {dateString}
+                    <div className="flex justify-between items-start mb-2">
+                        <div>
+                            <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1 opacity-90">
+                                {dateString}
+                            </div>
+                            <h1 className="text-2xl font-extrabold text-slate-800 leading-tight">
+                                {greeting} <span className="ml-1">{icon}</span>
+                            </h1>
                         </div>
+                        
+                        {/* STREAK */}
                         <div className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-full border border-slate-200 shadow-sm shrink-0">
                             <Flame size={14} className="text-orange-500 fill-orange-500 animate-pulse" />
                             <span className="font-bold text-slate-700 text-xs">{streak}</span>
                         </div>
                     </div>
 
-                    {/* Begrüßung */}
-                    <div className="flex justify-between items-end mb-4">
-                        <h1 className="text-2xl font-extrabold text-slate-800 leading-tight">
-                            {greeting} <span className="ml-1">{icon}</span>
-                        </h1>
-                    </div>
-
-                    {/* PROGRESS SECTION (Integriert) */}
-                    <div className="pb-4">
-                        <div className="flex justify-between items-end mb-1.5 px-0.5">
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                                <Trophy size={12} className="text-amber-500"/>
-                                {currentMilestone.label}
-                            </div>
-                            <div className="text-xs font-bold text-slate-600">
-                                {totalLearned} <span className="text-slate-300 font-normal">/ {currentMilestone.limit}</span>
-                            </div>
-                        </div>
-                        {/* Der schmale Balken */}
-                        <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                            <div 
-                                className={`h-full rounded-full transition-all duration-1000 ease-out ${currentMilestone.color}`} 
-                                style={{ width: `${progressPercent}%` }}
-                            ></div>
-                        </div>
+                    {/* FACT (Jetzt im Header) */}
+                    <div className="mt-3 flex items-start gap-2 opacity-80">
+                        <div className="min-w-[3px] h-full bg-indigo-300 rounded-full"></div>
+                        <p className="text-xs text-slate-500 italic leading-snug">
+                            "{dailyFact}"
+                        </p>
                     </div>
                 </div>
 
                 {/* --- SCROLLABLE CONTENT --- */}
-                <div className="space-y-5 px-1">
+                <div className="space-y-4 px-1">
 
-                    {/* Daily Fact (Jetzt als dezenter Text hier, da aus Header raus) */}
-                    <p className="text-center text-xs text-slate-400 italic px-4">
-                        💡 "{dailyFact}"
-                    </p>
+                    {/* 1. PROGRESS CARD (Wieder als eigene Karte unter dem Header) */}
+                    {(() => {
+                        const milestones = [
+                            { limit: 100, label: "Foundation", color: "bg-indigo-500" },
+                            { limit: 500, label: "Essentials", color: "bg-blue-500" },
+                            { limit: 1000, label: "Base", color: "bg-cyan-500" },
+                            { limit: 2000, label: "Extension", color: "bg-teal-500" },
+                            { limit: 5000, label: "Mastery", color: "bg-emerald-500" },
+                        ];
+                        let cm = milestones[0];
+                        for (let m of milestones) { if (totalLearned < (m.limit * 0.95)) { cm = m; break; } cm = m; }
+                        const pct = Math.min(100, (totalLearned / cm.limit) * 100);
 
-                    {/* 1. HERO: START LOOP */}
+                        return (
+                            <div className="bg-white px-5 py-4 rounded-[1.5rem] shadow-sm border border-slate-100 relative overflow-hidden flex items-center justify-between">
+                                <div className="flex flex-col justify-center gap-1 z-10 w-full">
+                                    <div className="flex justify-between items-center">
+                                        <div className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                                            <Trophy size={14} className="text-amber-500"/>
+                                            {cm.label}
+                                        </div>
+                                        <div className="text-xs font-bold text-slate-700">
+                                            {totalLearned} <span className="text-slate-300 font-normal">/ {cm.limit}</span>
+                                        </div>
+                                    </div>
+                                    {/* Balken */}
+                                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-1">
+                                        <div className={`h-full rounded-full transition-all duration-1000 ease-out ${cm.color}`} style={{ width: `${pct}%` }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })()}
+
+                    {/* 2. HERO: START LOOP */}
                     <button 
                         onClick={() => setView('smart-config')} 
                         className="w-full h-44 bg-gradient-to-br from-indigo-600 to-violet-600 text-white p-6 rounded-[2rem] shadow-xl shadow-indigo-200 transition-transform active:scale-[0.98] flex flex-col justify-between relative overflow-hidden group"
@@ -924,7 +920,7 @@ function App() {
                         <GraduationCap size={140} className="absolute -right-6 -bottom-6 text-white opacity-10 rotate-[-15deg] group-hover:scale-110 transition-transform duration-500" />
                     </button>
 
-                    {/* 2. REPAIR CARD */}
+                    {/* 3. REPAIR CARD */}
                     <button 
                         onClick={() => {
                             if (hasWeakWords) {
@@ -952,7 +948,7 @@ function App() {
                         {hasWeakWords && <ChevronRight size={24} className="text-rose-300 z-10" />}
                     </button>
 
-                    {/* 3. DAILY CHALLENGE */}
+                    {/* 4. DAILY CHALLENGE */}
                     <button 
                         onClick={() => {
                             setTestConfig({ startRank: 1, endRank: 2000, count: 10 }); 
@@ -970,7 +966,7 @@ function App() {
                         <ChevronRight size={24} className="text-slate-200 group-hover:text-amber-400 transition-colors" />
                     </button>
 
-                    {/* 4. GRAMMAR TIP */}
+                    {/* 5. GRAMMAR TIP */}
                     <button 
                         onClick={() => setView('skills')} 
                         className="w-full bg-slate-50 border border-slate-200 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative"
@@ -1449,7 +1445,7 @@ function App() {
                     onClick={() => setView('skills')}
                     className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
                 >
-                    <ArrowLeft size={20} className="rotate-[-90deg]" />
+                    <ArrowLeft size={20} className="rotate-[0deg]" />
                 </button>
                 <div>
                     <h2 className="text-2xl font-bold text-slate-800">AI Tools</h2>
@@ -2088,7 +2084,15 @@ function App() {
             // ... Home, Explore, Skills Cases wie vorher ...
             case 'home': case 'smart-config': case 'test-config': return renderHome();
             case 'explore': case 'reader': case 'culture': return renderExplore();
-            case 'skills': case 'translator': return renderSkills();
+            // TAB 3: SKILLS
+            case 'skills':
+                return renderSkills(); // Zeigt das Hauptmenü
+            
+            case 'translator': // <--- HIER WAR DER FEHLER
+                return renderTranslator(); // Muss auf die eigene Translator-Ansicht zeigen
+            
+            case 'grammar':      
+                return renderSkills();
 
             // --- PROFILE AREA ---
             case 'profile':
