@@ -1784,11 +1784,15 @@ function App() {
     );
     
     const renderProfile = () => {
-        // --- 1. DATEN BERECHNEN (Kein useState!) ---
+        // --- 1. DATEN BERECHNEN ---
         const safeVocab = vocabulary || [];
-        // Zähle Wörter, die gelernt sind (box > 0)
+        
+        // Gelernte Wörter (Box > 0)
         const learnedCount = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
         
+        // Profi-Wörter (Box 5 = Langzeitgedächtnis)
+        const masterCount = safeVocab.filter(w => userProgress[w.rank]?.box === 5).length;
+
         // Level Berechnung
         let levelTitle = "Tourist";
         let levelColor = "from-slate-400 to-slate-600";
@@ -1814,21 +1818,78 @@ function App() {
 
         const levelProgress = Math.min(100, (learnedCount / nextLevelAt) * 100);
 
-        // Badges Logik (Berechnet)
-        const badges = [
-            { id: 1, icon: <Zap size={18}/>, label: "First Step", active: learnedCount > 0, color: "text-yellow-500 bg-yellow-50" },
-            { id: 2, icon: <Shield size={18}/>, label: "Foundation", active: learnedCount >= 100, color: "text-blue-500 bg-blue-50" },
-            { id: 3, icon: <Medal size={18}/>, label: "Half K", active: learnedCount >= 500, color: "text-indigo-500 bg-indigo-50" },
-            { id: 4, icon: <Crown size={18}/>, label: "Mastery", active: learnedCount >= 2000, color: "text-amber-500 bg-amber-50" },
-            { id: 5, icon: <Flame size={18}/>, label: "On Fire", active: false, color: "text-orange-500 bg-orange-50" }, // Platzhalter für Streak
-            { id: 6, icon: <BookCheck size={18}/>, label: "Scholar", active: false, color: "text-emerald-500 bg-emerald-50" } // Platzhalter
+        // --- 2. BADGES DEFINITION (Mit Erklärungen) ---
+        const BADGES = [
+            { 
+                id: 'start', 
+                icon: <Zap size={20}/>, 
+                label: "First Step", 
+                desc: "Learn your first word", 
+                unlocked: learnedCount >= 1, 
+                color: "text-yellow-600 bg-yellow-100" 
+            },
+            { 
+                id: 'streak3', 
+                icon: <Flame size={20}/>, 
+                label: "On Fire", 
+                desc: "Reach a 3 day streak", 
+                unlocked: streak >= 3, 
+                color: "text-orange-600 bg-orange-100" 
+            },
+            { 
+                id: 'base100', 
+                icon: <Shield size={20}/>, 
+                label: "Foundation", 
+                desc: "Learn 100 words", 
+                unlocked: learnedCount >= 100, 
+                color: "text-blue-600 bg-blue-100" 
+            },
+            { 
+                id: 'streak7', 
+                icon: <Flame size={20}/>, 
+                label: "Unstoppable", 
+                desc: "Reach a 7 day streak", 
+                unlocked: streak >= 7, 
+                color: "text-red-600 bg-red-100" 
+            },
+            { 
+                id: 'halfk', 
+                icon: <Medal size={20}/>, 
+                label: "Half K", 
+                desc: "Learn 500 words", 
+                unlocked: learnedCount >= 500, 
+                color: "text-indigo-600 bg-indigo-100" 
+            },
+            { 
+                id: 'master', 
+                icon: <Crown size={20}/>, 
+                label: "Mastermind", 
+                desc: "50 words in Box 5", 
+                unlocked: masterCount >= 50, 
+                color: "text-emerald-600 bg-emerald-100" 
+            }
         ];
 
+        const handleHardReset = () => {
+            if (window.confirm("Delete ALL progress? This cannot be undone.")) {
+                const pin = window.prompt("Enter PIN to confirm:");
+                if (pin === "1999") {
+                    setUserProgress({});
+                    localStorage.removeItem('vocabApp_progress');
+                    // Streak auch resetten
+                    setStreak(0);
+                    localStorage.removeItem('vocabApp_streak');
+                    alert("System Reset: Done.");
+                    setView('home');
+                }
+            }
+        };
+
         return (
-            <div className="space-y-6 animate-in fade-in duration-500 pt-6 pb-24 px-1">
+            <div className="max-w-2xl mx-auto space-y-8 animate-in fade-in duration-500 pt-2 pb-24">
                 
                 {/* HEADER */}
-                <div className="flex items-center justify-between mb-2 px-1">
+                <div className="flex items-center justify-between px-1">
                     <h2 className="text-2xl font-bold text-slate-800">My Identity</h2>
                     <div className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">
                         Level {Math.floor(learnedCount / 50) + 1}
@@ -1857,18 +1918,37 @@ function App() {
                     <User size={120} className="absolute -right-6 -bottom-8 text-white opacity-10 rotate-12"/>
                 </div>
 
-                {/* 2. HALL OF FAME (Badges) */}
+                {/* 2. HALL OF FAME (Verbessert mit Beschreibung) */}
                 <div>
-                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Hall of Fame</h3>
-                    <div className="grid grid-cols-3 gap-3">
-                        {badges.map(b => (
-                            <div key={b.id} className={`aspect-square rounded-2xl flex flex-col items-center justify-center gap-2 border transition-all ${
-                                b.active ? `bg-white border-slate-100 shadow-sm opacity-100` : `bg-slate-50 border-slate-100 opacity-50 grayscale`
-                            }`}>
-                                <div className={`p-2 rounded-full ${b.active ? b.color : 'bg-slate-200 text-slate-400'}`}>
+                    <div className="flex items-center justify-between mb-3 px-1">
+                        <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider">Achievements</h3>
+                        <span className="text-xs font-bold text-indigo-500">
+                            {BADGES.filter(b => b.unlocked).length} / {BADGES.length} Unlocked
+                        </span>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                        {BADGES.map(b => (
+                            <div 
+                                key={b.id} 
+                                className={`p-4 rounded-2xl border transition-all flex items-center gap-3 ${
+                                    b.unlocked 
+                                    ? "bg-white border-slate-100 shadow-sm opacity-100" 
+                                    : "bg-slate-50 border-slate-100 opacity-60 grayscale"
+                                }`}
+                            >
+                                {/* Icon */}
+                                <div className={`p-2.5 rounded-xl shrink-0 ${b.unlocked ? b.color : 'bg-slate-200 text-slate-400'}`}>
                                     {b.icon}
                                 </div>
-                                <span className="text-[10px] font-bold text-slate-600">{b.label}</span>
+                                
+                                {/* Text */}
+                                <div>
+                                    <div className="font-bold text-slate-700 text-sm leading-tight">{b.label}</div>
+                                    <div className="text-[10px] text-slate-400 font-medium mt-0.5">
+                                        {b.desc}
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -1893,9 +1973,7 @@ function App() {
                             <ChevronRight size={20} className="text-slate-300 group-hover:text-indigo-400"/>
                         </button>
 
-                        {/* Stats Button (nutzt jetzt den existierenden 'showStats' State von oben, aber wir bauen es hier als Button zum Toggle oder neue View) */}
-                        {/* Da wir 'showStats' oben haben, können wir es hier toggeln oder in eine eigene View gehen. 
-                            Lass uns der Einfachheit halber die Statistik hier INLINE einblenden, wenn man klickt. */}
+                        {/* Stats Button */}
                         <button 
                             onClick={() => setShowStats(!showStats)} 
                             className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
@@ -1910,10 +1988,9 @@ function App() {
                             <ChevronRight size={20} className={`text-slate-300 transition-transform ${showStats ? 'rotate-90' : ''}`}/>
                         </button>
 
-                        {/* Inline Stats (Wenn offen) */}
+                        {/* Inline Stats */}
                         {showStats && (
                              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 animate-in slide-in-from-top-2 fade-in">
-                                 {/* Wir nutzen hier lokalen Code statt renderStats() aufzurufen, um den State-Fehler zu vermeiden */}
                                  {[
                                     { l: 100, c: "bg-indigo-500" }, { l: 500, c: "bg-blue-500" }, { l: 1000, c: "bg-cyan-500" }, { l: 2000, c: "bg-teal-500" }, { l: 5000, c: "bg-emerald-500" }
                                  ].map(m => {
