@@ -365,6 +365,36 @@ function App() {
 
     // Initial Load & Persistence
 // Initial Load & Persistence
+// --- STATE ---
+    // ... deine anderen States ...
+    const [streak, setStreak] = useState(0); // Neuer State für Flammen
+
+    // --- STREAK LOGIC (Beim Start prüfen) ---
+    useEffect(() => {
+        const today = new Date().toDateString();
+        const storedStreak = JSON.parse(localStorage.getItem('vocabApp_streak')) || { count: 0, lastDate: null };
+        
+        if (storedStreak.lastDate === today) {
+            // Heute schon da gewesen -> Nichts ändern, nur laden
+            setStreak(storedStreak.count);
+        } else {
+            // Datum vergleichen
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (storedStreak.lastDate === yesterday.toDateString()) {
+                // Gestern war der letzte Login -> Streak +1
+                const newCount = storedStreak.count + 1;
+                setStreak(newCount);
+                localStorage.setItem('vocabApp_streak', JSON.stringify({ count: newCount, lastDate: today }));
+            } else {
+                // Länger her (oder erster Start) -> Reset auf 1
+                setStreak(1);
+                localStorage.setItem('vocabApp_streak', JSON.stringify({ count: 1, lastDate: today }));
+            }
+        }
+    }, []);    
+
     useEffect(() => {
         // 1. Fortschritt laden
         const savedProgress = localStorage.getItem('vocabApp_progress');
@@ -753,7 +783,7 @@ function App() {
 
     // --- RENDERERS ---
     const renderHome = () => {
-        // --- 1. FORTSCHRITT DATEN ---
+        // --- 1. DATEN BERECHNEN ---
         const safeVocab = vocabulary || [];
         const totalLearned = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
         
@@ -764,82 +794,91 @@ function App() {
         });
         const hasWeakWords = weakWords.length > 0;
 
-        // --- 2. SMART HEADER LOGIC (Datum & Facts) ---
+        // --- 2. SMART HEADER INHALTE ---
         const now = new Date();
         const hour = now.getHours();
-        const dateKey = `${now.getDate()}-${now.getMonth() + 1}`; // z.B. "14-7" für 14. Juli
-
-        // A. Datum auf Französisch formatieren (z.B. "JEUDI 27 NOVEMBRE")
+        const dateKey = `${now.getDate()}-${now.getMonth() + 1}`; 
         const dateString = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
 
-        // B. Feiertage & Events
         const SPECIAL_DATES = {
             "1-1": { title: "Bonne Année ! 🎉", sub: "Happy New Year from France." },
-            "1-5": { title: "Fête du Travail ! 🌿", sub: "It's Labor Day. Take a break!" },
-            "21-6": { title: "Fête de la Musique ! 🎵", sub: "Music is playing everywhere today." },
             "14-7": { title: "C'est le 14 Juillet ! 🎆", sub: "Bastille Day - La Fête Nationale." },
             "25-12": { title: "Joyeux Noël ! 🎄", sub: "Merry Christmas!" },
         };
 
-        // C. Zufällige Frankreich-Fakten (für normale Tage)
         const FRANCE_FACTS = [
             "Did you know? French is spoken in 29 countries.",
             "Paris has over 400 parks and gardens.",
             "The Louvre is the most visited museum in the world.",
             "French has no word for 'cheap' (only 'bon marché').",
-            "Croissants were actually invented in Austria.",
-            "There are over 400 types of cheese in France.",
-            "About 45% of modern English words come from French.",
-            "Louis XIX was King of France for just 20 minutes.",
-            "Turning a baguette upside down is considered unlucky."
+            "There are over 400 types of cheese in France."
         ];
-        
-        // Wir wählen einen Fakt basierend auf dem Tag des Jahres (damit er sich nicht bei jedem Klick ändert)
         const dayOfYear = Math.floor(Date.now() / 86400000);
         const dailyFact = FRANCE_FACTS[dayOfYear % FRANCE_FACTS.length];
 
-        // D. Begrüßung nach Tageszeit
-        let greeting = hour < 12 ? "Bon matin ! ☕" : hour < 18 ? "Bonne après-midi ! ☀️" : "Bonsoir ! 🌙";
+        let greeting = hour < 12 ? "Bon matin" : hour < 18 ? "Bonne après-midi" : "Bonsoir";
         let subText = dailyFact;
+        let greetingIcon = hour < 12 ? "☕" : hour < 18 ? "☀️" : "🌙";
 
-        // E. Override: Wenn heute ein Feiertag ist, nimm den!
         if (SPECIAL_DATES[dateKey]) {
             greeting = SPECIAL_DATES[dateKey].title;
             subText = SPECIAL_DATES[dateKey].sub;
+            greetingIcon = ""; // Icon ist im Titel
         }
 
-        // --- 3. GRAMMAR TIP (Unten) ---
+        // Grammar Tip Logic
         const GRAMMAR_TIPS = [
-            { title: "C'est vs. Il est", text: "Use 'C'est' for nouns (C'est un docteur). Use 'Il est' for adjectives (Il est gentil)." },
-            { title: "Pas de vs. Pas du", text: "After a negative (ne...pas), always use 'de', never 'du' or 'des'. (Je n'ai pas de chien)." },
-            { title: "Endings -er verbs", text: "Regular -er verbs sound the same in singular: Je parle, Tu parles, Il parle. The 's' is silent!" }
+            { title: "C'est vs. Il est", text: "Use 'C'est' for nouns. Use 'Il est' for adjectives." },
+            { title: "Pas de vs. Pas du", text: "After a negative (ne...pas), always use 'de', never 'du'." },
+            { title: "Silent Letters", text: "Final consonants (s, t, d, x) are usually silent in French." }
         ];
         const dailyTip = GRAMMAR_TIPS[dayOfYear % GRAMMAR_TIPS.length];
 
         return (
-            <div className="space-y-5 animate-in fade-in duration-500 pt-6 pb-24 px-1">
+            <div className="space-y-5 animate-in fade-in duration-500 pt-4 pb-24 px-1">
                 
-                {/* 1. SMART HEADER */}
-                <div className="flex justify-between items-start mb-2 px-2">
-                    <div>
-                        <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">{dateString}</div>
-                        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 leading-tight">{greeting}</h1>
-                        <p className="text-slate-400 text-xs font-medium mt-1 max-w-[250px] leading-relaxed">{subText}</p>
+                {/* 1. NEUER SMART DASHBOARD HEADER (Weiße Karte) */}
+                <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 relative overflow-hidden">
+                    
+                    {/* Top Row: Datum & Streak */}
+                    <div className="flex justify-between items-center mb-4">
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded-lg">
+                            {dateString}
+                        </div>
+                        {/* STREAK ANZEIGE */}
+                        <div className="flex items-center gap-1.5 bg-orange-50 text-orange-600 px-3 py-1 rounded-full border border-orange-100 shadow-sm">
+                            <Flame size={14} fill="currentColor" className="animate-pulse" />
+                            <span className="font-bold text-sm">{streak} Day Streak</span>
+                        </div>
                     </div>
-                    {/* Fortschritts-Bubble */}
-                    <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-2xl border border-slate-100 shadow-sm shrink-0">
-                        <Trophy size={18} className="text-amber-500" />
-                        <span className="font-bold text-slate-700 text-sm">{totalLearned}</span>
+
+                    {/* Middle: Begrüßung */}
+                    <div className="mb-2 relative z-10">
+                        <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-600 leading-tight">
+                            {greeting} <span className="text-2xl text-slate-800">{greetingIcon}</span>
+                        </h1>
                     </div>
+
+                    {/* Bottom: Fact */}
+                    <div className="relative z-10">
+                        <div className="inline-flex items-start gap-2">
+                            <div className="min-w-[3px] h-8 bg-indigo-400 rounded-full mt-1"></div>
+                            <p className="text-slate-500 text-xs font-medium leading-relaxed italic">
+                                "{subText}"
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Deko Hintergrund (Ganz subtil) */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full mix-blend-multiply filter blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2"></div>
                 </div>
 
-                {/* 2. PROGRESS CARD (Meilenstein) */}
+                {/* 2. PROGRESS (Minimalistisch unter dem Header) */}
                 {(() => {
                     const milestones = [
                         { limit: 100, label: "Foundation", color: "bg-indigo-500" },
                         { limit: 500, label: "Essentials", color: "bg-blue-500" },
                         { limit: 1000, label: "Base", color: "bg-cyan-500" },
-                        { limit: 2000, label: "Extension", color: "bg-teal-500" },
                         { limit: 5000, label: "Mastery", color: "bg-emerald-500" },
                     ];
                     let cm = milestones[0];
@@ -847,19 +886,12 @@ function App() {
                     const pct = Math.min(100, (totalLearned / cm.limit) * 100);
 
                     return (
-                        <div className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden">
-                            <div className="flex justify-between items-end mb-3 relative z-10">
-                                <div>
-                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Next Goal</div>
-                                    <h2 className="text-lg font-bold text-slate-700">{cm.label}</h2>
-                                </div>
-                                <div className="text-right">
-                                    <span className="text-xl font-bold text-slate-800">{totalLearned}</span>
-                                    <span className="text-xs text-slate-400 font-bold ml-1">/ {cm.limit}</span>
-                                </div>
+                        <div className="flex items-center gap-3 px-2">
+                            <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+                                <div className={`h-full rounded-full ${cm.color}`} style={{ width: `${pct}%` }}></div>
                             </div>
-                            <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden relative z-10">
-                                <div className={`h-full rounded-full transition-all duration-1000 ease-out ${cm.color}`} style={{ width: `${pct}%` }}></div>
+                            <div className="text-[10px] font-bold text-slate-400 whitespace-nowrap">
+                                {totalLearned} / {cm.limit} Words
                             </div>
                         </div>
                     );
@@ -875,7 +907,7 @@ function App() {
                             <Play size={28} fill="currentColor" />
                         </div>
                         <div className="bg-indigo-500/30 px-3 py-1 rounded-full text-xs font-medium backdrop-blur-md border border-white/10">
-                            Daily Focus
+                            Priority
                         </div>
                     </div>
                     <div className="relative z-10 text-left">
@@ -931,7 +963,7 @@ function App() {
                     <ChevronRight size={24} className="text-slate-200 group-hover:text-amber-400 transition-colors" />
                 </button>
 
-                {/* 6. GRAMMAR TIP (Footer) */}
+                {/* 6. GRAMMAR TIP */}
                 <button 
                     onClick={() => setView('skills')} 
                     className="w-full bg-slate-50 border border-slate-200 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative"
