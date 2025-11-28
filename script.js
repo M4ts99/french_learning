@@ -513,8 +513,8 @@ function App() {
     const [quizAnswers, setQuizAnswers] = useState({});
     
     //Generated Story
-    const [storyConfig, setStoryConfig] = useState({ length: 'medium' }); // short, medium, long
-    const [clickedWord, setClickedWord] = useState(null); // Für das Popup { text, translation, rank, x, y }
+    const [storyConfig, setStoryConfig] = useState({ length: 'medium', level: 'auto' }); 
+    const [clickedWord, setClickedWord] = useState(null);
     const [isSpeaking, setIsSpeaking] = useState(false);
     
     // Session State
@@ -2094,51 +2094,32 @@ function App() {
         );
     };
     const renderReader = () => {
-        // --- STATES FÜR READER ---
-        // Wenn du diese States noch nicht ganz oben in App() hast, füge sie dort hinzu! 
-        // Falls du sie hier lokal lässt, wird der Reader beim Tab-Wechsel resettet (was ok ist).
-        
+        // State für die Config (Länge & Level)
+        // Wir nutzen useState hier lokal, da es ok ist, wenn es beim Tab-Wechsel resetet wird
 
-        // --- HELPER: STORY STARTEN ---
+
         const handleGenerate = (genre) => {
-            // Config + Genre übergeben
-            generateStory(genre, storyConfig.length); 
+            generateStory(genre, storyConfig.length, storyConfig.level); 
         };
 
-        // --- HELPER: AUDIO ---
         const toggleAudio = (text) => {
             if (isSpeaking) {
                 stopAudio();
                 setIsSpeaking(false);
             } else {
                 setIsSpeaking(true);
-                // WICHTIG: Sternchen entfernen für sauberes Vorlesen!
                 const cleanText = text.replace(/\*\*/g, ""); 
                 speak(cleanText);
-                
-                // Kleiner Hack: Da der Browser uns nicht sagt, wann er fertig ist,
-                // setzen wir den State nach einer geschätzten Zeit zurück oder lassen ihn manuell stoppen.
-                // Besser: onend Event nutzen (etwas komplexer in React ohne Refs), daher hier manueller Stop Button.
             }
         };
 
-        // --- HELPER: WORT KLICKEN ---
         const handleWordClick = (e, wordRaw) => {
             e.stopPropagation();
-            // Bereinigen: "**chat**." -> "chat"
             const cleanWord = wordRaw.replace(/[.,!?;:"«»()]/g, "").replace(/\*\*/g, "").toLowerCase();
-            
-            // Suchen im Vokabular
             const found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
-
             if (found) {
-                // Position bestimmen (für das Popup)
-                // Wir nutzen einfach relative Positionierung oder zeigen es fix unten an.
-                // Hier: Einfache Version -> Fixiertes Popup über dem Wort wäre komplex zu berechnen.
-                // Wir nutzen ein "Toast" oder eine "Sticky Card" unten, das ist auf dem Handy viel besser lesbar!
                 setClickedWord(found);
             } else {
-                // Wenn nicht gefunden, zeigen wir zumindest das Wort an
                 setClickedWord({ french: cleanWord, english: "Not in dictionary", rank: "?" });
             }
         };
@@ -2161,48 +2142,86 @@ function App() {
                         </div>
                     ) : (
                         <div className="space-y-6">
-                            {/* LÄNGEN EINSTELLUNG (Slider) */}
-                            <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm">
-                                <div className="flex justify-between items-center mb-4">
-                                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Story Length</span>
-                                    <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg uppercase">
-                                        {storyConfig.length === 'short' ? '~50 Words' : storyConfig.length === 'medium' ? '~100 Words' : '~200 Words'}
-                                    </span>
+                            
+                            {/* SETTINGS CARD */}
+                            <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
+                                
+                                {/* 1. LEVEL SELECTOR */}
+                                <div>
+                                    <div className="flex justify-between items-center mb-3">
+                                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Difficulty Level</span>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {/* Auto Button */}
+                                        <button 
+                                            onClick={() => setStoryConfig({...storyConfig, level: 'auto'})}
+                                            className={`px-3 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-1 ${
+                                                storyConfig.level === 'auto' 
+                                                ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' 
+                                                : 'bg-slate-50 text-slate-500 border-slate-200'
+                                            }`}
+                                        >
+                                            <Sparkles size={12} /> My Level
+                                        </button>
+
+                                        {/* CEFR Levels */}
+                                        {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(lvl => (
+                                            <button 
+                                                key={lvl}
+                                                onClick={() => setStoryConfig({...storyConfig, level: lvl})}
+                                                className={`px-3 py-2 rounded-xl text-xs font-bold border transition-all ${
+                                                    storyConfig.level === lvl 
+                                                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' 
+                                                    : 'bg-white text-slate-500 border-slate-200'
+                                                }`}
+                                            >
+                                                {lvl}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
-                                <input 
-                                    type="range" min="1" max="3" step="1" 
-                                    value={storyConfig.length === 'short' ? 1 : storyConfig.length === 'medium' ? 2 : 3}
-                                    onChange={(e) => {
-                                        const val = parseInt(e.target.value);
-                                        setStoryConfig({ length: val === 1 ? 'short' : val === 2 ? 'medium' : 'long' });
-                                    }}
-                                    className="w-full accent-indigo-600 h-2 bg-slate-100 rounded-lg cursor-pointer"
-                                />
-                                <div className="flex justify-between mt-2 text-[10px] text-slate-400 font-bold uppercase">
-                                    <span>Quick</span>
-                                    <span>Deep</span>
+
+                                {/* 2. LENGTH SLIDER */}
+                                <div>
+                                    <div className="flex justify-between items-center mb-4">
+                                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Story Length</span>
+                                        <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg uppercase">
+                                            {storyConfig.length === 'short' ? '~50 Words' : storyConfig.length === 'medium' ? '~100 Words' : '~200 Words'}
+                                        </span>
+                                    </div>
+                                    <input 
+                                        type="range" min="1" max="3" step="1" 
+                                        value={storyConfig.length === 'short' ? 1 : storyConfig.length === 'medium' ? 2 : 3}
+                                        onChange={(e) => {
+                                            const val = parseInt(e.target.value);
+                                            setStoryConfig({ ...storyConfig, length: val === 1 ? 'short' : val === 2 ? 'medium' : 'long' });
+                                        }}
+                                        className="w-full accent-indigo-600 h-2 bg-slate-100 rounded-lg cursor-pointer"
+                                    />
                                 </div>
                             </div>
 
                             {/* GENRE GRID */}
-                            <p className="text-slate-500 px-2 text-sm font-medium">Choose a Genre</p>
-                            <div className="grid grid-cols-2 gap-3">
-                                <button onClick={() => handleGenerate('Mystery')} className="bg-purple-50 border border-purple-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-36 flex flex-col justify-between group">
-                                    <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-purple-600 shadow-sm"><Ghost size={20}/></div>
-                                    <div><h3 className="font-bold text-purple-900">Mystery</h3><p className="text-xs text-purple-700/60">Solve the crime</p></div>
-                                </button>
-                                <button onClick={() => handleGenerate('Sci-Fi')} className="bg-blue-50 border border-blue-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-36 flex flex-col justify-between group">
-                                    <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-blue-600 shadow-sm"><Rocket size={20}/></div>
-                                    <div><h3 className="font-bold text-blue-900">Sci-Fi</h3><p className="text-xs text-blue-700/60">Future worlds</p></div>
-                                </button>
-                                <button onClick={() => handleGenerate('Daily Life')} className="bg-amber-50 border border-amber-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-36 flex flex-col justify-between group">
-                                    <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-amber-600 shadow-sm"><Coffee size={20}/></div>
-                                    <div><h3 className="font-bold text-amber-900">Daily Life</h3><p className="text-xs text-amber-700/60">Parisian Café</p></div>
-                                </button>
-                                <button onClick={() => handleGenerate('Fantasy')} className="bg-emerald-50 border border-emerald-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-36 flex flex-col justify-between group">
-                                    <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-emerald-600 shadow-sm"><Sword size={20}/></div>
-                                    <div><h3 className="font-bold text-emerald-900">Fantasy</h3><p className="text-xs text-emerald-700/60">Dragons & Knights</p></div>
-                                </button>
+                            <div>
+                                <p className="text-slate-500 px-2 text-sm font-medium mb-3">Choose a Genre</p>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <button onClick={() => handleGenerate('Mystery')} className="bg-purple-50 border border-purple-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group">
+                                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-purple-600 shadow-sm"><Ghost size={20}/></div>
+                                        <div><h3 className="font-bold text-purple-900">Mystery</h3></div>
+                                    </button>
+                                    <button onClick={() => handleGenerate('Sci-Fi')} className="bg-blue-50 border border-blue-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group">
+                                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-blue-600 shadow-sm"><Rocket size={20}/></div>
+                                        <div><h3 className="font-bold text-blue-900">Sci-Fi</h3></div>
+                                    </button>
+                                    <button onClick={() => handleGenerate('Daily Life')} className="bg-amber-50 border border-amber-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group">
+                                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-amber-600 shadow-sm"><Coffee size={20}/></div>
+                                        <div><h3 className="font-bold text-amber-900">Daily Life</h3></div>
+                                    </button>
+                                    <button onClick={() => handleGenerate('Fantasy')} className="bg-emerald-50 border border-emerald-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group">
+                                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-emerald-600 shadow-sm"><Sword size={20}/></div>
+                                        <div><h3 className="font-bold text-emerald-900">Fantasy</h3></div>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -2220,7 +2239,6 @@ function App() {
                             <ArrowLeft size={20} />
                         </button>
                         <div className="flex gap-2">
-                             {/* PLAY / STOP TOGGLE */}
                             <button 
                                 onClick={() => toggleAudio(currentStory.text)} 
                                 className={`p-2 px-4 rounded-full font-bold text-xs flex items-center gap-2 transition-all ${
@@ -2237,23 +2255,20 @@ function App() {
                         <h2 className="text-2xl font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">{currentStory.title}</h2>
                         
                         <div className="text-lg text-slate-700 leading-loose font-serif">
-                            {/* TEXT RENDERING LOGIC */}
                             {currentStory.text.split(' ').map((word, i) => {
-                                // Prüfen ob es ein "Markiertes" Wort ist (**word**)
+                                // Wörter, die fett (**) sind, sind die "Target Vocab"
                                 const isBold = word.includes('**');
-                                // Bereinigen für die Anzeige (Satzzeichen behalten)
                                 const displayText = word.replace(/\*\*/g, "");
                                 
                                 return (
                                     <span 
                                         key={i} 
                                         onClick={(e) => handleWordClick(e, word)}
-                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 ${
-                                            // Wenn geklickt -> Gelb
-                                            clickedWord?.french === displayText.replace(/[.,!?;:]/g, "").toLowerCase() ? 'bg-yellow-200' :
-                                            // Wenn Bold (vom Server) -> Blaues Styling (einheitlich)
-                                            isBold ? 'text-indigo-600 font-bold bg-indigo-50' : 
-                                            // Normal -> Hover effekt
+                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 border-b-2 border-transparent ${
+                                            // Wenn geklickt -> Gelb hinterlegt
+                                            clickedWord?.french === displayText.replace(/[.,!?;:]/g, "").toLowerCase() ? 'bg-yellow-200 border-yellow-400' :
+                                            // Wenn Target Vocab -> Blau markiert und leicht unterstrichen
+                                            isBold ? 'text-indigo-600 font-bold bg-indigo-50 border-indigo-100' : 
                                             'hover:bg-slate-100'
                                         }`}
                                     >
@@ -2264,7 +2279,7 @@ function App() {
                         </div>
                     </div>
 
-                    {/* INFO KACHEL (Popup) - Erscheint unten, wenn Wort geklickt */}
+                    {/* INFO KACHEL (Popup für geklicktes Wort) */}
                     {clickedWord && (
                         <div className="fixed bottom-24 left-4 right-4 bg-slate-900/90 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom-4 z-50 flex items-center justify-between">
                             <div>
@@ -2281,7 +2296,7 @@ function App() {
 
                     <button 
                         onClick={() => { 
-                            stopAudio(); // Audio stoppen beim Wechsel
+                            stopAudio();
                             setIsSpeaking(false);
                             setReaderMode('quiz'); 
                             setQuizAnswers({}); 
@@ -2294,12 +2309,10 @@ function App() {
             );
         }
 
-        // --- PHASE 3: QUIZ (Bleibt gleich) ---
+        // --- PHASE 3: QUIZ (Gleich geblieben) ---
         if (readerMode === 'quiz' && currentStory) {
             return (
                 <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
-                    {/* ... Dein alter Quiz Code (funktioniert gut) ... */}
-                    {/* Ich füge ihn der Vollständigkeit halber hier ein, damit du copy-paste machen kannst */}
                     <div className="flex items-center gap-3 mb-2 px-1">
                         <button onClick={() => setReaderMode('reading')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
                             <ArrowLeft size={20} />
@@ -2334,7 +2347,6 @@ function App() {
                 </div>
             );
         }
-
         return null;
     };
     const renderResults = () => (
