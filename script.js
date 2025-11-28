@@ -107,6 +107,41 @@ const COLLECTIONS = {
         { id: 'prof', label: 'Professions', sub: 'Work', icon: <Briefcase size={24}/>, ids: [204, 268, 386, 457, 483, 640, 684, 688, 690, 762, 783, 827, 901, 909, 917, 1098, 1150, 1188, 1203, 1232, 1259, 1264, 1323, 1328, 1337, 1341, 1343, 1406, 1411, 1499, 1546, 1552, 1631, 1706, 1722, 1737, 1738, 1789, 1797, 1861, 1876, 1924, 1957, 1961, 2039, 2049, 2089, 2100, 2101, 2119, 2176, 2183, 2201, 2233, 2248, 2276, 2307, 2404, 2415, 2430, 2436, 2443, 2461, 2523, 2587, 2645, 2741, 2768, 2824, 2848, 2906, 2928, 2954, 2963, 2981, 2995, 3003, 3042, 3048, 3072, 3081, 3085, 3100, 3118, 3163, 3167, 3189, 3223, 3241, 3251, 3262, 3283, 3327, 3350, 3371, 3446, 3494, 3503, 3518, 3630, 3745, 3767, 3886, 4052, 4131, 4261, 4282, 4346, 4430, 4422, 4463, 4787, 4309, 4253, 827, 640, 1264] },
     ]
 };
+// --- TOPIC HUB CONTENT ---
+const TOPIC_CONTENT = {
+    animals: {
+        idioms: [
+            { fr: "Il fait un temps de chien", en: "The weather is awful (lit. dog weather)" },
+            { fr: "Avoir un chat dans la gorge", en: "To have a frog in one's throat (lit. cat)" },
+            { fr: "Poser un lapin", en: "To stand someone up (lit. to place a rabbit)" }
+        ],
+        story: {
+            title: "Visite au Zoo",
+            text: "Aujourd'hui, nous allons au zoo. Le lion dort sous un arbre, mais les singes jouent. J'aime regarder les grands éléphants. C'est une belle journée.",
+            en: "Today we are going to the zoo. The lion sleeps under a tree, but the monkeys are playing. I like watching the big elephants. It is a beautiful day."
+        },
+        roleplay: {
+            title: "My Favorite Pet",
+            desc: "Tell the AI about your dog or cat. What is its name? What does it like to eat?"
+        }
+    },
+    food: {
+        idioms: [
+            { fr: "C'est la fin des haricots", en: "It's the last straw (lit. end of the beans)" },
+            { fr: "Raconter des salades", en: "To tell lies (lit. to tell salads)" },
+            { fr: "Occupe-toi de tes oignons", en: "Mind your own business (lit. your onions)" }
+        ],
+        story: {
+            title: "Au Restaurant",
+            text: "Je voudrais réserver une table pour deux personnes. Le menu est délicieux. Je prends un steak avec des frites et un verre de vin rouge. L'addition, s'il vous plaît !",
+            en: "I would like to reserve a table for two. The menu is delicious. I'll have a steak with fries and a glass of red wine. The check, please!"
+        },
+        roleplay: {
+            title: "Ordering Dinner",
+            desc: "You are at a bistro in Paris. Order a 3-course meal and ask for the bill."
+        }
+    }
+};
 // --- GRAMMAR DATA ---
 const GRAMMAR_MODULES = [
     { 
@@ -193,6 +228,126 @@ const ModernTranslator = () => {
         } finally {
             setLoading(false);
         }
+    };
+    const renderTopicHub = () => {
+        // Welches Thema wurde gewählt?
+        const topicConfig = COLLECTIONS.topics.find(t => t.id === selectedTopicId);
+        const content = TOPIC_CONTENT[selectedTopicId]; // Inhalte laden
+
+        if (!topicConfig) return <div>Topic not found</div>;
+
+        return (
+            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+                
+                {/* 1. HERO HEADER */}
+                <div className="relative mb-6">
+                    <button 
+                        onClick={() => setView('explore')} // Zurück zu Explore
+                        className="absolute left-0 top-0 p-2 -ml-2 bg-white/50 backdrop-blur-sm rounded-full text-slate-600 hover:bg-white transition-colors z-10"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                    
+                    <div className="flex flex-col items-center justify-center pt-4 pb-6 bg-gradient-to-b from-emerald-50 to-white rounded-[2.5rem]">
+                        <div className="bg-white p-6 rounded-3xl shadow-sm mb-4 text-emerald-600">
+                            {/* Wir klonen das Icon und machen es größer */}
+                            {React.cloneElement(topicConfig.icon, { size: 48 })}
+                        </div>
+                        <h1 className="text-3xl font-bold text-slate-800">{topicConfig.label}</h1>
+                        <p className="text-emerald-600/80 text-sm font-medium">{topicConfig.sub}</p>
+                    </div>
+                </div>
+
+                <div className="space-y-6 px-1">
+                    
+                    {/* 2. CORE VOCABULARY (Der "Start"-Button) */}
+                    <button 
+                        onClick={() => startCollectionSession(topicConfig.ids)}
+                        className="w-full bg-emerald-600 text-white p-5 rounded-3xl shadow-lg shadow-emerald-200 active:scale-[0.98] transition-all flex items-center justify-between group"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="bg-white/20 p-3 rounded-2xl"><Dumbbell size={24} fill="currentColor"/></div>
+                            <div className="text-left">
+                                <div className="font-bold text-lg">Start Vocab Drill</div>
+                                <div className="text-emerald-100 text-xs">{topicConfig.ids.length} essential words</div>
+                            </div>
+                        </div>
+                        <Play size={24} fill="currentColor" />
+                    </button>
+
+                    {/* 3. IDIOMS & CULTURE (Nur wenn Content da ist) */}
+                    {content?.idioms && (
+                        <div>
+                            <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-2">Local Idioms</h3>
+                            <div className="grid gap-3">
+                                {content.idioms.map((idiom, idx) => (
+                                    <button 
+                                        key={idx}
+                                        onClick={() => speak(idiom.fr)}
+                                        className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all relative group"
+                                    >
+                                        <div className="font-bold text-slate-700 text-lg pr-8 italic">"{idiom.fr}"</div>
+                                        <div className="text-slate-400 text-xs mt-1">{idiom.en}</div>
+                                        <div className="absolute top-4 right-4 text-emerald-200 group-hover:text-emerald-500 transition-colors">
+                                            <Volume2 size={20} />
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 4. MICRO STORY */}
+                    {content?.story && (
+                        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 relative overflow-hidden">
+                            <div className="flex items-center gap-2 mb-4">
+                                <BookOpen size={18} className="text-slate-400"/>
+                                <span className="font-bold text-slate-600 text-sm uppercase tracking-wide">Micro Story</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-800 mb-2">{content.story.title}</h3>
+                            <p className="text-slate-600 leading-relaxed font-serif text-lg mb-4">
+                                {content.story.text}
+                            </p>
+                            <div className="flex gap-2">
+                                <button onClick={() => speak(content.story.text)} className="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:text-emerald-600 transition-colors">
+                                    <Volume2 size={16}/> Listen
+                                </button>
+                                <button onClick={() => alert(content.story.en)} className="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:text-emerald-600 transition-colors">
+                                    <ArrowLeftRight size={16}/> Translate
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 5. ROLEPLAY PROMPT */}
+                    {content?.roleplay && (
+                        <button 
+                            onClick={() => {
+                                setView('skills'); // Wir leiten zum Skills/Chat Tab um (später deep link)
+                                alert(`Coming soon: Jump directly into the Chat Room with scenario "${content.roleplay.title}"`);
+                            }}
+                            className="w-full bg-gradient-to-r from-violet-100 to-fuchsia-100 p-5 rounded-3xl border border-violet-100 text-left flex items-center gap-4"
+                        >
+                            <div className="bg-white p-3 rounded-2xl text-violet-500 shadow-sm">
+                                <MessageSquare size={24} />
+                            </div>
+                            <div>
+                                <div className="font-bold text-violet-900">Roleplay Challenge</div>
+                                <div className="text-violet-700/70 text-xs">{content.roleplay.desc}</div>
+                            </div>
+                        </button>
+                    )}
+
+                    {/* Fallback wenn kein Content da ist */}
+                    {!content && (
+                        <div className="text-center p-6 text-slate-400 text-sm bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                            More cultural content coming soon for this topic! <br/>
+                            You can still practice the vocabulary above.
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
     };
 
     // --- NEU: Custom Switcher Button Design ---
@@ -347,6 +502,7 @@ function App() {
     const [showStats, setShowStats] = useState(false);
     const [exploreMode, setExploreMode] = useState('main');
     const [expandedCategory, setExpandedCategory] = useState(null);
+    const [selectedTopicId, setSelectedTopicId] = useState(null); // Welches Thema ist offen?
     
     
     
@@ -371,7 +527,10 @@ function App() {
     const [sortDir, setSortDir] = useState('asc'); // 'asc' (aufsteigend) oder 'desc' (absteigend)
     //     // State für Scroll-Button
     const [showScrollTop, setShowScrollTop] = useState(false);
-
+    // --- STATE MANAGEMENT ---
+    // ... deine anderen States ...
+    const [availableVoices, setAvailableVoices] = useState([]); // Liste aller Stimmen
+    const [selectedVoiceURI, setSelectedVoiceURI] = useState(null); // Die gewählte Stimme
     // Initial Load & Persistence
 // Initial Load & Persistence
 // --- STATE ---
@@ -415,7 +574,31 @@ function App() {
             window.addEventListener('scroll', handleScroll);
             return () => window.removeEventListener('scroll', handleScroll);
         }, []);
+    // --- VOICES LOADER ---
+    useEffect(() => {
+        const loadVoices = () => {
+            const voices = window.speechSynthesis.getVoices();
+            // Filter: Nur Französisch
+            const frVoices = voices.filter(v => v.lang.includes('fr'));
+            setAvailableVoices(frVoices);
 
+            // Versuche, eine gespeicherte Stimme zu laden
+            const savedVoice = localStorage.getItem('vocabApp_voice');
+            if (savedVoice) {
+                setSelectedVoiceURI(savedVoice);
+            } else if (frVoices.length > 0) {
+                // Smart Select: Versuche Google oder Premium zu finden, sonst nimm die erste
+                const bestVoice = frVoices.find(v => v.name.includes('Google') || v.name.includes('Premium') || v.name.includes('Enhanced')) || frVoices[0];
+                setSelectedVoiceURI(bestVoice.voiceURI);
+            }
+        };
+
+        loadVoices();
+        // Chrome braucht diesen Event-Listener, da Stimmen asynchron laden
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        
+        return () => { window.speechSynthesis.onvoiceschanged = null; };
+    }, []);
     useEffect(() => {
         // 1. Fortschritt laden
         const savedProgress = localStorage.getItem('vocabApp_progress');
@@ -533,6 +716,130 @@ function App() {
             nextReview: Date.now() + (nextInterval * 24 * 60 * 60 * 1000) 
         };
     };
+    // --- RENDER TOPIC HUB (Die Detailseite für Themen) ---
+    const renderTopicHub = () => {
+        // Welches Thema wurde gewählt?
+        const topicConfig = COLLECTIONS.topics.find(t => t.id === selectedTopicId);
+        
+        // Sicherheitscheck: Falls ID nicht gefunden oder TopicContent fehlt
+        if (!topicConfig) return <div className="p-8 text-center">Topic not found.</div>;
+        
+        // Inhalte laden (mit Fallback, falls Content noch nicht geschrieben ist)
+        const content = TOPIC_CONTENT[selectedTopicId]; 
+
+        return (
+            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+                
+                {/* 1. HERO HEADER */}
+                <div className="relative mb-6">
+                    <button 
+                        onClick={() => setView('explore')} // Zurück zu Explore
+                        className="absolute left-0 top-0 p-2 -ml-2 bg-white/50 backdrop-blur-sm rounded-full text-slate-600 hover:bg-white transition-colors z-10"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                    
+                    <div className="flex flex-col items-center justify-center pt-8 pb-8 bg-gradient-to-b from-emerald-50 to-white rounded-[2.5rem]">
+                        <div className="bg-white p-6 rounded-3xl shadow-sm mb-4 text-emerald-600">
+                            {/* Wir klonen das Icon und machen es größer */}
+                            {React.cloneElement(topicConfig.icon, { size: 48 })}
+                        </div>
+                        <h1 className="text-3xl font-bold text-slate-800">{topicConfig.label}</h1>
+                        <p className="text-emerald-600/80 text-sm font-medium">{topicConfig.sub}</p>
+                    </div>
+                </div>
+
+                <div className="space-y-6 px-1">
+                    
+                    {/* 2. CORE VOCABULARY (Der "Start"-Button) */}
+                    <button 
+                        onClick={() => startCollectionSession(topicConfig.ids)}
+                        className="w-full bg-emerald-600 text-white p-5 rounded-3xl shadow-lg shadow-emerald-200 active:scale-[0.98] transition-all flex items-center justify-between group"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="bg-white/20 p-3 rounded-2xl"><Dumbbell size={24} fill="currentColor"/></div>
+                            <div className="text-left">
+                                <div className="font-bold text-lg">Start Vocab Drill</div>
+                                <div className="text-emerald-100 text-xs">{topicConfig.ids.length} essential words</div>
+                            </div>
+                        </div>
+                        <Play size={24} fill="currentColor" />
+                    </button>
+
+                    {/* 3. IDIOMS & CULTURE (Nur wenn Content da ist) */}
+                    {content?.idioms && (
+                        <div>
+                            <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-2">Local Idioms</h3>
+                            <div className="grid gap-3">
+                                {content.idioms.map((idiom, idx) => (
+                                    <button 
+                                        key={idx}
+                                        onClick={() => speak(idiom.fr)}
+                                        className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all relative group"
+                                    >
+                                        <div className="font-bold text-slate-700 text-lg pr-8 italic">"{idiom.fr}"</div>
+                                        <div className="text-slate-400 text-xs mt-1">{idiom.en}</div>
+                                        <div className="absolute top-4 right-4 text-emerald-200 group-hover:text-emerald-500 transition-colors">
+                                            <Volume2 size={20} />
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 4. MICRO STORY */}
+                    {content?.story && (
+                        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 relative overflow-hidden">
+                            <div className="flex items-center gap-2 mb-4">
+                                <BookOpen size={18} className="text-slate-400"/>
+                                <span className="font-bold text-slate-600 text-sm uppercase tracking-wide">Micro Story</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-800 mb-2">{content.story.title}</h3>
+                            <p className="text-slate-600 leading-relaxed font-serif text-lg mb-4">
+                                {content.story.text}
+                            </p>
+                            <div className="flex gap-2">
+                                <button onClick={() => speak(content.story.text)} className="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:text-emerald-600 transition-colors">
+                                    <Volume2 size={16}/> Listen
+                                </button>
+                                <button onClick={() => alert(content.story.en)} className="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:text-emerald-600 transition-colors">
+                                    <ArrowLeftRight size={16}/> Translate
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 5. ROLEPLAY PROMPT */}
+                    {content?.roleplay && (
+                        <button 
+                            onClick={() => {
+                                setView('skills'); // Wir leiten zum Skills/Chat Tab um (später deep link)
+                                alert(`Coming soon: Jump directly into the Chat Room with scenario "${content.roleplay.title}"`);
+                            }}
+                            className="w-full bg-gradient-to-r from-violet-100 to-fuchsia-100 p-5 rounded-3xl border border-violet-100 text-left flex items-center gap-4"
+                        >
+                            <div className="bg-white p-3 rounded-2xl text-violet-500 shadow-sm">
+                                <MessageSquare size={24} />
+                            </div>
+                            <div>
+                                <div className="font-bold text-violet-900">Roleplay Challenge</div>
+                                <div className="text-violet-700/70 text-xs">{content.roleplay.desc}</div>
+                            </div>
+                        </button>
+                    )}
+
+                    {/* Fallback wenn kein Content da ist */}
+                    {!content && (
+                        <div className="text-center p-6 text-slate-400 text-sm bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                            More cultural content coming soon for this topic! <br/>
+                            You can still practice the vocabulary above.
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    };
 
     // Hilfsfunktion für die Logik oben (muss auch mit rein oder inline gelöst werden)
     // Am besten einfach inline lassen wie oben gelöst, das reicht.
@@ -558,22 +865,21 @@ function App() {
         return Math.round((knownWords.length / wordsInRange.length) * 100);
     };
     // --- AUDIO HELPER ---
+    // --- AUDIO HELPER ---
     const speak = (text) => {
         if (!text) return;
-        
-        // Stoppt vorherige Sprachausgabe (falls man schnell klickt)
         window.speechSynthesis.cancel();
 
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'fr-FR'; // WICHTIG: Französisch erzwingen
-        utterance.rate = 0.9;     // Etwas langsamer (0.9x), damit man es gut versteht
-        utterance.pitch = 1;      // Normale Tonhöhe
-
-        // Optional: Versuch, eine "Google" oder "Siri" Stimme zu finden (klingt besser)
-        const voices = window.speechSynthesis.getVoices();
-        // Wir suchen nach Stimmen die "fr" (französisch) im Code haben
-        const frVoice = voices.find(v => v.lang.includes('fr'));
-        if (frVoice) utterance.voice = frVoice;
+        utterance.lang = 'fr-FR';
+        utterance.rate = 0.9; 
+        
+        // HIER IST DAS UPDATE:
+        if (selectedVoiceURI) {
+            const allVoices = window.speechSynthesis.getVoices();
+            const voiceObj = allVoices.find(v => v.voiceURI === selectedVoiceURI);
+            if (voiceObj) utterance.voice = voiceObj;
+        }
 
         window.speechSynthesis.speak(utterance);
     };
@@ -1031,8 +1337,7 @@ function App() {
         );
     };
     const renderExplore = () => {
-        // HIER WAR DER FEHLER: "useState" gelöscht.
-        // Wir nutzen jetzt die Variable "exploreMode" von ganz oben aus der App.
+        // HINWEIS: Kein useState hier! Wir nutzen "exploreMode" aus der App().
 
         // Helper: Berechnet den Fortschritt für eine Kategorie
         const getCategoryProgress = (ids) => {
@@ -1105,7 +1410,7 @@ function App() {
             <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
                 <div className="flex items-center gap-3 mb-2 px-1">
                     <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
-                        <ArrowLeft size={20} className="rotate-[-90deg]" />
+                        <ArrowLeft size={20} />
                     </button>
                     <h2 className="text-2xl font-bold text-slate-800">{pageTitle}</h2>
                 </div>
@@ -1114,8 +1419,20 @@ function App() {
                     {activeCollection.map((item) => {
                         const progress = getCategoryProgress(item.ids);
                         const stats = getCategoryStats(item.ids);
+                        
                         return (
-                            <button key={item.id} onClick={() => startCollectionSession(item.ids)} className="w-full bg-white p-4 rounded-3xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all flex items-center gap-4 group">
+                            <button 
+                                key={item.id} 
+                                onClick={() => {
+                                    if (exploreMode === 'grammar') {
+                                        startCollectionSession(item.ids);
+                                    } else {
+                                        setSelectedTopicId(item.id);
+                                        setView('topic-hub');
+                                    }
+                                }}
+                                className="w-full bg-white p-4 rounded-3xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all flex items-center gap-4 group"
+                            >
                                 <div className={`w-14 h-14 flex items-center justify-center rounded-2xl shrink-0 ${exploreMode === 'grammar' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'}`}>
                                     {item.icon}
                                 </div>
@@ -1277,7 +1594,7 @@ function App() {
         };
 
         return (
-            <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 pt-4">
+            <div className="w-full animate-in fade-in duration-500 pt-4">
                 
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-6 pl-1">
@@ -1340,7 +1657,7 @@ function App() {
 
         return (
             // ÄNDERUNG: Kein Wrapper-Container mehr, nur "pt-4"
-            <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 pt-4">
+            <div className="w-full animate-in fade-in duration-500 pt-4">
                 
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-6 pl-1">
@@ -1514,7 +1831,7 @@ function App() {
                             <BookOpen size={20} /> Show Details
                         </button>
                     ) : (
-                        <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center border-t border-slate-100 pt-6 mt-2 w-full">
+                        <div className="w-full animate-in fade-in duration-300 flex flex-col items-center border-t border-slate-100 pt-6 mt-2 w-full">
                             <div className="text-center mb-6 w-full">
                                 <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
                                 <h3 className="text-3xl font-bold text-indigo-900 mb-2 leading-tight">{word.english || word.german}</h3>
@@ -1613,7 +1930,7 @@ function App() {
                             <BookOpen size={20} /> Show Translation
                         </button>
                     ) : (
-                        <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center border-t border-slate-100 pt-6 mt-2">
+                        <div className="w-full animate-in fade-in duration-300 flex flex-col items-center border-t border-slate-100 pt-6 mt-2">
                             
                             {/* ENGLISCH */}
                             <div className="text-center mb-6 w-full">
@@ -1796,16 +2113,71 @@ function App() {
         </div>
     );
     const renderDataMgmt = () => (
-        <div className="max-w-2xl mx-auto bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
-            <div className="flex items-center gap-3 mb-6">
-                <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full"><X size={20} className="text-slate-500" /></button>
-                <h2 className="text-xl font-bold text-slate-800">Import Data</h2>
+        <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in duration-500 pt-6 pb-24 px-1">
+            
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-2 px-1">
+                <button onClick={() => setView('profile')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                    <ArrowLeft size={24} />
+                </button>
+                <h2 className="text-2xl font-bold text-slate-800">Settings</h2>
             </div>
-            <p className="text-sm text-slate-500 mb-4">Paste your JSON list here. Format: <br/><code className="bg-slate-100 px-1 py-0.5 rounded text-xs break-all">[{`{"rank": 1, "french": "le", "english": "the"}`}, ...]</code></p>
-            <form onSubmit={handleDataUpload}>
-                <textarea name="jsonInput" className="w-full h-64 p-4 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-indigo-500 outline-none mb-4" placeholder='[{"rank": 1, "french": "le", "english": "the"}, ...]'></textarea>
-                <button type="submit" className="flex items-center justify-center gap-2 w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors"><Save size={18} /> Save List & Overwrite</button>
-            </form>
+
+            {/* 1. VOICE SETTINGS (NEU!) */}
+            <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-indigo-50 text-indigo-600 p-2 rounded-xl"><Volume2 size={20}/></div>
+                    <div>
+                        <h3 className="font-bold text-slate-800">Audio Voice</h3>
+                        <p className="text-xs text-slate-400">Select your preferred speaker</p>
+                    </div>
+                </div>
+
+                <div className="space-y-3">
+                    <select 
+                        value={selectedVoiceURI || ''}
+                        onChange={(e) => {
+                            setSelectedVoiceURI(e.target.value);
+                            localStorage.setItem('vocabApp_voice', e.target.value);
+                            // Test sprechen
+                            setTimeout(() => speak("Bonjour, c'est ma nouvelle voix."), 100);
+                        }}
+                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-indigo-500 transition-colors"
+                    >
+                        {availableVoices.length === 0 && <option>Loading voices...</option>}
+                        {availableVoices.map(v => (
+                            <option key={v.voiceURI} value={v.voiceURI}>
+                                {v.name} ({v.lang})
+                            </option>
+                        ))}
+                    </select>
+                    <p className="text-[10px] text-slate-400 italic text-center">
+                        Tip: Select "Google Français" or "Siri" for best quality.
+                    </p>
+                </div>
+            </div>
+
+            {/* 2. DATA IMPORT (Dein alter Code, verschönert) */}
+            <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-slate-100 text-slate-600 p-2 rounded-xl"><Save size={20}/></div>
+                    <div>
+                        <h3 className="font-bold text-slate-800">Import Data</h3>
+                        <p className="text-xs text-slate-400">Restore backup or add words</p>
+                    </div>
+                </div>
+                
+                <form onSubmit={handleDataUpload}>
+                    <textarea 
+                        name="jsonInput" 
+                        className="w-full h-32 p-4 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-indigo-500 outline-none mb-4 resize-none" 
+                        placeholder='[{"rank": 1, "french": "le", "english": "the"}, ...]'
+                    ></textarea>
+                    <button type="submit" className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors flex justify-center items-center gap-2 shadow-lg shadow-indigo-200 active:scale-95">
+                        <Save size={18} /> Save & Overwrite
+                    </button>
+                </form>
+            </div>
         </div>
     );
     
@@ -2146,7 +2518,7 @@ function App() {
 
                 {/* BACK TO TOP BUTTON */}
                 {showScrollTop && (
-                    <button onClick={scrollToTop} className="fixed bottom-24 right-6 bg-indigo-600 text-white p-3 rounded-full shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-90 transition-all z-50 animate-in slide-in-from-bottom-4 fade-in">
+                    <button onClick={scrollToTop} className="fixed bottom-24 right-6 bg-indigo-600 text-white p-3 rounded-full shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-90 transition-all z-50 animate-in fade-in">
                         <ArrowUp size={24} />
                     </button>
                 )}
@@ -2187,6 +2559,9 @@ function App() {
             
             case 'word-detail':
                 return renderWordDetail();
+            
+            case 'topic-hub': // <--- NEU
+                return renderTopicHub();
 
             default: return renderHome();
         }
@@ -2196,7 +2571,7 @@ function App() {
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col items-center">
             {/* Main Content Area */}
             {/* pb-24 sorgt dafür, dass Inhalt nicht hinter der Leiste verschwindet */}
-            <div className={`w-full max-w-lg md:max-w-2xl px-5 py-6 md:p-8 ${!isSessionActive ? 'pb-28' : ''}transition-all duration-300 ease-in-out`}>
+            <div className={`w-full max-w-lg md:max-w-2xl px-5 py-6 md:p-8 ${!isSessionActive ? 'pb-28' : ''}`}>
                 
                 {/* Wenn Session aktiv -> Session Views zeigen */}
                 {isSessionActive ? (
