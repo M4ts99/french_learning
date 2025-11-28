@@ -2219,16 +2219,25 @@ function App() {
         }
 
         // --- PHASE 2: LESEN ---
+        // --- PHASE 2: LESEN (Interactive Text) ---
         if (readerMode === 'reading' && currentStory) {
             return (
                 <div className="space-y-6 animate-in fade-in zoom-in duration-300 pt-6 pb-40 px-1 relative min-h-screen">
+                     {/* Header */}
                      <div className="flex items-center justify-between mb-4 px-1">
                         <button onClick={() => setReaderMode('select')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
                             <ArrowLeft size={20} />
                         </button>
-                        <button onClick={() => toggleAudio(currentStory.text)} className={`p-2 px-4 rounded-full font-bold text-xs flex items-center gap-2 transition-all ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>
-                            {isSpeaking ? <><X size={16}/> Stop</> : <><Volume2 size={16}/> Listen</>}
-                        </button>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={() => toggleAudio(currentStory.text)} 
+                                className={`p-2 px-4 rounded-full font-bold text-xs flex items-center gap-2 transition-all ${
+                                    isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'
+                                }`}
+                            >
+                                {isSpeaking ? <><X size={16}/> Stop</> : <><Volume2 size={16}/> Listen</>}
+                            </button>
+                        </div>
                     </div>
 
                     {/* STORY CONTAINER */}
@@ -2237,20 +2246,22 @@ function App() {
                         
                         <div className="text-lg text-slate-700 leading-loose font-serif text-justify">
                             {currentStory.text.split(' ').map((wordRaw, i) => {
-                                // 1. Sternchen (**) und Unterstriche (__) gnadenlos entfernen für die Anzeige
+                                // 1. Wir bereinigen das Wort für die ANZEIGE (Sterne weg)
                                 const displayText = wordRaw.replace(/[\*_]/g, "");
                                 
-                                // 2. Bereinigtes Wort für den Vergleich (ohne Satzzeichen)
-                                const compareWord = displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
+                                // 2. Wir bereinigen das Wort für die SUCHE (Satzzeichen weg, Kleinbuchstaben)
+                                // Das übergeben wir an handleWordClick
+                                const searchWord = displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
                                 
                                 return (
                                     <span 
                                         key={i} 
-                                        // Wir übergeben das rohe Wort, damit die Klick-Logik Satzzeichen handeln kann
-                                        onClick={(e) => handleWordClick(e, wordRaw)}
+                                        // HIER WAR DER FEHLER: Wir übergeben jetzt direkt das saubere displayText
+                                        // Die handleWordClick Funktion kümmert sich um den Rest
+                                        onClick={(e) => handleWordClick(e, displayText)}
                                         className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 hover:text-indigo-600 ${
-                                            // Gelb markieren wenn angeklickt
-                                            clickedWord?.french === compareWord ? 'bg-yellow-200 text-slate-900' : ''
+                                            // Check: Ist das angeklickte Wort dieses Wort?
+                                            clickedWord?.french.toLowerCase() === searchWord ? 'bg-yellow-200 text-slate-900' : ''
                                         }`}
                                     >
                                         {displayText}
@@ -2260,11 +2271,13 @@ function App() {
                         </div>
                     </div>
 
-                    {/* INFO POPUP */}
+                    {/* INFO POPUP (Bleibt gleich) */}
                     {clickedWord && (
                         <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom-4 z-50 flex items-center justify-between">
                             <div>
-                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Rank #{clickedWord.rank}</div>
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">
+                                    {clickedWord.rank !== "?" ? `Rank #${clickedWord.rank}` : "Unknown"}
+                                </div>
                                 <div className="text-xl font-bold">{clickedWord.french}</div>
                                 <div className="text-slate-300 text-sm italic">{clickedWord.english || clickedWord.german}</div>
                             </div>
@@ -2275,7 +2288,15 @@ function App() {
                         </div>
                     )}
 
-                    <button onClick={() => { stopAudio(); setIsSpeaking(false); setReaderMode('quiz'); setQuizAnswers({}); }} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all">
+                    <button 
+                        onClick={() => { 
+                            stopAudio();
+                            setIsSpeaking(false);
+                            setReaderMode('quiz'); 
+                            setQuizAnswers({}); 
+                        }}
+                        className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all"
+                    >
                         Take Quiz <ArrowLeft size={20} className="rotate-180"/>
                     </button>
                 </div>
