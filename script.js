@@ -516,6 +516,7 @@ function App() {
     const [storyConfig, setStoryConfig] = useState({ length: 'medium', level: 'auto' }); 
     const [clickedWord, setClickedWord] = useState(null);
     const [isSpeaking, setIsSpeaking] = useState(false);
+   
     
     // Session State
     const [activeSession, setActiveSession] = useState([]);
@@ -2111,9 +2112,7 @@ function App() {
         );
     };
     const renderReader = () => {
-        const [storyConfig, setStoryConfig] = useState({ length: 'medium', level: 'auto' }); 
-        const [clickedWord, setClickedWord] = useState(null);
-        const [isSpeaking, setIsSpeaking] = useState(false);
+        
 
         const handleGenerate = (genre) => {
             generateStory(genre, storyConfig.length, storyConfig.level); 
