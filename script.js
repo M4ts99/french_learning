@@ -1799,34 +1799,51 @@ function App() {
             setLoadingExamples(false);
         }
     };
-    const generateStory = async (genre, length) => { // <--- length als Parameter hinzufügen
+    const generateStory = async (genre, length, selectedLevel) => {
         setLoadingStory(true);
         
-        // 1. Schwache Wörter finden (max 5)
-        const weakWords = vocabulary
-            .filter(w => {
-                const p = userProgress[w.rank];
-                return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
-            })
-            .slice(0, 5)
-            .map(w => w.french);
+        // 1. Level Logik
+        let finalLevel = selectedLevel;
+        let weakWordsToSend = [];
 
-        // 2. Level abschätzen (einfach basierend auf gelernten Wörtern)
-        const learnedCount = vocabulary.filter(w => userProgress[w.rank]?.box > 0).length;
-        const level = learnedCount > 1000 ? "B1" : learnedCount > 300 ? "A2" : "A1";
+        if (selectedLevel === 'auto') {
+            // Nur bei AUTO nehmen wir Rücksicht auf den User-Fortschritt
+            const learnedCount = vocabulary.filter(w => userProgress[w.rank]?.box > 0).length;
+            if (learnedCount < 200) finalLevel = "A1";
+            else if (learnedCount < 600) finalLevel = "A2";
+            else if (learnedCount < 1200) finalLevel = "B1";
+            else finalLevel = "B2";
+
+            // Und wir senden die Problemwörter mit
+            weakWordsToSend = vocabulary
+                .filter(w => {
+                    const p = userProgress[w.rank];
+                    return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
+                })
+                .slice(0, 5)
+                .map(w => w.french);
+        } else {
+            // Bei manueller Wahl (z.B. C2) schicken wir KEINE weakWords,
+            // damit die KI "frei" und komplex schreiben kann.
+            weakWordsToSend = [];
+        }
 
         try {
             const res = await fetch('/api/story', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ genre, level, weakWords, length }) // <--- length mitsenden
+                body: JSON.stringify({ 
+                    genre, 
+                    level: finalLevel, 
+                    weakWords: weakWordsToSend, 
+                    length 
+                })
             });
             const data = await res.json();
-            
             if (data.error) throw new Error(data.error);
             
             setCurrentStory(data);
-            setReaderMode('reading'); // Wechsel zur Lese-Ansicht
+            setReaderMode('reading'); 
         } catch (e) {
             console.error(e);
             alert("Could not generate story. Please try again.");
@@ -2094,9 +2111,9 @@ function App() {
         );
     };
     const renderReader = () => {
-        // State für die Config (Länge & Level)
-        // Wir nutzen useState hier lokal, da es ok ist, wenn es beim Tab-Wechsel resetet wird
-
+        const [storyConfig, setStoryConfig] = useState({ length: 'medium', level: 'auto' }); 
+        const [clickedWord, setClickedWord] = useState(null);
+        const [isSpeaking, setIsSpeaking] = useState(false);
 
         const handleGenerate = (genre) => {
             generateStory(genre, storyConfig.length, storyConfig.level); 
@@ -2108,14 +2125,14 @@ function App() {
                 setIsSpeaking(false);
             } else {
                 setIsSpeaking(true);
-                const cleanText = text.replace(/\*\*/g, ""); 
-                speak(cleanText);
+                speak(text);
             }
         };
 
         const handleWordClick = (e, wordRaw) => {
             e.stopPropagation();
-            const cleanWord = wordRaw.replace(/[.,!?;:"«»()]/g, "").replace(/\*\*/g, "").toLowerCase();
+            // Satzzeichen entfernen für die Suche
+            const cleanWord = wordRaw.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
             const found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
             if (found) {
                 setClickedWord(found);
@@ -2142,62 +2159,34 @@ function App() {
                         </div>
                     ) : (
                         <div className="space-y-6">
-                            
                             {/* SETTINGS CARD */}
                             <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
-                                
-                                {/* 1. LEVEL SELECTOR */}
+                                {/* LEVEL SELECTOR */}
                                 <div>
                                     <div className="flex justify-between items-center mb-3">
                                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Difficulty Level</span>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
-                                        {/* Auto Button */}
-                                        <button 
-                                            onClick={() => setStoryConfig({...storyConfig, level: 'auto'})}
-                                            className={`px-3 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-1 ${
-                                                storyConfig.level === 'auto' 
-                                                ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' 
-                                                : 'bg-slate-50 text-slate-500 border-slate-200'
-                                            }`}
-                                        >
+                                        <button onClick={() => setStoryConfig({...storyConfig, level: 'auto'})} className={`px-3 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-1 ${storyConfig.level === 'auto' ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-slate-50 text-slate-500 border-slate-200'}`}>
                                             <Sparkles size={12} /> My Level
                                         </button>
-
-                                        {/* CEFR Levels */}
                                         {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(lvl => (
-                                            <button 
-                                                key={lvl}
-                                                onClick={() => setStoryConfig({...storyConfig, level: lvl})}
-                                                className={`px-3 py-2 rounded-xl text-xs font-bold border transition-all ${
-                                                    storyConfig.level === lvl 
-                                                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' 
-                                                    : 'bg-white text-slate-500 border-slate-200'
-                                                }`}
-                                            >
+                                            <button key={lvl} onClick={() => setStoryConfig({...storyConfig, level: lvl})} className={`px-3 py-2 rounded-xl text-xs font-bold border transition-all ${storyConfig.level === lvl ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-white text-slate-500 border-slate-200'}`}>
                                                 {lvl}
                                             </button>
                                         ))}
                                     </div>
                                 </div>
 
-                                {/* 2. LENGTH SLIDER */}
+                                {/* LENGTH SLIDER */}
                                 <div>
                                     <div className="flex justify-between items-center mb-4">
                                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Story Length</span>
                                         <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg uppercase">
-                                            {storyConfig.length === 'short' ? '~50 Words' : storyConfig.length === 'medium' ? '~100 Words' : '~200 Words'}
+                                            {storyConfig.length === 'short' ? '~50 Words' : storyConfig.length === 'medium' ? '~100 Words' : '~250 Words'}
                                         </span>
                                     </div>
-                                    <input 
-                                        type="range" min="1" max="3" step="1" 
-                                        value={storyConfig.length === 'short' ? 1 : storyConfig.length === 'medium' ? 2 : 3}
-                                        onChange={(e) => {
-                                            const val = parseInt(e.target.value);
-                                            setStoryConfig({ ...storyConfig, length: val === 1 ? 'short' : val === 2 ? 'medium' : 'long' });
-                                        }}
-                                        className="w-full accent-indigo-600 h-2 bg-slate-100 rounded-lg cursor-pointer"
-                                    />
+                                    <input type="range" min="1" max="3" step="1" value={storyConfig.length === 'short' ? 1 : storyConfig.length === 'medium' ? 2 : 3} onChange={(e) => { const val = parseInt(e.target.value); setStoryConfig({ ...storyConfig, length: val === 1 ? 'short' : val === 2 ? 'medium' : 'long' }); }} className="w-full accent-indigo-600 h-2 bg-slate-100 rounded-lg cursor-pointer" />
                                 </div>
                             </div>
 
@@ -2205,6 +2194,7 @@ function App() {
                             <div>
                                 <p className="text-slate-500 px-2 text-sm font-medium mb-3">Choose a Genre</p>
                                 <div className="grid grid-cols-2 gap-3">
+                                    {/* Buttons für Genres... (wie gehabt) */}
                                     <button onClick={() => handleGenerate('Mystery')} className="bg-purple-50 border border-purple-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group">
                                         <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-purple-600 shadow-sm"><Ghost size={20}/></div>
                                         <div><h3 className="font-bold text-purple-900">Mystery</h3></div>
@@ -2229,59 +2219,42 @@ function App() {
             );
         }
 
-        // --- PHASE 2: LESEN (Interactive Text) ---
+        // --- PHASE 2: LESEN ---
         if (readerMode === 'reading' && currentStory) {
             return (
                 <div className="space-y-6 animate-in fade-in zoom-in duration-300 pt-6 pb-40 px-1 relative min-h-screen">
-                     {/* Header */}
                      <div className="flex items-center justify-between mb-4 px-1">
                         <button onClick={() => setReaderMode('select')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
                             <ArrowLeft size={20} />
                         </button>
-                        <div className="flex gap-2">
-                            <button 
-                                onClick={() => toggleAudio(currentStory.text)} 
-                                className={`p-2 px-4 rounded-full font-bold text-xs flex items-center gap-2 transition-all ${
-                                    isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'
-                                }`}
-                            >
-                                {isSpeaking ? <><X size={16}/> Stop</> : <><Volume2 size={16}/> Listen</>}
-                            </button>
-                        </div>
+                        <button onClick={() => toggleAudio(currentStory.text)} className={`p-2 px-4 rounded-full font-bold text-xs flex items-center gap-2 transition-all ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>
+                            {isSpeaking ? <><X size={16}/> Stop</> : <><Volume2 size={16}/> Listen</>}
+                        </button>
                     </div>
 
-                    {/* STORY CONTAINER */}
                     <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-100">
                         <h2 className="text-2xl font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">{currentStory.title}</h2>
-                        
                         <div className="text-lg text-slate-700 leading-loose font-serif">
                             {currentStory.text.split(' ').map((word, i) => {
-                                // Wörter, die fett (**) sind, sind die "Target Vocab"
-                                const isBold = word.includes('**');
-                                const displayText = word.replace(/\*\*/g, "");
-                                
+                                // HIER GEÄNDERT: Keine Farb-Logik mehr, alles ist normaler Text, aber klickbar
                                 return (
                                     <span 
                                         key={i} 
                                         onClick={(e) => handleWordClick(e, word)}
-                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 border-b-2 border-transparent ${
-                                            // Wenn geklickt -> Gelb hinterlegt
-                                            clickedWord?.french === displayText.replace(/[.,!?;:]/g, "").toLowerCase() ? 'bg-yellow-200 border-yellow-400' :
-                                            // Wenn Target Vocab -> Blau markiert und leicht unterstrichen
-                                            isBold ? 'text-indigo-600 font-bold bg-indigo-50 border-indigo-100' : 
-                                            'hover:bg-slate-100'
+                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 ${
+                                            clickedWord?.french === word.replace(/[.,!?;:]/g, "").toLowerCase() ? 'bg-yellow-200' : ''
                                         }`}
                                     >
-                                        {displayText}
+                                        {word}
                                     </span>
                                 );
                             })}
                         </div>
                     </div>
 
-                    {/* INFO KACHEL (Popup für geklicktes Wort) */}
+                    {/* INFO POPUP */}
                     {clickedWord && (
-                        <div className="fixed bottom-24 left-4 right-4 bg-slate-900/90 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom-4 z-50 flex items-center justify-between">
+                        <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom-4 z-50 flex items-center justify-between">
                             <div>
                                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Rank #{clickedWord.rank}</div>
                                 <div className="text-xl font-bold">{clickedWord.french}</div>
@@ -2294,32 +2267,22 @@ function App() {
                         </div>
                     )}
 
-                    <button 
-                        onClick={() => { 
-                            stopAudio();
-                            setIsSpeaking(false);
-                            setReaderMode('quiz'); 
-                            setQuizAnswers({}); 
-                        }}
-                        className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all"
-                    >
+                    <button onClick={() => { stopAudio(); setIsSpeaking(false); setReaderMode('quiz'); setQuizAnswers({}); }} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all">
                         Take Quiz <ArrowLeft size={20} className="rotate-180"/>
                     </button>
                 </div>
             );
         }
 
-        // --- PHASE 3: QUIZ (Gleich geblieben) ---
+        // --- PHASE 3: QUIZ (Bleibt gleich) ---
         if (readerMode === 'quiz' && currentStory) {
+            // ... (hier einfach den bestehenden Quiz-Code nutzen) ...
             return (
                 <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-2 px-1">
-                        <button onClick={() => setReaderMode('reading')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
-                            <ArrowLeft size={20} />
-                        </button>
+                        <button onClick={() => setReaderMode('reading')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"><ArrowLeft size={20} /></button>
                         <h2 className="text-xl font-bold text-slate-800">Comprehension Check</h2>
                     </div>
-
                     <div className="space-y-6">
                         {currentStory.quiz.map((q, qIdx) => (
                             <div key={qIdx} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
@@ -2333,11 +2296,7 @@ function App() {
                                             if (isCorrect) btnClass = "bg-green-100 text-green-700 border-green-200 ring-2 ring-green-500";
                                             else btnClass = "bg-red-100 text-red-700 border-red-200";
                                         }
-                                        return (
-                                            <button key={oIdx} onClick={() => setQuizAnswers({...quizAnswers, [qIdx]: oIdx})} className={`w-full p-3 rounded-xl text-left text-sm font-medium border transition-all ${btnClass}`}>
-                                                {opt}
-                                            </button>
-                                        );
+                                        return <button key={oIdx} onClick={() => setQuizAnswers({...quizAnswers, [qIdx]: oIdx})} className={`w-full p-3 rounded-xl text-left text-sm font-medium border transition-all ${btnClass}`}>{opt}</button>;
                                     })}
                                 </div>
                             </div>
