@@ -461,8 +461,9 @@ function App() {
     // --- ANKI ALGORITHM (SM-2 Variation) ---
     // --- ANKI ALGORITHM (SM-2 Variation) ---
     // --- ANKI ALGORITHM (SM-2 Variation) ---
+    // --- ANKI ALGORITHM (SM-2 Variation) ---
     const calculateAnkiStats = (currentStats, quality) => {
-        // quality: 0=Again (Missed), 1=Hard, 2=Good, 3=Easy
+        // quality: 0=Again, 1=Hard, 2=Good, 3=Easy
         
         let interval = currentStats?.interval ?? 0;
         let ease = currentStats?.ease ?? 2.5;
@@ -470,46 +471,71 @@ function App() {
         
         let nextInterval;
         let nextRepetitions = repetitions + 1;
+        let nextEase = ease;
 
-        // --- SZENARIO 1: RESET (Vergessen) ---
-        if (quality === 0) {
-            nextInterval = 0; // Zurück auf "Neu"
-            nextRepetitions = 0; // Zähler resetten
-            ease = Math.max(1.3, ease - 0.2); // Strafe: Das Wort gilt als schwieriger (Ease sinkt)
-        }
-        // --- SZENARIO 2: NEUES WORT (Erstes Lernen) ---
-        else if (interval === 0) {
-            if (quality === 1) nextInterval = 0; // Hard bleibt bei Neu (nochmal üben)
-            else if (quality === 2) nextInterval = 1; // Good = 1 Tag
-            else nextInterval = 4; // Easy = 4 Tage
+        // --- LOGIK: INTERVALL BERECHNEN ---
+        
+        // 1. Neues Wort (oder nach Reset)
+        if (interval === 0) {
+            if (quality === 0) { // Again
+                nextInterval = 0; 
+                nextRepetitions = 0;
+            } else if (quality === 1) { // Hard
+                nextInterval = 0; // Bleibt 0, muss nochmal geübt werden
+                // Strafe für Ease, auch am Anfang!
+                nextEase = Math.max(1.3, ease - 0.15); 
+            } else if (quality === 2) { // Good
+                nextInterval = 1; 
+            } else { // Easy
+                nextInterval = 3; // Wir reduzieren den "Easy"-Sprung von 4 auf 3 Tage
+                nextEase += 0.15;
+            }
         } 
-        // --- SZENARIO 3: WIEDERHOLUNG (Review) ---
+        // 2. Wiederholung
         else {
-            // Ease Factor anpassen
-            // Hard(-0.15), Good(0), Easy(+0.15)
-            let easeMod = (quality === 1) ? -0.15 : (quality === 3) ? 0.15 : 0;
-            let nextEase = Math.max(1.3, ease + easeMod);
-            
-            // Intervall Berechnung (Exponential)
-            // Hard: x1.2
-            // Good: x Ease (z.B. x2.5)
-            // Easy: x Ease x 1.3 (z.B. x3.25)
-            let factor = (quality === 1) ? 1.2 : (quality === 3 ? nextEase * 1.3 : nextEase);
-            
-            nextInterval = Math.ceil(interval * factor);
-            ease = nextEase;
+            if (quality === 0) { // Vergessen
+                nextInterval = 0;
+                nextRepetitions = 0;
+                nextEase = Math.max(1.3, ease - 0.2);
+            } else {
+                // Ease Anpassung
+                if (quality === 1) nextEase -= 0.15; // Hard macht es schwerer für die Zukunft
+                if (quality === 3) nextEase += 0.15; // Easy macht es leichter
+                nextEase = Math.max(1.3, nextEase);
+                
+                // Faktor Berechnung
+                let factor = (quality === 1) ? 1.2 : (quality === 3 ? nextEase * 1.3 : nextEase);
+                nextInterval = Math.ceil(interval * factor);
+            }
+        }
+
+        // --- NEU: BOX BERECHNUNG (Mapping) ---
+        // Wir trennen Tage von Boxen, damit es logischer aussieht.
+        let visualBox = 0;
+        if (nextInterval === 0) visualBox = 1;       // Lernen / Fehler
+        else if (nextInterval <= 3) visualBox = 2;   // 1-3 Tage (Frisch)
+        else if (nextInterval <= 10) visualBox = 3;  // 4-10 Tage (Sitzt)
+        else if (nextInterval <= 30) visualBox = 4;  // 11-30 Tage (Fest)
+        else visualBox = 5;                          // >30 Tage (Langzeit)
+
+        // Sonderfall: Wenn es "Hard" war, darf die Box nicht steigen (außer es war 0)
+        if (quality === 1 && interval > 0) {
+             // Wir begrenzen die Box visuell auf die aktuelle, damit man nicht "aufsteigt", wenn man es schwer fand
+             const oldBox = calculateBoxFromInterval(interval); // Hilfsfunktion oder Schätzung
+             visualBox = Math.min(visualBox, oldBox);
         }
 
         return { 
             interval: nextInterval,
-            // WICHTIG: Wenn nextInterval 0 ist (bei Missed), ist auch box 0.
-            // Die Statistik zählt nur box > 0. Damit fliegt es raus!
-            box: nextInterval, 
-            ease: ease, 
+            box: visualBox, // Das ist jetzt eine saubere 1-5 Skala
+            ease: nextEase, 
             repetitions: nextRepetitions,
             nextReview: Date.now() + (nextInterval * 24 * 60 * 60 * 1000) 
         };
     };
+
+    // Hilfsfunktion für die Logik oben (muss auch mit rein oder inline gelöst werden)
+    // Am besten einfach inline lassen wie oben gelöst, das reicht.
 
     // Helper für Button-Labels (z.B. "10m", "4d")
     // Helper für Button-Labels
