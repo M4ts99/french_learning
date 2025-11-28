@@ -51,7 +51,10 @@ const Zap = (p) => <Icon {...p} path={<polygon points="13 2 3 14 12 14 11 22 21 
 const Shield = (p) => <Icon {...p} path={<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>} />;
 const Medal = (p) => <Icon {...p} path={<><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></>} />;
 const ArrowLeft = (p) => <Icon {...p} path={<><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></>} />;
-
+const ArrowUp = (p) => <Icon {...p} path={<><path d="m18 15-6-6-6 6"/></>} />;
+const ArrowDown = (p) => <Icon {...p} path={<><path d="m6 9 6 6 6-6"/></>} />;
+const ArrowUpDown = (p) => <Icon {...p} path={<><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></>} />;
+const Hash = (p) => <Icon {...p} path={<><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></>} />;
 
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
@@ -145,6 +148,7 @@ const ModernTranslator = () => {
     const [correctionData, setCorrectionData] = useState(null);   // Für Coach
     
     const [loading, setLoading] = useState(false);
+
 
     // --- LOGIC: TRANSLATE ---
     const handleTranslate = async () => {
@@ -363,6 +367,11 @@ function App() {
     const [aiExamples, setAiExamples] = useState(null);
     const [loadingExamples, setLoadingExamples] = useState(false);
 
+    const [sortType, setSortType] = useState('rank'); 
+    const [sortDir, setSortDir] = useState('asc'); // 'asc' (aufsteigend) oder 'desc' (absteigend)
+    //     // State für Scroll-Button
+    const [showScrollTop, setShowScrollTop] = useState(false);
+
     // Initial Load & Persistence
 // Initial Load & Persistence
 // --- STATE ---
@@ -393,7 +402,19 @@ function App() {
                 localStorage.setItem('vocabApp_streak', JSON.stringify({ count: 1, lastDate: today }));
             }
         }
-    }, []);    
+    }, []);  
+    useEffect(() => {
+            const handleScroll = () => {
+                if (window.scrollY > 300) {
+                    setShowScrollTop(true);
+                } else {
+                    setShowScrollTop(false);
+                }
+            };
+
+            window.addEventListener('scroll', handleScroll);
+            return () => window.removeEventListener('scroll', handleScroll);
+        }, []);
 
     useEffect(() => {
         // 1. Fortschritt laden
@@ -984,20 +1005,17 @@ function App() {
         );
     };
     const renderExplore = () => {
-        // Lokaler State für die Navigation innerhalb von Explore
-        // 'main' = Hauptmenü, 'grammar' = Vokabel-Sets Liste, 'topics' = Themen Liste
-        
+        // HIER WAR DER FEHLER: "useState" gelöscht.
+        // Wir nutzen jetzt die Variable "exploreMode" von ganz oben aus der App.
 
-        // Helper: Berechnet den Fortschritt für eine Kategorie (z.B. "Tiere")
+        // Helper: Berechnet den Fortschritt für eine Kategorie
         const getCategoryProgress = (ids) => {
             if (!ids || ids.length === 0) return 0;
             const safeVocab = vocabulary || [];
-            // Zähle Wörter in dieser Kategorie, die gelernt sind (box > 0)
             const learnedCount = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
             return Math.round((learnedCount / ids.length) * 100);
         };
 
-        // Helper: Berechnet wie viele Wörter gelernt sind (z.B. "12/50")
         const getCategoryStats = (ids) => {
             if (!ids || ids.length === 0) return "0/0";
             const safeVocab = vocabulary || [];
@@ -1005,80 +1023,47 @@ function App() {
             return `${learnedCount}/${ids.length}`;
         };
 
-        // --- ANSICHT 1: HAUPTMENÜ (Vertical Stack) ---
+        // --- ANSICHT 1: HAUPTMENÜ ---
         if (exploreMode === 'main') {
             return (
                 <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-500 pt-6 pb-24 px-1">
-                    {/* Header */}
                     <div className="flex items-center gap-3 mb-2 px-1">
                         <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Compass size={24} /></div>
                         <h2 className="text-2xl font-bold text-slate-800">Explore</h2>
                     </div>
 
-                    {/* 1. STORIES (Buch-Design) */}
-                    <button 
-                        onClick={() => setView('reader')} 
-                        className="w-full bg-amber-50 border border-amber-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm"
-                    >
+                    {/* Stories */}
+                    <button onClick={() => setView('reader')} className="w-full bg-amber-50 border border-amber-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
                         <div className="relative z-10 flex items-start gap-4">
-                            <div className="bg-white p-3 rounded-2xl text-amber-500 shadow-sm">
-                                <BookCheck size={28} />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-amber-900 text-xl">Reading Room</h3>
-                                <p className="text-amber-700/70 text-sm font-medium mt-1">Interactive Stories • A1-B1</p>
-                            </div>
+                            <div className="bg-white p-3 rounded-2xl text-amber-500 shadow-sm"><BookCheck size={28} /></div>
+                            <div><h3 className="font-bold text-amber-900 text-xl">Reading Room</h3><p className="text-amber-700/70 text-sm font-medium mt-1">Interactive Stories • A1-B1</p></div>
                         </div>
                         <BookOpen size={100} className="absolute -right-4 -bottom-6 text-amber-100 opacity-60 rotate-12 group-hover:scale-110 transition-transform"/>
                     </button>
 
-                    {/* 2. NEWS (Zeitungs-Design) */}
-                    <button 
-                        onClick={() => setView('culture')} 
-                        className="w-full bg-rose-50 border border-rose-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm"
-                    >
+                    {/* News */}
+                    <button onClick={() => setView('culture')} className="w-full bg-rose-50 border border-rose-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
                         <div className="relative z-10 flex items-start gap-4">
-                            <div className="bg-white p-3 rounded-2xl text-rose-500 shadow-sm">
-                                <Activity size={28} />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-rose-900 text-xl">Culture Feed</h3>
-                                <p className="text-rose-700/70 text-sm font-medium mt-1">News & Memes from France</p>
-                            </div>
+                            <div className="bg-white p-3 rounded-2xl text-rose-500 shadow-sm"><Activity size={28} /></div>
+                            <div><h3 className="font-bold text-rose-900 text-xl">Culture Feed</h3><p className="text-rose-700/70 text-sm font-medium mt-1">News & Memes from France</p></div>
                         </div>
                         <Sparkles size={100} className="absolute -right-4 -bottom-6 text-rose-100 opacity-60 rotate-12 group-hover:scale-110 transition-transform"/>
                     </button>
 
-                    {/* 3. VOCAB SETS (Grammatik-Design) */}
-                    <button 
-                        onClick={() => setExploreMode('grammar')} 
-                        className="w-full bg-indigo-50 border border-indigo-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm"
-                    >
+                    {/* Vocab Sets */}
+                    <button onClick={() => setExploreMode('grammar')} className="w-full bg-indigo-50 border border-indigo-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
                         <div className="relative z-10 flex items-start gap-4">
-                            <div className="bg-white p-3 rounded-2xl text-indigo-500 shadow-sm">
-                                <Layers size={28} />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-indigo-900 text-xl">Vocabulary Sets</h3>
-                                <p className="text-indigo-700/70 text-sm font-medium mt-1">Verbs, Nouns, Adjectives</p>
-                            </div>
+                            <div className="bg-white p-3 rounded-2xl text-indigo-500 shadow-sm"><Layers size={28} /></div>
+                            <div><h3 className="font-bold text-indigo-900 text-xl">Vocabulary Sets</h3><p className="text-indigo-700/70 text-sm font-medium mt-1">Verbs, Nouns, Adjectives</p></div>
                         </div>
                         <ChevronRight size={24} className="absolute right-6 top-1/2 -translate-y-1/2 text-indigo-200" />
                     </button>
 
-                    {/* 4. TOPICS (Buntes Design) */}
-                    <button 
-                        onClick={() => setExploreMode('topics')} 
-                        className="w-full bg-emerald-50 border border-emerald-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm"
-                    >
+                    {/* Topics */}
+                    <button onClick={() => setExploreMode('topics')} className="w-full bg-emerald-50 border border-emerald-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
                         <div className="relative z-10 flex items-start gap-4">
-                            <div className="bg-white p-3 rounded-2xl text-emerald-500 shadow-sm">
-                                <User size={28} />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-emerald-900 text-xl">Real Life Topics</h3>
-                                <p className="text-emerald-700/70 text-sm font-medium mt-1">Food, Travel, Work & more</p>
-                            </div>
+                            <div className="bg-white p-3 rounded-2xl text-emerald-500 shadow-sm"><User size={28} /></div>
+                            <div><h3 className="font-bold text-emerald-900 text-xl">Real Life Topics</h3><p className="text-emerald-700/70 text-sm font-medium mt-1">Food, Travel, Work & more</p></div>
                         </div>
                         <ChevronRight size={24} className="absolute right-6 top-1/2 -translate-y-1/2 text-emerald-200" />
                     </button>
@@ -1086,65 +1071,38 @@ function App() {
             );
         }
 
-        // --- ANSICHT 2: LISTEN (Grammar oder Topics) ---
-        // Wir wählen die richtige Liste basierend auf dem Modus
+        // --- ANSICHT 2: LISTEN ---
         const activeCollection = exploreMode === 'grammar' ? COLLECTIONS.grammar : COLLECTIONS.topics;
         const pageTitle = exploreMode === 'grammar' ? "Vocab Sets" : "Real Life Topics";
-        const themeColor = exploreMode === 'grammar' ? "indigo" : "emerald";
 
         return (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
-                
-                {/* Header mit Zurück-Button */}
                 <div className="flex items-center gap-3 mb-2 px-1">
-                    <button 
-                        onClick={() => setExploreMode('main')}
-                        className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
-                    >
-                        <ArrowLeft size={20} className="rotate-[-90deg]" /* Kleiner Hack: Pfeil nach links drehen, falls Rotate genutzt wird, sonst nimm ArrowLeft icon */ />
+                    <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                        <ArrowLeft size={20} className="rotate-[-90deg]" />
                     </button>
                     <h2 className="text-2xl font-bold text-slate-800">{pageTitle}</h2>
                 </div>
 
-                {/* Die Liste */}
                 <div className="grid gap-3">
                     {activeCollection.map((item) => {
                         const progress = getCategoryProgress(item.ids);
                         const stats = getCategoryStats(item.ids);
-                        
                         return (
-                            <button 
-                                key={item.id}
-                                onClick={() => startCollectionSession(item.ids)}
-                                className="w-full bg-white p-4 rounded-3xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all flex items-center gap-4 group"
-                            >
-                                {/* Icon Container */}
-                                <div className={`w-14 h-14 flex items-center justify-center rounded-2xl shrink-0 ${
-                                    exploreMode === 'grammar' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'
-                                }`}>
+                            <button key={item.id} onClick={() => startCollectionSession(item.ids)} className="w-full bg-white p-4 rounded-3xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all flex items-center gap-4 group">
+                                <div className={`w-14 h-14 flex items-center justify-center rounded-2xl shrink-0 ${exploreMode === 'grammar' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'}`}>
                                     {item.icon}
                                 </div>
-
-                                {/* Text & Progress */}
                                 <div className="flex-1 text-left">
                                     <div className="flex justify-between items-center mb-1">
                                         <h3 className="font-bold text-slate-800">{item.label}</h3>
                                         <span className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">{stats}</span>
                                     </div>
-                                    
                                     <div className="text-xs text-slate-400 mb-2">{item.sub}</div>
-                                    
-                                    {/* Mini Progress Bar */}
                                     <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                                        <div 
-                                            className={`h-full rounded-full transition-all duration-1000 ${
-                                                exploreMode === 'grammar' ? 'bg-indigo-500' : 'bg-emerald-500'
-                                            }`} 
-                                            style={{ width: `${progress}%` }}
-                                        ></div>
+                                        <div className={`h-full rounded-full transition-all duration-1000 ${exploreMode === 'grammar' ? 'bg-indigo-500' : 'bg-emerald-500'}`} style={{ width: `${progress}%` }}></div>
                                     </div>
                                 </div>
-
                                 <ChevronRight size={20} className="text-slate-200 group-hover:text-slate-400 transition-colors"/>
                             </button>
                         );
@@ -1994,26 +1952,47 @@ function App() {
     };
     // Umbenannt von renderLearnedSection zu renderLibrary für Klarheit
     const renderLibrary = () => {
-        // Vokabular laden
+        // HIER KEIN useEffect MEHR! (Der Scroll-Listener ist schon in App definiert)
+        
+        // Funktion zum Hochscrollen
+        const scrollToTop = () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // Funktion zum Ändern der Sortierung
+        const toggleSort = (type) => {
+            if (sortType === type) {
+                setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+            } else {
+                setSortType(type);
+                setSortDir('asc');
+            }
+        };
+
+        // --- DATEN VERARBEITUNG ---
         const safeVocab = vocabulary || [];
         const learnedList = safeVocab.filter(w => userProgress[w.rank]?.box > 0);
         
-        // Suche
         const filteredList = learnedList.filter(w => 
             w.french.toLowerCase().includes(librarySearch.toLowerCase()) || 
             (w.english && w.english.toLowerCase().includes(librarySearch.toLowerCase()))
-        ).sort((a, b) => a.rank - b.rank);
+        ).sort((a, b) => {
+            let comparison = 0;
+            if (sortType === 'rank') {
+                comparison = a.rank - b.rank;
+            } else {
+                comparison = a.french.localeCompare(b.french);
+            }
+            return sortDir === 'asc' ? comparison : comparison * -1;
+        });
 
         return (
-            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 relative min-h-screen">
                 
                 {/* Header mit Zurück-Button */}
                 <div className="flex items-center gap-3 mb-6 px-1">
-                    <button 
-                        onClick={() => setView('profile')} // Zurück zum Profil
-                        className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
-                    >
-                        <ArrowLeft size={20} className="rotate-[0deg]" />
+                    <button onClick={() => setView('profile')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                        <ArrowLeft size={24} />
                     </button>
                     <div>
                         <h2 className="text-2xl font-bold text-slate-800">Collection</h2>
@@ -2021,54 +2000,52 @@ function App() {
                     </div>
                 </div>
 
-                {/* Suchleiste */}
-                <div className="relative mb-4">
-                    <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input 
-                        type="text" 
-                        value={librarySearch}
-                        onChange={(e) => setLibrarySearch(e.target.value)}
-                        placeholder="Search collection..." 
-                        className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-4 text-sm focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm"
-                    />
-                    {librarySearch && <button onClick={() => setLibrarySearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"><X size={14}/></button>}
+                {/* SEARCH & SORT AREA (Sticky) */}
+                <div className="sticky top-4 z-30 space-y-3 mb-6">
+                    <div className="relative shadow-sm">
+                        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input type="text" value={librarySearch} onChange={(e) => setLibrarySearch(e.target.value)} placeholder="Search collection..." className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-4 text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
+                        {librarySearch && <button onClick={() => setLibrarySearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"><X size={14}/></button>}
+                    </div>
+
+                    {/* Sortier Buttons */}
+                    <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+                        <button onClick={() => toggleSort('rank')} className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all border ${sortType === 'rank' ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-white text-slate-500 border-slate-200'}`}>
+                            <Hash size={14} className={sortType === 'rank' ? 'text-indigo-200' : 'text-slate-400'} /> Rank {sortType === 'rank' && (sortDir === 'asc' ? <ArrowUp size={14}/> : <ArrowDown size={14}/>)}
+                        </button>
+                        <button onClick={() => toggleSort('alpha')} className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all border ${sortType === 'alpha' ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-white text-slate-500 border-slate-200'}`}>
+                            <span>A-Z</span> {sortType === 'alpha' && (sortDir === 'asc' ? <ArrowDown size={14}/> : <ArrowUp size={14}/>)}
+                        </button>
+                    </div>
                 </div>
 
-                {/* Liste */}
+                {/* LISTE */}
                 {learnedList.length > 0 ? (
-                    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100">
+                    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100 relative z-10">
                         {filteredList.slice(0, 100).map(word => (
-                            <button 
-                                key={word.rank} 
-                                onClick={() => {
-                                    setSelectedWord(word);
-                                    setIsFlipped(false);
-                                    setAiExamples(null);
-                                    setView('word-detail');
-                                }}
-                                className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors text-left"
-                            >
+                            <button key={word.rank} onClick={() => { setSelectedWord(word); setIsFlipped(false); setAiExamples(null); setView('word-detail'); }} className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors text-left">
                                 <div className="flex items-center gap-4">
                                     <span className="text-xs font-mono text-slate-300 w-8">#{word.rank}</span>
-                                    <div>
-                                        <div className="font-bold text-slate-800">{word.french}</div>
-                                        <div className="text-xs text-slate-500">{word.english || word.german}</div>
-                                    </div>
+                                    <div><div className="font-bold text-slate-800">{word.french}</div><div className="text-xs text-slate-500">{word.english || word.german}</div></div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">
-                                        Box {userProgress[word.rank]?.box || '?'}
-                                    </span>
+                                    <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">Box {userProgress[word.rank]?.box || '?'}</span>
                                     <ChevronRight size={16} className="text-slate-200" />
                                 </div>
                             </button>
                         ))}
                         {filteredList.length === 0 && <div className="p-8 text-center text-slate-400 text-sm">No matches found.</div>}
+                        {filteredList.length > 100 && <div className="p-3 text-center text-xs text-slate-400 bg-slate-50">...and {filteredList.length - 100} more</div>}
                     </div>
                 ) : (
-                    <div className="text-center p-10 bg-white rounded-3xl border border-dashed border-slate-200 text-slate-400">
-                        <p>Your collection is empty.</p>
-                    </div>
+                    <div className="text-center p-10 bg-white rounded-3xl border border-dashed border-slate-200 text-slate-400"><p>Your collection is empty.</p></div>
+                )}
+
+                {/* BACK TO TOP BUTTON */}
+                {showScrollTop && (
+                    <button onClick={scrollToTop} className="fixed bottom-24 right-6 bg-indigo-600 text-white p-3 rounded-full shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-90 transition-all z-50 animate-in slide-in-from-bottom-4 fade-in">
+                        <ArrowUp size={24} />
+                    </button>
                 )}
             </div>
         );
