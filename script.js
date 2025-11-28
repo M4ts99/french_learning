@@ -55,6 +55,10 @@ const ArrowUp = (p) => <Icon {...p} path={<><path d="m18 15-6-6-6 6"/></>} />;
 const ArrowDown = (p) => <Icon {...p} path={<><path d="m6 9 6 6 6-6"/></>} />;
 const ArrowUpDown = (p) => <Icon {...p} path={<><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></>} />;
 const Hash = (p) => <Icon {...p} path={<><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></>} />;
+const Ghost = (p) => <Icon {...p} path={<><path d="M9 22a7 7 0 1 0 0-14h6a7 7 0 1 0 0 14z"/><path d="M9 22v-6.63a3.5 3.5 0 0 0-2.06-6.05"/><path d="M15 22v-6.63a3.5 3.5 0 0 0 2.06-6.05"/><circle cx="10" cy="12" r="1"/><circle cx="14" cy="12" r="1"/></>} />;
+const Rocket = (p) => <Icon {...p} path={<><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.1 4-1 4-1s-1 2.4-4 4z"/><path d="M12 15v5s3.03-.55 4-2c1.1-1.62 1-4 1-4s-2.4 1-4 4z"/></>} />;
+const Sword = (p) => <Icon {...p} path={<><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/></>} />;
+
 
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
@@ -503,7 +507,10 @@ function App() {
     const [exploreMode, setExploreMode] = useState('main');
     const [expandedCategory, setExpandedCategory] = useState(null);
     const [selectedTopicId, setSelectedTopicId] = useState(null); // Welches Thema ist offen?
-    
+    const [readerMode, setReaderMode] = useState('select'); // 'select', 'reading', 'quiz', 'finish'
+    const [currentStory, setCurrentStory] = useState(null);
+    const [loadingStory, setLoadingStory] = useState(false);
+    const [quizAnswers, setQuizAnswers] = useState({});
     
     
     // Session State
@@ -1784,6 +1791,41 @@ function App() {
             setLoadingExamples(false);
         }
     };
+    const generateStory = async (genre) => {
+        setLoadingStory(true);
+        
+        // 1. Schwache Wörter finden (max 5)
+        const weakWords = vocabulary
+            .filter(w => {
+                const p = userProgress[w.rank];
+                return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
+            })
+            .slice(0, 5)
+            .map(w => w.french);
+
+        // 2. Level abschätzen (einfach basierend auf gelernten Wörtern)
+        const learnedCount = vocabulary.filter(w => userProgress[w.rank]?.box > 0).length;
+        const level = learnedCount > 1000 ? "B1" : learnedCount > 300 ? "A2" : "A1";
+
+        try {
+            const res = await fetch('/api/story', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ genre, level, weakWords })
+            });
+            const data = await res.json();
+            
+            if (data.error) throw new Error(data.error);
+            
+            setCurrentStory(data);
+            setReaderMode('reading'); // Wechsel zur Lese-Ansicht
+        } catch (e) {
+            console.error(e);
+            alert("Could not generate story. Please try again.");
+        } finally {
+            setLoadingStory(false);
+        }
+    };
     const renderWordDetail = () => {
         if (!selectedWord) return null;
         const word = selectedWord;
@@ -2043,7 +2085,135 @@ function App() {
             </div>
         );
     };
+    const renderReader = () => {
+        // --- PHASE 1: GENRE AUSWAHL ---
+        if (readerMode === 'select') {
+            return (
+                <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+                    <div className="flex items-center gap-3 mb-2 px-1">
+                        <button onClick={() => setView('explore')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                            <ArrowLeft size={20} />
+                        </button>
+                        <h2 className="text-2xl font-bold text-slate-800">Reading Room</h2>
+                    </div>
+                    
+                    <p className="text-slate-500 px-1 text-sm">Choose a genre. The AI will write a story tailored to your weak words.</p>
 
+                    {loadingStory ? (
+                        <div className="h-64 flex flex-col items-center justify-center text-indigo-500 space-y-4">
+                            <RotateCcw size={48} className="animate-spin"/>
+                            <p className="font-bold animate-pulse">Writing your story...</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-2 gap-3">
+                            <button onClick={() => generateStory('Mystery')} className="bg-purple-50 border border-purple-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-36 flex flex-col justify-between group">
+                                <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-purple-600 shadow-sm"><Ghost size={20}/></div>
+                                <div><h3 className="font-bold text-purple-900">Mystery</h3><p className="text-xs text-purple-700/60">Solve the crime</p></div>
+                            </button>
+                            <button onClick={() => generateStory('Sci-Fi')} className="bg-blue-50 border border-blue-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-36 flex flex-col justify-between group">
+                                <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-blue-600 shadow-sm"><Rocket size={20}/></div>
+                                <div><h3 className="font-bold text-blue-900">Sci-Fi</h3><p className="text-xs text-blue-700/60">Future worlds</p></div>
+                            </button>
+                            <button onClick={() => generateStory('Daily Life')} className="bg-amber-50 border border-amber-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-36 flex flex-col justify-between group">
+                                <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-amber-600 shadow-sm"><Coffee size={20}/></div>
+                                <div><h3 className="font-bold text-amber-900">Daily Life</h3><p className="text-xs text-amber-700/60">Parisian Café</p></div>
+                            </button>
+                            <button onClick={() => generateStory('Fantasy')} className="bg-emerald-50 border border-emerald-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-36 flex flex-col justify-between group">
+                                <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-emerald-600 shadow-sm"><Sword size={20}/></div>
+                                <div><h3 className="font-bold text-emerald-900">Fantasy</h3><p className="text-xs text-emerald-700/60">Dragons & Knights</p></div>
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // --- PHASE 2: LESEN ---
+        if (readerMode === 'reading' && currentStory) {
+            return (
+                <div className="space-y-6 animate-in fade-in zoom-in duration-300 pt-6 pb-24 px-1">
+                     <div className="flex items-center justify-between mb-4 px-1">
+                        <button onClick={() => setReaderMode('select')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                            <ArrowLeft size={20} />
+                        </button>
+                        <button onClick={() => speak(currentStory.text)} className="p-2 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100">
+                            <Volume2 size={20} />
+                        </button>
+                    </div>
+
+                    <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-100">
+                        <h2 className="text-2xl font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">{currentStory.title}</h2>
+                        <p className="text-lg text-slate-700 leading-loose font-serif">
+                            {/* Einfacher Weg um **bold** zu rendern */}
+                            {currentStory.text.split('**').map((part, i) => 
+                                i % 2 === 1 ? <strong key={i} className="text-indigo-600 bg-indigo-50 px-1 rounded">{part}</strong> : part
+                            )}
+                        </p>
+                    </div>
+
+                    <button 
+                        onClick={() => { setReaderMode('quiz'); setQuizAnswers({}); }}
+                        className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2"
+                    >
+                        Take Quiz <ArrowLeft size={20} className="rotate-180"/>
+                    </button>
+                </div>
+            );
+        }
+
+        // --- PHASE 3: QUIZ ---
+        if (readerMode === 'quiz' && currentStory) {
+            return (
+                <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+                    <div className="flex items-center gap-3 mb-2 px-1">
+                        <button onClick={() => setReaderMode('reading')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                            <ArrowLeft size={20} />
+                        </button>
+                        <h2 className="text-xl font-bold text-slate-800">Comprehension Check</h2>
+                    </div>
+
+                    <div className="space-y-6">
+                        {currentStory.quiz.map((q, qIdx) => (
+                            <div key={qIdx} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
+                                <h3 className="font-bold text-slate-800 mb-4">{q.question}</h3>
+                                <div className="space-y-2">
+                                    {q.options.map((opt, oIdx) => {
+                                        const isSelected = quizAnswers[qIdx] === oIdx;
+                                        const isCorrect = q.correctIndex === oIdx;
+                                        // Farbe anzeigen wenn ausgewählt: Grün wenn richtig, Rot wenn falsch
+                                        let btnClass = "bg-slate-50 text-slate-600 border-slate-100";
+                                        if (isSelected) {
+                                            if (isCorrect) btnClass = "bg-green-100 text-green-700 border-green-200 ring-2 ring-green-500";
+                                            else btnClass = "bg-red-100 text-red-700 border-red-200";
+                                        }
+
+                                        return (
+                                            <button 
+                                                key={oIdx}
+                                                onClick={() => setQuizAnswers({...quizAnswers, [qIdx]: oIdx})}
+                                                className={`w-full p-3 rounded-xl text-left text-sm font-medium border transition-all ${btnClass}`}
+                                            >
+                                                {opt}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <button 
+                        onClick={() => setReaderMode('select')} 
+                        className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg"
+                    >
+                        Finish Story
+                    </button>
+                </div>
+            );
+        }
+
+        return null;
+    };
     const renderResults = () => (
         <div className="text-center max-w-md mx-auto py-10 animate-in zoom-in duration-300">
             <div className="inline-block p-6 bg-green-100 rounded-full mb-6"><BarChart3 size={48} className="text-green-600" /></div>
@@ -2535,7 +2705,12 @@ function App() {
         switch (view) {
             // ... Home, Explore, Skills Cases wie vorher ...
             case 'home': case 'smart-config': case 'test-config': return renderHome();
-            case 'explore': case 'reader': case 'culture': return renderExplore();
+            case 'explore': 
+                return renderExplore();
+            case 'reader': 
+                return renderReader();
+            case 'culture': 
+                return renderExplore();
             // TAB 3: SKILLS
             case 'skills':
                 return renderSkills(); // Zeigt das Hauptmenü
