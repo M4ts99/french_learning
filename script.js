@@ -1803,19 +1803,14 @@ function App() {
     const generateStory = async (genre, length, selectedLevel) => {
         setLoadingStory(true);
         
-        // 1. Level Logik
-        let finalLevel = selectedLevel;
+        // 1. Level-Code bereinigen (Frontend zeigt evtl "A1 (Beginner)" an)
+        // Wir wollen nur "A1", "C2" oder "auto"
+        let levelToSend = selectedLevel === 'auto' ? 'auto' : selectedLevel;
+
+        // 2. Schwache Wörter sammeln (NUR für Auto-Modus)
         let weakWordsToSend = [];
 
         if (selectedLevel === 'auto') {
-            // Nur bei AUTO nehmen wir Rücksicht auf den User-Fortschritt
-            const learnedCount = vocabulary.filter(w => userProgress[w.rank]?.box > 0).length;
-            if (learnedCount < 200) finalLevel = "A1";
-            else if (learnedCount < 600) finalLevel = "A2";
-            else if (learnedCount < 1200) finalLevel = "B1";
-            else finalLevel = "B2";
-
-            // Und wir senden die Problemwörter mit
             weakWordsToSend = vocabulary
                 .filter(w => {
                     const p = userProgress[w.rank];
@@ -1823,11 +1818,12 @@ function App() {
                 })
                 .slice(0, 5)
                 .map(w => w.french);
-        } else {
-            // Bei manueller Wahl (z.B. C2) schicken wir KEINE weakWords,
-            // damit die KI "frei" und komplex schreiben kann.
-            weakWordsToSend = [];
-        }
+            
+            // Falls keine schwachen Wörter da sind, bleibt es bei auto, 
+            // aber das Backend nimmt dann den Fallback.
+        } 
+        // HINWEIS: Wenn selectedLevel NICHT auto ist (z.B. C2), bleibt weakWordsToSend leer [].
+        // Das Backend sieht das leere Array und ignoriert deine Lernwörter.
 
         try {
             const res = await fetch('/api/story', {
@@ -1835,7 +1831,7 @@ function App() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     genre, 
-                    level: finalLevel, 
+                    level: levelToSend, 
                     weakWords: weakWordsToSend, 
                     length 
                 })
@@ -2124,19 +2120,33 @@ function App() {
                 setIsSpeaking(false);
             } else {
                 setIsSpeaking(true);
-                speak(text);
+                
+                // HIER IST DER FIX:
+                // Wir entfernen ALLES was Sternchen (*) oder Unterstrich (_) oder Raute (#) ist.
+                // Der reguläre Ausdruck /[*_#]/g löscht diese Zeichen gnadenlos raus.
+                const cleanText = text.replace(/[*_#]/g, ""); 
+                
+                speak(cleanText);
             }
         };
 
         const handleWordClick = (e, wordRaw) => {
             e.stopPropagation();
-            // Satzzeichen entfernen für die Suche
-            const cleanWord = wordRaw.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
+            
+            // 1. Zuerst die Sterne/Formatierung entfernen (* und _)
+            const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
+            
+            // 2. Dann Satzzeichen entfernen für die Suche
+            const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
+            
+            // Suche im Vokabular
             const found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
+            
             if (found) {
                 setClickedWord(found);
             } else {
-                setClickedWord({ french: cleanWord, english: "Not in dictionary", rank: "?" });
+                // Fallback: Wir zeigen das Wort an, aber OHNE Sterne (textWithoutFormat nutzen!)
+                setClickedWord({ french: textWithoutFormat, english: "Not in dictionary", rank: "?" });
             }
         };
 
