@@ -590,7 +590,15 @@ function App() {
             window.addEventListener('scroll', handleScroll);
             return () => window.removeEventListener('scroll', handleScroll);
         }, []);
-    // --- VOICES LOADER ---
+    // --- AUDIO CLEANUP (Bugfix) ---
+    // Stoppt Audio sofort, wenn man den Tab wechselt oder den Modus im Reader ändert
+    useEffect(() => {
+        window.speechSynthesis.cancel();
+        // Falls du eine "isSpeaking" Variable in renderReader hast, wird diese beim Re-Render eh resettet
+    }, [view, readerMode]);
+    
+    
+        // --- VOICES LOADER ---
     useEffect(() => {
         const loadVoices = () => {
             const voices = window.speechSynthesis.getVoices();
@@ -2109,8 +2117,10 @@ function App() {
     };
     const renderReader = () => {
         
+  
 
         const handleGenerate = (genre) => {
+            // Wir übergeben jetzt die exakte Zahl (z.B. 320) an das Backend
             generateStory(genre, storyConfig.length, storyConfig.level); 
         };
 
@@ -2120,34 +2130,18 @@ function App() {
                 setIsSpeaking(false);
             } else {
                 setIsSpeaking(true);
-                
-                // HIER IST DER FIX:
-                // Wir entfernen ALLES was Sternchen (*) oder Unterstrich (_) oder Raute (#) ist.
-                // Der reguläre Ausdruck /[*_#]/g löscht diese Zeichen gnadenlos raus.
                 const cleanText = text.replace(/[*_#]/g, ""); 
-                
                 speak(cleanText);
             }
         };
 
         const handleWordClick = (e, wordRaw) => {
             e.stopPropagation();
-            
-            // 1. Zuerst die Sterne/Formatierung entfernen (* und _)
             const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
-            
-            // 2. Dann Satzzeichen entfernen für die Suche
             const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
-            
-            // Suche im Vokabular
             const found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
-            
-            if (found) {
-                setClickedWord(found);
-            } else {
-                // Fallback: Wir zeigen das Wort an, aber OHNE Sterne (textWithoutFormat nutzen!)
-                setClickedWord({ french: textWithoutFormat, english: "Not in dictionary", rank: "?" });
-            }
+            if (found) setClickedWord(found);
+            else setClickedWord({ french: textWithoutFormat, english: "Not in dictionary", rank: "?" });
         };
 
         // --- PHASE 1: AUSWAHL ---
@@ -2187,15 +2181,24 @@ function App() {
                                     </div>
                                 </div>
 
-                                {/* LENGTH SLIDER */}
+                                {/* LENGTH SLIDER (Neu: 50-500 Wörter) */}
                                 <div>
                                     <div className="flex justify-between items-center mb-4">
                                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Story Length</span>
-                                        <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg uppercase">
-                                            {storyConfig.length === 'short' ? '~50 Words' : storyConfig.length === 'medium' ? '~100 Words' : '~250 Words'}
+                                        <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg uppercase border border-indigo-100">
+                                            ~ {storyConfig.length} Words
                                         </span>
                                     </div>
-                                    <input type="range" min="1" max="3" step="1" value={storyConfig.length === 'short' ? 1 : storyConfig.length === 'medium' ? 2 : 3} onChange={(e) => { const val = parseInt(e.target.value); setStoryConfig({ ...storyConfig, length: val === 1 ? 'short' : val === 2 ? 'medium' : 'long' }); }} className="w-full accent-indigo-600 h-2 bg-slate-100 rounded-lg cursor-pointer" />
+                                    <input 
+                                        type="range" min="50" max="500" step="10" 
+                                        value={storyConfig.length}
+                                        onChange={(e) => setStoryConfig({ ...storyConfig, length: parseInt(e.target.value) })}
+                                        className="w-full accent-indigo-600 h-2 bg-slate-100 rounded-lg cursor-pointer"
+                                    />
+                                    <div className="flex justify-between mt-2 text-[10px] text-slate-400 font-bold uppercase">
+                                        <span>Short (50)</span>
+                                        <span>Long (500)</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2203,7 +2206,6 @@ function App() {
                             <div>
                                 <p className="text-slate-500 px-2 text-sm font-medium mb-3">Choose a Genre</p>
                                 <div className="grid grid-cols-2 gap-3">
-                                    {/* Buttons für Genres... (wie gehabt) */}
                                     <button onClick={() => handleGenerate('Mystery')} className="bg-purple-50 border border-purple-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group">
                                         <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-purple-600 shadow-sm"><Ghost size={20}/></div>
                                         <div><h3 className="font-bold text-purple-900">Mystery</h3></div>
@@ -2228,66 +2230,38 @@ function App() {
             );
         }
 
+        // ... PHASE 2 & 3 (Lesen und Quiz) bleiben genau gleich wie vorher ...
+        // (Kopiere einfach den unteren Teil deiner alten Funktion hier rein)
+        
+        // HIER ZUR SICHERHEIT DER ZWEITE TEIL, damit du Copy-Paste machen kannst:
+        
         // --- PHASE 2: LESEN ---
-        // --- PHASE 2: LESEN (Interactive Text) ---
         if (readerMode === 'reading' && currentStory) {
             return (
                 <div className="space-y-6 animate-in fade-in zoom-in duration-300 pt-6 pb-40 px-1 relative min-h-screen">
-                     {/* Header */}
                      <div className="flex items-center justify-between mb-4 px-1">
                         <button onClick={() => setReaderMode('select')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
                             <ArrowLeft size={20} />
                         </button>
                         <div className="flex gap-2">
-                            <button 
-                                onClick={() => toggleAudio(currentStory.text)} 
-                                className={`p-2 px-4 rounded-full font-bold text-xs flex items-center gap-2 transition-all ${
-                                    isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'
-                                }`}
-                            >
+                            <button onClick={() => toggleAudio(currentStory.text)} className={`p-2 px-4 rounded-full font-bold text-xs flex items-center gap-2 transition-all ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>
                                 {isSpeaking ? <><X size={16}/> Stop</> : <><Volume2 size={16}/> Listen</>}
                             </button>
                         </div>
                     </div>
-
-                    {/* STORY CONTAINER */}
                     <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-100">
                         <h2 className="text-2xl font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">{currentStory.title}</h2>
-                        
                         <div className="text-lg text-slate-700 leading-loose font-serif text-justify">
                             {currentStory.text.split(' ').map((wordRaw, i) => {
-                                // 1. Wir bereinigen das Wort für die ANZEIGE (Sterne weg)
                                 const displayText = wordRaw.replace(/[\*_]/g, "");
-                                
-                                // 2. Wir bereinigen das Wort für die SUCHE (Satzzeichen weg, Kleinbuchstaben)
-                                // Das übergeben wir an handleWordClick
-                                const searchWord = displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
-                                
-                                return (
-                                    <span 
-                                        key={i} 
-                                        // HIER WAR DER FEHLER: Wir übergeben jetzt direkt das saubere displayText
-                                        // Die handleWordClick Funktion kümmert sich um den Rest
-                                        onClick={(e) => handleWordClick(e, displayText)}
-                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 hover:text-indigo-600 ${
-                                            // Check: Ist das angeklickte Wort dieses Wort?
-                                            clickedWord?.french.toLowerCase() === searchWord ? 'bg-yellow-200 text-slate-900' : ''
-                                        }`}
-                                    >
-                                        {displayText}
-                                    </span>
-                                );
+                                return <span key={i} onClick={(e) => handleWordClick(e, wordRaw)} className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 hover:text-indigo-600 ${clickedWord?.french === displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase() ? 'bg-yellow-200 text-slate-900' : ''}`}>{displayText}</span>;
                             })}
                         </div>
                     </div>
-
-                    {/* INFO POPUP (Bleibt gleich) */}
                     {clickedWord && (
                         <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom-4 z-50 flex items-center justify-between">
                             <div>
-                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">
-                                    {clickedWord.rank !== "?" ? `Rank #${clickedWord.rank}` : "Unknown"}
-                                </div>
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">{clickedWord.rank !== "?" ? `Rank #${clickedWord.rank}` : "Unknown"}</div>
                                 <div className="text-xl font-bold">{clickedWord.french}</div>
                                 <div className="text-slate-300 text-sm italic">{clickedWord.english || clickedWord.german}</div>
                             </div>
@@ -2297,25 +2271,15 @@ function App() {
                             </div>
                         </div>
                     )}
-
-                    <button 
-                        onClick={() => { 
-                            stopAudio();
-                            setIsSpeaking(false);
-                            setReaderMode('quiz'); 
-                            setQuizAnswers({}); 
-                        }}
-                        className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all"
-                    >
+                    <button onClick={() => { stopAudio(); setIsSpeaking(false); setReaderMode('quiz'); setQuizAnswers({}); }} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all">
                         Take Quiz <ArrowLeft size={20} className="rotate-180"/>
                     </button>
                 </div>
             );
         }
 
-        // --- PHASE 3: QUIZ (Bleibt gleich) ---
+        // --- PHASE 3: QUIZ (Gleich) ---
         if (readerMode === 'quiz' && currentStory) {
-            // ... (hier einfach den bestehenden Quiz-Code nutzen) ...
             return (
                 <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-2 px-1">
@@ -2331,10 +2295,7 @@ function App() {
                                         const isSelected = quizAnswers[qIdx] === oIdx;
                                         const isCorrect = q.correctIndex === oIdx;
                                         let btnClass = "bg-slate-50 text-slate-600 border-slate-100";
-                                        if (isSelected) {
-                                            if (isCorrect) btnClass = "bg-green-100 text-green-700 border-green-200 ring-2 ring-green-500";
-                                            else btnClass = "bg-red-100 text-red-700 border-red-200";
-                                        }
+                                        if (isSelected) { if (isCorrect) btnClass = "bg-green-100 text-green-700 border-green-200 ring-2 ring-green-500"; else btnClass = "bg-red-100 text-red-700 border-red-200"; }
                                         return <button key={oIdx} onClick={() => setQuizAnswers({...quizAnswers, [qIdx]: oIdx})} className={`w-full p-3 rounded-xl text-left text-sm font-medium border transition-all ${btnClass}`}>{opt}</button>;
                                     })}
                                 </div>
