@@ -2193,50 +2193,70 @@ function App() {
         };
 
         // --- INTELLIGENTER LOOKUP ---
+        // --- INTELLIGENTER LOOKUP (Mit Fallback) ---
         const handleWordClick = async (e, wordRaw) => {
             e.stopPropagation();
             
-            // 1. Bereinigen (Sterne und Satzzeichen weg)
+            // 1. Bereinigen
             const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
             const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
             
-            // 2. VERSUCH A: Ist es in unserer 5000er Liste?
+            // 2. VERSUCH A: Lokal
             let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
 
-            // 3. VERSUCH B: Ist es ein bekanntes unregelmäßiges Verb? (z.B. "suis")
             if (!found && IRREGULAR_MAP[cleanWord]) {
                 const infinitive = IRREGULAR_MAP[cleanWord];
                 found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
             }
 
             if (found) {
-                // TREFFER: Zeige lokale Daten an (Rank, etc.)
                 setClickedWord(found);
             } else {
-                // NICHT GEFUNDEN: API Fragen (MyMemory)
+                // NICHT GEFUNDEN -> API STARTEN
                 setLoadingTranslation(true);
-                // Zeige Lade-Status im Popup
                 setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "API" });
                 
+                let translation = null;
+
                 try {
-                    const res = await fetch('/api/lookup', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ word: cleanWord })
-                    });
-                    const data = await res.json();
-                    
-                    if (data.translation) {
+                    // VERSUCH B: Dein Backend (Preferred)
+                    try {
+                        const res = await fetch('/api/lookup', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ word: cleanWord })
+                        });
+                        if (res.ok) {
+                            const data = await res.json();
+                            translation = data.translation;
+                        }
+                    } catch (serverError) {
+                        console.warn("Backend failed, trying direct fetch...", serverError);
+                    }
+
+                    // VERSUCH C: Direktaufruf (Fallback für Localhost)
+                    if (!translation) {
+                        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanWord)}&langpair=fr|en`);
+                        const data = await res.json();
+                        if (data.responseData && data.responseData.translatedText) {
+                            translation = data.responseData.translatedText;
+                        }
+                    }
+
+                    // Ergebnis setzen
+                    if (translation) {
                         setClickedWord({ 
                             french: textWithoutFormat, 
-                            english: data.translation, 
-                            rank: "External" // Zeigt blaues Badge an
+                            english: translation, 
+                            rank: "External" 
                         });
                     } else {
-                        setClickedWord({ french: textWithoutFormat, english: "No translation found", rank: "?" });
+                        throw new Error("No result");
                     }
+
                 } catch (err) {
-                    setClickedWord({ french: textWithoutFormat, english: "Offline / Error", rank: "X" });
+                    console.error(err);
+                    setClickedWord({ french: textWithoutFormat, english: "Not found / Offline", rank: "X" });
                 } finally {
                     setLoadingTranslation(false);
                 }
