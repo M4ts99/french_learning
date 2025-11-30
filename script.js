@@ -558,6 +558,16 @@ function App() {
     const [availableVoices, setAvailableVoices] = useState([]); // Liste aller Stimmen
     const [selectedVoiceURI, setSelectedVoiceURI] = useState(null); // Die gewählte Stimme
 
+    // Translator
+    const [mode, setMode] = useState('translate'); 
+    const [direction, setDirection] = useState('fr-en');
+    const [input, setInput] = useState('');
+    const [translationData, setTranslationData] = useState(null);
+    const [correctionData, setCorrectionData] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    // Audio & Voices (WICHTIG!)
+
     const stopAudio = () => {
         window.speechSynthesis.cancel();
     };
@@ -921,7 +931,55 @@ function App() {
 
         window.speechSynthesis.speak(utterance);
     };
+    const renderTranslatorContent = () => {
+        // HIER KEINE STATES MEHR DEFINIEREN (die müssen oben in App sein)
+        // Also: mode, direction, input, translationData, correctionData, loading
+        // müssen oben in App definiert werden!
 
+        const handleTranslate = async () => {
+            if (!input.trim()) return;
+            setLoading(true);
+            setTranslationData(null);
+            
+            try {
+                const target = direction === 'en-fr' ? 'fr' : 'en';
+                const res = await fetch('/api/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: input.trim(), targetLang: target })
+                });
+                const data = await res.json();
+                setTranslationData(data);
+            } catch (err) {
+                alert("Translation failed.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const handleCorrection = async () => {
+            if (!input.trim()) return;
+            setLoading(true);
+            setCorrectionData(null); 
+
+            try {
+                const res = await fetch('/api/correct', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: input.trim() })
+                });
+                const data = await res.json();
+                setCorrectionData(data);
+            } catch (err) {
+                alert("Correction failed.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        // ... hier der Return Block vom Translator (JSX) ...
+        // Ersetze <ModernTranslator /> in renderTranslator() durch {renderTranslatorContent()}
+    };
     // --- SESSION LOGIC ---
     const startSmartSession = () => {
         const now = Date.now();
@@ -1778,22 +1836,8 @@ function App() {
     };
     const renderTranslator = () => (
         <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
-            {/* Header mit Zurück-Button */}
-            <div className="flex items-center gap-3 mb-6 px-1">
-                <button 
-                    onClick={() => setView('skills')}
-                    className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
-                >
-                    <ArrowLeft size={20} className="rotate-[0deg]" />
-                </button>
-                <div>
-                    <h2 className="text-2xl font-bold text-slate-800">AI Tools</h2>
-                    <p className="text-slate-400 text-sm">Translation & Correction</p>
-                </div>
-            </div>
-
-            {/* Deine existierende Translator Komponente */}
-            <ModernTranslator />
+            {/* Header... */}
+            {renderTranslatorContent()} 
         </div>
     );
     const fetchAiExamples = async (wordObj) => {
@@ -2130,10 +2174,19 @@ function App() {
         );
     };
     const renderReader = () => {
-        // HIER KEIN useState MEHR! Wir nutzen die globalen Variablen.
+        // --- STATES ---
+        // HINWEIS: Falls du diese schon in App() hast, nimm die von oben!
+        // Falls nicht, füge sie oben in App() ein und lösche sie hier.
+        // Um sicherzugehen, zeige ich hier die Logik, die in App() sein sollte:
+        /* const [storyConfig, setStoryConfig] = useState({ length: 150, level: 'auto' }); 
+           const [clickedWord, setClickedWord] = useState(null);
+           const [isSpeaking, setIsSpeaking] = useState(false);
+           const [loadingTranslation, setLoadingTranslation] = useState(false); // <--- NEU!
+        */
+       
+       // Falls du sie noch nicht in App() hast, füge "const [loadingTranslation, setLoadingTranslation] = useState(false);" oben in App() hinzu!
 
         const handleGenerate = (genre) => {
-            // Wir übergeben jetzt die exakte Zahl aus der Config an das Backend
             generateStory(genre, storyConfig.length, storyConfig.level); 
         };
 
@@ -2143,32 +2196,80 @@ function App() {
                 setIsSpeaking(false);
             } else {
                 setIsSpeaking(true);
-                // Sternchen entfernen, damit sie nicht vorgelesen werden
                 const cleanText = text.replace(/[*_#]/g, ""); 
                 speak(cleanText);
             }
         };
 
-        const handleWordClick = (e, wordRaw) => {
+        // --- DIE NEUE KLICK-LOGIK (Hybrid) ---
+        const handleWordClick = async (e, wordRaw) => {
             e.stopPropagation();
-            // 1. Sternchen entfernen für die Anzeige
+            
+            // 1. Bereinigen
             const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
-            // 2. Satzzeichen entfernen für den Datenbank-Abgleich
             const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
             
-            const found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
+            // 2. VERSUCH A: Exakter Treffer in Liste
+            let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
+
+            // 3. VERSUCH B: Irregular Map (suis -> être)
+            if (!found && IRREGULAR_MAP[cleanWord]) {
+                const infinitive = IRREGULAR_MAP[cleanWord];
+                found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
+            }
+
+            // 4. VERSUCH C: Endungen raten (einfacher Stemmer)
+            if (!found) {
+                // Schneidet s, e, es, ent, ait ab
+                const stem = cleanWord.replace(/(s|e|es|ent|ait|ant|ez|ons)$/, "");
+                // Wir suchen NICHT automatisch nach dem Stamm, um Fehler zu vermeiden,
+                // sondern gehen lieber zur API, wenn wir uns nicht sicher sind.
+            }
+
             if (found) {
+                // LOKAL GEFUNDEN!
                 setClickedWord(found);
             } else {
-                setClickedWord({ french: textWithoutFormat, english: "Not in dictionary", rank: "?" });
+                // NICHT GEFUNDEN -> API FRAGEN
+                setLoadingTranslation(true);
+                setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "API" });
+                
+                try {
+                    const res = await fetch('/api/lookup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ word: cleanWord })
+                    });
+                    const data = await res.json();
+                    
+                    if (data.translation) {
+                        setClickedWord({ 
+                            french: textWithoutFormat, 
+                            english: data.translation, 
+                            rank: "External" 
+                        });
+                    } else {
+                        setClickedWord({ french: textWithoutFormat, english: "No translation found", rank: "?" });
+                    }
+                } catch (err) {
+                    setClickedWord({ french: textWithoutFormat, english: "Offline / Error", rank: "X" });
+                } finally {
+                    setLoadingTranslation(false);
+                }
             }
         };
 
-        // --- PHASE 1: AUSWAHL ---
+        // --- PHASE 1: AUSWAHL (Bleibt gleich) ---
         if (readerMode === 'select') {
-            return (
+             // ... (Hier deinen bestehenden Code für Phase 1 einfügen) ...
+             // Um Platz zu sparen, poste ich hier nur den geänderten Teil "PHASE 2"
+             // Du kannst deinen existierenden "select" Block behalten.
+             return (
                 <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
-                    <div className="flex items-center gap-3 mb-2 px-1">
+                     {/* ... dein Select Code ... */}
+                     {/* Falls du ihn brauchst, kopiere ihn aus der vorherigen Antwort */}
+                     {/* Kurzfassung für den Kontext: */}
+                     <div className="flex items-center gap-3 mb-2 px-1">
                         <button onClick={() => setView('explore')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
                             <ArrowLeft size={20} />
                         </button>
@@ -2200,8 +2301,7 @@ function App() {
                                         ))}
                                     </div>
                                 </div>
-
-                                {/* LENGTH SLIDER (50-500) */}
+                                {/* LENGTH SLIDER */}
                                 <div>
                                     <div className="flex justify-between items-center mb-4">
                                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Story Length</span>
@@ -2209,52 +2309,29 @@ function App() {
                                             ~ {storyConfig.length} Words
                                         </span>
                                     </div>
-                                    <input 
-                                        type="range" min="50" max="500" step="10" 
-                                        value={storyConfig.length}
-                                        onChange={(e) => setStoryConfig({ ...storyConfig, length: parseInt(e.target.value) })}
-                                        className="w-full accent-indigo-600 h-2 bg-slate-100 rounded-lg cursor-pointer"
-                                    />
-                                    <div className="flex justify-between mt-2 text-[10px] text-slate-400 font-bold uppercase">
-                                        <span>Short (50)</span>
-                                        <span>Long (500)</span>
-                                    </div>
+                                    <input type="range" min="50" max="500" step="10" value={storyConfig.length} onChange={(e) => setStoryConfig({ ...storyConfig, length: parseInt(e.target.value) })} className="w-full accent-indigo-600 h-2 bg-slate-100 rounded-lg cursor-pointer" />
                                 </div>
                             </div>
-
                             {/* GENRE GRID */}
                             <div>
                                 <p className="text-slate-500 px-2 text-sm font-medium mb-3">Choose a Genre</p>
                                 <div className="grid grid-cols-2 gap-3">
-                                    <button onClick={() => handleGenerate('Mystery')} className="bg-purple-50 border border-purple-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group">
-                                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-purple-600 shadow-sm"><Ghost size={20}/></div>
-                                        <div><h3 className="font-bold text-purple-900">Mystery</h3></div>
-                                    </button>
-                                    <button onClick={() => handleGenerate('Sci-Fi')} className="bg-blue-50 border border-blue-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group">
-                                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-blue-600 shadow-sm"><Rocket size={20}/></div>
-                                        <div><h3 className="font-bold text-blue-900">Sci-Fi</h3></div>
-                                    </button>
-                                    <button onClick={() => handleGenerate('Daily Life')} className="bg-amber-50 border border-amber-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group">
-                                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-amber-600 shadow-sm"><Coffee size={20}/></div>
-                                        <div><h3 className="font-bold text-amber-900">Daily Life</h3></div>
-                                    </button>
-                                    <button onClick={() => handleGenerate('Fantasy')} className="bg-emerald-50 border border-emerald-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group">
-                                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-emerald-600 shadow-sm"><Sword size={20}/></div>
-                                        <div><h3 className="font-bold text-emerald-900">Fantasy</h3></div>
-                                    </button>
+                                    <button onClick={() => handleGenerate('Mystery')} className="bg-purple-50 border border-purple-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group"><div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-purple-600 shadow-sm"><Ghost size={20}/></div><div><h3 className="font-bold text-purple-900">Mystery</h3></div></button>
+                                    <button onClick={() => handleGenerate('Sci-Fi')} className="bg-blue-50 border border-blue-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group"><div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-blue-600 shadow-sm"><Rocket size={20}/></div><div><h3 className="font-bold text-blue-900">Sci-Fi</h3></div></button>
+                                    <button onClick={() => handleGenerate('Daily Life')} className="bg-amber-50 border border-amber-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group"><div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-amber-600 shadow-sm"><Coffee size={20}/></div><div><h3 className="font-bold text-amber-900">Daily Life</h3></div></button>
+                                    <button onClick={() => handleGenerate('Fantasy')} className="bg-emerald-50 border border-emerald-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group"><div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-emerald-600 shadow-sm"><Sword size={20}/></div><div><h3 className="font-bold text-emerald-900">Fantasy</h3></div></button>
                                 </div>
                             </div>
                         </div>
                     )}
                 </div>
-            );
+             );
         }
 
-        // --- PHASE 2: LESEN (Interactive Text) ---
+        // --- PHASE 2: LESEN (MIT POPUP) ---
         if (readerMode === 'reading' && currentStory) {
             return (
                 <div className="space-y-6 animate-in fade-in zoom-in duration-300 pt-6 pb-40 px-1 relative min-h-screen">
-                     {/* Header */}
                      <div className="flex items-center justify-between mb-4 px-1">
                         <button onClick={() => setReaderMode('select')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
                             <ArrowLeft size={20} />
@@ -2266,34 +2343,31 @@ function App() {
                         </div>
                     </div>
 
-                    {/* STORY CONTAINER */}
                     <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-100">
                         <h2 className="text-2xl font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">{currentStory.title}</h2>
-                        
                         <div className="text-lg text-slate-700 leading-loose font-serif text-justify">
                             {currentStory.text.split(' ').map((wordRaw, i) => {
-                                // Sternchen entfernen für die Anzeige
                                 const displayText = wordRaw.replace(/[\*_]/g, "");
-                                return (
-                                    <span 
-                                        key={i} 
-                                        onClick={(e) => handleWordClick(e, wordRaw)}
-                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 hover:text-indigo-600 ${
-                                            clickedWord?.french === displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase() ? 'bg-yellow-200 text-slate-900' : ''
-                                        }`}
-                                    >
-                                        {displayText}
-                                    </span>
-                                );
+                                return <span key={i} onClick={(e) => handleWordClick(e, wordRaw)} className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 hover:text-indigo-600 ${clickedWord?.french === displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase() ? 'bg-yellow-200 text-slate-900' : ''}`}>{displayText}</span>;
                             })}
                         </div>
                     </div>
 
-                    {/* INFO POPUP */}
+                    {/* INFO POPUP (Erweitert für API Status) */}
                     {clickedWord && (
                         <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom-4 z-50 flex items-center justify-between">
                             <div>
-                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">{clickedWord.rank !== "?" ? `Rank #${clickedWord.rank}` : "Unknown"}</div>
+                                {/* Badge */}
+                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 inline-block px-1.5 rounded ${
+                                    clickedWord.rank === "API" ? "bg-yellow-500/20 text-yellow-300" : 
+                                    clickedWord.rank === "External" ? "bg-blue-500/20 text-blue-300" : 
+                                    "text-slate-400"
+                                }`}>
+                                    {clickedWord.rank === "API" ? <RotateCcw className="animate-spin w-3 h-3"/> : 
+                                     clickedWord.rank === "External" ? "Web Translation" : 
+                                     `Rank #${clickedWord.rank}`}
+                                </div>
+                                
                                 <div className="text-xl font-bold">{clickedWord.french}</div>
                                 <div className="text-slate-300 text-sm italic">{clickedWord.english || clickedWord.german}</div>
                             </div>
@@ -2304,16 +2378,7 @@ function App() {
                         </div>
                     )}
 
-                    <button 
-                        onClick={() => { 
-                            stopAudio();
-                            setIsSpeaking(false);
-                            setReaderMode('quiz'); 
-                            setQuizAnswers({}); 
-                            window.scrollTo({ top: 0, behavior: 'smooth' }); 
-                        }}
-                        className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all"
-                    >
+                    <button onClick={() => { stopAudio(); setIsSpeaking(false); setReaderMode('quiz'); setQuizAnswers({}); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all">
                         Take Quiz <ArrowLeft size={20} className="rotate-180"/>
                     </button>
                 </div>
@@ -2325,12 +2390,9 @@ function App() {
             return (
                 <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-2 px-1">
-                        <button onClick={() => setReaderMode('reading')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
-                            <ArrowLeft size={20} />
-                        </button>
+                        <button onClick={() => setReaderMode('reading')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"><ArrowLeft size={20} /></button>
                         <h2 className="text-xl font-bold text-slate-800">Comprehension Check</h2>
                     </div>
-
                     <div className="space-y-6">
                         {currentStory.quiz.map((q, qIdx) => (
                             <div key={qIdx} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
@@ -2340,15 +2402,8 @@ function App() {
                                         const isSelected = quizAnswers[qIdx] === oIdx;
                                         const isCorrect = q.correctIndex === oIdx;
                                         let btnClass = "bg-slate-50 text-slate-600 border-slate-100";
-                                        if (isSelected) {
-                                            if (isCorrect) btnClass = "bg-green-100 text-green-700 border-green-200 ring-2 ring-green-500";
-                                            else btnClass = "bg-red-100 text-red-700 border-red-200";
-                                        }
-                                        return (
-                                            <button key={oIdx} onClick={() => setQuizAnswers({...quizAnswers, [qIdx]: oIdx})} className={`w-full p-3 rounded-xl text-left text-sm font-medium border transition-all ${btnClass}`}>
-                                                {opt}
-                                            </button>
-                                        );
+                                        if (isSelected) { if (isCorrect) btnClass = "bg-green-100 text-green-700 border-green-200 ring-2 ring-green-500"; else btnClass = "bg-red-100 text-red-700 border-red-200"; }
+                                        return <button key={oIdx} onClick={() => setQuizAnswers({...quizAnswers, [qIdx]: oIdx})} className={`w-full p-3 rounded-xl text-left text-sm font-medium border transition-all ${btnClass}`}>{opt}</button>;
                                     })}
                                 </div>
                             </div>
@@ -2358,7 +2413,6 @@ function App() {
                 </div>
             );
         }
-
         return null;
     };
     const renderResults = () => (
