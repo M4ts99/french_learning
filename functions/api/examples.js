@@ -37,6 +37,7 @@ export async function onRequestPost(context) {
     // Manchmal packt Gemini das JSON in Markdown ```json ... ```. Das entfernen wir:
     rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
 
+    
     return new Response(rawText, {
       headers: { "Content-Type": "application/json" },
     });
