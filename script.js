@@ -2219,84 +2219,55 @@ function App() {
         const handleWordClick = async (e, wordRaw) => {
             e.stopPropagation();
             
-            // 1. Bereinigen
             const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
-            const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase().trim();
+            const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
             
-            // 2. CHECK: Ist es eine Zahl oder Römisch? (XIV, 14, 1990)
-            // Regex prüft auf reine Zahlen oder römische Ziffern (I, V, X, L, C, D, M)
-            const isNumber = /^\d+$/.test(cleanWord);
-            const isRoman = /^m*(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/.test(cleanWord) && cleanWord.length > 0;
-
-            if (isNumber || isRoman) {
-                setClickedWord({ 
-                    french: textWithoutFormat, 
-                    english: "Number / Numeral", 
-                    rank: "#" 
-                });
+            // 1. Erstmal lokal schauen (spart API Call bei einfachen Wörtern)
+            let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
+            if (found) {
+                setClickedWord(found);
                 return;
             }
 
-            // 3. VERSUCH A: Lokal (Top 5000)
-            let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
-
-            // 4. VERSUCH B: Irregular Map
-            if (!found && IRREGULAR_MAP[cleanWord]) {
-                const infinitive = IRREGULAR_MAP[cleanWord];
-                found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
-            }
-
-            if (found) {
-                setClickedWord(found);
-            } else {
-                // 5. VERSUCH C: API (Mit Machine Translation Flag)
-                setLoadingTranslation(true);
-                setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "API" });
+            // 2. Wenn nicht lokal -> Gemini fragen
+            setLoadingTranslation(true);
+            setClickedWord({ french: textWithoutFormat, english: "Analyzing...", rank: "AI" });
+            
+            try {
+                const res = await fetch('/api/lookup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ word: cleanWord })
+                });
+                const data = await res.json();
                 
-                let translation = null;
-
-                try {
-                    // Backend (Proxy)
-                    try {
-                        const res = await fetch('/api/lookup', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ word: cleanWord })
-                        });
-                        if (res.ok) {
-                            const data = await res.json();
-                            translation = data.translation;
-                        }
-                    } catch (serverError) {
-                        console.warn("Backend failed, trying direct fetch...", serverError);
-                    }
-
-                    // Fallback: Direktaufruf (mit mt=1 Trick!)
-                    if (!translation) {
-                        // mt=1 erzwingt Maschinenübersetzung, wenn kein menschlicher Treffer da ist.
-                        // Das verhindert spanische Wörter oder Quatsch wie "Discussion" bei XIV.
-                        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanWord)}&langpair=fr|en&mt=1`);
-                        const data = await res.json();
-                        if (data.responseData && data.responseData.translatedText) {
-                            translation = data.responseData.translatedText;
-                        }
-                    }
-
-                    if (translation) {
+                if (data.root) {
+                    // CLOU: Wir schauen, ob wir die GRUNDFORM (root) in unserer Liste haben!
+                    const rootFound = vocabulary.find(v => v.french.toLowerCase() === data.root.toLowerCase());
+                    
+                    if (rootFound) {
+                        // Ja! Wir zeigen die Daten der Grundform an, aber mit der Info von Gemini
                         setClickedWord({ 
-                            french: textWithoutFormat, 
-                            english: translation, 
-                            rank: "External" 
+                            french: textWithoutFormat, // Zeige das Originalwort (z.B. "J'ai")
+                            english: `${data.translation} (${data.type})`, // "I have (Verb 1st pers)"
+                            rank: rootFound.rank, // Zeige den echten Rank von "Avoir"
+                            root: data.root // Merken wir uns für Anzeige
                         });
                     } else {
-                        throw new Error("No result");
+                        // Nein, auch die Grundform ist nicht in den Top 5000
+                        setClickedWord({ 
+                            french: textWithoutFormat, 
+                            english: `${data.translation} (from: ${data.root})`, 
+                            rank: "External" 
+                        });
                     }
-
-                } catch (err) {
-                    setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
-                } finally {
-                    setLoadingTranslation(false);
+                } else {
+                    throw new Error("No Data");
                 }
+            } catch (err) {
+                setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
+            } finally {
+                setLoadingTranslation(false);
             }
         };
         // --- PHASE 1: AUSWAHL ---
@@ -2403,13 +2374,29 @@ function App() {
                             })}
                         </div>
                     </div>
+                    {/* INFO POPUP */}
                     {clickedWord && (
                         <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom-4 z-50 flex items-center justify-between">
                             <div>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 inline-block px-1.5 rounded ${clickedWord.rank === "API" ? "bg-yellow-500/20 text-yellow-300" : clickedWord.rank === "External" ? "bg-blue-500/20 text-blue-300" : "text-slate-400"}`}>
-                                    {clickedWord.rank === "API" ? <RotateCcw className="animate-spin w-3 h-3"/> : clickedWord.rank === "External" ? "Web Translation" : `Rank #${clickedWord.rank}`}
+                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 inline-block px-1.5 rounded ${
+                                    clickedWord.rank === "AI" ? "bg-purple-500/20 text-purple-300" : 
+                                    clickedWord.rank === "External" ? "bg-blue-500/20 text-blue-300" : 
+                                    "text-slate-400"
+                                }`}>
+                                    {clickedWord.rank === "AI" ? <RotateCcw className="animate-spin w-3 h-3"/> : 
+                                     clickedWord.rank === "External" ? "Web Translation" : 
+                                     `Rank #${clickedWord.rank}`}
                                 </div>
-                                <div className="text-xl font-bold">{clickedWord.french}</div>
+                                
+                                <div className="text-xl font-bold flex items-baseline gap-2">
+                                    {clickedWord.french}
+                                    {/* Wenn wir eine Root gefunden haben (z.B. J'ai -> Avoir), zeigen wir das klein an */}
+                                    {clickedWord.root && clickedWord.root.toLowerCase() !== clickedWord.french.toLowerCase() && (
+                                        <span className="text-xs text-slate-500 font-normal">
+                                            → {clickedWord.root}
+                                        </span>
+                                    )}
+                                </div>
                                 <div className="text-slate-300 text-sm italic">{clickedWord.english || clickedWord.german}</div>
                             </div>
                             <div className="flex gap-3">
