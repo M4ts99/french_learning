@@ -529,6 +529,61 @@ function App() {
     // --- ANKI ALGORITHM (SM-2 Variation) ---
     // --- ANKI ALGORITHM (SM-2 Variation) ---
     // --- ANKI ALGORITHM (SM-2 Variation) ---
+    // --- ARTICLE READER LOGIC ---
+    const openArticle = async (url) => {
+        // 1. UI sofort umschalten
+        setView('reader');
+        setReaderMode('select'); // Zeigt den Lade-Screen
+        setLoadingStory(true);
+        setLoadingTip("Fetching article via Magic Reader...");
+
+        try {
+            // 2. Jina AI via Proxy aufrufen
+            const jinaUrl = `https://r.jina.ai/${url}`;
+            const proxy = "https://corsproxy.io/?"; // Brücke gegen Blockaden
+            
+            const res = await fetch(proxy + encodeURIComponent(jinaUrl));
+            if (!res.ok) throw new Error("Article fetch failed");
+            
+            const markdown = await res.text();
+
+            // 3. Markdown bereinigen (Jina liefert Markdown, wir brauchen Plain Text)
+            // Titel extrahieren (meist die erste Zeile mit #)
+            const lines = markdown.split('\n');
+            const titleLine = lines.find(l => l.startsWith('Title:')) || lines[0];
+            const title = titleLine.replace('Title:', '').replace(/#/g, '').trim();
+
+            // Textkörper säubern
+            const cleanText = markdown
+                .replace(/^Title:.*$/gm, '') // Titelzeile weg (haben wir schon)
+                .replace(/!\[.*?\]\(.*?\)/g, '') // Bilder entfernen
+                .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Links: URL weg, Text behalten
+                .replace(/https?:\/\/\S+/g, '') // Rohe URLs entfernen
+                .replace(/[#*`_]/g, '') // Markdown Zeichen (*, #) entfernen
+                .replace(/\n+/g, ' ') // Zeilenumbrüche zu Leerzeichen
+                .replace(/\s+/g, ' ') // Doppelte Leerzeichen weg
+                .trim()
+                .substring(0, 2000); // Limitieren auf 2000 Zeichen (damit es nicht zu lang wird)
+
+            // 4. Als Story setzen
+            setCurrentStory({
+                title: title || "News Article",
+                text: cleanText,
+                quiz: null, // Nachrichten haben kein Quiz
+                isArticle: true // Flag für das UI
+            });
+            
+            setReaderMode('reading');
+
+        } catch (e) {
+            console.error(e);
+            alert("Could not load article inside app. Opening browser...");
+            window.open(url, '_blank'); // Fallback
+            setView('explore'); // Zurück
+        } finally {
+            setLoadingStory(false);
+        }
+    };
     const calculateAnkiStats = (currentStats, quality) => {
         // quality: 0=Again, 1=Hard, 2=Good, 3=Easy
         
@@ -1480,11 +1535,13 @@ function App() {
         // ANSICHTEN
         // =========================================
 
-        // 1. ARTICLES VIEW
+        // 1. ARTICLES VIEW (Updated)
         if (exploreMode === 'articles') {
+            // ... (fetchNews Logik bleibt gleich) ...
             if (newsData.length === 0 && !loadingContent) fetchNews();
+
             return (
-                <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+                <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
                     <div className="flex items-center gap-3 mb-4 px-1">
                         <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
                         <h2 className="text-2xl font-bold text-slate-800">News Kiosk</h2>
@@ -1492,13 +1549,19 @@ function App() {
                     {loadingContent && <div className="text-center py-10 text-slate-400 animate-pulse">Loading headlines...</div>}
                     <div className="space-y-4">
                         {newsData.map((item, idx) => (
-                            <a key={idx} href={item.link} target="_blank" rel="noreferrer" className="block bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all">
+                            // HIER IST DIE ÄNDERUNG:
+                            <button 
+                                key={idx} 
+                                onClick={() => openArticle(item.link)} // <--- Ruft jetzt unseren Magic Reader auf
+                                className="w-full text-left block bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all"
+                            >
                                 <div className="flex justify-between items-start mb-2">
                                     <span className="text-[10px] font-bold bg-rose-50 text-rose-600 px-2 py-1 rounded">France 24</span>
                                     <span className="text-[10px] text-slate-300">{new Date(item.pubDate).toLocaleDateString()}</span>
                                 </div>
                                 <h3 className="font-bold text-slate-800 leading-snug mb-2">{item.title}</h3>
-                            </a>
+                                {item.enclosure?.link && <img src={item.enclosure.link} alt="News" className="w-full h-32 object-cover rounded-xl opacity-90" />}
+                            </button>
                         ))}
                     </div>
                 </div>
@@ -2403,30 +2466,11 @@ function App() {
         );
     };
     const renderReader = () => {
-        // --- STATES ---
-        // HINWEIS: Falls du storyConfig, clickedWord etc. in App() hast, lösche sie hier!
-        // Ich lasse sie hier der Vollständigkeit halber stehen, falls du sie lokal hast.
+        // HIER KEINE STATES! (Die sind oben in App)
 
-
-        // --- HELPER & FACTS ---
-        const LOADING_FACTS = [
-            "Did you know? French is the official language of 29 countries.",
-            "Fun Fact: The letter 'W' appears only in foreign words in French.",
-            "Tip: French has no word for 'cheap' (we say 'bon marché').",
-            "Culture: France produces over 400 types of cheese.",
-            "History: French was the official language of England for 300 years.",
-            "Tip: 'Salut' can mean both 'Hello' and 'Goodbye'.",
-            "Fun Fact: The croissant was actually invented in Austria.",
-            "Grammar: All French nouns have a gender (masculine or feminine).",
-            "Paris is often called 'La Ville Lumière' (The City of Light)."
-        ];
-
+        // --- HELPER ---
         const handleGenerate = (genre) => {
-            // 1. Zufälligen Fakt auswählen
-            const randomFact = LOADING_FACTS[Math.floor(Math.random() * LOADING_FACTS.length)];
-            setLoadingTip(randomFact);
-            
-            // 2. Generierung starten
+            // Wir übergeben jetzt die exakte Zahl (z.B. 320) an das Backend
             generateStory(genre, storyConfig.length, storyConfig.level); 
         };
 
@@ -2441,52 +2485,50 @@ function App() {
             }
         };
 
-        // --- INTELLIGENTER LOOKUP (Optimiert) ---
         const handleWordClick = async (e, wordRaw) => {
             e.stopPropagation();
             
-            // 1. Bereinigen
             const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
             const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase().trim();
             
-            // 2. VERSUCH A: Exakter Treffer in Liste
+            // 1. CHECK: Ist es eine Zahl/Römisch?
+            if (/^\d+$/.test(cleanWord) || /^m*(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/.test(cleanWord)) {
+                setClickedWord({ french: textWithoutFormat, english: "Number", rank: "#" });
+                return;
+            }
+
+            // 2. VERSUCH A: Lokal
             let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
 
-            // 3. VERSUCH B: Lokale Irregular Map (schneller als API)
+            // 3. VERSUCH B: Irregular Map
             if (!found && IRREGULAR_MAP[cleanWord]) {
                 const infinitive = IRREGULAR_MAP[cleanWord];
                 found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
             }
 
             if (found) {
-                // Lokal gefunden
                 setClickedWord(found);
             } else {
-                // NICHT GEFUNDEN -> API FRAGEN (Gemini Lite)
+                // 4. VERSUCH C: API FRAGEN
                 setLoadingTranslation(true);
-                setClickedWord({ french: textWithoutFormat, english: "Analyzing...", rank: "AI" });
+                setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "API" });
                 
                 try {
+                    // Backend (Proxy)
                     const res = await fetch('/api/lookup', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ word: cleanWord })
                     });
-                    
                     const data = await res.json();
                     
-                    if (data.error) throw new Error(data.error);
-
-                    // LOGIK: Hat Gemini eine Grundform (Root) gefunden?
+                    // Hat Gemini eine Root gefunden?
                     let rootFound = null;
                     if (data.root) {
-                         // Suchen wir diese Grundform in unserer Liste?
                          rootFound = vocabulary.find(v => v.french.toLowerCase() === data.root.toLowerCase());
                     }
 
                     if (rootFound) {
-                        // CLOU: Wir zeigen die Infos der lokalen Grundform an!
-                        // Z.B. Klick auf "verras" -> API sagt Root: "voir" -> Wir zeigen Rank von "voir"
                         setClickedWord({ 
                             french: textWithoutFormat, 
                             english: `${data.translation} (${data.type})`, 
@@ -2494,7 +2536,6 @@ function App() {
                             root: data.root 
                         });
                     } else {
-                        // Echtes externes Wort
                         setClickedWord({ 
                             french: textWithoutFormat, 
                             english: data.translation || "No translation", 
@@ -2504,17 +2545,22 @@ function App() {
                     }
 
                 } catch (err) {
-                    console.error("Lookup Failed:", err);
-                    setClickedWord({ 
-                        french: textWithoutFormat, 
-                        english: "Offline / Error", 
-                        rank: "X" 
-                    });
+                    // Fallback Direktaufruf bei Backend-Fehler
+                    try {
+                         const resFallback = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanWord)}&langpair=fr|en&mt=1`);
+                         const dataFallback = await resFallback.json();
+                         if(dataFallback.responseData?.translatedText) {
+                            setClickedWord({ french: textWithoutFormat, english: dataFallback.responseData.translatedText, rank: "External" });
+                         } else { throw new Error("No fallback"); }
+                    } catch(e2) {
+                        setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
+                    }
                 } finally {
                     setLoadingTranslation(false);
                 }
             }
         };
+
         // --- PHASE 1: AUSWAHL ---
         if (readerMode === 'select') {
             return (
@@ -2526,21 +2572,17 @@ function App() {
                         <h2 className="text-2xl font-bold text-slate-800">Reading Room</h2>
                     </div>
                     
-                    {/* LADE SCREEN (Neu gestaltet) */}
                     {loadingStory ? (
                         <div className="h-72 flex flex-col items-center justify-center text-center px-6 space-y-6 animate-in fade-in duration-500">
                             <div className="relative">
                                 <div className="absolute inset-0 bg-indigo-100 rounded-full animate-ping opacity-75"></div>
                                 <div className="relative bg-white p-4 rounded-full shadow-sm text-indigo-600">
-                                    {/* Loader2 dreht sich schön im Uhrzeigersinn */}
                                     <Loader2 size={40} className="animate-spin" />
                                 </div>
                             </div>
                             <div>
                                 <h3 className="text-indigo-900 font-bold text-lg mb-2">Writing your story...</h3>
-                                <p className="text-slate-500 text-sm italic max-w-xs mx-auto leading-relaxed">
-                                    💡 {loadingTip}
-                                </p>
+                                <p className="text-slate-500 text-sm italic max-w-xs mx-auto leading-relaxed">💡 {loadingTip}</p>
                             </div>
                         </div>
                     ) : (
@@ -2572,10 +2614,14 @@ function App() {
                                         </span>
                                     </div>
                                     <input type="range" min="50" max="500" step="10" value={storyConfig.length} onChange={(e) => setStoryConfig({ ...storyConfig, length: parseInt(e.target.value) })} className="w-full accent-indigo-600 h-2 bg-slate-100 rounded-lg cursor-pointer" />
+                                    <div className="flex justify-between mt-2 text-[10px] text-slate-400 font-bold uppercase">
+                                        <span>Short (50)</span>
+                                        <span>Long (500)</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* GENRE GRID (Jetzt mit 6 Genres) */}
+                            {/* GENRE GRID */}
                             <div>
                                 <p className="text-slate-500 px-2 text-sm font-medium mb-3">Choose a Genre</p>
                                 <div className="grid grid-cols-2 gap-3">
@@ -2592,13 +2638,10 @@ function App() {
                 </div>
             );
         }
-        
-        // ... (Phase 2 Reading & Phase 3 Quiz bleiben unverändert, kopiere sie von vorhin) ...
-        // Nur der obere Teil musste angepasst werden für Loader & Facts.
-        
-        // HIER ZUR SICHERHEIT NOCHMAL PHASE 2, damit nichts fehlt:
+
+        // --- PHASE 2: LESEN ---
         if (readerMode === 'reading' && currentStory) {
-             return (
+            return (
                 <div className="space-y-6 animate-in fade-in zoom-in duration-300 pt-6 pb-40 px-1 relative min-h-screen">
                      <div className="flex items-center justify-between mb-4 px-1">
                         <button onClick={() => setReaderMode('select')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
@@ -2610,32 +2653,43 @@ function App() {
                             </button>
                         </div>
                     </div>
+
                     <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-100">
                         <h2 className="text-2xl font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">{currentStory.title}</h2>
                         <div className="text-lg text-slate-700 leading-loose font-serif text-justify">
                             {currentStory.text.split(' ').map((wordRaw, i) => {
                                 const displayText = wordRaw.replace(/[\*_]/g, "");
-                                return <span key={i} onClick={(e) => handleWordClick(e, wordRaw)} className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 hover:text-indigo-600 ${clickedWord?.french === displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase() ? 'bg-yellow-200 text-slate-900' : ''}`}>{displayText}</span>;
+                                return (
+                                    <span 
+                                        key={i} 
+                                        onClick={(e) => handleWordClick(e, wordRaw)}
+                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 hover:text-indigo-600 ${
+                                            clickedWord?.french === displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase() ? 'bg-yellow-200 text-slate-900' : ''
+                                        }`}
+                                    >
+                                        {displayText}
+                                    </span>
+                                );
                             })}
                         </div>
                     </div>
+
                     {/* INFO POPUP */}
                     {clickedWord && (
                         <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom-4 z-50 flex items-center justify-between">
                             <div>
                                 <div className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 inline-block px-1.5 rounded ${
-                                    clickedWord.rank === "AI" ? "bg-purple-500/20 text-purple-300" : 
+                                    clickedWord.rank === "API" ? "bg-yellow-500/20 text-yellow-300" : 
                                     clickedWord.rank === "External" ? "bg-blue-500/20 text-blue-300" : 
                                     "text-slate-400"
                                 }`}>
-                                    {clickedWord.rank === "AI" ? <RotateCcw className="animate-spin w-3 h-3"/> : 
+                                    {clickedWord.rank === "API" ? <RotateCcw className="animate-spin w-3 h-3"/> : 
                                      clickedWord.rank === "External" ? "Web Translation" : 
                                      `Rank #${clickedWord.rank}`}
                                 </div>
                                 
                                 <div className="text-xl font-bold flex items-baseline gap-2">
                                     {clickedWord.french}
-                                    {/* Wenn wir eine Root gefunden haben (z.B. J'ai -> Avoir), zeigen wir das klein an */}
                                     {clickedWord.root && clickedWord.root.toLowerCase() !== clickedWord.french.toLowerCase() && (
                                         <span className="text-xs text-slate-500 font-normal">
                                             → {clickedWord.root}
@@ -2650,23 +2704,49 @@ function App() {
                             </div>
                         </div>
                     )}
-                    <button onClick={() => { stopAudio(); setIsSpeaking(false); setReaderMode('quiz'); setQuizAnswers({}); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all">
-                        Take Quiz <ArrowLeft size={20} className="rotate-180"/>
-                    </button>
+
+                    {/* Nur Quiz anzeigen, wenn es eine Story ist (kein Artikel) */}
+                    {!currentStory.isArticle ? (
+                        <button 
+                            onClick={() => { 
+                                stopAudio();
+                                setIsSpeaking(false);
+                                setReaderMode('quiz'); 
+                                setQuizAnswers({}); 
+                                window.scrollTo({ top: 0, behavior: 'smooth' }); 
+                            }}
+                            className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all"
+                        >
+                            Take Quiz <ArrowLeft size={20} className="rotate-180"/>
+                        </button>
+                    ) : (
+                        // Bei Artikeln: Button zum Beenden
+                        <button 
+                            onClick={() => {
+                                stopAudio();
+                                setIsSpeaking(false);
+                                setView('explore'); // Zurück zu den News
+                                setReaderMode('select');
+                            }}
+                            className="w-full bg-slate-100 text-slate-500 py-4 rounded-2xl font-bold flex justify-center items-center gap-2 hover:bg-slate-200 transition-all"
+                        >
+                            Done Reading
+                        </button>
+                    )}
                 </div>
             );
         }
 
+        // --- PHASE 3: QUIZ ---
         if (readerMode === 'quiz' && currentStory) {
-             // ... (Quiz Phase bleibt unverändert) ...
-             return (
+            return (
                 <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-2 px-1">
                         <button onClick={() => setReaderMode('reading')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"><ArrowLeft size={20} /></button>
                         <h2 className="text-xl font-bold text-slate-800">Comprehension Check</h2>
                     </div>
                     <div className="space-y-6">
-                        {currentStory.quiz.map((q, qIdx) => (
+                        {currentStory.quiz && currentStory.quiz.map((q, qIdx) => (
                             <div key={qIdx} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
                                 <h3 className="font-bold text-slate-800 mb-4">{q.question}</h3>
                                 <div className="space-y-2">
@@ -2674,8 +2754,15 @@ function App() {
                                         const isSelected = quizAnswers[qIdx] === oIdx;
                                         const isCorrect = q.correctIndex === oIdx;
                                         let btnClass = "bg-slate-50 text-slate-600 border-slate-100";
-                                        if (isSelected) { if (isCorrect) btnClass = "bg-green-100 text-green-700 border-green-200 ring-2 ring-green-500"; else btnClass = "bg-red-100 text-red-700 border-red-200"; }
-                                        return <button key={oIdx} onClick={() => setQuizAnswers({...quizAnswers, [qIdx]: oIdx})} className={`w-full p-3 rounded-xl text-left text-sm font-medium border transition-all ${btnClass}`}>{opt}</button>;
+                                        if (isSelected) {
+                                            if (isCorrect) btnClass = "bg-green-100 text-green-700 border-green-200 ring-2 ring-green-500";
+                                            else btnClass = "bg-red-100 text-red-700 border-red-200";
+                                        }
+                                        return (
+                                            <button key={oIdx} onClick={() => setQuizAnswers({...quizAnswers, [qIdx]: oIdx})} className={`w-full p-3 rounded-xl text-left text-sm font-medium border transition-all ${btnClass}`}>
+                                                {opt}
+                                            </button>
+                                        );
                                     })}
                                 </div>
                             </div>
@@ -2685,7 +2772,7 @@ function App() {
                 </div>
             );
         }
-        
+
         return null;
     };
     const renderResults = () => (
