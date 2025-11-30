@@ -111,6 +111,20 @@ const COLLECTIONS = {
         { id: 'prof', label: 'Professions', sub: 'Work', icon: <Briefcase size={24}/>, ids: [204, 268, 386, 457, 483, 640, 684, 688, 690, 762, 783, 827, 901, 909, 917, 1098, 1150, 1188, 1203, 1232, 1259, 1264, 1323, 1328, 1337, 1341, 1343, 1406, 1411, 1499, 1546, 1552, 1631, 1706, 1722, 1737, 1738, 1789, 1797, 1861, 1876, 1924, 1957, 1961, 2039, 2049, 2089, 2100, 2101, 2119, 2176, 2183, 2201, 2233, 2248, 2276, 2307, 2404, 2415, 2430, 2436, 2443, 2461, 2523, 2587, 2645, 2741, 2768, 2824, 2848, 2906, 2928, 2954, 2963, 2981, 2995, 3003, 3042, 3048, 3072, 3081, 3085, 3100, 3118, 3163, 3167, 3189, 3223, 3241, 3251, 3262, 3283, 3327, 3350, 3371, 3446, 3494, 3503, 3518, 3630, 3745, 3767, 3886, 4052, 4131, 4261, 4282, 4346, 4430, 4422, 4463, 4787, 4309, 4253, 827, 640, 1264] },
     ]
 };
+// --- HELPER: IRREGULAR VERBS MAP ---
+// Mappt konjugierte Formen auf den Infinitiv (der in deiner Liste steht)
+const IRREGULAR_MAP = {
+    "suis": "être", "es": "être", "est": "être", "sommes": "être", "êtes": "être", "sont": "être", "été": "être", "était": "être", "fut": "être", "serai": "être",
+    "ai": "avoir", "as": "avoir", "a": "avoir", "avons": "avoir", "avez": "avoir", "ont": "avoir", "eu": "avoir", "avait": "avoir", "aura": "avoir",
+    "vais": "aller", "vas": "aller", "va": "aller", "allons": "aller", "allez": "aller", "vont": "aller", "ira": "aller",
+    "fais": "faire", "fait": "faire", "font": "faire", "ferai": "faire",
+    "peux": "pouvoir", "peut": "pouvoir", "pu": "pouvoir", "pourrai": "pouvoir",
+    "veux": "vouloir", "veut": "vouloir", "voulu": "vouloir", "voudrai": "vouloir",
+    "sais": "savoir", "sait": "savoir", "su": "savoir", "saurai": "savoir",
+    "vois": "voir", "voit": "voir", "vu": "voir", "verrai": "voir",
+    "dois": "devoir", "doit": "devoir", "dû": "devoir",
+    "dis": "dire", "dit": "dire", "dites": "dire"
+};
 // --- TOPIC HUB CONTENT ---
 const TOPIC_CONTENT = {
     animals: {
@@ -2116,11 +2130,10 @@ function App() {
         );
     };
     const renderReader = () => {
-        
-  
+        // HIER KEIN useState MEHR! Wir nutzen die globalen Variablen.
 
         const handleGenerate = (genre) => {
-            // Wir übergeben jetzt die exakte Zahl (z.B. 320) an das Backend
+            // Wir übergeben jetzt die exakte Zahl aus der Config an das Backend
             generateStory(genre, storyConfig.length, storyConfig.level); 
         };
 
@@ -2130,6 +2143,7 @@ function App() {
                 setIsSpeaking(false);
             } else {
                 setIsSpeaking(true);
+                // Sternchen entfernen, damit sie nicht vorgelesen werden
                 const cleanText = text.replace(/[*_#]/g, ""); 
                 speak(cleanText);
             }
@@ -2137,11 +2151,17 @@ function App() {
 
         const handleWordClick = (e, wordRaw) => {
             e.stopPropagation();
+            // 1. Sternchen entfernen für die Anzeige
             const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
+            // 2. Satzzeichen entfernen für den Datenbank-Abgleich
             const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
+            
             const found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
-            if (found) setClickedWord(found);
-            else setClickedWord({ french: textWithoutFormat, english: "Not in dictionary", rank: "?" });
+            if (found) {
+                setClickedWord(found);
+            } else {
+                setClickedWord({ french: textWithoutFormat, english: "Not in dictionary", rank: "?" });
+            }
         };
 
         // --- PHASE 1: AUSWAHL ---
@@ -2181,7 +2201,7 @@ function App() {
                                     </div>
                                 </div>
 
-                                {/* LENGTH SLIDER (Neu: 50-500 Wörter) */}
+                                {/* LENGTH SLIDER (50-500) */}
                                 <div>
                                     <div className="flex justify-between items-center mb-4">
                                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Story Length</span>
@@ -2230,27 +2250,14 @@ function App() {
             );
         }
 
-        // ... PHASE 2 & 3 (Lesen und Quiz) bleiben genau gleich wie vorher ...
-        // (Kopiere einfach den unteren Teil deiner alten Funktion hier rein)
-        
-        // HIER ZUR SICHERHEIT DER ZWEITE TEIL, damit du Copy-Paste machen kannst:
-        
-        // --- PHASE 2: LESEN ---
+        // --- PHASE 2: LESEN (Interactive Text) ---
         if (readerMode === 'reading' && currentStory) {
             return (
                 <div className="space-y-6 animate-in fade-in zoom-in duration-300 pt-6 pb-40 px-1 relative min-h-screen">
+                     {/* Header */}
                      <div className="flex items-center justify-between mb-4 px-1">
-                        <button 
-                        onClick={() => { 
-                            stopAudio();
-                            setIsSpeaking(false);
-                            setReaderMode('quiz'); 
-                            setQuizAnswers({}); 
-                            window.scrollTo({ top: 0, behavior: 'smooth' }); // <--- DER SCROLL FIX
-                        }}
-                        className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all"
-                    >
-                        Take Quiz <ArrowLeft size={20} className="rotate-180"/>
+                        <button onClick={() => setReaderMode('select')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                            <ArrowLeft size={20} />
                         </button>
                         <div className="flex gap-2">
                             <button onClick={() => toggleAudio(currentStory.text)} className={`p-2 px-4 rounded-full font-bold text-xs flex items-center gap-2 transition-all ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>
@@ -2258,15 +2265,31 @@ function App() {
                             </button>
                         </div>
                     </div>
+
+                    {/* STORY CONTAINER */}
                     <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-100">
                         <h2 className="text-2xl font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">{currentStory.title}</h2>
+                        
                         <div className="text-lg text-slate-700 leading-loose font-serif text-justify">
                             {currentStory.text.split(' ').map((wordRaw, i) => {
+                                // Sternchen entfernen für die Anzeige
                                 const displayText = wordRaw.replace(/[\*_]/g, "");
-                                return <span key={i} onClick={(e) => handleWordClick(e, wordRaw)} className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 hover:text-indigo-600 ${clickedWord?.french === displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase() ? 'bg-yellow-200 text-slate-900' : ''}`}>{displayText}</span>;
+                                return (
+                                    <span 
+                                        key={i} 
+                                        onClick={(e) => handleWordClick(e, wordRaw)}
+                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 hover:text-indigo-600 ${
+                                            clickedWord?.french === displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase() ? 'bg-yellow-200 text-slate-900' : ''
+                                        }`}
+                                    >
+                                        {displayText}
+                                    </span>
+                                );
                             })}
                         </div>
                     </div>
+
+                    {/* INFO POPUP */}
                     {clickedWord && (
                         <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom-4 z-50 flex items-center justify-between">
                             <div>
@@ -2280,21 +2303,34 @@ function App() {
                             </div>
                         </div>
                     )}
-                    <button onClick={() => { stopAudio(); setIsSpeaking(false); setReaderMode('quiz'); setQuizAnswers({}); }} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all">
+
+                    <button 
+                        onClick={() => { 
+                            stopAudio();
+                            setIsSpeaking(false);
+                            setReaderMode('quiz'); 
+                            setQuizAnswers({}); 
+                            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+                        }}
+                        className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all"
+                    >
                         Take Quiz <ArrowLeft size={20} className="rotate-180"/>
                     </button>
                 </div>
             );
         }
 
-        // --- PHASE 3: QUIZ (Gleich) ---
+        // --- PHASE 3: QUIZ ---
         if (readerMode === 'quiz' && currentStory) {
             return (
                 <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-2 px-1">
-                        <button onClick={() => setReaderMode('reading')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"><ArrowLeft size={20} /></button>
+                        <button onClick={() => setReaderMode('reading')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                            <ArrowLeft size={20} />
+                        </button>
                         <h2 className="text-xl font-bold text-slate-800">Comprehension Check</h2>
                     </div>
+
                     <div className="space-y-6">
                         {currentStory.quiz.map((q, qIdx) => (
                             <div key={qIdx} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
@@ -2304,8 +2340,15 @@ function App() {
                                         const isSelected = quizAnswers[qIdx] === oIdx;
                                         const isCorrect = q.correctIndex === oIdx;
                                         let btnClass = "bg-slate-50 text-slate-600 border-slate-100";
-                                        if (isSelected) { if (isCorrect) btnClass = "bg-green-100 text-green-700 border-green-200 ring-2 ring-green-500"; else btnClass = "bg-red-100 text-red-700 border-red-200"; }
-                                        return <button key={oIdx} onClick={() => setQuizAnswers({...quizAnswers, [qIdx]: oIdx})} className={`w-full p-3 rounded-xl text-left text-sm font-medium border transition-all ${btnClass}`}>{opt}</button>;
+                                        if (isSelected) {
+                                            if (isCorrect) btnClass = "bg-green-100 text-green-700 border-green-200 ring-2 ring-green-500";
+                                            else btnClass = "bg-red-100 text-red-700 border-red-200";
+                                        }
+                                        return (
+                                            <button key={oIdx} onClick={() => setQuizAnswers({...quizAnswers, [qIdx]: oIdx})} className={`w-full p-3 rounded-xl text-left text-sm font-medium border transition-all ${btnClass}`}>
+                                                {opt}
+                                            </button>
+                                        );
                                     })}
                                 </div>
                             </div>
@@ -2315,6 +2358,7 @@ function App() {
                 </div>
             );
         }
+
         return null;
     };
     const renderResults = () => (
