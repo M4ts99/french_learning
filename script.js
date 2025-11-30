@@ -191,323 +191,7 @@ const GRAMMAR_MODULES = [
 
 // --- NEW COMPONENTS ---
 // --- NEW COMPONENTS ---
-const ModernTranslator = () => {
-    const [mode, setMode] = useState('translate'); // 'translate' oder 'coach'
-    const [direction, setDirection] = useState('fr-en'); // 'fr-en' (Französisch -> Englisch) oder 'en-fr'
-    const [input, setInput] = useState('');
-    
-    // Ergebnis States
-    const [translationData, setTranslationData] = useState(null); // Für Translator
-    const [correctionData, setCorrectionData] = useState(null);   // Für Coach
-    
-    const [loading, setLoading] = useState(false);
 
-
-    // --- LOGIC: TRANSLATE ---
-    const handleTranslate = async () => {
-        if (!input.trim()) return;
-        setLoading(true);
-        setTranslationData(null); // Reset
-        
-        try {
-            // Wir sagen dem Backend, in welche Sprache es gehen soll
-            const target = direction === 'en-fr' ? 'fr' : 'en';
-            
-            const res = await fetch('/api/translate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: input.trim(), targetLang: target })
-            });
-            const data = await res.json();
-            setTranslationData(data); // Erwartet: { translation: "...", examples: [...] }
-        } catch (err) {
-            alert("Translation failed. Check connection.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // --- LOGIC: CORRECT ---
-    const handleCorrection = async () => {
-        if (!input.trim()) return;
-        setLoading(true);
-        setCorrectionData(null); // Reset
-
-        try {
-            const res = await fetch('/api/correct', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: input.trim() })
-            });
-            const data = await res.json();
-            setCorrectionData(data); // Erwartet: { corrected: "...", explanation: "..." }
-        } catch (err) {
-            alert("Correction failed.");
-        } finally {
-            setLoading(false);
-        }
-    };
-    const renderTopicHub = () => {
-        // Welches Thema wurde gewählt?
-        const topicConfig = COLLECTIONS.topics.find(t => t.id === selectedTopicId);
-        const content = TOPIC_CONTENT[selectedTopicId]; // Inhalte laden
-
-        if (!topicConfig) return <div>Topic not found</div>;
-
-        return (
-            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
-                
-                {/* 1. HERO HEADER */}
-                <div className="relative mb-6">
-                    <button 
-                        onClick={() => setView('explore')} // Zurück zu Explore
-                        className="absolute left-0 top-0 p-2 -ml-2 bg-white/50 backdrop-blur-sm rounded-full text-slate-600 hover:bg-white transition-colors z-10"
-                    >
-                        <ArrowLeft size={24} />
-                    </button>
-                    
-                    <div className="flex flex-col items-center justify-center pt-4 pb-6 bg-gradient-to-b from-emerald-50 to-white rounded-[2.5rem]">
-                        <div className="bg-white p-6 rounded-3xl shadow-sm mb-4 text-emerald-600">
-                            {/* Wir klonen das Icon und machen es größer */}
-                            {React.cloneElement(topicConfig.icon, { size: 48 })}
-                        </div>
-                        <h1 className="text-3xl font-bold text-slate-800">{topicConfig.label}</h1>
-                        <p className="text-emerald-600/80 text-sm font-medium">{topicConfig.sub}</p>
-                    </div>
-                </div>
-
-                <div className="space-y-6 px-1">
-                    
-                    {/* 2. CORE VOCABULARY (Der "Start"-Button) */}
-                    <button 
-                        onClick={() => startCollectionSession(topicConfig.ids)}
-                        className="w-full bg-emerald-600 text-white p-5 rounded-3xl shadow-lg shadow-emerald-200 active:scale-[0.98] transition-all flex items-center justify-between group"
-                    >
-                        <div className="flex items-center gap-4">
-                            <div className="bg-white/20 p-3 rounded-2xl"><Dumbbell size={24} fill="currentColor"/></div>
-                            <div className="text-left">
-                                <div className="font-bold text-lg">Start Vocab Drill</div>
-                                <div className="text-emerald-100 text-xs">{topicConfig.ids.length} essential words</div>
-                            </div>
-                        </div>
-                        <Play size={24} fill="currentColor" />
-                    </button>
-
-                    {/* 3. IDIOMS & CULTURE (Nur wenn Content da ist) */}
-                    {content?.idioms && (
-                        <div>
-                            <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-2">Local Idioms</h3>
-                            <div className="grid gap-3">
-                                {content.idioms.map((idiom, idx) => (
-                                    <button 
-                                        key={idx}
-                                        onClick={() => speak(idiom.fr)}
-                                        className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all relative group"
-                                    >
-                                        <div className="font-bold text-slate-700 text-lg pr-8 italic">"{idiom.fr}"</div>
-                                        <div className="text-slate-400 text-xs mt-1">{idiom.en}</div>
-                                        <div className="absolute top-4 right-4 text-emerald-200 group-hover:text-emerald-500 transition-colors">
-                                            <Volume2 size={20} />
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* 4. MICRO STORY */}
-                    {content?.story && (
-                        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 relative overflow-hidden">
-                            <div className="flex items-center gap-2 mb-4">
-                                <BookOpen size={18} className="text-slate-400"/>
-                                <span className="font-bold text-slate-600 text-sm uppercase tracking-wide">Micro Story</span>
-                            </div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-2">{content.story.title}</h3>
-                            <p className="text-slate-600 leading-relaxed font-serif text-lg mb-4">
-                                {content.story.text}
-                            </p>
-                            <div className="flex gap-2">
-                                <button onClick={() => speak(content.story.text)} className="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:text-emerald-600 transition-colors">
-                                    <Volume2 size={16}/> Listen
-                                </button>
-                                <button onClick={() => alert(content.story.en)} className="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:text-emerald-600 transition-colors">
-                                    <ArrowLeftRight size={16}/> Translate
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* 5. ROLEPLAY PROMPT */}
-                    {content?.roleplay && (
-                        <button 
-                            onClick={() => {
-                                setView('skills'); // Wir leiten zum Skills/Chat Tab um (später deep link)
-                                alert(`Coming soon: Jump directly into the Chat Room with scenario "${content.roleplay.title}"`);
-                            }}
-                            className="w-full bg-gradient-to-r from-violet-100 to-fuchsia-100 p-5 rounded-3xl border border-violet-100 text-left flex items-center gap-4"
-                        >
-                            <div className="bg-white p-3 rounded-2xl text-violet-500 shadow-sm">
-                                <MessageSquare size={24} />
-                            </div>
-                            <div>
-                                <div className="font-bold text-violet-900">Roleplay Challenge</div>
-                                <div className="text-violet-700/70 text-xs">{content.roleplay.desc}</div>
-                            </div>
-                        </button>
-                    )}
-
-                    {/* Fallback wenn kein Content da ist */}
-                    {!content && (
-                        <div className="text-center p-6 text-slate-400 text-sm bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                            More cultural content coming soon for this topic! <br/>
-                            You can still practice the vocabulary above.
-                        </div>
-                    )}
-                </div>
-            </div>
-        );
-    };
-
-    // --- NEU: Custom Switcher Button Design ---
-    const SwitcherButton = () => {
-        const isFrToEn = direction === 'fr-en';
-        
-        return (
-            <div className="flex items-center gap-2 p-1 bg-white rounded-xl shadow-sm border border-slate-200">
-                {/* Linke Sprache (Quelle) */}
-                <div className="px-4 py-2 bg-slate-50 rounded-lg text-slate-700 font-bold text-sm flex items-center gap-2 transition-all">
-                    {isFrToEn ? '🇫🇷 French' : '🇬🇧/🇩🇪 English/German'}
-                </div>
-                
-                {/* Swap Icon */}
-                <button 
-                    onClick={() => setDirection(prev => prev === 'en-fr' ? 'fr-en' : 'en-fr')}
-                    className="p-2 rounded-full hover:bg-slate-100 text-indigo-500 active:scale-90 transition-all"
-                >
-                    <RotateCcw size={20} className="text-indigo-600" />
-                </button>
-                
-                {/* Rechte Sprache (Ziel) */}
-                <div className="px-4 py-2 bg-slate-50 rounded-lg text-slate-700 font-bold text-sm flex items-center gap-2 transition-all">
-                    {isFrToEn ? '🇬🇧 English' : '🇫🇷 French'}
-                </div>
-            </div>
-        );
-    };
-
-    return (
-        <div className="w-full max-w-xl mx-auto space-y-6">
-            
-            {/* 1. MODE SWITCHER (Tabs) */}
-            <div className="bg-slate-200 p-1 rounded-2xl flex shadow-sm">
-                <button 
-                    onClick={() => { setMode('translate'); setInput(''); setTranslationData(null); }}
-                    className={`flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'translate' ? 'bg-white text-indigo-600 shadow-sm scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                    <ArrowLeftRight size={18}/> Translator
-                </button>
-                <button 
-                    onClick={() => { setMode('coach'); setInput(''); setCorrectionData(null); }}
-                    className={`flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'coach' ? 'bg-white text-emerald-600 shadow-sm scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                    <MessageSquare size={18}/> Writing Coach
-                </button>
-            </div>
-
-            {/* 2. INPUT CARD */}
-            <div className="bg-white rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden">
-                
-                {/* Header mit Controls */}
-                <div className="bg-slate-50/80 px-4 py-3 border-b border-slate-100 flex justify-between items-center backdrop-blur-sm">
-                    {mode === 'translate' ? (
-                        // HIER IST DER NEUE SWITCHER
-                        <SwitcherButton />
-                    ) : (
-                        <span className="text-sm font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-lg">
-                            <PenTool size={16}/> Write in French
-                        </span>
-                    )}
-                    
-                    {input && <button onClick={() => setInput('')} className="p-2 bg-slate-200 rounded-full hover:bg-slate-300 text-slate-500 transition-colors"><X size={16}/></button>}
-                </div>
-
-                <textarea 
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder={mode === 'translate' ? "Enter text here..." : "Ecrivez quelque chose en français..."}
-                    className="w-full h-40 p-5 text-lg text-slate-700 outline-none resize-none bg-transparent placeholder-slate-400 font-medium"
-                />
-
-                <div className="px-4 py-4 border-t border-slate-50 flex justify-end bg-slate-50/50">
-                    <button 
-                        onClick={mode === 'translate' ? handleTranslate : handleCorrection} 
-                        disabled={loading || !input}
-                        className={`rounded-xl px-8 py-3 font-bold text-white transition-all flex items-center gap-2 text-base ${
-                            loading || !input 
-                            ? 'bg-slate-300 cursor-not-allowed' 
-                            : mode === 'translate' ? 'bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 active:scale-[0.98]' : 'bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200 active:scale-[0.98]'
-                        }`}
-                    >
-                        {loading ? <RotateCcw className="animate-spin" size={20}/> : <Play size={20} fill="currentColor"/>}
-                        {mode === 'translate' ? 'Translate' : 'Check Grammar'}
-                    </button>
-                </div>
-            </div>
-
-            {/* 3. RESULTS AREA (Unverändert, sieht schon gut aus) */}
-            
-            {/* A) TRANSLATOR RESULT */}
-            {mode === 'translate' && translationData && (
-                <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                    {/* Main Translation */}
-                    <div className="bg-indigo-50 rounded-3xl border border-indigo-100 p-6 relative shadow-sm">
-                        <button onClick={() => speak(translationData.translation)} className="absolute top-4 right-4 p-2 text-indigo-400 hover:text-indigo-700 bg-indigo-100 rounded-full transition-colors"><Volume2 size={20}/></button>
-                        <span className="text-xs font-bold text-indigo-300 uppercase tracking-wide block mb-2">Translation</span>
-                        <p className="text-3xl text-indigo-900 font-serif leading-snug">{translationData.translation}</p>
-                    </div>
-
-                    {/* Auto-Examples */}
-                    {translationData.examples && (
-                        <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-md shadow-slate-100/50">
-                            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-4 flex items-center gap-2">
-                                <Sparkles size={16} className="text-amber-400"/> Context Examples
-                            </h4>
-                            <div className="space-y-3">
-                                {translationData.examples.map((ex, idx) => (
-                                    <div key={idx} className="bg-slate-50 p-4 rounded-xl relative group hover:bg-indigo-50 transition-colors">
-                                        <div className="pr-8">
-                                            <p className="text-slate-800 font-bold text-lg leading-snug mb-1">{ex.fr}</p>
-                                            <p className="text-slate-500 text-sm italic">{ex.en}</p>
-                                        </div>
-                                        <button onClick={() => speak(ex.fr)} className="absolute right-3 top-3 p-2 text-slate-400 group-hover:text-indigo-600 bg-white rounded-full shadow-sm transition-all opacity-0 group-hover:opacity-100"><Volume2 size={18}/></button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {/* B) COACH RESULT */}
-            {mode === 'coach' && correctionData && (
-                <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                    {/* Correction */}
-                    <div className="bg-emerald-50 rounded-3xl border border-emerald-100 p-6 shadow-sm relative">
-                        <button onClick={() => speak(correctionData.corrected)} className="absolute top-4 right-4 p-2 text-emerald-400 hover:text-emerald-700 bg-emerald-100 rounded-full transition-colors"><Volume2 size={20}/></button>
-                        <span className="text-xs font-bold text-emerald-400 uppercase tracking-wide block mb-2 flex items-center gap-2"><Check size={16}/> Corrected Version</span>
-                        <p className="text-3xl text-emerald-900 font-medium leading-snug">{correctionData.corrected}</p>
-                    </div>
-                    {/* Explanation */}
-                    <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-md shadow-slate-100/50">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-2 flex items-center gap-2"><Info size={16}/> Teacher's Note</span>
-                        <p className="text-slate-700 text-base leading-relaxed bg-slate-50 p-4 rounded-xl border-l-4 border-indigo-400">{correctionData.explanation}</p>
-                    </div>
-                </div>
-            )}
-
-        </div>
-    );
-};
 function App() {
     // --- STATE MANAGEMENT ---
     const [view, setView] = useState('home'); 
@@ -935,9 +619,7 @@ function App() {
         window.speechSynthesis.speak(utterance);
     };
     const renderTranslatorContent = () => {
-        // HIER KEINE STATES MEHR DEFINIEREN (die müssen oben in App sein)
-        // Also: mode, direction, input, translationData, correctionData, loading
-        // müssen oben in App definiert werden!
+        // KEIN useState HIER! Wir nutzen die Variablen von oben aus App()
 
         const handleTranslate = async () => {
             if (!input.trim()) return;
@@ -979,9 +661,93 @@ function App() {
                 setLoading(false);
             }
         };
-        
-        // ... hier der Return Block vom Translator (JSX) ...
-        // Ersetze <ModernTranslator /> in renderTranslator() durch {renderTranslatorContent()}
+
+        // Helper für den Switcher Button
+        const SwitcherButton = () => {
+            const isFrToEn = direction === 'fr-en';
+            return (
+                <div className="flex items-center gap-2 p-1 bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div className="px-4 py-2 bg-slate-50 rounded-lg text-slate-700 font-bold text-sm flex items-center gap-2 transition-all">
+                        {isFrToEn ? '🇫🇷 French' : '🇬🇧/🇩🇪 English/German'}
+                    </div>
+                    <button onClick={() => setDirection(prev => prev === 'en-fr' ? 'fr-en' : 'en-fr')} className="p-2 rounded-full hover:bg-slate-100 text-indigo-500 active:scale-90 transition-all">
+                        <RotateCcw size={20} className="text-indigo-600" />
+                    </button>
+                    <div className="px-4 py-2 bg-slate-50 rounded-lg text-slate-700 font-bold text-sm flex items-center gap-2 transition-all">
+                        {isFrToEn ? '🇬🇧 English' : '🇫🇷 French'}
+                    </div>
+                </div>
+            );
+        };
+
+        // RETURN JSX (Das UI)
+        return (
+            <div className="w-full max-w-xl mx-auto space-y-6">
+                
+                {/* 1. MODE SWITCHER (Tabs) */}
+                <div className="bg-slate-200 p-1 rounded-2xl flex shadow-sm">
+                    <button onClick={() => { setMode('translate'); setInput(''); setTranslationData(null); }} className={`flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'translate' ? 'bg-white text-indigo-600 shadow-sm scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}>
+                        <ArrowLeftRight size={18}/> Translator
+                    </button>
+                    <button onClick={() => { setMode('coach'); setInput(''); setCorrectionData(null); }} className={`flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'coach' ? 'bg-white text-emerald-600 shadow-sm scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}>
+                        <MessageSquare size={18}/> Writing Coach
+                    </button>
+                </div>
+
+                {/* 2. INPUT CARD */}
+                <div className="bg-white rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden">
+                    <div className="bg-slate-50/80 px-4 py-3 border-b border-slate-100 flex justify-between items-center backdrop-blur-sm">
+                        {mode === 'translate' ? <SwitcherButton /> : <span className="text-sm font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-lg"><PenTool size={16}/> Write in French</span>}
+                        {input && <button onClick={() => setInput('')} className="p-2 bg-slate-200 rounded-full hover:bg-slate-300 text-slate-500 transition-colors"><X size={16}/></button>}
+                    </div>
+                    <textarea value={input} onChange={(e) => setInput(e.target.value)} placeholder={mode === 'translate' ? "Enter text here..." : "Ecrivez quelque chose en français..."} className="w-full h-40 p-5 text-lg text-slate-700 outline-none resize-none bg-transparent placeholder-slate-400 font-medium" />
+                    <div className="px-4 py-4 border-t border-slate-50 flex justify-end bg-slate-50/50">
+                        <button onClick={mode === 'translate' ? handleTranslate : handleCorrection} disabled={loading || !input} className={`rounded-xl px-8 py-3 font-bold text-white transition-all flex items-center gap-2 text-base ${loading || !input ? 'bg-slate-300 cursor-not-allowed' : mode === 'translate' ? 'bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 active:scale-[0.98]' : 'bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200 active:scale-[0.98]'}`}>
+                            {loading ? <RotateCcw className="animate-spin" size={20}/> : <Play size={20} fill="currentColor"/>}
+                            {mode === 'translate' ? 'Translate' : 'Check Grammar'}
+                        </button>
+                    </div>
+                </div>
+
+                {/* 3. RESULTS */}
+                {mode === 'translate' && translationData && (
+                    <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                        <div className="bg-indigo-50 rounded-3xl border border-indigo-100 p-6 relative shadow-sm">
+                            <button onClick={() => speak(translationData.translation)} className="absolute top-4 right-4 p-2 text-indigo-400 hover:text-indigo-700 bg-indigo-100 rounded-full transition-colors"><Volume2 size={20}/></button>
+                            <span className="text-xs font-bold text-indigo-300 uppercase tracking-wide block mb-2">Translation</span>
+                            <p className="text-3xl text-indigo-900 font-serif leading-snug">{translationData.translation}</p>
+                        </div>
+                        {translationData.examples && (
+                            <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-md shadow-slate-100/50">
+                                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-4 flex items-center gap-2"><Sparkles size={16} className="text-amber-400"/> Context Examples</h4>
+                                <div className="space-y-3">
+                                    {translationData.examples.map((ex, idx) => (
+                                        <div key={idx} className="bg-slate-50 p-4 rounded-xl relative group hover:bg-indigo-50 transition-colors">
+                                            <div className="pr-8"><p className="text-slate-800 font-bold text-lg leading-snug mb-1">{ex.fr}</p><p className="text-slate-500 text-sm italic">{ex.en}</p></div>
+                                            <button onClick={() => speak(ex.fr)} className="absolute right-3 top-3 p-2 text-slate-400 group-hover:text-indigo-600 bg-white rounded-full shadow-sm transition-all opacity-0 group-hover:opacity-100"><Volume2 size={18}/></button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {mode === 'coach' && correctionData && (
+                    <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                        <div className="bg-emerald-50 rounded-3xl border border-emerald-100 p-6 shadow-sm relative">
+                            <button onClick={() => speak(correctionData.corrected)} className="absolute top-4 right-4 p-2 text-emerald-400 hover:text-emerald-700 bg-emerald-100 rounded-full transition-colors"><Volume2 size={20}/></button>
+                            <span className="text-xs font-bold text-emerald-400 uppercase tracking-wide block mb-2 flex items-center gap-2"><Check size={16}/> Corrected Version</span>
+                            <p className="text-3xl text-emerald-900 font-medium leading-snug">{correctionData.corrected}</p>
+                        </div>
+                        <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-md shadow-slate-100/50">
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-2 flex items-center gap-2"><Info size={16}/> Teacher's Note</span>
+                            <p className="text-slate-700 text-base leading-relaxed bg-slate-50 p-4 rounded-xl border-l-4 border-indigo-400">{correctionData.explanation}</p>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
     };
     // --- SESSION LOGIC ---
     const startSmartSession = () => {
