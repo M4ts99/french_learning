@@ -2240,8 +2240,17 @@ function App() {
             return (
                 <div className="space-y-6 animate-in fade-in zoom-in duration-300 pt-6 pb-40 px-1 relative min-h-screen">
                      <div className="flex items-center justify-between mb-4 px-1">
-                        <button onClick={() => setReaderMode('select')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
-                            <ArrowLeft size={20} />
+                        <button 
+                        onClick={() => { 
+                            stopAudio();
+                            setIsSpeaking(false);
+                            setReaderMode('quiz'); 
+                            setQuizAnswers({}); 
+                            window.scrollTo({ top: 0, behavior: 'smooth' }); // <--- DER SCROLL FIX
+                        }}
+                        className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all"
+                    >
+                        Take Quiz <ArrowLeft size={20} className="rotate-180"/>
                         </button>
                         <div className="flex gap-2">
                             <button onClick={() => toggleAudio(currentStory.text)} className={`p-2 px-4 rounded-full font-bold text-xs flex items-center gap-2 transition-all ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>

@@ -1,0 +1,43 @@
+const CEFR_PROMPTS = {
+      "A1": `Act as a French language teacher for absolute beginners. Write a short story in French about the topic: {TOPIC}.
+Constraints for CEFR Level A1:
+- Tenses: Use ONLY the Présent de l'indicatif. Avoid past/future.
+- Vocabulary: High-frequency, basic words (top 500).
+- Sentence Structure: Very short, simple (Subject-Verb-Object).
+- Tone: Clear, slow-paced.
+- Length: {LENGTH}.`,
+
+      "A2": `Act as a French language teacher for elementary students. Write a story in French about the topic: {TOPIC}.
+Constraints for CEFR Level A2:
+- Tenses: Présent, Passé Composé, Futur Proche. Avoid Imparfait/Passé Simple.
+- Vocabulary: Everyday vocabulary.
+- Connectors: Simple (et, mais, parce que).
+- Length: {LENGTH}.`,
+
+      "B1": `Act as a French language teacher for intermediate students. Write an engaging story in French about the topic: {TOPIC}.
+Constraints for CEFR Level B1:
+- Tenses: Mix Passé Composé and Imparfait correctly. Use Futur Simple.
+- Complexity: Relative clauses (qui, que, où).
+- Length: {LENGTH}.`,
+
+      "B2": `Act as a French author writing for upper-intermediate learners. Write a story in French about the topic: {TOPIC}.
+Constraints for CEFR Level B2:
+- Grammar: Full range including Subjonctif.
+- Vocabulary: Varied, precise.
+- Connectors: Logical (cependant, par conséquent).
+- Length: {LENGTH}.`,
+
+      "C1": `Act as a skilled French writer. Write a sophisticated story in French about the topic: {TOPIC}.
+Constraints for CEFR Level C1:
+- Style: Fluid, complex structure.
+- Vocabulary: Nuanced, idioms.
+- Tone: Irony, implicit meanings.
+- Length: {LENGTH}.`,
+
+      "C2": `Act as a celebrated French novelist. Write a masterfully crafted story in French about the topic: {TOPIC}.
+Constraints for CEFR Level C2:
+- Proficiency: Native speaker level (Literature).
+- Vocabulary: Rare, poetic, specific.
+- Freedom: Use Passé Simple, Subjonctif Imparfait.
+- Length: {LENGTH}.`
+    };

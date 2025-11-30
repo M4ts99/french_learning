@@ -5,103 +5,113 @@ export async function onRequestPost(context) {
 
     if (!apiKey) return new Response(JSON.stringify({ error: "Key missing" }), { status: 500 });
 
-    // 1. LÄNGE DEFINIEREN
-    let lengthInstruction = "approximately 150 words";
-    if (length === "short") lengthInstruction = "approximately 60-80 words";
-    if (length === "long") lengthInstruction = "approximately 300 words";
+    // --- 1. LÄNGE & STIL (Dynamic Density) ---
+    // Wir übersetzen die Zahl in eine "Regie-Anweisung"
+    let lengthInstruction = "around 150 words. Standard pacing.";
+    let lengthNum = parseInt(length) || 150;
 
-    // 2. PROMPTS (Deine definierten Level)
-const CEFR_PROMPTS = {
-      "A1": `Act as a French language teacher for absolute beginners. Write a short story in French about the topic: {TOPIC}.
-Constraints for CEFR Level A1:
-- Tenses: Use ONLY the Présent de l'indicatif. Avoid past/future.
-- Vocabulary: High-frequency, basic words (top 500).
-- Sentence Structure: Very short, simple (Subject-Verb-Object).
-- Tone: Clear, slow-paced.
-- Length: {LENGTH}.`,
+    if (lengthNum <= 80) {
+        lengthInstruction = `VERY SHORT (${lengthNum} words). Be extremely concise. Jump straight to the action. No filler sentences.`;
+    } else if (lengthNum >= 250) {
+        lengthInstruction = `LONG and DETAILED (${lengthNum} words). Be descriptive. Describe the atmosphere, feelings, and surroundings in detail. Take time to build the scene.`;
+    } else {
+        lengthInstruction = `Medium length (${lengthNum} words). Balanced pacing.`;
+    }
 
-      "A2": `Act as a French language teacher for elementary students. Write a story in French about the topic: {TOPIC}.
-Constraints for CEFR Level A2:
-- Tenses: Présent, Passé Composé, Futur Proche. Avoid Imparfait/Passé Simple.
-- Vocabulary: Everyday vocabulary.
-- Connectors: Simple (et, mais, parce que).
-- Length: {LENGTH}.`,
+    // --- 2. RANDOM "SPICE" (Gegen Langeweile) ---
+    // Wir würfeln einen "Vibe", damit die Geschichten nicht immer gleich klingen.
+    const TONES = [
+        "Humorous and light-hearted. Try to be funny.",
+        "Mysterious and slightly suspenseful.",
+        "Dramatic and emotional.",
+        "Witty and clever.",
+        "Surprising. Include a small plot twist at the end.",
+        "Absurd and imaginative (like a strange dream)."
+    ];
+    const randomTone = TONES[Math.floor(Math.random() * TONES.length)];
 
-      "B1": `Act as a French language teacher for intermediate students. Write an engaging story in French about the topic: {TOPIC}.
-Constraints for CEFR Level B1:
-- Tenses: Mix Passé Composé and Imparfait correctly. Use Futur Simple.
-- Complexity: Relative clauses (qui, que, où).
-- Length: {LENGTH}.`,
+    // --- 3. LEVEL PROMPTS ---
+    const CEFR_PROMPTS = {
+      "A1": `Act as a creative writer for beginners. Write a story in French about: {TOPIC}.
+Constraints for A1:
+- Tenses: Present tense ONLY.
+- Vocabulary: Basic but creative.
+- Tone: {TONE}
+- Length: {LENGTH}`,
 
-      "B2": `Act as a French author writing for upper-intermediate learners. Write a story in French about the topic: {TOPIC}.
-Constraints for CEFR Level B2:
-- Grammar: Full range including Subjonctif.
-- Vocabulary: Varied, precise.
-- Connectors: Logical (cependant, par conséquent).
-- Length: {LENGTH}.`,
+      "A2": `Act as a creative writer for elementary learners. Write a story in French about: {TOPIC}.
+Constraints for A2:
+- Tenses: Présent & Passé Composé.
+- Tone: {TONE}
+- Length: {LENGTH}`,
 
-      "C1": `Act as a skilled French writer. Write a sophisticated story in French about the topic: {TOPIC}.
-Constraints for CEFR Level C1:
-- Style: Fluid, complex structure.
-- Vocabulary: Nuanced, idioms.
-- Tone: Irony, implicit meanings.
-- Length: {LENGTH}.`,
+      "B1": `Act as a storyteller. Write an engaging story in French about: {TOPIC}.
+Constraints for B1:
+- Tenses: Mix Past tenses. Use connectors.
+- Tone: {TONE}
+- Length: {LENGTH}`,
 
-      "C2": `Act as a celebrated French novelist. Write a masterfully crafted story in French about the topic: {TOPIC}.
-Constraints for CEFR Level C2:
-- Proficiency: Native speaker level (Literature).
-- Vocabulary: Rare, poetic, specific.
-- Freedom: Use Passé Simple, Subjonctif Imparfait.
-- Length: {LENGTH}.`
+      "B2": `Act as a French author. Write a story in French about: {TOPIC}.
+Constraints for B2:
+- Complex grammar allowed (Subjonctif).
+- Tone: {TONE}
+- Length: {LENGTH}`,
+
+      "C1": `Act as a skilled French novelist. Write a sophisticated story in French about: {TOPIC}.
+Constraints for C1:
+- Style: Literary and fluid.
+- Tone: {TONE}
+- Length: {LENGTH}`,
+
+      "C2": `Act as a famous French literature author (like Proust or Hugo). Write a masterpiece about: {TOPIC}.
+Constraints for C2:
+- Use Passé Simple, Subjonctif Imparfait.
+- Vocabulary: Archaic, rare, highly specific.
+- Tone: {TONE}
+- Length: {LENGTH}`
     };
 
-    // 3. LOGIK
+    // --- 4. LOGIK ZUSAMMENBAUEN ---
     const cleanLevel = level.split(' ')[0]; 
     let basePrompt = "";
 
     if (cleanLevel === "auto") {
-        // --- AUTO MODUS ---
+        // Auto-Modus
         if (weakWords && weakWords.length > 0) {
-            // Fall A: User hat schon Wörter gelernt -> Nutze sie!
-            basePrompt = `Act as a helpful tutor. Write a story in French about ${genre}.
+            // A: Mit Weak Words -> Wir müssen etwas einfacher bleiben, damit die Wörter passen
+            basePrompt = `Write a creative story in French about ${genre}.
             Level: Adaptive (A2-B1).
-            Length: ${lengthInstruction}.
-            Integrate these words naturally: ${weakWords.join(", ")}.
-            Ensure the story is 100% in French.`;
+            Tone: ${randomTone}
+            Length: ${lengthInstruction}
+            IMPORTANT: You MUST naturally integrate these words: ${weakWords.join(", ")}.`;
         } else {
-            // Fall B: User ist neu (0 Wörter) -> ABSOLUTE BEGINNER (A0) FIX
-            // Hier erzwingen wir "Je m'appelle..." Stil
-            basePrompt = `Act as a French teacher for total beginners (Level A0).
-            Write a very simple story in French about ${genre}.
-            
-            Strict Constraints:
-            1. The story MUST be written in FRENCH (not English).
-            2. Use extremely basic sentence structures (Subject + Verb + Attribute).
-            3. Use primarily fundamental verbs: être, avoir, s'appeler, habiter, aimer, aller.
-            4. Style: "Je m'appelle Paul. J'habite à Paris. J'aime le café."
-            5. Length: ${lengthInstruction}.
-            Ensure the story is 100% in French.
-            `;
+            // B: Beginner (A0) Fallback
+            basePrompt = `Write a very simple, funny story in French about ${genre}.
+            Level: Absolute Beginner (A0).
+            Tone: ${randomTone}
+            Length: ${lengthInstruction}
+            Use verbs like: être, avoir, habiter, aimer. Short sentences.`;
         }
     } else {
-        // --- MANUELLER MODUS ---
+        // Manueller Modus
         basePrompt = CEFR_PROMPTS[cleanLevel] || CEFR_PROMPTS["A2"];
         basePrompt = basePrompt.replace("{TOPIC}", genre);
         basePrompt = basePrompt.replace("{LENGTH}", lengthInstruction);
-        basePrompt += "\nIgnore user vocabulary. Write strictly in French according to the level.";
+        basePrompt = basePrompt.replace("{TONE}", randomTone); // Hier kommt der Zufall rein!
+        basePrompt += "\nIgnore user vocabulary. Focus purely on the story quality and level.";
     }
 
-    // 4. OUTPUT FORMATIERUNG
+    // --- 5. OUTPUT ---
     const finalPrompt = `
       ${basePrompt}
       
       IMPORTANT OUTPUT RULES:
       1. Return ONLY a raw JSON object.
-      2. Do NOT use markdown formatting (no **bold**, no *italics*). Plain text only.
+      2. Story text must be PLAIN TEXT. Do NOT use markdown bolding (**word**) or asterisks.
       3. JSON Structure:
       {
         "title": "French Title",
-        "text": "The story text (in French)...",
+        "text": "The story text...",
         "quiz": [
           { "question": "Question in English?", "options": ["A", "B", "C"], "correctIndex": 0 },
           { "question": "Question in English?", "options": ["A", "B", "C"], "correctIndex": 0 },
@@ -111,7 +121,7 @@ Constraints for CEFR Level C2:
     `;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
