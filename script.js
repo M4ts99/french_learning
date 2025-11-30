@@ -1296,46 +1296,43 @@ function App() {
         };
 
         const fetchMemes = async () => {
-            // 1. Check: Haben wir schon Daten?
             if (memesData.length > 0) return;
             
             setLoadingContent(true);
+            console.log("🚀 Starting Meme Fetch..."); // Debug 1
 
-            // --- FESTE FALLBACK MEMES (Falls Reddit down ist) ---
+            // Fallbacks definieren
             const fallbackMemes = [
                 { id: "f1", title: "Le pain", url: "https://i.kym-cdn.com/photos/images/newsfeed/001/535/068/29d.jpg", ups: 1200 },
                 { id: "f2", title: "Quand tu ne comprends rien", url: "https://i.imgflip.com/1ur9b0.jpg", ups: 850 },
-                { id: "f3", title: "French Grammar be like", url: "https://preview.redd.it/french-grammar-be-like-v0-7t84b5345d8a1.jpg?auto=webp&s=59447563945698562103945698", ups: 400 },
-                { id: "f4", title: "Le Croissant", url: "https://i.pinimg.com/736x/35/8f/dc/358fdc5c708458606337517792086418.jpg", ups: 320 }
+                { id: "f3", title: "French Grammar be like", url: "https://preview.redd.it/french-grammar-be-like-v0-7t84b5345d8a1.jpg?auto=webp&s=59447563945698562103945698", ups: 400 }
             ];
 
             try {
-                // 2. Timeout-Trick: Wir geben Reddit maximal 3 Sekunden
-                const fetchWithTimeout = (url, ms) => {
-                    return Promise.race([
-                        fetch(url),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), ms))
-                    ]);
-                };
+                // Neuer, schnellerer Proxy
+                // Wir nutzen 'hot' statt 'top', da gibt es meist mehr Bilder
+                const targetUrl = "https://www.reddit.com/r/FrenchMemes/hot.json?limit=50";
+                const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(targetUrl);
 
-                // Wir nutzen AllOrigins als Proxy, um CORS zu umgehen
-                const redditUrl = encodeURIComponent("https://www.reddit.com/r/FrenchMemes/top.json?t=week&limit=30");
+                console.log("🌍 Fetching URL:", proxyUrl); // Debug 2
+
+                const res = await fetch(proxyUrl);
                 
-                const res = await fetchWithTimeout(`https://api.allorigins.win/get?url=${redditUrl}`, 4000);
-                
-                if (!res.ok) throw new Error("Proxy Error");
-                
+                if (!res.ok) {
+                    throw new Error(`HTTP Error: ${res.status}`);
+                }
+
                 const data = await res.json();
-                // AllOrigins packt die Antwort in "contents" (als String)
-                const redditJson = JSON.parse(data.contents);
+                console.log("📦 Raw Data received:", data); // Debug 3: Was kommt wirklich an?
 
-                const freshMemes = redditJson.data.children
+                const freshMemes = data.data.children
                     .map(c => c.data)
                     .filter(post => 
                         post.url && 
-                        (post.url.includes('.jpg') || post.url.includes('.png')) &&
+                        // Wir prüfen auf gängige Bild-Endungen
+                        (post.url.match(/\.(jpeg|jpg|gif|png)$/) != null) &&
                         !post.over_18 &&
-                        !seenMemeIds.includes(post.id) // Direkt filtern was wir schon kennen
+                        !seenMemeIds.includes(post.id) 
                     )
                     .map(post => ({
                         id: post.id,
@@ -1344,16 +1341,17 @@ function App() {
                         ups: post.ups
                     }));
 
+                console.log("✅ Filtered Memes:", freshMemes.length); // Debug 4
+
                 if (freshMemes.length > 0) {
                     setMemesData(freshMemes);
                 } else {
-                    // Wenn Reddit leer ist (oder wir alles gesehen haben), zeige Fallback
+                    console.warn("⚠️ No memes found after filter.");
                     setMemesData(fallbackMemes.filter(m => !seenMemeIds.includes(m.id)));
                 }
 
             } catch (e) { 
-                console.warn("Reddit loading failed, using fallback.", e);
-                // Bei JEDEM Fehler (Timeout, Netzwerk, Reddit down) -> Fallback laden
+                console.error("❌ MEME ERROR DETAILS:", e); // Debug 5: Der echte Fehler
                 setMemesData(fallbackMemes.filter(m => !seenMemeIds.includes(m.id)));
             } finally {
                 setLoadingContent(false);
