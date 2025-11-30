@@ -59,6 +59,9 @@ const Ghost = (p) => <Icon {...p} path={<><path d="M9 22a7 7 0 1 0 0-14h6a7 7 0 
 const Rocket = (p) => <Icon {...p} path={<><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.1 4-1 4-1s-1 2.4-4 4z"/><path d="M12 15v5s3.03-.55 4-2c1.1-1.62 1-4 1-4s-2.4 1-4 4z"/></>} />;
 const Sword = (p) => <Icon {...p} path={<><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/></>} />;
 const Loader2 = (p) => <Icon {...p} path={<path d="M21 12a9 9 0 1 1-6.219-8.56" />} />;
+const Newspaper = (p) => <Icon {...p} path={<><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></>} />;
+const Smile = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></>} />;
+const Image = (p) => <Icon {...p} path={<><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></>} />;
 
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
@@ -252,6 +255,11 @@ function App() {
     const [loading, setLoading] = useState(false);
 
     const [loadingTranslation, setLoadingTranslation] = useState(false); // <--- NEU
+
+    const [newsData, setNewsData] = useState([]);
+    const [memesData, setMemesData] = useState([]);
+    const [currentJoke, setCurrentJoke] = useState(null);
+    const [loadingContent, setLoadingContent] = useState(false);
 
     // Audio & Voices (WICHTIG!)
 
@@ -1202,120 +1210,244 @@ function App() {
         );
     };
     const renderExplore = () => {
-        // HINWEIS: Kein useState hier! Wir nutzen "exploreMode" aus der App().
-
-        // Helper: Berechnet den Fortschritt für eine Kategorie
-        const getCategoryProgress = (ids) => {
-            if (!ids || ids.length === 0) return 0;
-            const safeVocab = vocabulary || [];
-            const learnedCount = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
-            return Math.round((learnedCount / ids.length) * 100);
+        // WIR NUTZEN exploreMode (State von App)
+        
+        // --- HELPER: DATA FETCHING ---
+        const fetchNews = async () => {
+            if (newsData.length > 0) return; // Cache nutzen
+            setLoadingContent(true);
+            try {
+                // RSS zu JSON Konverter (öffentlich & gratis)
+                const rssUrl = 'https://www.20minutes.fr/feeds/rss-une.xml';
+                const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
+                const data = await res.json();
+                setNewsData(data.items.slice(0, 10));
+            } catch (e) { alert("News currently unavailable."); }
+            setLoadingContent(false);
         };
 
-        const getCategoryStats = (ids) => {
-            if (!ids || ids.length === 0) return "0/0";
-            const safeVocab = vocabulary || [];
-            const learnedCount = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
-            return `${learnedCount}/${ids.length}`;
+        const fetchMemes = async () => {
+            if (memesData.length > 0) return;
+            setLoadingContent(true);
+            try {
+                const res = await fetch('https://www.reddit.com/r/FrenchMemes/top.json?limit=25&t=week');
+                const data = await res.json();
+                const images = data.data.children
+                    .map(c => c.data)
+                    .filter(post => post.url.includes('.jpg') || post.url.includes('.png'));
+                setMemesData(images);
+            } catch (e) { alert("Memes currently unavailable."); }
+            setLoadingContent(false);
         };
 
-        // --- ANSICHT 1: HAUPTMENÜ ---
-        if (exploreMode === 'main') {
+        const fetchJoke = async () => {
+            setLoadingContent(true);
+            setCurrentJoke(null);
+            try {
+                const res = await fetch('/api/content', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'joke' })
+                });
+                const data = await res.json();
+                setCurrentJoke(data);
+            } catch (e) { alert("Joke machine broke."); }
+            setLoadingContent(false);
+        };
+
+        // --- SUB-VIEWS (Innerhalb von Explore) ---
+        
+        // 1. ARTICLES VIEW
+        if (exploreMode === 'articles') {
+            // Trigger Fetch beim ersten Aufruf
+            if (newsData.length === 0 && !loadingContent) fetchNews();
+
             return (
-                <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-500 pt-6 pb-24 px-1">
-                    <div className="flex items-center gap-3 mb-2 px-1">
-                        <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Compass size={24} /></div>
-                        <h2 className="text-2xl font-bold text-slate-800">Explore</h2>
+                <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
+                    <div className="flex items-center gap-3 mb-4 px-1">
+                        <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
+                        <h2 className="text-2xl font-bold text-slate-800">News Kiosk</h2>
+                    </div>
+                    {loadingContent && <div className="text-center py-10 text-slate-400 animate-pulse">Loading headlines...</div>}
+                    <div className="space-y-4">
+                        {newsData.map((item, idx) => (
+                            <a key={idx} href={item.link} target="_blank" rel="noreferrer" className="block bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all">
+                                <div className="flex justify-between items-start mb-2">
+                                    <span className="text-[10px] font-bold bg-rose-50 text-rose-600 px-2 py-1 rounded">News</span>
+                                    <span className="text-[10px] text-slate-300">{new Date(item.pubDate).toLocaleDateString()}</span>
+                                </div>
+                                <h3 className="font-bold text-slate-800 leading-snug mb-2">{item.title}</h3>
+                                {item.enclosure?.link && <img src={item.enclosure.link} alt="News" className="w-full h-32 object-cover rounded-xl opacity-90" />}
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // 2. MEMES VIEW
+        if (exploreMode === 'memes') {
+            if (memesData.length === 0 && !loadingContent) fetchMemes();
+
+            return (
+                <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
+                    <div className="flex items-center gap-3 mb-4 px-1">
+                        <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
+                        <h2 className="text-2xl font-bold text-slate-800">Meme Gallery</h2>
+                    </div>
+                    {loadingContent && <div className="text-center py-10 text-slate-400 animate-pulse">Fetching memes...</div>}
+                    <div className="space-y-6">
+                        {memesData.map((meme, idx) => (
+                            <div key={idx} className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
+                                <h3 className="font-bold text-slate-800 text-sm mb-3 px-1">{meme.title}</h3>
+                                <div className="rounded-2xl overflow-hidden bg-slate-50 border border-slate-100">
+                                    <img src={meme.url} alt="Meme" loading="lazy" className="w-full h-auto object-contain" />
+                                </div>
+                                <div className="mt-3 flex justify-between items-center text-xs text-slate-400 px-1">
+                                    <span>⬆️ {meme.ups}</span>
+                                    <button onClick={() => speak(meme.title)} className="flex items-center gap-1 text-indigo-500 font-bold"><Volume2 size={14}/> Read Title</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // 3. JOKES VIEW
+        if (exploreMode === 'jokes') {
+            if (!currentJoke && !loadingContent) fetchJoke();
+
+            return (
+                <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full flex flex-col">
+                    <div className="flex items-center gap-3 mb-4 px-1">
+                        <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
+                        <h2 className="text-2xl font-bold text-slate-800">Joke Box</h2>
                     </div>
 
-                    {/* Stories */}
-                    <button onClick={() => setView('reader')} className="w-full bg-amber-50 border border-amber-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
-                        <div className="relative z-10 flex items-start gap-4">
-                            <div className="bg-white p-3 rounded-2xl text-amber-500 shadow-sm"><BookCheck size={28} /></div>
-                            <div><h3 className="font-bold text-amber-900 text-xl">Reading Room</h3><p className="text-amber-700/70 text-sm font-medium mt-1">Interactive Stories • A1-B1</p></div>
-                        </div>
-                        <BookOpen size={100} className="absolute -right-4 -bottom-6 text-amber-100 opacity-60 rotate-12 group-hover:scale-110 transition-transform"/>
-                    </button>
+                    <div className="flex-1 flex flex-col items-center justify-center py-8">
+                        {loadingContent ? (
+                             <div className="text-center text-amber-500 animate-pulse"><RotateCcw className="animate-spin mx-auto mb-2"/> Finding a funny one...</div>
+                        ) : currentJoke ? (
+                            <div className="w-full bg-white p-8 rounded-[2.5rem] shadow-lg border border-slate-100 text-center relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 to-orange-400"></div>
+                                <div className="mb-6">
+                                    <span className="text-4xl">😂</span>
+                                </div>
+                                <h3 className="text-2xl font-bold text-slate-800 mb-4 leading-snug font-serif">
+                                    "{currentJoke.fr}"
+                                </h3>
+                                <p className="text-slate-500 italic text-sm border-t border-slate-100 pt-4 mt-4">
+                                    {currentJoke.en}
+                                </p>
+                                <div className="mt-6 flex justify-center gap-2">
+                                    <button onClick={() => speak(currentJoke.fr)} className="p-3 bg-slate-50 rounded-full text-slate-600 hover:bg-amber-50 hover:text-amber-600"><Volume2 size={24}/></button>
+                                </div>
+                            </div>
+                        ) : null}
+                    </div>
 
-                    {/* News */}
-                    <button onClick={() => setView('culture')} className="w-full bg-rose-50 border border-rose-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
-                        <div className="relative z-10 flex items-start gap-4">
-                            <div className="bg-white p-3 rounded-2xl text-rose-500 shadow-sm"><Activity size={28} /></div>
-                            <div><h3 className="font-bold text-rose-900 text-xl">Culture Feed</h3><p className="text-rose-700/70 text-sm font-medium mt-1">News & Memes from France</p></div>
-                        </div>
-                        <Sparkles size={100} className="absolute -right-4 -bottom-6 text-rose-100 opacity-60 rotate-12 group-hover:scale-110 transition-transform"/>
-                    </button>
-
-                    {/* Vocab Sets */}
-                    <button onClick={() => setExploreMode('grammar')} className="w-full bg-indigo-50 border border-indigo-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
-                        <div className="relative z-10 flex items-start gap-4">
-                            <div className="bg-white p-3 rounded-2xl text-indigo-500 shadow-sm"><Layers size={28} /></div>
-                            <div><h3 className="font-bold text-indigo-900 text-xl">Vocabulary Sets</h3><p className="text-indigo-700/70 text-sm font-medium mt-1">Verbs, Nouns, Adjectives</p></div>
-                        </div>
-                        <ChevronRight size={24} className="absolute right-6 top-1/2 -translate-y-1/2 text-indigo-200" />
-                    </button>
-
-                    {/* Topics */}
-                    <button onClick={() => setExploreMode('topics')} className="w-full bg-emerald-50 border border-emerald-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
-                        <div className="relative z-10 flex items-start gap-4">
-                            <div className="bg-white p-3 rounded-2xl text-emerald-500 shadow-sm"><User size={28} /></div>
-                            <div><h3 className="font-bold text-emerald-900 text-xl">Real Life Topics</h3><p className="text-emerald-700/70 text-sm font-medium mt-1">Food, Travel, Work & more</p></div>
-                        </div>
-                        <ChevronRight size={24} className="absolute right-6 top-1/2 -translate-y-1/2 text-emerald-200" />
+                    <button onClick={fetchJoke} className="w-full bg-amber-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-amber-200 hover:bg-amber-600 transition-all flex items-center justify-center gap-2">
+                        <RotateCcw size={20} /> Next Joke
                     </button>
                 </div>
             );
         }
 
-        // --- ANSICHT 2: LISTEN ---
-        const activeCollection = exploreMode === 'grammar' ? COLLECTIONS.grammar : COLLECTIONS.topics;
-        const pageTitle = exploreMode === 'grammar' ? "Vocab Sets" : "Real Life Topics";
+        // 4. LISTEN (Topics & Grammar) - Das hatten wir schon
+        if (exploreMode === 'grammar' || exploreMode === 'topics') {
+            const activeCollection = exploreMode === 'grammar' ? COLLECTIONS.grammar : COLLECTIONS.topics;
+            const title = exploreMode === 'grammar' ? "Vocab Sets" : "Real Life Topics";
+            
+            // Helper lokal (oder global in App wenn du willst)
+            const getProgress = (ids) => {
+                 const safeVocab = vocabulary || [];
+                 const learned = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
+                 return Math.round((learned / ids.length) * 100) || 0;
+            };
 
-        return (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
-                <div className="flex items-center gap-3 mb-2 px-1">
-                    <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
-                        <ArrowLeft size={20} />
-                    </button>
-                    <h2 className="text-2xl font-bold text-slate-800">{pageTitle}</h2>
-                </div>
-
-                <div className="grid gap-3">
-                    {activeCollection.map((item) => {
-                        const progress = getCategoryProgress(item.ids);
-                        const stats = getCategoryStats(item.ids);
-                        
-                        return (
-                            <button 
-                                key={item.id} 
+            return (
+                <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+                    <div className="flex items-center gap-3 mb-4 px-1">
+                        <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
+                        <h2 className="text-2xl font-bold text-slate-800">{title}</h2>
+                    </div>
+                    <div className="grid gap-3">
+                        {activeCollection.map(item => (
+                            <button key={item.id} 
                                 onClick={() => {
-                                    if (exploreMode === 'grammar') {
-                                        startCollectionSession(item.ids);
-                                    } else {
-                                        setSelectedTopicId(item.id);
-                                        setView('topic-hub');
-                                    }
+                                    if(exploreMode === 'grammar') startCollectionSession(item.ids);
+                                    else { setSelectedTopicId(item.id); setView('topic-hub'); }
                                 }}
-                                className="w-full bg-white p-4 rounded-3xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all flex items-center gap-4 group"
+                                className="w-full bg-white p-4 rounded-3xl border border-slate-100 shadow-sm active:scale-[0.98] flex items-center gap-4"
                             >
-                                <div className={`w-14 h-14 flex items-center justify-center rounded-2xl shrink-0 ${exploreMode === 'grammar' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'}`}>
-                                    {item.icon}
-                                </div>
+                                <div className={`w-14 h-14 flex items-center justify-center rounded-2xl ${exploreMode==='grammar'?'bg-indigo-50 text-indigo-600':'bg-emerald-50 text-emerald-600'}`}>{item.icon}</div>
                                 <div className="flex-1 text-left">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <h3 className="font-bold text-slate-800">{item.label}</h3>
-                                        <span className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">{stats}</span>
-                                    </div>
-                                    <div className="text-xs text-slate-400 mb-2">{item.sub}</div>
-                                    <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                                        <div className={`h-full rounded-full transition-all duration-1000 ${exploreMode === 'grammar' ? 'bg-indigo-500' : 'bg-emerald-500'}`} style={{ width: `${progress}%` }}></div>
+                                    <h3 className="font-bold text-slate-800">{item.label}</h3>
+                                    <div className="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                                        <div className={`h-full ${exploreMode==='grammar'?'bg-indigo-500':'bg-emerald-500'}`} style={{width: `${getProgress(item.ids)}%`}}></div>
                                     </div>
                                 </div>
-                                <ChevronRight size={20} className="text-slate-200 group-hover:text-slate-400 transition-colors"/>
+                                <ChevronRight size={20} className="text-slate-300"/>
                             </button>
-                        );
-                    })}
+                        ))}
+                    </div>
                 </div>
+            );
+        }
+
+        // --- HAUPTMENÜ (Das Grid) ---
+        return (
+            <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-500 pt-6 pb-24 px-1">
+                <div className="flex items-center gap-3 mb-2 px-1">
+                    <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Compass size={24} /></div>
+                    <h2 className="text-2xl font-bold text-slate-800">Explore</h2>
+                </div>
+
+                {/* 1. HERO: READING ROOM */}
+                <button onClick={() => setView('reader')} className="w-full bg-amber-50 border border-amber-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm h-40 flex flex-col justify-center">
+                    <div className="relative z-10 flex items-center gap-4">
+                        <div className="bg-white p-3 rounded-2xl text-amber-500 shadow-sm"><BookCheck size={32} /></div>
+                        <div><h3 className="font-bold text-amber-900 text-2xl">Reading Room</h3><p className="text-amber-700/70 text-sm font-medium">Interactive Stories</p></div>
+                    </div>
+                    <BookOpen size={120} className="absolute -right-6 -bottom-8 text-amber-100 opacity-60 rotate-12 group-hover:scale-110 transition-transform"/>
+                </button>
+
+                {/* 2. CONTENT GRID */}
+                <div className="grid grid-cols-2 gap-3">
+                    {/* Articles */}
+                    <button onClick={() => setExploreMode('articles')} className="bg-rose-50 border border-rose-100 p-4 rounded-[2rem] text-left active:scale-[0.98] h-36 flex flex-col justify-between relative overflow-hidden">
+                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-rose-500 shadow-sm z-10"><Newspaper size={20}/></div>
+                        <div className="z-10"><h3 className="font-bold text-rose-900 text-lg">Articles</h3><p className="text-[10px] text-rose-700">News Kiosk</p></div>
+                    </button>
+                    
+                    {/* Memes */}
+                    <button onClick={() => setExploreMode('memes')} className="bg-purple-50 border border-purple-100 p-4 rounded-[2rem] text-left active:scale-[0.98] h-36 flex flex-col justify-between relative overflow-hidden">
+                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-purple-500 shadow-sm z-10"><Image size={20}/></div>
+                        <div className="z-10"><h3 className="font-bold text-purple-900 text-lg">Memes</h3><p className="text-[10px] text-purple-700">Gallery</p></div>
+                    </button>
+
+                    {/* Jokes */}
+                    <button onClick={() => setExploreMode('jokes')} className="bg-orange-50 border border-orange-100 p-4 rounded-[2rem] text-left active:scale-[0.98] h-36 flex flex-col justify-between relative overflow-hidden">
+                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-orange-500 shadow-sm z-10"><Smile size={20}/></div>
+                        <div className="z-10"><h3 className="font-bold text-orange-900 text-lg">Jokes</h3><p className="text-[10px] text-orange-700">Daily Laugh</p></div>
+                    </button>
+
+                     {/* Vocab Sets */}
+                     <button onClick={() => setExploreMode('grammar')} className="bg-indigo-50 border border-indigo-100 p-4 rounded-[2rem] text-left active:scale-[0.98] h-36 flex flex-col justify-between relative overflow-hidden">
+                        <div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-indigo-500 shadow-sm z-10"><Layers size={20}/></div>
+                        <div className="z-10"><h3 className="font-bold text-indigo-900 text-lg">Vocab</h3><p className="text-[10px] text-indigo-700">Grammar Sets</p></div>
+                    </button>
+                </div>
+
+                {/* 3. TOPICS (Full Width) */}
+                <button onClick={() => setExploreMode('topics')} className="w-full bg-emerald-50 border border-emerald-100 p-5 rounded-[2rem] text-left active:scale-[0.98] flex items-center justify-between group">
+                    <div className="flex items-center gap-4">
+                        <div className="bg-white p-3 rounded-2xl text-emerald-500 shadow-sm"><User size={24} /></div>
+                        <div><h3 className="font-bold text-emerald-900 text-xl">Real Life Topics</h3><p className="text-emerald-700/70 text-xs font-medium">Food, Travel, Work & more</p></div>
+                    </div>
+                    <ChevronRight size={24} className="text-emerald-300"/>
+                </button>
             </div>
         );
     };
