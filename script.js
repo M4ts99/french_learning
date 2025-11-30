@@ -566,6 +566,8 @@ function App() {
     const [correctionData, setCorrectionData] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    const [loadingTranslation, setLoadingTranslation] = useState(false); // <--- NEU
+
     // Audio & Voices (WICHTIG!)
 
     const stopAudio = () => {
@@ -2174,18 +2176,7 @@ function App() {
         );
     };
     const renderReader = () => {
-        // --- STATES ---
-        // HINWEIS: Falls du diese schon in App() hast, nimm die von oben!
-        // Falls nicht, füge sie oben in App() ein und lösche sie hier.
-        // Um sicherzugehen, zeige ich hier die Logik, die in App() sein sollte:
-        /* const [storyConfig, setStoryConfig] = useState({ length: 150, level: 'auto' }); 
-           const [clickedWord, setClickedWord] = useState(null);
-           const [isSpeaking, setIsSpeaking] = useState(false);
-           const [loadingTranslation, setLoadingTranslation] = useState(false); // <--- NEU!
-        */
-       
-       // Falls du sie noch nicht in App() hast, füge "const [loadingTranslation, setLoadingTranslation] = useState(false);" oben in App() hinzu!
-
+        // --- HELPER ---
         const handleGenerate = (genre) => {
             generateStory(genre, storyConfig.length, storyConfig.level); 
         };
@@ -2201,37 +2192,30 @@ function App() {
             }
         };
 
-        // --- DIE NEUE KLICK-LOGIK (Hybrid) ---
+        // --- INTELLIGENTER LOOKUP ---
         const handleWordClick = async (e, wordRaw) => {
             e.stopPropagation();
             
-            // 1. Bereinigen
+            // 1. Bereinigen (Sterne und Satzzeichen weg)
             const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
             const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
             
-            // 2. VERSUCH A: Exakter Treffer in Liste
+            // 2. VERSUCH A: Ist es in unserer 5000er Liste?
             let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
 
-            // 3. VERSUCH B: Irregular Map (suis -> être)
+            // 3. VERSUCH B: Ist es ein bekanntes unregelmäßiges Verb? (z.B. "suis")
             if (!found && IRREGULAR_MAP[cleanWord]) {
                 const infinitive = IRREGULAR_MAP[cleanWord];
                 found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
             }
 
-            // 4. VERSUCH C: Endungen raten (einfacher Stemmer)
-            if (!found) {
-                // Schneidet s, e, es, ent, ait ab
-                const stem = cleanWord.replace(/(s|e|es|ent|ait|ant|ez|ons)$/, "");
-                // Wir suchen NICHT automatisch nach dem Stamm, um Fehler zu vermeiden,
-                // sondern gehen lieber zur API, wenn wir uns nicht sicher sind.
-            }
-
             if (found) {
-                // LOKAL GEFUNDEN!
+                // TREFFER: Zeige lokale Daten an (Rank, etc.)
                 setClickedWord(found);
             } else {
-                // NICHT GEFUNDEN -> API FRAGEN
+                // NICHT GEFUNDEN: API Fragen (MyMemory)
                 setLoadingTranslation(true);
+                // Zeige Lade-Status im Popup
                 setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "API" });
                 
                 try {
@@ -2246,7 +2230,7 @@ function App() {
                         setClickedWord({ 
                             french: textWithoutFormat, 
                             english: data.translation, 
-                            rank: "External" 
+                            rank: "External" // Zeigt blaues Badge an
                         });
                     } else {
                         setClickedWord({ french: textWithoutFormat, english: "No translation found", rank: "?" });
@@ -2259,17 +2243,11 @@ function App() {
             }
         };
 
-        // --- PHASE 1: AUSWAHL (Bleibt gleich) ---
+        // --- PHASE 1: AUSWAHL (Unverändert) ---
         if (readerMode === 'select') {
-             // ... (Hier deinen bestehenden Code für Phase 1 einfügen) ...
-             // Um Platz zu sparen, poste ich hier nur den geänderten Teil "PHASE 2"
-             // Du kannst deinen existierenden "select" Block behalten.
              return (
                 <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
-                     {/* ... dein Select Code ... */}
-                     {/* Falls du ihn brauchst, kopiere ihn aus der vorherigen Antwort */}
-                     {/* Kurzfassung für den Kontext: */}
-                     <div className="flex items-center gap-3 mb-2 px-1">
+                    <div className="flex items-center gap-3 mb-2 px-1">
                         <button onClick={() => setView('explore')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
                             <ArrowLeft size={20} />
                         </button>
@@ -2325,10 +2303,10 @@ function App() {
                         </div>
                     )}
                 </div>
-             );
+            );
         }
 
-        // --- PHASE 2: LESEN (MIT POPUP) ---
+        // --- PHASE 2: LESEN ---
         if (readerMode === 'reading' && currentStory) {
             return (
                 <div className="space-y-6 animate-in fade-in zoom-in duration-300 pt-6 pb-40 px-1 relative min-h-screen">
@@ -2353,11 +2331,10 @@ function App() {
                         </div>
                     </div>
 
-                    {/* INFO POPUP (Erweitert für API Status) */}
+                    {/* INFO POPUP */}
                     {clickedWord && (
                         <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom-4 z-50 flex items-center justify-between">
                             <div>
-                                {/* Badge */}
                                 <div className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 inline-block px-1.5 rounded ${
                                     clickedWord.rank === "API" ? "bg-yellow-500/20 text-yellow-300" : 
                                     clickedWord.rank === "External" ? "bg-blue-500/20 text-blue-300" : 
@@ -2413,6 +2390,7 @@ function App() {
                 </div>
             );
         }
+
         return null;
     };
     const renderResults = () => (
