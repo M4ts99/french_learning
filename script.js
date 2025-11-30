@@ -2194,16 +2194,32 @@ function App() {
 
         // --- INTELLIGENTER LOOKUP ---
         // --- INTELLIGENTER LOOKUP (Mit Fallback) ---
+        // --- INTELLIGENTER LOOKUP (Optimiert) ---
         const handleWordClick = async (e, wordRaw) => {
             e.stopPropagation();
             
             // 1. Bereinigen
             const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
-            const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
+            const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase().trim();
             
-            // 2. VERSUCH A: Lokal
+            // 2. CHECK: Ist es eine Zahl oder Römisch? (XIV, 14, 1990)
+            // Regex prüft auf reine Zahlen oder römische Ziffern (I, V, X, L, C, D, M)
+            const isNumber = /^\d+$/.test(cleanWord);
+            const isRoman = /^m*(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/.test(cleanWord) && cleanWord.length > 0;
+
+            if (isNumber || isRoman) {
+                setClickedWord({ 
+                    french: textWithoutFormat, 
+                    english: "Number / Numeral", 
+                    rank: "#" 
+                });
+                return;
+            }
+
+            // 3. VERSUCH A: Lokal (Top 5000)
             let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
 
+            // 4. VERSUCH B: Irregular Map
             if (!found && IRREGULAR_MAP[cleanWord]) {
                 const infinitive = IRREGULAR_MAP[cleanWord];
                 found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
@@ -2212,14 +2228,14 @@ function App() {
             if (found) {
                 setClickedWord(found);
             } else {
-                // NICHT GEFUNDEN -> API STARTEN
+                // 5. VERSUCH C: API (Mit Machine Translation Flag)
                 setLoadingTranslation(true);
                 setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "API" });
                 
                 let translation = null;
 
                 try {
-                    // VERSUCH B: Dein Backend (Preferred)
+                    // Backend (Proxy)
                     try {
                         const res = await fetch('/api/lookup', {
                             method: 'POST',
@@ -2234,16 +2250,17 @@ function App() {
                         console.warn("Backend failed, trying direct fetch...", serverError);
                     }
 
-                    // VERSUCH C: Direktaufruf (Fallback für Localhost)
+                    // Fallback: Direktaufruf (mit mt=1 Trick!)
                     if (!translation) {
-                        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanWord)}&langpair=fr|en`);
+                        // mt=1 erzwingt Maschinenübersetzung, wenn kein menschlicher Treffer da ist.
+                        // Das verhindert spanische Wörter oder Quatsch wie "Discussion" bei XIV.
+                        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanWord)}&langpair=fr|en&mt=1`);
                         const data = await res.json();
                         if (data.responseData && data.responseData.translatedText) {
                             translation = data.responseData.translatedText;
                         }
                     }
 
-                    // Ergebnis setzen
                     if (translation) {
                         setClickedWord({ 
                             french: textWithoutFormat, 
@@ -2255,8 +2272,7 @@ function App() {
                     }
 
                 } catch (err) {
-                    console.error(err);
-                    setClickedWord({ french: textWithoutFormat, english: "Not found / Offline", rank: "X" });
+                    setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
                 } finally {
                     setLoadingTranslation(false);
                 }
