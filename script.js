@@ -2219,55 +2219,74 @@ function App() {
         const handleWordClick = async (e, wordRaw) => {
             e.stopPropagation();
             
+            // 1. Bereinigen
             const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
-            const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase();
+            const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase().trim();
             
-            // 1. Erstmal lokal schauen (spart API Call bei einfachen Wörtern)
+            // 2. VERSUCH A: Exakter Treffer in Liste
             let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
-            if (found) {
-                setClickedWord(found);
-                return;
+
+            // 3. VERSUCH B: Lokale Irregular Map (schneller als API)
+            if (!found && IRREGULAR_MAP[cleanWord]) {
+                const infinitive = IRREGULAR_MAP[cleanWord];
+                found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
             }
 
-            // 2. Wenn nicht lokal -> Gemini fragen
-            setLoadingTranslation(true);
-            setClickedWord({ french: textWithoutFormat, english: "Analyzing...", rank: "AI" });
-            
-            try {
-                const res = await fetch('/api/lookup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ word: cleanWord })
-                });
-                const data = await res.json();
+            if (found) {
+                // Lokal gefunden
+                setClickedWord(found);
+            } else {
+                // NICHT GEFUNDEN -> API FRAGEN (Gemini Lite)
+                setLoadingTranslation(true);
+                setClickedWord({ french: textWithoutFormat, english: "Analyzing...", rank: "AI" });
                 
-                if (data.root) {
-                    // CLOU: Wir schauen, ob wir die GRUNDFORM (root) in unserer Liste haben!
-                    const rootFound = vocabulary.find(v => v.french.toLowerCase() === data.root.toLowerCase());
+                try {
+                    const res = await fetch('/api/lookup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ word: cleanWord })
+                    });
                     
+                    const data = await res.json();
+                    
+                    if (data.error) throw new Error(data.error);
+
+                    // LOGIK: Hat Gemini eine Grundform (Root) gefunden?
+                    let rootFound = null;
+                    if (data.root) {
+                         // Suchen wir diese Grundform in unserer Liste?
+                         rootFound = vocabulary.find(v => v.french.toLowerCase() === data.root.toLowerCase());
+                    }
+
                     if (rootFound) {
-                        // Ja! Wir zeigen die Daten der Grundform an, aber mit der Info von Gemini
-                        setClickedWord({ 
-                            french: textWithoutFormat, // Zeige das Originalwort (z.B. "J'ai")
-                            english: `${data.translation} (${data.type})`, // "I have (Verb 1st pers)"
-                            rank: rootFound.rank, // Zeige den echten Rank von "Avoir"
-                            root: data.root // Merken wir uns für Anzeige
-                        });
-                    } else {
-                        // Nein, auch die Grundform ist nicht in den Top 5000
+                        // CLOU: Wir zeigen die Infos der lokalen Grundform an!
+                        // Z.B. Klick auf "verras" -> API sagt Root: "voir" -> Wir zeigen Rank von "voir"
                         setClickedWord({ 
                             french: textWithoutFormat, 
-                            english: `${data.translation} (from: ${data.root})`, 
-                            rank: "External" 
+                            english: `${data.translation} (${data.type})`, 
+                            rank: rootFound.rank, 
+                            root: data.root 
+                        });
+                    } else {
+                        // Echtes externes Wort
+                        setClickedWord({ 
+                            french: textWithoutFormat, 
+                            english: data.translation || "No translation", 
+                            rank: "External",
+                            root: (data.root && data.root !== cleanWord) ? data.root : null
                         });
                     }
-                } else {
-                    throw new Error("No Data");
+
+                } catch (err) {
+                    console.error("Lookup Failed:", err);
+                    setClickedWord({ 
+                        french: textWithoutFormat, 
+                        english: "Offline / Error", 
+                        rank: "X" 
+                    });
+                } finally {
+                    setLoadingTranslation(false);
                 }
-            } catch (err) {
-                setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
-            } finally {
-                setLoadingTranslation(false);
             }
         };
         // --- PHASE 1: AUSWAHL ---
