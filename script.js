@@ -306,11 +306,11 @@ function App() {
     const [loadingTranslation, setLoadingTranslation] = useState(false); // <--- NEU
 
     const [newsData, setNewsData] = useState([]);
-    const [memesData, setMemesData] = useState([]);
+    
     const [currentJoke, setCurrentJoke] = useState(null);
     const [loadingContent, setLoadingContent] = useState(false);
 
-    const [memeIndex, setMemeIndex] = useState(0); 
+   
         // Ist der Witz aufgelöst?
     const [jokeRevealed, setJokeRevealed] = useState(false);
     // Audio & Voices (WICHTIG!)
@@ -322,7 +322,79 @@ function App() {
         const saved = localStorage.getItem('vocabApp_seenMemes');
         return saved ? JSON.parse(saved) : [];
     });
+    // --- MEME STATE & LOGIC (In App einfügen) ---
+    const [memesData, setMemesData] = useState([]);
+    const [memeIndex, setMemeIndex] = useState(0);
+    const [loadingMemes, setLoadingMemes] = useState(false);
 
+    // Die sichere Fetch-Funktion (Mix aus All-Time und Week)
+    const fetchMixedMemes = async () => {
+        if (loadingMemes || memesData.length > 0) return; // Schutz vor Doppel-Ladung
+        
+        setLoadingMemes(true);
+        try {
+            const proxy = "https://corsproxy.io/?";
+            
+            // 1. Wir laden BEIDE Listen gleichzeitig
+            const [resAllTime, resWeek] = await Promise.all([
+                fetch(proxy + encodeURIComponent("https://www.reddit.com/r/FrenchMemes/top.json?t=all&limit=30")),
+                fetch(proxy + encodeURIComponent("https://www.reddit.com/r/FrenchMemes/top.json?t=week&limit=30"))
+            ]);
+
+            const jsonAll = await resAllTime.json();
+            const jsonWeek = await resWeek.json();
+
+            // Helper zum Extrahieren der Bild-Daten
+            const extractData = (json) => json.data.children
+                .map(c => c.data)
+                .filter(post => post.url && (post.url.match(/\.(jpeg|jpg|gif|png)$/) != null) && !post.over_18)
+                .map(post => ({ title: post.title, url: post.url, ups: post.ups, id: post.id }));
+
+            const listAll = extractData(jsonAll);
+            const listWeek = extractData(jsonWeek);
+
+            // 2. Der "Reißverschluss": Abwechselnd A und B
+            const mixed = [];
+            const maxLen = Math.max(listAll.length, listWeek.length);
+            const usedIds = new Set();
+
+            for (let i = 0; i < maxLen; i++) {
+                // Nimm einen Klassiker
+                if (listAll[i] && !usedIds.has(listAll[i].id)) {
+                    mixed.push(listAll[i]);
+                    usedIds.add(listAll[i].id);
+                }
+                // Nimm einen aktuellen
+                if (listWeek[i] && !usedIds.has(listWeek[i].id)) {
+                    mixed.push(listWeek[i]);
+                    usedIds.add(listWeek[i].id);
+                }
+            }
+
+            if (mixed.length === 0) throw new Error("No memes found");
+            
+            setMemesData(mixed);
+            setMemeIndex(0); // Reset auf Start
+
+        } catch (e) {
+            console.error("Meme Load Error", e);
+            // Fallback Notfall-Memes
+            setMemesData([
+                { title: "Le pain", url: "https://i.kym-cdn.com/photos/images/newsfeed/001/535/068/29d.jpg", ups: 999 },
+                { title: "Quand tu ne comprends rien", url: "https://i.imgflip.com/1ur9b0.jpg", ups: 850 }
+            ]);
+        } finally {
+            setLoadingMemes(false);
+        }
+    };
+
+    // AUTOMATISCHER START (Der Trigger)
+    // Feuert nur, wenn wir im Meme-Modus sind UND die Liste noch leer ist
+    useEffect(() => {
+        if (view === 'explore' && exploreMode === 'memes' && memesData.length === 0) {
+            fetchMixedMemes();
+        }
+    }, [view, exploreMode]);
     // Speichert automatisch bei Änderungen
     useEffect(() => {
         localStorage.setItem('vocabApp_seenMemes', JSON.stringify(seenMemeIds));
@@ -1433,18 +1505,15 @@ function App() {
             );
         }
 
-        // 2. MEMES VIEW (Smart Logic)
+        // 2. MEMES VIEW (Nur Anzeige - Logik ist jetzt in App)
         if (exploreMode === 'memes') {
-            // Laden triggern wenn leer und noch nicht fertig (oder loading)
-            if (memesData.length === 0 && !loadingContent && seenMemeIds.length === 0) {
-                 // Nur fetchen wenn wir noch gar nichts wissen (auch keine History haben)
-                 // Oder besser: Wir fetchen immer wenn memesData leer ist, aber das UI regelt den "Done" State.
-                 fetchMemes();
-            }
-            
-            // Wir nehmen immer das oberste Meme vom Stapel
-            const currentMeme = memesData[0];
-            const isDone = memesData.length === 0 && !loadingContent;
+            const currentMeme = memesData[memeIndex];
+
+            const handleNext = () => {
+                // Einfach zum nächsten Index gehen
+                // (Modulo % sorgt dafür, dass es am Ende wieder von vorne losgeht)
+                setMemeIndex((prev) => (prev + 1) % memesData.length);
+            };
 
             return (
                 <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full flex flex-col">
@@ -1454,40 +1523,26 @@ function App() {
                     </div>
                     
                     <div className="flex-1 flex flex-col items-center justify-center">
-                        {loadingContent ? (
-                             <div className="text-center text-purple-400 animate-pulse"><Image className="animate-bounce mx-auto mb-2"/> Loading Reddit...</div>
-                        ) : isDone ? (
-                            // --- DONE SCREEN ---
-                            <div className="text-center p-8 bg-slate-50 rounded-[2.5rem] border border-dashed border-slate-200">
-                                <div className="text-4xl mb-4">🎉</div>
-                                <h3 className="font-bold text-slate-800 text-lg">All caught up!</h3>
-                                <p className="text-slate-500 text-sm mt-2">You've seen the top memes of the week.</p>
-                                <button 
-                                    onClick={handleResetMemes}
-                                    className="mt-6 text-indigo-500 font-bold text-sm hover:underline"
-                                >
-                                    Watch again (Reset)
-                                </button>
-                            </div>
-                        ) : (
-                            // --- MEME CARD ---
-                            <div className="w-full bg-white p-4 rounded-[2rem] shadow-lg border border-slate-100 relative overflow-hidden animate-in zoom-in duration-300">
+                        {loadingMemes && !currentMeme ? (
+                             <div className="text-center text-purple-400 animate-pulse"><Image size={32} className="animate-bounce mx-auto mb-2"/> Mixing best memes...</div>
+                        ) : currentMeme ? (
+                            <div className="w-full bg-white p-4 rounded-[2rem] shadow-lg border border-slate-100 relative overflow-hidden animate-in zoom-in duration-200">
                                 <h3 className="font-bold text-slate-800 text-lg mb-3 text-center leading-snug px-2">{currentMeme.title}</h3>
                                 <div className="rounded-xl overflow-hidden bg-slate-100 border border-slate-100 flex items-center justify-center relative min-h-[250px]">
-                                    <img src={currentMeme.url} alt="Meme" className="w-full h-auto max-h-[400px] object-contain" />
+                                    <img src={currentMeme.url} alt="Meme" className="w-full h-full object-contain max-h-[50vh]" />
                                 </div>
                                 <div className="mt-4 flex justify-between items-center px-2">
                                     <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-full">⬆️ {currentMeme.ups}</span>
                                     <button onClick={() => speak(currentMeme.title)} className="p-3 bg-purple-50 text-purple-600 rounded-full hover:bg-purple-100"><Volume2 size={24}/></button>
                                 </div>
                             </div>
-                        )}
+                        ) : <div className="text-slate-400">No memes found.</div>}
                     </div>
 
-                    {/* Next Button (Nur wenn nicht fertig) */}
-                    {!isDone && !loadingContent && (
+                    {/* Next Button */}
+                    {!loadingMemes && memesData.length > 0 && (
                         <button 
-                            onClick={handleNextMeme} 
+                            onClick={handleNext} 
                             className="mt-6 w-full bg-purple-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all flex items-center justify-center gap-2"
                         >
                             Next Meme <ArrowLeft size={20} className="rotate-180"/>
