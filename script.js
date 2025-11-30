@@ -164,18 +164,53 @@ const TOPIC_CONTENT = {
     }
 };
 // --- JOKE DATABASE (Local & Offline) ---
+// --- LOCAL JOKES DATABASE ---
 const JOKE_DB = [
-    { fr: "Que fait une fraise sur un cheval ?", en: "What is a strawberry doing on a horse?", punchline: "Tagada Tagada !" },
-    { fr: "Pourquoi les plongeurs plongent-ils toujours en arrière ?", en: "Why do divers always dive backwards?", punchline: "Parce que sinon ils tombent dans le bateau." },
-    { fr: "Quel est le comble pour un électricien ?", en: "What is the height of absurdity for an electrician?", punchline: "De ne pas être au courant." },
-    { fr: "C'est l'histoire d'un pingouin qui respire par les fesses...", en: "It's the story of a penguin breathing through its butt...", punchline: "Il s'assoit et il meurt." },
-    { fr: "Comment appelle-t-on un chien qui n'a pas de pattes ?", en: "What do you call a dog with no legs?", punchline: "On ne l'appelle pas, on va le chercher." },
-    { fr: "Que dit une imprimante dans l'eau ?", en: "What does a printer say in the water?", punchline: "J’ai papier ! (J'ai pas pied)" },
-    { fr: "Pourquoi les poissons vivent-ils dans l'eau salée ?", en: "Why do fish live in saltwater?", punchline: "Parce que le poivre les fait éternuer !" },
-    { fr: "Quel est le sport préféré des insectes ?", en: "What is the favorite sport of insects?", punchline: "Le cricket." },
-    { fr: "Que fait un petit pois qui se bat ?", en: "What does a fighting pea do?", punchline: "Il se purée." },
-    { fr: "Quel est l'animal le plus heureux ?", en: "What is the happiest animal?", punchline: "Le hibou, parce que sa femme est chouette." },
-    
+    { 
+        q: "Que fait un chien qui entre dans une pharmacie ?", 
+        a: "Il demande du 'sirop' (six os) !", 
+        en: "He asks for 'syrup' (sounds like 'six bones')!" 
+    },
+    { 
+        q: "Pourquoi les plongeurs plongent-ils toujours en arrière ?", 
+        a: "Parce que sinon ils tombent dans le bateau.", 
+        en: "Because otherwise they fall into the boat." 
+    },
+    { 
+        q: "C'est l'histoire d'un pingouin qui respire par les fesses.", 
+        a: "Un jour il s'assoit et il meurt.", 
+        en: "One day he sits down and dies." 
+    },
+    { 
+        q: "Quel est le comble pour un électricien ?", 
+        a: "De ne pas être au courant.", 
+        en: "To not be 'current' (aware/informed)." 
+    },
+    { 
+        q: "Que dit une imprimante dans l'eau ?", 
+        a: "J'ai papier peur !", 
+        en: "I have 'paper' fear! (Sounds like 'J'ai pas pied' - I can't touch bottom)." 
+    },
+    { 
+        q: "Comment appelle-t-on un chien magicien ?", 
+        a: "Un abracadabrador.", 
+        en: "A labracadabrador." 
+    },
+    { 
+        q: "Deux œufs discutent. L'un dit : 'Pourquoi tu es tout vert ?'", 
+        a: "L'autre répond : 'Parce que je suis kiwi !'", 
+        en: "The other says: 'Because I'm a kiwi!' (Sounds like 'cuit, oui' - cooked, yes)." 
+    },
+    { 
+        q: "Qu'est-ce qu'une baguette avec une boussole ?", 
+        a: "Du pain perdu.", 
+        en: "Lost bread (French toast)." 
+    },
+    { 
+        q: "Pourquoi les Français mangent-ils des escargots ?", 
+        a: "Parce qu'ils n'aiment pas le fast-food.", 
+        en: "Because they don't like fast food." 
+    }
 ];
 // --- GRAMMAR DATA ---
 const GRAMMAR_MODULES = [
@@ -279,6 +314,14 @@ function App() {
         // Ist der Witz aufgelöst?
     const [jokeRevealed, setJokeRevealed] = useState(false);
     // Audio & Voices (WICHTIG!)
+    // ... oben in function App() ...
+    
+    const [questionTranslation, setQuestionTranslation] = useState(null); // <--- NEU: Für die Frage
+    // ...
+        
+        // Witze States:
+    const [showPunchline, setShowPunchline] = useState(false);   // Zeigt die französische Antwort
+    const [showTranslation, setShowTranslation] = useState(false); // Zeigt die englische Erklärung
 
     const stopAudio = () => {
         window.speechSynthesis.cancel();
@@ -1227,11 +1270,8 @@ function App() {
         );
     };
     const renderExplore = () => {
-        // Wir nutzen die States von oben (App): exploreMode, memesData, newsData, currentJoke
-
-        // Lokale States für Interaktion (nur für diese Ansicht)
-        // Welches Meme schauen wir gerade an?
-
+        // --- STATE (Muss ganz oben stehen!) ---
+ 
 
         // --- DATA FETCHERS ---
         const fetchNews = async () => {
@@ -1250,16 +1290,12 @@ function App() {
             if (memesData.length > 0) return;
             setLoadingContent(true);
             try {
-                // Versuche Backend
                 const res = await fetch('/api/memes');
                 if (res.ok) {
                     const data = await res.json();
                     setMemesData(data);
-                } else {
-                    throw new Error("Backend offline");
-                }
+                } else { throw new Error("Backend offline"); }
             } catch (e) { 
-                // Fallback Memes (damit es nicht leer bleibt)
                 setMemesData([
                     { title: "Quand tu ne comprends rien", url: "https://i.imgflip.com/1ur9b0.jpg", ups: 999 },
                     { title: "Le pain", url: "https://i.kym-cdn.com/photos/images/newsfeed/001/535/068/29d.jpg", ups: 500 }
@@ -1269,9 +1305,11 @@ function App() {
         };
 
         const nextJoke = () => {
-            setJokeRevealed(false); // Zudecken
+            // Reset States
+            setShowPunchline(false);
+            setShowTranslation(false);
             setLoadingContent(true);
-            // Simulierter Netzwerk-Delay für "Feeling"
+            
             setTimeout(() => {
                 const randomJoke = JOKE_DB[Math.floor(Math.random() * JOKE_DB.length)];
                 setCurrentJoke(randomJoke);
@@ -1279,18 +1317,18 @@ function App() {
             }, 300);
         };
 
-        // --- HELPER FÜR LISTEN ---
-        const getCategoryStats = (ids) => {
-            if (!ids || ids.length === 0) return "0/0";
-            const safeVocab = vocabulary || [];
-            const learnedCount = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
-            return `${learnedCount}/${ids.length}`;
-        };
+        // --- HELPER ---
         const getCategoryProgress = (ids) => {
             if (!ids || ids.length === 0) return 0;
             const safeVocab = vocabulary || [];
             const learnedCount = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
             return Math.round((learnedCount / ids.length) * 100);
+        };
+        const getCategoryStats = (ids) => {
+            if (!ids || ids.length === 0) return "0/0";
+            const safeVocab = vocabulary || [];
+            const learnedCount = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
+            return `${learnedCount}/${ids.length}`;
         };
 
         // =========================================
@@ -1322,7 +1360,7 @@ function App() {
             );
         }
 
-        // 2. MEMES VIEW (Swipe Style)
+        // 2. MEMES VIEW
         if (exploreMode === 'memes') {
             if (memesData.length === 0 && !loadingContent) fetchMemes();
             const meme = memesData[memeIndex];
@@ -1334,10 +1372,9 @@ function App() {
                         <h2 className="text-2xl font-bold text-slate-800">Meme Gallery</h2>
                     </div>
                     
-                    {/* Meme Card */}
                     <div className="flex-1 flex flex-col items-center justify-center">
                         {loadingContent ? (
-                             <div className="text-center text-purple-400 animate-pulse"><Image className="animate-bounce mx-auto mb-2"/> Loading...</div>
+                             <div className="text-center text-purple-400 animate-pulse"><RotateCcw className="animate-spin mx-auto mb-2"/> Loading...</div>
                         ) : meme ? (
                             <div className="w-full bg-white p-4 rounded-[2rem] shadow-lg border border-slate-100 relative overflow-hidden">
                                 <h3 className="font-bold text-slate-800 text-lg mb-3 text-center">{meme.title}</h3>
@@ -1348,10 +1385,9 @@ function App() {
                                     <button onClick={() => speak(meme.title)} className="p-3 bg-purple-50 text-purple-600 rounded-full hover:bg-purple-100"><Volume2 size={24}/></button>
                                 </div>
                             </div>
-                        ) : <div className="text-slate-400">No memes found :(</div>}
+                        ) : <div className="text-slate-400">No memes found.</div>}
                     </div>
 
-                    {/* Controls */}
                     <div className="mt-6 grid grid-cols-2 gap-4">
                         <button onClick={() => setMemeIndex(Math.max(0, memeIndex - 1))} disabled={memeIndex === 0} className="bg-slate-100 text-slate-500 py-4 rounded-2xl font-bold disabled:opacity-50">Prev</button>
                         <button onClick={() => setMemeIndex((memeIndex + 1) % memesData.length)} className="bg-purple-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-purple-200">Next Meme</button>
@@ -1360,9 +1396,40 @@ function App() {
             );
         }
 
-        // 3. JOKES VIEW (Tap to Reveal)
+        // 3. JOKES VIEW (Update: Smiley weg, Frage-Übersetzung)
         if (exploreMode === 'jokes') {
-            if (!currentJoke && !loadingContent) nextJoke();
+            
+            // Helper zum Laden (muss hier definiert sein, um Zugriff auf States zu haben)
+            const loadNextJoke = () => {
+                setJokeRevealed(false); 
+                setQuestionTranslation(null); // Reset Übersetzung
+                setLoadingContent(true);
+                setTimeout(() => {
+                    const randomJoke = JOKE_DB[Math.floor(Math.random() * JOKE_DB.length)];
+                    setCurrentJoke(randomJoke);
+                    setLoadingContent(false);
+                }, 300);
+            };
+
+            // Helper für Frage-Übersetzung
+            const translateQuestion = async () => {
+                if (!currentJoke) return;
+                try {
+                    // Wir nutzen deine existierende Translator API
+                    const res = await fetch('/api/translate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text: currentJoke.q, targetLang: 'en' })
+                    });
+                    const data = await res.json();
+                    setQuestionTranslation(data.translation);
+                } catch (e) {
+                    setQuestionTranslation("Translation unavailable offline");
+                }
+            };
+
+            // Initiale Ladung
+            if (!currentJoke && !loadingContent) loadNextJoke();
 
             return (
                 <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full flex flex-col">
@@ -1373,40 +1440,74 @@ function App() {
 
                     <div className="flex-1 flex flex-col items-center justify-center py-4">
                         {loadingContent ? (
-                             <div className="text-center text-amber-500 animate-pulse"><RotateCcw className="animate-spin mx-auto mb-2"/> Finding a funny one...</div>
+                             <div className="text-center text-amber-500 animate-pulse"><RotateCcw className="animate-spin mx-auto mb-2"/> Picking a good one...</div>
                         ) : currentJoke ? (
                             <div className="w-full bg-white p-8 rounded-[2.5rem] shadow-lg border border-slate-100 text-center relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 to-orange-400"></div>
                                 
-                                {/* French Joke */}
-                                <div className="mb-8">
-                                    <span className="text-4xl mb-4 block">🇫🇷</span>
-                                    <h3 className="text-2xl font-bold text-slate-800 leading-snug font-serif italic">
-                                        "{currentJoke.fr}"
+                                {/* Smiley ist hier GELÖSCHT */}
+
+                                <div className="mb-6">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Question</span>
+                                    
+                                    {/* Die Frage */}
+                                    <h3 className="text-xl font-bold text-slate-800 mt-2 mb-2 leading-snug font-serif italic">
+                                        "{currentJoke.q}"
                                     </h3>
-                                    <button onClick={() => speak(currentJoke.fr)} className="mt-4 p-3 bg-slate-50 rounded-full text-slate-600 hover:bg-amber-50 hover:text-amber-600 transition-colors mx-auto"><Volume2 size={24}/></button>
+
+                                    {/* Frage übersetzen Button/Text */}
+                                    {questionTranslation ? (
+                                        <p className="text-xs text-indigo-500 font-medium animate-in fade-in bg-indigo-50 py-1 px-2 rounded-lg inline-block">
+                                            🇬🇧 {questionTranslation}
+                                        </p>
+                                    ) : (
+                                        <button onClick={translateQuestion} className="text-[10px] font-bold text-slate-400 underline decoration-dotted hover:text-indigo-500">
+                                            Translate Question
+                                        </button>
+                                    )}
+
+                                    <div className="mt-3">
+                                        <button onClick={() => speak(currentJoke.q)} className="p-2 bg-slate-50 rounded-full text-slate-400 hover:text-amber-600 hover:bg-amber-50"><Volume2 size={20}/></button>
+                                    </div>
                                 </div>
 
-                                {/* Hidden Answer */}
-                                {jokeRevealed ? (
-                                    <div className="border-t border-slate-100 pt-6 animate-in slide-in-from-bottom-2 fade-in">
-                                        <span className="text-2xl mb-2 block">🇬🇧</span>
-                                        <p className="text-slate-600 font-medium">{currentJoke.en}</p>
+                                {/* ANTWORT BEREICH */}
+                                {showPunchline ? (
+                                    <div className="animate-in zoom-in duration-300 border-t border-slate-100 pt-6">
+                                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Punchline</span>
+                                        <h3 className="text-2xl font-bold text-indigo-600 mt-2 mb-4 leading-snug italic">
+                                            "{currentJoke.a}"
+                                        </h3>
+                                        
+                                        <div className="flex justify-center gap-3 mb-4">
+                                             <button onClick={() => speak(currentJoke.a)} className="p-3 bg-indigo-50 rounded-full text-indigo-600 hover:bg-indigo-100"><Volume2 size={24}/></button>
+                                        </div>
+
+                                        {/* Antwort Übersetzung */}
+                                        {showTranslation ? (
+                                             <p className="text-slate-400 text-sm bg-slate-50 p-3 rounded-xl animate-in fade-in">
+                                                🇬🇧 {currentJoke.en}
+                                             </p>
+                                        ) : (
+                                            <button onClick={() => setShowTranslation(true)} className="text-xs font-bold text-slate-400 underline decoration-dotted">
+                                                Explain Joke
+                                            </button>
+                                        )}
                                     </div>
                                 ) : (
                                     <button 
-                                        onClick={() => setJokeRevealed(true)}
-                                        className="w-full py-4 bg-slate-50 text-slate-400 font-bold rounded-xl border border-dashed border-slate-200 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                                        onClick={() => setShowPunchline(true)}
+                                        className="w-full py-4 bg-slate-50 text-slate-500 font-bold rounded-2xl border-2 border-dashed border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-all mt-2"
                                     >
-                                        Tap to reveal translation
+                                        Tap for Answer
                                     </button>
                                 )}
                             </div>
                         ) : null}
                     </div>
 
-                    <button onClick={nextJoke} className="w-full bg-amber-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-amber-200 hover:bg-amber-600 transition-all flex items-center justify-center gap-2 mt-4">
-                        <RotateCcw size={20} /> Next Joke
+                    <button onClick={loadNextJoke} className="w-full bg-amber-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-amber-200 hover:bg-amber-600 transition-all flex items-center justify-center gap-2 mt-4">
+                        <ArrowLeft size={20} /> Next Joke
                     </button>
                 </div>
             );
@@ -1455,72 +1556,72 @@ function App() {
             );
         }
 
-        // --- HAUPTMENÜ (VERTICAL STACK) ---
-        // Hier ist der Fix: Alle 6 Kacheln untereinander!
-        return (
-            <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-500 pt-6 pb-24 px-1">
-                
-                <div className="flex items-center gap-3 mb-2 px-1">
-                    <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Compass size={24} /></div>
-                    <h2 className="text-2xl font-bold text-slate-800">Explore</h2>
+        // --- HAUPTMENÜ (VERTICAL STACK - NO GRID) ---
+        if (exploreMode === 'main') {
+            return (
+                <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-500 pt-6 pb-24 px-1">
+                    <div className="flex items-center gap-3 mb-4 px-1">
+                        <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Compass size={24} /></div>
+                        <h2 className="text-2xl font-bold text-slate-800">Explore</h2>
+                    </div>
+
+                    {/* 1. READING ROOM (Hero) */}
+                    <button onClick={() => setView('reader')} className="w-full bg-amber-50 border border-amber-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
+                        <div className="flex items-center gap-4 z-10">
+                            <div className="bg-white p-3 rounded-2xl text-amber-500 shadow-sm"><BookCheck size={24} /></div>
+                            <div><h3 className="font-bold text-amber-900 text-lg">Reading Room</h3><p className="text-amber-700/70 text-xs font-medium">Interactive Stories</p></div>
+                        </div>
+                        <ChevronRight size={24} className="text-amber-300 z-10"/>
+                        <BookOpen size={80} className="absolute -right-4 -bottom-6 text-amber-100/50 rotate-12"/>
+                    </button>
+
+                    {/* 2. CULTURE FEED (News) */}
+                    <button onClick={() => setExploreMode('articles')} className="w-full bg-rose-50 border border-rose-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
+                         <div className="flex items-center gap-4 z-10">
+                            <div className="bg-white p-3 rounded-2xl text-rose-500 shadow-sm"><Newspaper size={24} /></div>
+                            <div><h3 className="font-bold text-rose-900 text-lg">Culture Feed</h3><p className="text-rose-700/70 text-xs font-medium">News & Articles</p></div>
+                        </div>
+                        <ChevronRight size={24} className="text-rose-300 z-10"/>
+                    </button>
+                    
+                    {/* 3. MEME GALLERY */}
+                    <button onClick={() => setExploreMode('memes')} className="w-full bg-purple-50 border border-purple-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
+                        <div className="flex items-center gap-4 z-10">
+                            <div className="bg-white p-3 rounded-2xl text-purple-500 shadow-sm"><Image size={24} /></div>
+                            <div><h3 className="font-bold text-purple-900 text-lg">Meme Gallery</h3><p className="text-purple-700/70 text-xs font-medium">Fun way to learn</p></div>
+                        </div>
+                        <ChevronRight size={24} className="text-purple-300 z-10"/>
+                    </button>
+
+                    {/* 4. JOKE BOX */}
+                    <button onClick={() => setExploreMode('jokes')} className="w-full bg-orange-50 border border-orange-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
+                        <div className="flex items-center gap-4 z-10">
+                            <div className="bg-white p-3 rounded-2xl text-orange-500 shadow-sm"><Smile size={24} /></div>
+                            <div><h3 className="font-bold text-orange-900 text-lg">Joke Box</h3><p className="text-orange-700/70 text-xs font-medium">Daily Laughter</p></div>
+                        </div>
+                        <ChevronRight size={24} className="text-orange-300 z-10"/>
+                    </button>
+
+                     {/* 5. VOCAB SETS */}
+                     <button onClick={() => setExploreMode('grammar')} className="w-full bg-indigo-50 border border-indigo-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
+                        <div className="flex items-center gap-4 z-10">
+                            <div className="bg-white p-3 rounded-2xl text-indigo-500 shadow-sm"><Layers size={24} /></div>
+                            <div><h3 className="font-bold text-indigo-900 text-lg">Vocabulary Sets</h3><p className="text-indigo-700/70 text-xs font-medium">Verbs, Nouns...</p></div>
+                        </div>
+                        <ChevronRight size={24} className="text-indigo-300 z-10"/>
+                    </button>
+
+                    {/* 6. TOPICS */}
+                    <button onClick={() => setExploreMode('topics')} className="w-full bg-emerald-50 border border-emerald-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
+                        <div className="flex items-center gap-4 z-10">
+                            <div className="bg-white p-3 rounded-2xl text-emerald-500 shadow-sm"><User size={24} /></div>
+                            <div><h3 className="font-bold text-emerald-900 text-lg">Real Life Topics</h3><p className="text-emerald-700/70 text-xs font-medium">Food, Travel & more</p></div>
+                        </div>
+                        <ChevronRight size={24} className="text-emerald-300 z-10"/>
+                    </button>
                 </div>
-
-                {/* 1. READING ROOM (Stories) */}
-                <button onClick={() => setView('reader')} className="w-full bg-amber-50 border border-amber-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
-                    <div className="relative z-10 flex items-start gap-4">
-                        <div className="bg-white p-3 rounded-2xl text-amber-500 shadow-sm"><BookCheck size={28} /></div>
-                        <div><h3 className="font-bold text-amber-900 text-xl">Reading Room</h3><p className="text-amber-700/70 text-sm font-medium mt-1">Interactive Stories • A1-B1</p></div>
-                    </div>
-                    <BookOpen size={100} className="absolute -right-4 -bottom-6 text-amber-100 opacity-60 rotate-12 group-hover:scale-110 transition-transform"/>
-                </button>
-
-                {/* 2. CULTURE FEED (News) */}
-                <button onClick={() => setExploreMode('articles')} className="w-full bg-rose-50 border border-rose-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
-                    <div className="relative z-10 flex items-start gap-4">
-                        <div className="bg-white p-3 rounded-2xl text-rose-500 shadow-sm"><Activity size={28} /></div>
-                        <div><h3 className="font-bold text-rose-900 text-xl">Culture Feed</h3><p className="text-rose-700/70 text-sm font-medium mt-1">News & Articles</p></div>
-                    </div>
-                    <Newspaper size={100} className="absolute -right-4 -bottom-6 text-rose-100 opacity-60 rotate-12 group-hover:scale-110 transition-transform"/>
-                </button>
-
-                {/* 3. MEME GALLERY */}
-                <button onClick={() => setExploreMode('memes')} className="w-full bg-purple-50 border border-purple-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
-                    <div className="relative z-10 flex items-start gap-4">
-                        <div className="bg-white p-3 rounded-2xl text-purple-500 shadow-sm"><Image size={28} /></div>
-                        <div><h3 className="font-bold text-purple-900 text-xl">Meme Gallery</h3><p className="text-purple-700/70 text-sm font-medium mt-1">Fun way to learn</p></div>
-                    </div>
-                    <Image size={100} className="absolute -right-4 -bottom-6 text-purple-100 opacity-60 rotate-12 group-hover:scale-110 transition-transform"/>
-                </button>
-
-                {/* 4. JOKE BOX */}
-                <button onClick={() => setExploreMode('jokes')} className="w-full bg-orange-50 border border-orange-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
-                    <div className="relative z-10 flex items-start gap-4">
-                        <div className="bg-white p-3 rounded-2xl text-orange-500 shadow-sm"><Smile size={28} /></div>
-                        <div><h3 className="font-bold text-orange-900 text-xl">Joke Box</h3><p className="text-orange-700/70 text-sm font-medium mt-1">Daily Laughter</p></div>
-                    </div>
-                    <Smile size={100} className="absolute -right-4 -bottom-6 text-orange-100 opacity-60 rotate-12 group-hover:scale-110 transition-transform"/>
-                </button>
-
-                {/* 5. VOCAB SETS */}
-                <button onClick={() => setExploreMode('grammar')} className="w-full bg-indigo-50 border border-indigo-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
-                    <div className="relative z-10 flex items-start gap-4">
-                        <div className="bg-white p-3 rounded-2xl text-indigo-500 shadow-sm"><Layers size={28} /></div>
-                        <div><h3 className="font-bold text-indigo-900 text-xl">Vocabulary Sets</h3><p className="text-indigo-700/70 text-sm font-medium mt-1">Verbs, Nouns, Adjectives</p></div>
-                    </div>
-                    <ChevronRight size={24} className="absolute right-6 top-1/2 -translate-y-1/2 text-indigo-200" />
-                </button>
-
-                {/* 6. REAL LIFE TOPICS */}
-                <button onClick={() => setExploreMode('topics')} className="w-full bg-emerald-50 border border-emerald-100 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm">
-                    <div className="relative z-10 flex items-start gap-4">
-                        <div className="bg-white p-3 rounded-2xl text-emerald-500 shadow-sm"><User size={28} /></div>
-                        <div><h3 className="font-bold text-emerald-900 text-xl">Real Life Topics</h3><p className="text-emerald-700/70 text-sm font-medium mt-1">Food, Travel & more</p></div>
-                    </div>
-                    <ChevronRight size={24} className="absolute right-6 top-1/2 -translate-y-1/2 text-emerald-200" />
-                </button>
-
-            </div>
-        );
+             );
+        }
     };
     const renderSkills = () => {
         // Lokaler State für das Akkordeon (welche Kategorie ist offen?)
