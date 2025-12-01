@@ -1,56 +1,56 @@
-// WICHTIG: Der Name der Funktion MUSS "onRequestPost" sein!
-export async function onRequestPost(context) {
+export async function onRequest(context) {
+  // CORS & GET Handling
+  if (context.request.method === "OPTIONS") {
+    return new Response(null, { headers: { "Access-Control-Allow-Origin": "*" } });
+  }
+  if (context.request.method === "GET") {
+    return new Response("Chat API Ready");
+  }
+
   try {
-    // 1. Request lesen
     const { history, scenario, level } = await context.request.json();
     const apiKey = context.env.GEMINI_API_KEY;
 
-    if (!apiKey) {
-        return new Response(JSON.stringify({ error: "API Key missing in Backend" }), { status: 500 });
-    }
+    if (!apiKey) return new Response(JSON.stringify({ error: "API Key missing" }), { status: 500 });
 
-    // 2. System Prompt
-    let complexity = "Simple words, slow pace. A1/A2 level.";
-    if (level === "B1" || level === "B2") complexity = "Standard grammar, normal pace.";
-    if (level === "C1" || level === "C2") complexity = "Complex grammar, slang, fast pace.";
+    const recentHistory = (history || []).slice(-6);
 
     const systemPrompt = `
-      Act as a French Roleplay Character.
-      Scenario: ${scenario}
-      Level: ${level} (${complexity})
+      Role: French Roleplay Game Engine.
+      SCENARIO: ${scenario}
+      LEVEL: ${level}
       
-      Your Task: Reply to the user.
+      TASK:
+      1. Reply to the user (playing the character).
+      2. Check user's grammar strictly. If there is an error, provide a "correction".
+      3. Provide 3 short French follow-up phrases the user could say next in "suggestions".
       
-      Rules:
-      1. Keep answers short (chat style).
-      2. Hidden "patience meter" (starts at 3). Rude/English = -1.
-      3. Goal achieved = mission_status: "success".
+      OUTPUT RULES:
+      - Return ONLY JSON.
+      - "suggestions" MUST be an array of 3 strings (e.g. ["Oui, merci", "Non", "Combien?"]).
+      - "correction" should be null if the user was correct, otherwise the corrected sentence string.
       
-      IMPORTANT: Return ONLY raw JSON. No Markdown.
-      JSON Format:
+      JSON Structure:
       {
-        "text": "French reply",
-        "translation": "English translation",
+        "text": "French reply...",
+        "translation": "English translation...",
+        "correction": "Corrected user sentence" (or null),
+        "suggestions": ["Option A", "Option B", "Option C"],
         "patience_change": 0,
         "mission_status": "ongoing"
       }
     `;
 
-    // 3. Messages zusammenbauen
     const messages = [
         { role: "user", parts: [{ text: systemPrompt }] },
-        ...history.map(msg => ({
+        ...recentHistory.map(msg => ({
             role: msg.role === 'user' ? 'user' : 'model',
             parts: [{ text: msg.content }]
         }))
     ];
 
-    // 4. Fetch an Gemini 2.0 Flash Lite
-    // HINWEIS: Das ist der offizielle Name für Flash-Lite in der API aktuell.
-    const modelName = "gemini-2.0-flash-lite-preview-02-05";
-    
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,13 +60,7 @@ export async function onRequestPost(context) {
 
     const data = await response.json();
     
-    // Fehlerprüfung Google
-    if (data.error) {
-        throw new Error(`Gemini Error: ${data.error.message}`);
-    }
-    if (!data.candidates || !data.candidates[0].content) {
-        throw new Error("No content from AI");
-    }
+    if (!data.candidates) throw new Error("AI Overload");
 
     let rawText = data.candidates[0].content.parts[0].text;
     rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
@@ -74,7 +68,6 @@ export async function onRequestPost(context) {
     return new Response(rawText, { headers: { "Content-Type": "application/json" } });
 
   } catch (err) {
-    // Fehler zurückgeben
     return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 }
