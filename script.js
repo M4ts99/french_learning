@@ -1103,44 +1103,37 @@ function App() {
         const sendMessage = async () => {
             if (!chatInput.trim()) return;
             
-            // 1. User Nachricht anzeigen
             const newHistory = [...chatHistory, { role: 'user', content: chatInput }];
             setChatHistory(newHistory);
             setChatInput('');
             setChatLoading(true);
 
             try {
-                // 2. Backend fragen
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         history: newHistory, 
-                        scenario: chatScenario.title, // "The Bakery"
+                        scenario: chatScenario.title, 
                         level: chatLevel 
                     })
                 });
                 
-                const data = await res.json(); // Erwartet: { text, patience_change, mission_status }
+                const data = await res.json();
 
-                // 3. Antwort verarbeiten
                 if (data.text) {
                     setChatHistory(prev => [...prev, { role: 'model', content: data.text, translation: data.translation }]);
                 }
 
-                // 4. Spiel-Logik (Herzen)
                 if (data.patience_change < 0) {
                     setChatHearts(h => Math.max(0, h - 1));
-                    // Visueller Effekt (Vibration) könnte hier hin
                 }
 
-                // 5. Status Check
                 if (data.mission_status === 'success') setChatStatus('won');
-                else if (data.mission_status === 'failed' || chatHearts <= 1 && data.patience_change < 0) setChatStatus('lost');
+                else if (data.mission_status === 'failed' || (chatHearts <= 1 && data.patience_change < 0)) setChatStatus('lost');
 
             } catch (e) {
                 console.error(e);
-                // Fallback Nachricht
                 setChatHistory(prev => [...prev, { role: 'model', content: "(Connection Error) Désolé, je ne vous entends pas." }]);
             } finally {
                 setChatLoading(false);
@@ -1180,8 +1173,8 @@ function App() {
                                 key={s.id}
                                 onClick={() => {
                                     setChatScenario(s);
-                                    setChatHistory([]); // Reset History
-                                    setChatHearts(3);   // Reset Hearts
+                                    setChatHistory([]); 
+                                    setChatHearts(3);   
                                     setChatStatus('active');
                                 }}
                                 className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all h-40 flex flex-col justify-between group hover:border-indigo-200"
@@ -1212,17 +1205,18 @@ function App() {
             );
         }
 
-        // --- VIEW 3: ACTIVE CHAT ---
+        // --- VIEW 3: ACTIVE CHAT (DER FIX) ---
         return (
-            <div className="fixed inset-0 z-50 bg-slate-50 flex flex-col">
+            // HIER GEÄNDERT: h-[100dvh] statt inset-0, damit Mobil-Browser-Leisten berücksichtigt werden
+            <div className="fixed top-0 left-0 w-full h-[100dvh] z-50 bg-slate-50 flex flex-col">
+                
                 {/* Chat Header */}
-                <div className="bg-white border-b border-slate-200 px-4 py-4 pt-safe flex justify-between items-center shadow-sm z-10">
+                <div className="bg-white border-b border-slate-200 px-4 py-4 pt-safe flex justify-between items-center shadow-sm z-10 shrink-0">
                     <button onClick={() => setChatStatus('lobby')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full"><ArrowLeft size={24}/></button>
                     <div className="text-center">
                         <div className="font-bold text-slate-800">{chatScenario?.title}</div>
                         <div className="text-[10px] text-slate-400 uppercase tracking-wide">Level {chatLevel}</div>
                     </div>
-                    {/* Hearts */}
                     <div className="flex gap-1">
                         {[1,2,3].map(i => (
                             <Heart key={i} size={20} className={i <= chatHearts ? "fill-red-500 text-red-500" : "text-slate-200"} />
@@ -1230,8 +1224,8 @@ function App() {
                     </div>
                 </div>
 
-                {/* Chat Messages Area */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-32">
+                {/* Chat Messages Area (flex-1 nimmt den restlichen Platz) */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
                     {/* Mission Info Bubble */}
                     <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-center mb-6">
                         <span className="text-xs font-bold text-indigo-500 uppercase tracking-wider">Mission Objective</span>
@@ -1246,7 +1240,7 @@ function App() {
                                     ? 'bg-indigo-600 text-white rounded-tr-none' 
                                     : 'bg-white border border-slate-100 text-slate-800 rounded-tl-none shadow-sm'
                                 }`}
-                                onClick={() => msg.translation && alert(msg.translation)} // Simple translate on click
+                                onClick={() => msg.translation && alert(msg.translation)} 
                             >
                                 {msg.content}
                                 {msg.translation && msg.role === 'model' && (
@@ -1260,10 +1254,13 @@ function App() {
                              <div className="bg-slate-200 text-slate-500 px-4 py-2 rounded-2xl rounded-tl-none text-xs animate-pulse">Typing...</div>
                          </div>
                     )}
+                    {/* Dummy Element um automatisch nach unten zu scrollen (optional) */}
+                    <div style={{ height: 10 }}></div>
                 </div>
 
-                {/* Input Area */}
-                <div className="bg-white border-t border-slate-200 p-4 pb-safe w-full absolute bottom-0">
+                {/* Input Area (Kein Absolute mehr!) */}
+                {/* HIER GEÄNDERT: shrink-0 verhindert das Zerquetschen, pb-6 gibt Abstand nach unten */}
+                <div className="bg-white border-t border-slate-200 p-4 pb-20 w-full shrink-0">
                     <div className="flex gap-2">
                         <input 
                             type="text" 
@@ -1278,7 +1275,7 @@ function App() {
                             disabled={!chatInput.trim() || chatLoading}
                             className="bg-indigo-600 text-white p-3 rounded-xl disabled:opacity-50"
                         >
-                            <ArrowUp size={24} className="rotate-90"/> {/* Send Icon Ersatz */}
+                            <ArrowUp size={24} className="rotate-90"/> 
                         </button>
                     </div>
                 </div>
