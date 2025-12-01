@@ -1,5 +1,4 @@
 export async function onRequest(context) {
-  // CORS & GET Handling
   if (context.request.method === "OPTIONS") {
     return new Response(null, { headers: { "Access-Control-Allow-Origin": "*" } });
   }
@@ -8,7 +7,8 @@ export async function onRequest(context) {
   }
 
   try {
-    const { history, scenario, level } = await context.request.json();
+    // NEU: Wir empfangen jetzt auch 'goal'
+    const { history, scenario, goal, level } = await context.request.json();
     const apiKey = context.env.GEMINI_API_KEY;
 
     if (!apiKey) return new Response(JSON.stringify({ error: "API Key missing" }), { status: 500 });
@@ -16,29 +16,31 @@ export async function onRequest(context) {
     const recentHistory = (history || []).slice(-6);
 
     const systemPrompt = `
-      Role: Strict French Roleplay Game Engine.
+      Role: French Roleplay Game Engine.
       SCENARIO: ${scenario}
+      USER GOAL: "${goal}"
       LEVEL: ${level}
       
-      TASK:
+      YOUR TASKS:
       1. Reply as the character.
-      2. Check user's grammar. If wrong -> "correction".
-      3. Suggest 3 responses.
+      2. CHECK VICTORY CONDITION: Has the user clearly achieved the "USER GOAL"? 
+         - Example: If goal is "Buy bread", and user asked for it and you agreed to sell/gave it -> SUCCESS.
+         - If success, say a polite goodbye in French and set "mission_status": "success".
+      3. Check grammar errors (strict).
       
-      GAME RULES (PATIENCE PENALTIES):
-      - Speaking English -> -1
-      - Rude behavior -> -1
-      - OFF-TOPIC: If the user talks about something completely unrelated to the scenario (e.g. talking about spaceships in a bakery) -> -1.
-      - Nonsense/Gibberish -> -1
+      GAME RULES:
+      - Speak English -> patience -1
+      - Rude -> patience -1
+      - Goal achieved -> mission_status "success" (IMMEDIATELY)
       
-      OUTPUT JSON ONLY:
+      JSON OUTPUT ONLY:
       {
-        "text": "French reply",
+        "text": "French reply (Keep it under 15 words)",
         "translation": "English translation",
         "correction": "Corrected user sentence (or null)",
         "suggestions": ["A", "B", "C"],
-        "patience_change": 0, (0 or -1)
-        "mission_status": "ongoing"
+        "patience_change": 0,
+        "mission_status": "ongoing" (or "success" or "failed")
       }
     `;
 

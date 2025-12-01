@@ -1197,6 +1197,7 @@ function App() {
                     body: JSON.stringify({ 
                         history: contextSlice, 
                         scenario: chatScenario.title, 
+                        goal: chatScenario.goal, // <--- NEU: Wir schicken das Ziel mit!
                         level: chatLevel 
                     })
                 });
