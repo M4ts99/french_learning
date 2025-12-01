@@ -1172,20 +1172,23 @@ function App() {
         );
     };
     const renderChat = () => {
-        
+        // Lokale UI States für den Chat
+        const [suggestions, setSuggestions] = useState([]); 
+        const [activeTranslation, setActiveTranslation] = useState(null); // Für das schöne Popup
+
         // --- LOGIK: NACHRICHT SENDEN ---
-        const sendMessage = async () => {
-            if (!chatInput.trim()) return;
+        const sendMessage = async (textOverride = null) => {
+            const msgText = textOverride || chatInput;
+            if (!msgText.trim()) return;
             
-            // UI sofort updaten
-            const newHistory = [...chatHistory, { role: 'user', content: chatInput }];
+            // Sofort UI updaten
+            const newHistory = [...chatHistory, { role: 'user', content: msgText }];
             setChatHistory(newHistory);
             setChatInput('');
             setChatLoading(true);
+            setSuggestions([]); // Vorschläge ausblenden während Laden
 
             try {
-                console.log("📤 Sending...", { scenario: chatScenario.title, level: chatLevel, msg: chatInput });
-
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1195,58 +1198,40 @@ function App() {
                         level: chatLevel 
                     })
                 });
-
-                if (!res.ok) {
-                    throw new Error(`Server Error: ${res.status}`);
-                }
                 
                 const data = await res.json();
-                console.log("📥 AI Response:", data); // SCHAU HIER IN DIE KONSOLE
 
-                // 1. Antwort anzeigen
-                if (data.text) {
-                    setChatHistory(prev => [...prev, { 
-                        role: 'model', 
-                        content: data.text, 
-                        translation: data.translation 
-                    }]);
-                }
-                
-                // 2. Korrektur in die letzte User-Nachricht injizieren
-                if (data.correction) {
-                    setChatHistory(prev => {
-                        const copy = [...prev];
-                        // Finde letzte User Nachricht und füge Korrektur hinzu
-                        // (Wir nehmen vorletztes Element, da das letzte jetzt die AI Antwort ist)
-                        const lastUserIndex = copy.length - 2; 
-                        if (lastUserIndex >= 0 && copy[lastUserIndex].role === 'user') {
-                            copy[lastUserIndex].correction = data.correction;
+                // 1. KI Antwort
+                setChatHistory(prev => {
+                    const copy = [...prev];
+                    // Korrektur in die letzte User-Nachricht einfügen
+                    if (data.correction && copy.length >= 1) {
+                        // Wir suchen die letzte User Nachricht
+                        for (let i = copy.length - 1; i >= 0; i--) {
+                            if (copy[i].role === 'user') {
+                                copy[i].correction = data.correction;
+                                break;
+                            }
                         }
-                        return copy;
-                    });
+                    }
+                    // Neue Nachricht anhängen
+                    copy.push({ role: 'model', content: data.text, translation: data.translation });
+                    return copy;
+                });
+
+                // 2. Vorschläge updaten
+                if (data.suggestions && Array.isArray(data.suggestions)) {
+                    setSuggestions(data.suggestions);
                 }
 
-                // 3. Spiel-Logik (Herzen abziehen)
-                if (data.patience_change < 0) {
-                    console.log("💔 Lost a heart!");
-                    setChatHearts(h => {
-                        const newHearts = Math.max(0, h - 1);
-                        // Sofort Game Over prüfen, um UI Glitch zu vermeiden
-                        if (newHearts === 0) setChatStatus('lost');
-                        return newHearts;
-                    });
-                }
-
-                // 4. Status Check
-                if (data.mission_status === 'success') {
-                    setChatStatus('won');
-                } else if (data.mission_status === 'failed') {
-                    setChatStatus('lost');
-                }
+                // 3. Game Stats
+                if (data.patience_change < 0) setChatHearts(h => Math.max(0, h - 1));
+                if (data.mission_status === 'success') setChatStatus('won');
+                else if (data.mission_status === 'failed' || (chatHearts <= 1 && data.patience_change < 0)) setChatStatus('lost');
 
             } catch (e) {
-                console.error("CHAT ERROR:", e);
-                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Connection Error. Try again." }]);
+                console.error(e);
+                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Connection lost." }]);
             } finally {
                 setChatLoading(false);
             }
@@ -1254,13 +1239,14 @@ function App() {
 
         // --- VIEW 1: LOBBY ---
         if (chatStatus === 'lobby') {
-            return (
+             return (
                 <div className="w-full animate-in fade-in duration-300 pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-6 px-1">
                         <button onClick={() => setView('skills')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"><ArrowLeft size={24}/></button>
                         <h2 className="text-2xl font-bold text-slate-800">Roleplay</h2>
                     </div>
 
+                    {/* Level Selector */}
                     <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm mb-6">
                         <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Difficulty</div>
                         <div className="flex justify-between">
@@ -1276,10 +1262,10 @@ function App() {
                             <button key={s.id} 
                                 onClick={() => {
                                     setChatScenario(s);
-                                    // HIER: Das Intro sofort setzen!
                                     setChatHistory([{ role: 'system', content: s.intro }]);
                                     setChatHearts(3);   
                                     setChatStatus('active');
+                                    setSuggestions([]); // Reset
                                 }}
                                 className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all h-40 flex flex-col justify-between group hover:border-indigo-200"
                             >
@@ -1292,7 +1278,7 @@ function App() {
             );
         }
 
-        // --- VIEW 2: GAME OVER / WIN ---
+        // --- VIEW 2: GAME OVER ---
         if (chatStatus === 'won' || chatStatus === 'lost') {
             return (
                 <div className="h-[80vh] flex flex-col items-center justify-center text-center px-6 animate-in zoom-in duration-300">
@@ -1306,7 +1292,8 @@ function App() {
 
         // --- VIEW 3: ACTIVE CHAT ---
         return (
-            <div className="fixed top-0 left-0 w-full h-[100dvh] z-50 bg-slate-50 flex flex-col">
+            <div className="fixed top-0 left-0 w-full h-[100dvh] z-40 bg-slate-50 flex flex-col">
+                
                 {/* Header */}
                 <div className="bg-white border-b border-slate-200 px-4 py-4 pt-safe flex justify-between items-center shadow-sm z-10 shrink-0">
                     <button onClick={() => setChatStatus('lobby')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full"><ArrowLeft size={24}/></button>
@@ -1317,53 +1304,65 @@ function App() {
                     <div className="flex gap-1">{[1,2,3].map(i => (<Heart key={i} size={20} className={i <= chatHearts ? "fill-red-500 text-red-500" : "text-slate-200"} />))}</div>
                 </div>
 
-                {/* Messages */}
+                {/* Chat Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {/* Mission Goal */}
-                    <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-center mb-6 text-xs text-indigo-800">
-                        🎯 Goal: {chatScenario?.goal}
-                    </div>
+                    <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-center mb-6 text-xs text-indigo-800">🎯 Goal: {chatScenario?.goal}</div>
 
                     {chatHistory.map((msg, idx) => {
-                        // System Nachricht (Intro) sieht anders aus
-                        if (msg.role === 'system') {
-                            return <div key={idx} className="text-center text-xs text-slate-400 italic my-4">✨ {msg.content}</div>;
-                        }
+                        if (msg.role === 'system') return <div key={idx} className="text-center text-xs text-slate-400 italic my-4">✨ {msg.content}</div>;
 
                         return (
                             <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                                 
-                                {/* KORREKTUR BUBBLE (über der User Nachricht) */}
+                                {/* KORREKTUR DISPLAY (Schön rot und deutlich) */}
                                 {msg.role === 'user' && msg.correction && (
-                                    <div className="mb-1 mr-2 bg-red-50 text-red-600 text-[10px] px-2 py-1 rounded-lg border border-red-100 animate-in fade-in slide-in-from-bottom-1 max-w-[80%]">
-                                        💡 {msg.correction}
+                                    <div className="mb-1 mr-1 bg-rose-50 text-rose-700 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-rose-100 animate-in fade-in slide-in-from-bottom-1 max-w-[85%] shadow-sm">
+                                        <span className="mr-1">❌</span> Better: "{msg.correction}"
                                     </div>
                                 )}
 
-                                <div className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed relative group shadow-sm ${
-                                    msg.role === 'user' 
-                                    ? 'bg-indigo-600 text-white rounded-tr-none' 
-                                    : 'bg-white border border-slate-100 text-slate-800 rounded-tl-none'
-                                }`}
-                                onClick={() => msg.translation && alert(msg.translation)} 
+                                {/* Message Bubble */}
+                                <div 
+                                    className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed relative group shadow-sm cursor-pointer active:scale-95 transition-transform ${
+                                        msg.role === 'user' 
+                                        ? 'bg-indigo-600 text-white rounded-tr-none' 
+                                        : 'bg-white border border-slate-100 text-slate-800 rounded-tl-none'
+                                    }`}
+                                    onClick={() => msg.translation && setActiveTranslation(msg)} 
                                 >
                                     {msg.content}
                                     {msg.translation && msg.role === 'model' && (
-                                        <div className="absolute -bottom-5 left-0 text-[10px] text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Tap to translate</div>
+                                        <div className="absolute -bottom-6 left-0 text-[10px] text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                                            <BookOpen size={10}/> Tap to translate
+                                        </div>
                                     )}
                                 </div>
                             </div>
                         );
                     })}
                     
-                    {chatLoading && (
-                         <div className="flex justify-start"><div className="bg-slate-200 text-slate-500 px-4 py-2 rounded-2xl rounded-tl-none text-xs animate-pulse">...</div></div>
-                    )}
+                    {chatLoading && <div className="flex justify-start"><div className="bg-slate-200 text-slate-500 px-4 py-2 rounded-2xl rounded-tl-none text-xs animate-pulse">...</div></div>}
                     <div style={{ height: 10 }}></div>
                 </div>
 
-                {/* Input */}
-                <div className="bg-white border-t border-slate-200 p-4 pb-12 w-full shrink-0">
+                {/* Input Area + Suggestions */}
+                <div className="bg-white border-t border-slate-200 p-4 pb-12 w-full shrink-0 flex flex-col gap-3">
+                    
+                    {/* SUGGESTIONS (Chips) */}
+                    {suggestions.length > 0 && !chatLoading && (
+                        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                            {suggestions.map((sugg, idx) => (
+                                <button 
+                                    key={idx} 
+                                    onClick={() => sendMessage(sugg)}
+                                    className="whitespace-nowrap bg-indigo-50 text-indigo-600 border border-indigo-100 px-3 py-1.5 rounded-full text-xs font-bold active:scale-95 transition-transform"
+                                >
+                                    {sugg}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
                     <div className="flex gap-2">
                         <input 
                             type="text" 
@@ -1373,11 +1372,30 @@ function App() {
                             placeholder="Type your reply..."
                             className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"
                         />
-                        <button onClick={sendMessage} disabled={!chatInput.trim() || chatLoading} className="bg-indigo-600 text-white p-3 rounded-xl disabled:opacity-50">
+                        <button onClick={() => sendMessage()} disabled={!chatInput.trim() || chatLoading} className="bg-indigo-600 text-white p-3 rounded-xl disabled:opacity-50">
                             <ArrowUp size={24} className="rotate-90"/> 
                         </button>
                     </div>
                 </div>
+
+                {/* TRANSLATION MODAL (Das schöne Overlay) */}
+                {activeTranslation && (
+                    <div className="absolute inset-0 z-50 flex items-end justify-center bg-black/20 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setActiveTranslation(null)}>
+                        <div className="bg-white w-full p-6 rounded-t-[2rem] shadow-2xl animate-in slide-in-from-bottom-10 duration-300" onClick={e => e.stopPropagation()}>
+                            <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6"></div>
+                            <div className="mb-4">
+                                <p className="text-sm text-slate-400 font-bold uppercase tracking-wider mb-2">Original</p>
+                                <p className="text-lg text-slate-800 font-medium">{activeTranslation.content}</p>
+                            </div>
+                            <div className="mb-6">
+                                <p className="text-sm text-indigo-500 font-bold uppercase tracking-wider mb-2">Translation</p>
+                                <p className="text-lg text-indigo-900 font-medium">{activeTranslation.translation}</p>
+                            </div>
+                            <button onClick={() => setActiveTranslation(null)} className="w-full bg-slate-100 text-slate-600 py-4 rounded-xl font-bold">Close</button>
+                        </div>
+                    </div>
+                )}
+
             </div>
         );
     };
