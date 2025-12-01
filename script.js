@@ -417,7 +417,7 @@ function App() {
         return () => clearInterval(interval);
     }, []);
 
-    
+
     // Die sichere Fetch-Funktion (Mix aus All-Time und Week)
     const fetchMixedMemes = async () => {
         if (loadingMemes || memesData.length > 0) return; // Schutz vor Doppel-Ladung
@@ -1132,6 +1132,7 @@ function App() {
     const renderChat = () => {
         
         // --- LOGIK: NACHRICHT SENDEN ---
+        // --- LOGIK: NACHRICHT SENDEN ---
         const sendMessage = async () => {
             if (!chatInput.trim()) return;
             
@@ -1141,6 +1142,8 @@ function App() {
             setChatLoading(true);
 
             try {
+                console.log("Sending to chat API...", { scenario: chatScenario.title, level: chatLevel });
+
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1150,8 +1153,14 @@ function App() {
                         level: chatLevel 
                     })
                 });
+
+                if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(`API Error: ${res.status} - ${errText}`);
+                }
                 
                 const data = await res.json();
+                console.log("Chat Response:", data);
 
                 if (data.text) {
                     setChatHistory(prev => [...prev, { role: 'model', content: data.text, translation: data.translation }]);
@@ -1165,8 +1174,8 @@ function App() {
                 else if (data.mission_status === 'failed' || (chatHearts <= 1 && data.patience_change < 0)) setChatStatus('lost');
 
             } catch (e) {
-                console.error(e);
-                setChatHistory(prev => [...prev, { role: 'model', content: "(Connection Error) Désolé, je ne vous entends pas." }]);
+                console.error("CHAT ERROR:", e);
+                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Connection Error. Check Console (F12)." }]);
             } finally {
                 setChatLoading(false);
             }
