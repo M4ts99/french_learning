@@ -1177,50 +1177,76 @@ function App() {
         const sendMessage = async () => {
             if (!chatInput.trim()) return;
             
-            // User Nachricht hinzufügen
-            const userMsg = { role: 'user', content: chatInput };
-            const newHistory = [...chatHistory, userMsg];
+            // UI sofort updaten
+            const newHistory = [...chatHistory, { role: 'user', content: chatInput }];
             setChatHistory(newHistory);
             setChatInput('');
             setChatLoading(true);
 
             try {
-                // Speed-Hack: Nur die letzten 6 Nachrichten senden
-                // (Wir senden nicht die 'intro' System-Nachricht, die ist nur lokal für den User)
-                const contextHistory = newHistory.filter(m => m.role !== 'system').slice(-6);
+                console.log("📤 Sending...", { scenario: chatScenario.title, level: chatLevel, msg: chatInput });
 
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        history: contextHistory, 
+                        history: newHistory, 
                         scenario: chatScenario.title, 
                         level: chatLevel 
                     })
                 });
+
+                if (!res.ok) {
+                    throw new Error(`Server Error: ${res.status}`);
+                }
                 
                 const data = await res.json();
+                console.log("📥 AI Response:", data); // SCHAU HIER IN DIE KONSOLE
 
-                // Wir updaten die LETZTE User-Nachricht mit der Korrektur (falls vorhanden)
-                // und fügen dann die KI-Antwort hinzu.
-                setChatHistory(prev => {
-                    const historyCopy = [...prev];
-                    // Letzte Nachricht war vom User? Dann Korrektur anhängen
-                    if (data.correction && historyCopy[historyCopy.length - 1].role === 'user') {
-                        historyCopy[historyCopy.length - 1].correction = data.correction;
-                    }
-                    // KI Antwort
-                    historyCopy.push({ role: 'model', content: data.text, translation: data.translation });
-                    return historyCopy;
-                });
+                // 1. Antwort anzeigen
+                if (data.text) {
+                    setChatHistory(prev => [...prev, { 
+                        role: 'model', 
+                        content: data.text, 
+                        translation: data.translation 
+                    }]);
+                }
+                
+                // 2. Korrektur in die letzte User-Nachricht injizieren
+                if (data.correction) {
+                    setChatHistory(prev => {
+                        const copy = [...prev];
+                        // Finde letzte User Nachricht und füge Korrektur hinzu
+                        // (Wir nehmen vorletztes Element, da das letzte jetzt die AI Antwort ist)
+                        const lastUserIndex = copy.length - 2; 
+                        if (lastUserIndex >= 0 && copy[lastUserIndex].role === 'user') {
+                            copy[lastUserIndex].correction = data.correction;
+                        }
+                        return copy;
+                    });
+                }
 
-                if (data.patience_change < 0) setChatHearts(h => Math.max(0, h - 1));
-                if (data.mission_status === 'success') setChatStatus('won');
-                else if (data.mission_status === 'failed' || (chatHearts <= 1 && data.patience_change < 0)) setChatStatus('lost');
+                // 3. Spiel-Logik (Herzen abziehen)
+                if (data.patience_change < 0) {
+                    console.log("💔 Lost a heart!");
+                    setChatHearts(h => {
+                        const newHearts = Math.max(0, h - 1);
+                        // Sofort Game Over prüfen, um UI Glitch zu vermeiden
+                        if (newHearts === 0) setChatStatus('lost');
+                        return newHearts;
+                    });
+                }
+
+                // 4. Status Check
+                if (data.mission_status === 'success') {
+                    setChatStatus('won');
+                } else if (data.mission_status === 'failed') {
+                    setChatStatus('lost');
+                }
 
             } catch (e) {
-                console.error(e);
-                setChatHistory(prev => [...prev, { role: 'model', content: "..." }]); // Leere Blase bei Fehler
+                console.error("CHAT ERROR:", e);
+                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Connection Error. Try again." }]);
             } finally {
                 setChatLoading(false);
             }
