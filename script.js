@@ -64,6 +64,7 @@ const Smile = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><path 
 const Image = (p) => <Icon {...p} path={<><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></>} />;
 const Wifi = (p) => <Icon {...p} path={<><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></>} />;
 const WifiOff = (p) => <Icon {...p} path={<><line x1="1" x2="23" y1="1" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></>} />;
+const AlertCircle = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></>} />;
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
         { id: 'home', label: 'Home', icon: <HomeIcon size={24} /> },
@@ -430,6 +431,8 @@ function App() {
     const [suggestions, setSuggestions] = useState([]); 
     const [activeTranslation, setActiveTranslation] = useState(null); // Für das schöne Popup
     const [apiStatus, setApiStatus] = useState('checking'); // 'online', 'offline', 'checking'
+    
+    const [selectedMsg, setSelectedMsg] = useState(null); // Umbenannt von activeTranslation, da es jetzt mehr kann
 
     // --- HEALTH CHECK (Beim Start) ---
     useEffect(() => {
@@ -1173,27 +1176,19 @@ function App() {
         );
     };
     const renderChat = () => {
-        // Lokale UI States für den Chat
 
-        // --- LOGIK: NACHRICHT SENDEN ---
         const sendMessage = async (textOverride = null) => {
             const msgText = textOverride || chatInput;
             if (!msgText.trim()) return;
             
-            // User Nachricht setzen
             const userMsg = { role: 'user', content: msgText };
-            // WICHTIG: Wir nutzen hier eine Funktions-Update, um Race Conditions zu vermeiden
             setChatHistory(prev => [...prev, userMsg]);
-            
             setChatInput('');
             setChatLoading(true);
-            setSuggestions([]); // Alte Vorschläge löschen während wir laden
+            setSuggestions([]); 
 
             try {
-                // Wir bauen die History für den Request
-                // (Wir nehmen den aktuellen State + die neue Nachricht)
                 const currentHistoryForApi = [...chatHistory, userMsg];
-                // Nur die letzten 6 für Kontext nehmen
                 const contextSlice = currentHistoryForApi.slice(-6);
 
                 const res = await fetch('/api/chat', {
@@ -1207,50 +1202,38 @@ function App() {
                 });
                 
                 const data = await res.json();
-                console.log("AI Data:", data); // Debugging: Schau in die Konsole ob suggestions da sind
 
-                // 1. Vorschläge setzen (WICHTIG)
-                if (data.suggestions && data.suggestions.length > 0) {
+                if (data.suggestions && Array.isArray(data.suggestions)) {
                     setSuggestions(data.suggestions);
                 }
 
-                // 2. History Update (Korrektur + Antwort)
                 setChatHistory(prev => {
                     const newHistory = [...prev];
-                    
-                    // Korrektur einfügen (in die letzte User-Nachricht)
                     if (data.correction) {
                         const lastIndex = newHistory.length - 1;
                         if (newHistory[lastIndex].role === 'user') {
                             newHistory[lastIndex].correction = data.correction;
                         }
                     }
-                    
-                    // KI Antwort hinzufügen
-                    newHistory.push({ 
-                        role: 'model', 
-                        content: data.text, 
-                        translation: data.translation 
-                    });
-                    
+                    newHistory.push({ role: 'model', content: data.text, translation: data.translation });
                     return newHistory;
                 });
 
-                // 3. Game Stats
                 if (data.patience_change < 0) setChatHearts(h => Math.max(0, h - 1));
                 if (data.mission_status === 'success') setChatStatus('won');
-                else if (data.mission_status === 'failed') setChatStatus('lost');
+                else if (data.mission_status === 'failed' || (chatHearts <= 1 && data.patience_change < 0)) setChatStatus('lost');
 
             } catch (e) {
                 console.error(e);
-                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Error. Try again." }]);
+                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Connection Error." }]);
             } finally {
                 setChatLoading(false);
             }
         };
 
-        // --- VIEW 1: LOBBY ---
-        if (chatStatus === 'lobby') {
+        // --- LOBBY & GAME OVER BLEIBEN GLEICH (Kopiere sie von vorher oder lass sie so) ---
+        if (chatStatus === 'lobby') { 
+            // ... dein Lobby Code von vorhin ...
              return (
                 <div className="w-full animate-in fade-in duration-300 pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-6 px-1">
@@ -1277,7 +1260,7 @@ function App() {
                                     setChatHistory([{ role: 'system', content: s.intro }]);
                                     setChatHearts(3);   
                                     setChatStatus('active');
-                                    setSuggestions([]); // Reset
+                                    setSuggestions([]); 
                                 }}
                                 className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all h-40 flex flex-col justify-between group hover:border-indigo-200"
                             >
@@ -1289,10 +1272,8 @@ function App() {
                 </div>
             );
         }
-
-        // --- VIEW 2: GAME OVER ---
         if (chatStatus === 'won' || chatStatus === 'lost') {
-            return (
+             return (
                 <div className="h-[80vh] flex flex-col items-center justify-center text-center px-6 animate-in zoom-in duration-300">
                     <div className="text-6xl mb-4">{chatStatus === 'won' ? '🎉' : '💀'}</div>
                     <h2 className="text-3xl font-bold text-slate-800 mb-2">{chatStatus === 'won' ? 'Mission Accomplished!' : 'Mission Failed'}</h2>
@@ -1302,7 +1283,7 @@ function App() {
             );
         }
 
-        // --- VIEW 3: ACTIVE CHAT ---
+        // --- VIEW 3: ACTIVE CHAT (Update) ---
         return (
             <div className="fixed top-0 left-0 w-full h-[100dvh] z-40 bg-slate-50 flex flex-col">
                 
@@ -1326,84 +1307,85 @@ function App() {
                         return (
                             <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                                 
-                                {/* KORREKTUR DISPLAY (Schön rot und deutlich) */}
-                                {msg.role === 'user' && msg.correction && (
-                                    <div className="mb-1 mr-1 bg-rose-50 text-rose-700 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-rose-100 animate-in fade-in slide-in-from-bottom-1 max-w-[85%] shadow-sm">
-                                        <span className="mr-1">❌</span> Better: "{msg.correction}"
-                                    </div>
-                                )}
-
-                                {/* Message Bubble */}
+                                {/* Bubble */}
                                 <div 
-                                    className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed relative group shadow-sm cursor-pointer active:scale-95 transition-transform ${
+                                    className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed relative group shadow-sm cursor-pointer active:scale-95 transition-transform flex items-center gap-2 ${
                                         msg.role === 'user' 
                                         ? 'bg-indigo-600 text-white rounded-tr-none' 
                                         : 'bg-white border border-slate-100 text-slate-800 rounded-tl-none'
                                     }`}
-                                    onClick={() => msg.translation && setActiveTranslation(msg)} 
+                                    // Klick öffnet jetzt das Detail-Popup (für Übersetzung ODER Korrektur)
+                                    onClick={() => setSelectedMsg(msg)} 
                                 >
-                                    {msg.content}
-                                    {msg.translation && msg.role === 'model' && (
-                                        <div className="absolute -bottom-6 left-0 text-[10px] text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-                                            <BookOpen size={10}/> Tap to translate
+                                    {/* Rotes Icon wenn Fehler (nur bei User) */}
+                                    {msg.role === 'user' && msg.correction && (
+                                        <div className="bg-white/20 p-1 rounded-full shrink-0 animate-pulse">
+                                            <AlertCircle size={16} className="text-white" />
                                         </div>
                                     )}
+                                    
+                                    <div>{msg.content}</div>
                                 </div>
                             </div>
                         );
                     })}
-                    
                     {chatLoading && <div className="flex justify-start"><div className="bg-slate-200 text-slate-500 px-4 py-2 rounded-2xl rounded-tl-none text-xs animate-pulse">...</div></div>}
                     <div style={{ height: 10 }}></div>
                 </div>
 
-                {/* Input Area + Suggestions */}
+                {/* Input & Suggestions */}
                 <div className="bg-white border-t border-slate-200 p-4 pb-12 w-full shrink-0 flex flex-col gap-3">
-                    
-                    {/* SUGGESTIONS (Chips) */}
                     {suggestions.length > 0 && !chatLoading && (
                         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                             {suggestions.map((sugg, idx) => (
-                                <button 
-                                    key={idx} 
-                                    onClick={() => sendMessage(sugg)}
-                                    className="whitespace-nowrap bg-indigo-50 text-indigo-600 border border-indigo-100 px-3 py-1.5 rounded-full text-xs font-bold active:scale-95 transition-transform"
-                                >
-                                    {sugg}
-                                </button>
+                                <button key={idx} onClick={() => sendMessage(sugg)} className="whitespace-nowrap bg-indigo-50 text-indigo-600 border border-indigo-100 px-3 py-1.5 rounded-full text-xs font-bold active:scale-95 transition-transform">{sugg}</button>
                             ))}
                         </div>
                     )}
-
                     <div className="flex gap-2">
-                        <input 
-                            type="text" 
-                            value={chatInput}
-                            onChange={(e) => setChatInput(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                            placeholder="Type your reply..."
-                            className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"
-                        />
-                        <button onClick={() => sendMessage()} disabled={!chatInput.trim() || chatLoading} className="bg-indigo-600 text-white p-3 rounded-xl disabled:opacity-50">
-                            <ArrowUp size={24} className="rotate-90"/> 
-                        </button>
+                        <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && sendMessage()} placeholder="Type your reply..." className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"/>
+                        <button onClick={() => sendMessage()} disabled={!chatInput.trim() || chatLoading} className="bg-indigo-600 text-white p-3 rounded-xl disabled:opacity-50"><ArrowUp size={24} className="rotate-90"/></button>
                     </div>
                 </div>
 
-                {/* TRANSLATION MODAL (Das schöne Overlay) */}
-                {activeTranslation && (
-                    <div className="bg-white w-full p-6 pb-12 rounded-t-[2.5rem] shadow-2xl animate-in slide-in-from-bottom-10 duration-300 mb-safe" onClick={e => e.stopPropagation()}>
-                        <div className="bg-white w-full p-6 rounded-t-[2rem] shadow-2xl animate-in slide-in-from-bottom-10 duration-300" onClick={e => e.stopPropagation()}>
+                {/* --- DETAIL MODAL (Overlay für Korrektur & Übersetzung) --- */}
+                {selectedMsg && (
+                    <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/30 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setSelectedMsg(null)}>
+                        <div className="bg-white w-full p-6 pb-12 rounded-t-[2.5rem] shadow-2xl animate-in slide-in-from-bottom-10 duration-300 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                            
                             <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6"></div>
-                            <div className="mb-4">
-                                <p className="text-sm text-slate-400 font-bold uppercase tracking-wider mb-2">Original</p>
-                                <p className="text-lg text-slate-800 font-medium">{activeTranslation.content}</p>
-                            </div>
+
+                            {/* Sektion 1: Original */}
                             <div className="mb-6">
-                                <p className="text-sm text-indigo-500 font-bold uppercase tracking-wider mb-2">Translation</p>
-                                <p className="text-lg text-indigo-900 font-medium">{activeTranslation.translation}</p>
+                                <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">Original</p>
+                                <p className="text-lg text-slate-800 font-medium leading-snug">{selectedMsg.content}</p>
                             </div>
-                            <button onClick={() => setActiveTranslation(null)} className="w-full bg-slate-100 text-slate-600 py-4 rounded-xl font-bold">Close</button>
+
+                            {/* Sektion 2: Korrektur (Nur wenn vorhanden) */}
+                            {selectedMsg.correction && (
+                                <div className="mb-6 bg-rose-50 border border-rose-100 p-4 rounded-2xl">
+                                    <div className="flex items-center gap-2 mb-2 text-rose-600">
+                                        <AlertCircle size={18} />
+                                        <p className="text-xs font-bold uppercase tracking-wider">Correction</p>
+                                    </div>
+                                    <p className="text-lg text-rose-800 font-medium leading-snug">{selectedMsg.correction}</p>
+                                </div>
+                            )}
+
+                            {/* Sektion 3: Übersetzung (Nur wenn vorhanden) */}
+                            {selectedMsg.translation && (
+                                <div className="mb-6">
+                                    <div className="flex items-center gap-2 mb-2 text-indigo-500">
+                                        <BookOpen size={18} />
+                                        <p className="text-xs font-bold uppercase tracking-wider">Translation</p>
+                                    </div>
+                                    <p className="text-lg text-indigo-900 font-medium leading-snug">{selectedMsg.translation}</p>
+                                </div>
+                            )}
+
+                            <button onClick={() => setSelectedMsg(null)} className="w-full bg-slate-100 text-slate-600 py-4 rounded-xl font-bold active:scale-[0.98] transition-transform">
+                                Close
+                            </button>
                         </div>
                     </div>
                 )}
