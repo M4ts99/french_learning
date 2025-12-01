@@ -239,6 +239,42 @@ const GRAMMAR_MODULES = [
         topics: ['Asking Questions', 'Negation (ne...pas)', 'Pronouns', 'Prepositions'] 
     }
 ];
+// --- NEWS SOURCES ---
+const NEWS_SOURCES = [
+    { 
+        id: 'kids', 
+        name: '1jour1actu', 
+        level: 'A2', 
+        desc: 'For Kids (Easy)', 
+        // Wir nehmen den Haupt-Feed, der ist technischer sauberer
+        rss: 'https://www.1jour1actu.com/feed', 
+        color: 'bg-emerald-100 text-emerald-700 border-emerald-200' 
+    },
+    { 
+        id: '20min', 
+        name: '20 Minutes', 
+        level: 'B1', 
+        desc: 'Short & Punchy', 
+        rss: 'https://www.20minutes.fr/feeds/rss-une.xml', 
+        color: 'bg-blue-100 text-blue-700 border-blue-200' 
+    },
+    { 
+        id: 'f24', 
+        name: 'France 24', 
+        level: 'B2', 
+        desc: 'International', 
+        rss: 'https://www.france24.com/fr/france/rss', 
+        color: 'bg-rose-100 text-rose-700 border-rose-200' 
+    },
+    { 
+        id: 'slate', 
+        name: 'Slate.fr', 
+        level: 'C1', 
+        desc: 'Opinion & Culture', 
+        rss: 'https://www.slate.fr/rss.xml', 
+        color: 'bg-slate-100 text-slate-700 border-slate-200' 
+    }
+];
 
 
 // --- NEW COMPONENTS ---
@@ -310,8 +346,10 @@ function App() {
     const [currentJoke, setCurrentJoke] = useState(null);
     const [loadingContent, setLoadingContent] = useState(false);
 
-   
-        // Ist der Witz aufgelöst?
+    const [currentNewsSource, setCurrentNewsSource] = useState(NEWS_SOURCES[2]);
+    
+    
+    // Ist der Witz aufgelöst?
     const [jokeRevealed, setJokeRevealed] = useState(false);
     // Audio & Voices (WICHTIG!)
     // ... oben in function App() ...
@@ -530,56 +568,141 @@ function App() {
     // --- ANKI ALGORITHM (SM-2 Variation) ---
     // --- ANKI ALGORITHM (SM-2 Variation) ---
     // --- ARTICLE READER LOGIC ---
+    // --- ARTICLE READER LOGIC (Optimiert) ---
+    // --- ARTICLE READER LOGIC (Verbesserter Cleaner) ---
+    // --- ARTICLE READER LOGIC (Aggressiver Cleaner) ---
     const openArticle = async (url) => {
-        // 1. UI sofort umschalten
         setView('reader');
-        setReaderMode('select'); // Zeigt den Lade-Screen
+        setReaderMode('select');
         setLoadingStory(true);
-        setLoadingTip("Fetching article via Magic Reader...");
+        setLoadingTip("Cleaning up the mess...");
 
         try {
-            // 2. Jina AI via Proxy aufrufen
+            // 1. Jina AI via Proxy
+            // Wir nutzen hier 'r.jina.ai' im Markdown Modus
             const jinaUrl = `https://r.jina.ai/${url}`;
-            const proxy = "https://corsproxy.io/?"; // Brücke gegen Blockaden
+            const proxy = "https://corsproxy.io/?"; 
             
             const res = await fetch(proxy + encodeURIComponent(jinaUrl));
             if (!res.ok) throw new Error("Article fetch failed");
             
-            const markdown = await res.text();
+            const rawMarkdown = await res.text();
 
-            // 3. Markdown bereinigen (Jina liefert Markdown, wir brauchen Plain Text)
-            // Titel extrahieren (meist die erste Zeile mit #)
-            const lines = markdown.split('\n');
-            const titleLine = lines.find(l => l.startsWith('Title:')) || lines[0];
-            const title = titleLine.replace('Title:', '').replace(/#/g, '').trim();
+            // --- STEP A: GROBE VORREINIGUNG ---
+            let text = rawMarkdown
+                // Entferne Jina Header (URLSource etc.) bis zum ersten echten Inhalt
+                .replace(/^[\s\S]*?MarkdownContent:/i, '') 
+                // Entferne Bilder & Links
+                .replace(/!\[.*?\]\(.*?\)/g, '') 
+                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') 
+                .replace(/https?:\/\/\S+/g, '')
+                // Entferne Markdown Fett/Kursiv
+                .replace(/[*_#`]/g, '')
+                // Entferne Mehrfach-Leerzeichen
+                .replace(/[ \t]+/g, ' '); 
 
-            // Textkörper säubern
-            const cleanText = markdown
-                .replace(/^Title:.*$/gm, '') // Titelzeile weg (haben wir schon)
-                .replace(/!\[.*?\]\(.*?\)/g, '') // Bilder entfernen
-                .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Links: URL weg, Text behalten
-                .replace(/https?:\/\/\S+/g, '') // Rohe URLs entfernen
-                .replace(/[#*`_]/g, '') // Markdown Zeichen (*, #) entfernen
-                .replace(/\n+/g, ' ') // Zeilenumbrüche zu Leerzeichen
-                .replace(/\s+/g, ' ') // Doppelte Leerzeichen weg
-                .trim()
-                .substring(0, 2000); // Limitieren auf 2000 Zeichen (damit es nicht zu lang wird)
+            // --- STEP B: ZEILEN-ANALYSE (Der Filter) ---
+            const lines = text.split('\n');
+            let cleanLines = [];
+            let titleFound = false;
+            let finalTitle = "News Article";
+            
+            // Wörter, die das Ende des Artikels markieren (Footer-Start)
+            // Sobald wir eines davon sehen, hören wir auf zu lesen.
+            const stopWords = [
+                "Lire aussi", "Sur le même sujet", "Services", "Mentions légales", 
+                "Nous contacter", "Publicité", "Sponsorisé", "Jeux", "Bons plans",
+                "Votre avis", "Commentaires", "À la une", "En continu", "Par thématique"
+            ];
 
-            // 4. Als Story setzen
+            // Wörter, die Zeilen sofort disqualifizieren (Cookie Banner etc.)
+            const junkMarkers = [
+                "Menu", "Search", "Recherche", "Connexion", "S'abonner", "Newsletter",
+                "Facebook", "Twitter", "Instagram", "YouTube", "Pinterest",
+                "cookie", "accepter", "refuser", "paramétrer", "consentement",
+                "Copyright", "Tous droits réservés", "Temps de lecture", "Publié le",
+                "Divertissement", "Sport", "Planète", "High-Tech", "Conso", // Menü-Kategorien
+                "========", "--------"
+            ];
+
+            for (let line of lines) {
+                let l = line.trim();
+                
+                if (l.length < 3) continue; // Zu kurz
+
+                // 1. Titel finden (Erste lange Zeile)
+                if (!titleFound) {
+                    if (l.length > 20 && !junkMarkers.some(m => l.includes(m))) {
+                        finalTitle = l.replace('Title:', '').trim();
+                        titleFound = true;
+                    }
+                    continue; // Titel nicht in den Body packen
+                }
+
+                // 2. NOTBREMSE: Sind wir im Footer?
+                // Wenn die Zeile exakt eines der Stop-Wörter ist, brechen wir ab.
+                if (stopWords.some(s => l.toLowerCase() === s.toLowerCase() || l.toLowerCase().startsWith(s.toLowerCase() + ":"))) {
+                    break; // STOPP! Der Rest ist Müll.
+                }
+
+                // 3. JUNK FILTER
+                const isJunk = junkMarkers.some(marker => l.toLowerCase().includes(marker.toLowerCase()));
+                if (isJunk) continue;
+
+                // 4. QUALITÄTS-CHECK
+                // Ein echter Satz endet meist mit . ! ? oder »
+                const hasPunctuation = /[.!?»]$/.test(l);
+                // Ein echter Absatz ist meist länger als 80 Zeichen
+                const isLong = l.length > 80;
+                // Ist es eine Zeitangabe (z.B. "12:30")? Weg damit.
+                const isTime = /^\d{1,2}:\d{2}$/.test(l);
+
+                // WIR NEHMEN DIE ZEILE NUR WENN:
+                // Sie lang ist ODER Satzzeichen hat UND keine Zeitangabe ist.
+                if ((isLong || hasPunctuation) && !isTime) {
+                    cleanLines.push(l);
+                }
+            }
+
+            const bodyText = cleanLines.join('\n\n');
+
+            // --- STEP C: FALLBACK FÜR 1JOUR1ACTU ---
+            // Wenn nach dem Reinigen fast nichts übrig ist (oft bei 1jour1actu, weil die Struktur anders ist),
+            // versuchen wir es weniger streng.
+            if (bodyText.length < 200) {
+                 // Notfall-Plan: Einfach die längsten 5 Absätze nehmen
+                 const sortedByLength = lines.sort((a, b) => b.length - a.length);
+                 const fallbackText = sortedByLength.slice(0, 6).join('\n\n');
+                 
+                 if (fallbackText.length > 200) {
+                     setCurrentStory({ title: finalTitle, text: fallbackText, quiz: null, isArticle: true });
+                     setReaderMode('reading');
+                     setLoadingStory(false);
+                     return;
+                 }
+            }
+
+            if (bodyText.length < 100) {
+                throw new Error("Text too short after cleaning");
+            }
+
+            // 4. ERGEBNIS SETZEN
             setCurrentStory({
-                title: title || "News Article",
-                text: cleanText,
-                quiz: null, // Nachrichten haben kein Quiz
-                isArticle: true // Flag für das UI
+                title: finalTitle,
+                text: bodyText,
+                quiz: null, 
+                isArticle: true
             });
             
             setReaderMode('reading');
 
         } catch (e) {
             console.error(e);
-            alert("Could not load article inside app. Opening browser...");
-            window.open(url, '_blank'); // Fallback
-            setView('explore'); // Zurück
+            // Smart Fallback: Wenn es nicht klappt, Link im Browser öffnen
+            if(confirm("This article format is hard to read in-app. Open in Browser instead?")) {
+                window.open(url, '_blank');
+            }
+            setView('explore'); 
         } finally {
             setLoadingStory(false);
         }
@@ -1279,7 +1402,7 @@ function App() {
                     {/* FACT (Jetzt im Header) */}
                     <div className="mt-3 flex items-start gap-2 opacity-80">
                         <div className="min-w-[3px] h-full bg-indigo-300 rounded-full"></div>
-                        <p className="text-xs text-slate-500 italic leading-snug">
+                        <p className="text-m text-slate-500 italic leading-snug">
                             "{dailyFact}"
                         </p>
                     </div>
@@ -1410,15 +1533,27 @@ function App() {
  
 
         // --- DATA FETCHERS ---
-        const fetchNews = async () => {
-            if (newsData.length > 0) return; 
+        // 1. NEWS FETCHER (Dynamisch)
+        const fetchNews = async (sourceOverride = null) => {
+            // Wenn wir die Funktion aufrufen, können wir optional eine neue Quelle erzwingen
+            const source = sourceOverride || currentNewsSource;
+            
             setLoadingContent(true);
             try {
-                const rssUrl = 'https://www.france24.com/fr/france/rss';
-                const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
+                // RSS2JSON API nutzen
+                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.rss)}`;
+                const res = await fetch(apiUrl);
                 const data = await res.json();
-                if (data.items) setNewsData(data.items.slice(0, 15));
-            } catch (e) { console.error(e); }
+                
+                if (data.status === 'ok' && data.items) {
+                    setNewsData(data.items.slice(0, 15));
+                } else {
+                    throw new Error("Feed error");
+                }
+            } catch (e) { 
+                console.error(e);
+                setNewsData([]); // Leere Liste bei Fehler
+            }
             setLoadingContent(false);
         };
 
@@ -1536,8 +1671,9 @@ function App() {
         // =========================================
 
         // 1. ARTICLES VIEW (Updated)
+        // 1. ARTICLES VIEW (Multi-Source News Kiosk)
         if (exploreMode === 'articles') {
-            // ... (fetchNews Logik bleibt gleich) ...
+            // Initial laden, wenn leer
             if (newsData.length === 0 && !loadingContent) fetchNews();
 
             return (
@@ -1546,24 +1682,61 @@ function App() {
                         <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
                         <h2 className="text-2xl font-bold text-slate-800">News Kiosk</h2>
                     </div>
-                    {loadingContent && <div className="text-center py-10 text-slate-400 animate-pulse">Loading headlines...</div>}
-                    <div className="space-y-4">
-                        {newsData.map((item, idx) => (
-                            // HIER IST DIE ÄNDERUNG:
-                            <button 
-                                key={idx} 
-                                onClick={() => openArticle(item.link)} // <--- Ruft jetzt unseren Magic Reader auf
-                                className="w-full text-left block bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all"
-                            >
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="text-[10px] font-bold bg-rose-50 text-rose-600 px-2 py-1 rounded">France 24</span>
-                                    <span className="text-[10px] text-slate-300">{new Date(item.pubDate).toLocaleDateString()}</span>
-                                </div>
-                                <h3 className="font-bold text-slate-800 leading-snug mb-2">{item.title}</h3>
-                                {item.enclosure?.link && <img src={item.enclosure.link} alt="News" className="w-full h-32 object-cover rounded-xl opacity-90" />}
-                            </button>
-                        ))}
+
+                    {/* QUELLEN AUSWAHL (Horizontal Scroll) */}
+                    <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide mb-2">
+                        {NEWS_SOURCES.map(source => {
+                            const isActive = currentNewsSource.id === source.id;
+                            return (
+                                <button 
+                                    key={source.id}
+                                    onClick={() => {
+                                        setCurrentNewsSource(source);
+                                        setNewsData([]); // Liste leeren für Ladeeffekt
+                                        fetchNews(source); // Sofort neu laden
+                                    }}
+                                    className={`flex flex-col items-start px-4 py-2 rounded-xl border transition-all min-w-[120px] ${
+                                        isActive 
+                                        ? `${source.color} border-transparent shadow-sm scale-[1.02]` 
+                                        : 'bg-white border-slate-100 text-slate-400 hover:border-slate-300'
+                                    }`}
+                                >
+                                    <div className="font-bold text-sm">{source.name}</div>
+                                    <div className="text-[10px] opacity-80 font-bold mt-1">Level {source.level}</div>
+                                </button>
+                            );
+                        })}
                     </div>
+
+                    {/* ARTIKEL LISTE */}
+                    {loadingContent ? (
+                        <div className="text-center py-20 text-slate-400 animate-pulse flex flex-col items-center">
+                             <RotateCcw className="animate-spin mb-2"/>
+                             Fetching latest news...
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {newsData.map((item, idx) => (
+                                <button 
+                                    key={idx} 
+                                    onClick={() => openArticle(item.link)} 
+                                    className="w-full text-left block bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all group"
+                                >
+                                    <div className="flex justify-between items-start mb-2">
+                                        <span className={`text-[10px] font-bold px-2 py-1 rounded ${currentNewsSource.color.replace('text-', 'bg-').replace('100', '50')} ${currentNewsSource.color.split(' ')[1]}`}>
+                                            {currentNewsSource.name}
+                                        </span>
+                                        <span className="text-[10px] text-slate-300">{new Date(item.pubDate).toLocaleDateString()}</span>
+                                    </div>
+                                    <h3 className="font-bold text-slate-800 leading-snug mb-2 group-hover:text-indigo-600 transition-colors">{item.title}</h3>
+                                    {item.enclosure?.link && <img src={item.enclosure.link} alt="News" className="w-full h-32 object-cover rounded-xl opacity-90" />}
+                                </button>
+                            ))}
+                            {newsData.length === 0 && !loadingContent && (
+                                <div className="text-center p-8 text-slate-400">No articles found. Try another source.</div>
+                            )}
+                        </div>
+                    )}
                 </div>
             );
         }
@@ -2132,24 +2305,39 @@ function App() {
             {renderTranslatorContent()} 
         </div>
     );
-    const fetchAiExamples = async (wordObj) => {
-        // Wort-Objekt übergeben statt nur Text, damit wir den Rank haben
+    // --- ROBUSTER AI GENERATOR ---
+    const fetchAiExamples = async (input) => {
+        // 1. Input analysieren (String oder Objekt?)
+        let wordText = "";
+        let wordRank = "temp";
+
+        if (typeof input === 'string') {
+            wordText = input;
+        } else if (input && input.french) {
+            wordText = input.french;
+            wordRank = input.rank;
+        } else {
+            console.error("Invalid input for examples:", input);
+            return;
+        }
+
         setLoadingExamples(true);
         try {
             const res = await fetch('/api/examples', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ word: wordObj.french })
+                body: JSON.stringify({ word: wordText })
             });
             const data = await res.json();
             
             if (Array.isArray(data)) {
-                // Speichere Ergebnis im Cache unter der ID des Wortes
+                // 2. Sowohl im Cache als auch im direkten State speichern
                 setExampleCache(prev => ({
                     ...prev,
-                    [wordObj.rank]: data
+                    [wordRank]: data
                 }));
-                setExamplesVisible(true); // Direkt anzeigen nach Generierung
+                setAiExamples(data); // Damit wir es sofort anzeigen können
+                setExamplesVisible(true);
             }
         } catch (e) {
             console.error(e);
@@ -2297,9 +2485,12 @@ function App() {
         let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
         let progressPercent = !isSmartMode ? (currentIndex / activeSession.length) * 100 : 0;
 
+        // Check Cache oder Live-Daten
+        const currentExamples = exampleCache[word.rank] || aiExamples;
+
         return (
             <div className="flex flex-col h-full max-w-xl mx-auto w-full pt-4">
-                {/* Header mit Fortschritt */}
+                {/* Header */}
                 <div className="flex items-center justify-between mb-2 pl-1">
                     <button onClick={() => setView('home')} className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
                         <X size={24} />
@@ -2311,152 +2502,92 @@ function App() {
                 {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-6"><div className="bg-indigo-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }}></div></div>}
                 
                 {/* DIE KARTE */}
-                <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-6 flex flex-col items-center justify-center min-h-[350px] relative transition-all animate-in fade-in zoom-in duration-300">
+                <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-6 flex flex-col items-center justify-center min-h-[400px] relative transition-all animate-in fade-in zoom-in duration-300">
                     
                     <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Rank #{word.rank}</div>
                     {isSmartMode && userProgress[word.rank] && <div className="absolute top-4 left-4 bg-indigo-50 text-indigo-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
 
-                    {/* --- FRONT: FRANZÖSISCH --- */}
-                    <div className="mb-6 text-center w-full relative">
-                        <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">French</div>
-                        
-                        <div className="flex items-center justify-center gap-3 mb-6">
-                            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words text-center leading-tight">{word.french}</h2>
-                            <button 
-                                onClick={(e) => { e.stopPropagation(); speak(word.french); }} 
-                                className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 active:scale-90 transition-all shadow-sm shrink-0"
-                            >
-                                <Volume2 size={24} />
-                            </button>
-                        </div>
-                        
-                        {word.example_fr && (
-                            <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl text-left relative group mx-2">
-                                <p className="text-slate-600 italic text-lg leading-relaxed pr-8">"{word.example_fr}"</p>
-                                <button 
-                                    onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }}
-                                    className="absolute right-2 top-2 p-2 text-slate-300 hover:text-indigo-600 hover:bg-white rounded-full transition-colors"
-                                >
-                                    <Volume2 size={25} />
-                                </button>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* --- INTERAKTION / RÜCKSEITE --- */}
+                    {/* VORDERSEITE (Französisch) */}
                     {!isFlipped ? (
-                        <button 
-                            onClick={() => setIsFlipped(true)} 
-                            className="mt-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-200 transition-all flex items-center gap-2"
-                        >
-                            <BookOpen size={20} /> Show Translation
-                        </button>
+                        <>
+                            <div className="mb-8 text-center w-full">
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">French</div>
+                                <div className="flex items-center justify-center gap-3">
+                                    <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words text-center leading-tight">{word.french}</h2>
+                                    <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all shadow-sm shrink-0"><Volume2 size={24} /></button>
+                                </div>
+                                {word.example_fr && <p className="text-slate-500 italic mt-6 text-lg px-4 border-l-2 border-slate-200 pl-4 text-left">"{word.example_fr}"</p>}
+                            </div>
+                            <button onClick={() => setIsFlipped(true)} className="mt-auto bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-200 transition-all flex items-center gap-2 w-full justify-center">
+                                <BookOpen size={20} /> Show Translation
+                            </button>
+                        </>
                     ) : (
-                        <div className="w-full animate-in fade-in duration-300 flex flex-col items-center border-t border-slate-100 pt-6 mt-2">
-                            
-                            {/* ENGLISCH */}
+                        /* RÜCKSEITE (Englisch + AI) */
+                        <div className="w-full animate-in fade-in duration-300 flex flex-col items-center w-full h-full">
                             <div className="text-center mb-6 w-full">
                                 <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
                                 <h3 className="text-3xl font-bold text-indigo-900 mb-2 leading-tight">{word.english || word.german}</h3>
                                 {word.example_en && <p className="text-indigo-400 italic text-sm mt-2 px-4">"{word.example_en}"</p>}
                             </div>
 
-                            {/* --- SMART AI GENERATOR --- */}
-                            <div className="w-full mb-6 px-2">
-                                {(() => {
-                                    // Prüfen, ob wir für dieses Wort schon was im Speicher haben
-                                    const cachedExamples = exampleCache[word.rank];
-
-                                    // FALL 1: Lädt gerade
-                                    if (loadingExamples) {
-                                        return (
-                                            <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2">
-                                                <RotateCcw className="animate-spin" size={16}/> Asking Gemini...
+                            {/* --- AI SECTION --- */}
+                            <div className="w-full mb-6 px-2 flex-1 overflow-y-auto max-h-[200px]">
+                                {loadingExamples ? (
+                                    <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2">
+                                        <RotateCcw className="animate-spin" size={16}/> Generiere Kontext...
+                                    </div>
+                                ) : (
+                                    !currentExamples ? (
+                                        <button 
+                                            // HIER IST DER FIX: Wir übergeben das Wort-Objekt!
+                                            onClick={() => fetchAiExamples(word)} 
+                                            className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2"
+                                        >
+                                            <Sparkles size={16} /> Generate AI Examples
+                                        </button>
+                                    ) : (
+                                        <div className="space-y-3 animate-in fade-in duration-500 text-left">
+                                            <div className="flex justify-between items-center px-1 mb-1">
+                                                 <span className="text-[10px] font-bold text-slate-400 uppercase">AI Context</span>
+                                                 <button onClick={() => { setAiExamples(null); setExamplesVisible(false); }} className="text-[10px] text-indigo-400 font-bold hover:underline">Clear</button>
                                             </div>
-                                        );
-                                    }
-
-                                    // FALL 2: Noch nie generiert -> "Generate" Button
-                                    if (!cachedExamples) {
-                                        return (
-                                            <button 
-                                                onClick={() => fetchAiExamples(word)}
-                                                className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2"
-                                            >
-                                                <Sparkles size={16} /> Generate AI Context
-                                            </button>
-                                        );
-                                    }
-
-                                    // FALL 3: Generiert, aber eingeklappt -> "Show" Button
-                                    if (!examplesVisible) {
-                                        return (
-                                            <button 
-                                                onClick={() => setExamplesVisible(true)}
-                                                className="w-full py-3 bg-indigo-50 text-indigo-600 rounded-xl font-bold text-sm border border-indigo-100 hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2"
-                                            >
-                                                <BookOpen size={16} /> Show Generated Examples ({cachedExamples.length})
-                                            </button>
-                                        );
-                                    }
-
-                                    // FALL 4: Angezeigt -> Liste rendern
-                                    return (
-                                        <div className="space-y-3 animate-in fade-in duration-500">
-                                            <div className="flex justify-between items-end mb-1 px-1">
-                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">AI Context</span>
-                                                <button onClick={() => setExamplesVisible(false)} className="text-[10px] text-indigo-400 font-bold hover:underline">Hide</button>
-                                            </div>
-                                            {cachedExamples.map((ex, idx) => (
-                                                <div key={idx} className="bg-white border border-slate-200 p-3 rounded-xl shadow-sm text-left relative">
+                                            {currentExamples.map((ex, idx) => (
+                                                <div key={idx} className="bg-slate-50 border border-slate-100 p-3 rounded-xl shadow-sm relative group">
                                                     <div className="flex justify-between items-start gap-2">
                                                         <p className="text-slate-700 font-medium text-sm leading-snug pr-6">{ex.fr}</p>
-                                                        <button onClick={() => speak(ex.fr)} className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors">
-                                                            <Volume2 size={16} />
-                                                        </button>
+                                                        <button onClick={() => speak(ex.fr)} className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors"><Volume2 size={16} /></button>
                                                     </div>
-                                                    <p className="text-slate-400 text-xs italic mt-1 border-t border-slate-50 pt-1">{ex.en}</p>
+                                                    <p className="text-slate-400 text-xs italic mt-1 border-t border-slate-200/50 pt-1">{ex.en}</p>
                                                 </div>
                                             ))}
                                         </div>
-                                    );
-                                })()}
+                                    )
+                                )}
                             </div>
-                            {/* --- ENDE AI GENERATOR --- */}
 
+                            {/* BUTTONS */}
                             {isSmartMode ? (
-                                <div className="grid grid-cols-4 gap-2 w-full px-1">
+                                <div className="grid grid-cols-4 gap-2 w-full px-1 mt-auto">
                                     {[
-                                        { q: 0, label: "Again", color: "bg-red-50 text-red-600 border-red-200", sub: "Recap" },
-                                        { q: 1, label: "Hard", color: "bg-amber-50 text-amber-600 border-amber-200", sub: "" },
-                                        { q: 2, label: "Good", color: "bg-green-50 text-green-600 border-green-200", sub: "" },
-                                        { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200", sub: "" }
+                                        { q: 0, label: "Again", color: "bg-red-50 text-red-600 border-red-200" },
+                                        { q: 1, label: "Hard", color: "bg-amber-50 text-amber-600 border-amber-200" },
+                                        { q: 2, label: "Good", color: "bg-green-50 text-green-600 border-green-200" },
+                                        { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200" }
                                     ].map((btn) => {
-                                        // Vorausberechnung für das Label (z.B. "3d")
                                         const stats = calculateAnkiStats(userProgress[word.rank], btn.q);
-                                        const timeLabel = formatInterval(stats.interval);
-                                        
                                         return (
-                                            <button 
-                                                key={btn.label}
-                                                onClick={() => handleResult(btn.q)} 
-                                                className={`${btn.color} border p-2 rounded-xl flex flex-col items-center justify-center transition-all active:scale-95 h-20 shadow-sm`}
-                                            >
-                                                <span className="text-xs font-bold uppercase tracking-tighter opacity-60 mb-1">{timeLabel}</span>
+                                            <button key={btn.label} onClick={() => handleResult(btn.q)} className={`${btn.color} border p-1 rounded-xl flex flex-col items-center justify-center transition-all active:scale-95 h-16 shadow-sm`}>
+                                                <span className="text-[10px] font-bold uppercase tracking-tighter opacity-60 mb-0.5">{formatInterval(stats.interval)}</span>
                                                 <span className="font-bold text-sm leading-none">{btn.label}</span>
                                             </button>
                                         );
                                     })}
                                 </div>
                             ) : (
-                                // --- TEST MODE BUTTONS (Nur 2) ---
-                                <div className="grid grid-cols-2 gap-4 w-full px-2">
-                                    <button onClick={() => handleResult(0)} className="bg-red-50 text-red-600 border border-red-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-20">
-                                        <X size={20} /> Missed
-                                    </button>
-                                    <button onClick={() => handleResult(2)} className="bg-green-50 text-green-600 border border-green-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-20">
-                                        <Check size={20} /> Got it
-                                    </button>
+                                <div className="grid grid-cols-2 gap-4 w-full px-2 mt-auto">
+                                    <button onClick={() => handleResult(0)} className="bg-red-50 text-red-600 border border-red-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-16"><X size={20} /> Missed</button>
+                                    <button onClick={() => handleResult(2)} className="bg-green-50 text-green-600 border border-green-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-16"><Check size={20} /> Got it</button>
                                 </div>
                             )}
                         </div>
