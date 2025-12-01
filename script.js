@@ -62,7 +62,8 @@ const Loader2 = (p) => <Icon {...p} path={<path d="M21 12a9 9 0 1 1-6.219-8.56" 
 const Newspaper = (p) => <Icon {...p} path={<><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></>} />;
 const Smile = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></>} />;
 const Image = (p) => <Icon {...p} path={<><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></>} />;
-
+const Wifi = (p) => <Icon {...p} path={<><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></>} />;
+const WifiOff = (p) => <Icon {...p} path={<><line x1="1" x2="23" y1="1" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></>} />;
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
         { id: 'home', label: 'Home', icon: <HomeIcon size={24} /> },
@@ -384,8 +385,39 @@ function App() {
     const [chatStatus, setChatStatus] = useState('lobby'); // 'lobby', 'active', 'won', 'lost'
     const [chatInput, setChatInput] = useState('');
     const [chatLoading, setChatLoading] = useState(false);
+    
+    const [apiStatus, setApiStatus] = useState('checking'); // 'online', 'offline', 'checking'
 
+    // --- HEALTH CHECK (Beim Start) ---
+    useEffect(() => {
+        const checkHealth = async () => {
+            try {
+                // Wir pingen einfach das Wort "le" an. Das kostet fast nichts.
+                const res = await fetch('/api/lookup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ word: 'le' })
+                });
+                
+                if (res.ok) {
+                    setApiStatus('online');
+                } else {
+                    setApiStatus('offline');
+                }
+            } catch (e) {
+                console.error("API Check failed", e);
+                setApiStatus('offline');
+            }
+        };
+        
+        checkHealth();
+        
+        // Optional: Alle 60 Sekunden erneut prüfen
+        const interval = setInterval(checkHealth, 60000);
+        return () => clearInterval(interval);
+    }, []);
 
+    
     // Die sichere Fetch-Funktion (Mix aus All-Time und Week)
     const fetchMixedMemes = async () => {
         if (loadingMemes || memesData.length > 0) return; // Schutz vor Doppel-Ladung
@@ -1260,6 +1292,7 @@ function App() {
 
                 {/* Input Area (Kein Absolute mehr!) */}
                 {/* HIER GEÄNDERT: shrink-0 verhindert das Zerquetschen, pb-6 gibt Abstand nach unten */}
+                {/* PB X Abstand zur Balken Chatbalken */}
                 <div className="bg-white border-t border-slate-200 p-4 pb-20 w-full shrink-0">
                     <div className="flex gap-2">
                         <input 
@@ -1535,7 +1568,7 @@ function App() {
 
     // --- RENDERERS ---
     const renderHome = () => {
-        // --- DATEN ---
+        // --- DATEN BERECHNEN ---
         const safeVocab = vocabulary || [];
         const totalLearned = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
         
@@ -1586,14 +1619,34 @@ function App() {
         return (
             <div className="pb-24">
                 
-                {/* --- STICKY HEADER (Mit Fact) --- */}
+                {/* --- STICKY HEADER --- */}
                 <div className="sticky top-0 z-40 bg-slate-50/95 backdrop-blur-xl border-b border-slate-200 -mx-5 -mt-6 px-6 pt-12 pb-4 mb-5 shadow-sm">
                     
                     <div className="flex justify-between items-start mb-2">
-                        <div>
-                            <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1 opacity-90">
-                                {dateString}
+                        <div className="flex flex-col gap-1">
+                            {/* DATUM + STATUS */}
+                            <div className="flex items-center gap-2">
+                                <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest opacity-90">
+                                    {dateString}
+                                </div>
+                                
+                                {/* DER NEUE STATUS DOT */}
+                                {apiStatus === 'online' ? (
+                                    <div className="flex items-center gap-1 bg-emerald-100 px-1.5 py-0.5 rounded-md animate-in fade-in">
+                                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                                        <span className="text-[8px] font-bold text-emerald-600 uppercase tracking-wider">Online</span>
+                                    </div>
+                                ) : apiStatus === 'offline' ? (
+                                    <div className="flex items-center gap-1 bg-red-100 px-1.5 py-0.5 rounded-md animate-in fade-in">
+                                        <WifiOff size={8} className="text-red-500"/>
+                                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-wider">Offline</span>
+                                    </div>
+                                ) : (
+                                    // Checking State (kleiner grauer Punkt)
+                                    <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-ping ml-1"></div>
+                                )}
                             </div>
+
                             <h1 className="text-2xl font-extrabold text-slate-800 leading-tight">
                                 {greeting} <span className="ml-1">{icon}</span>
                             </h1>
@@ -1606,19 +1659,27 @@ function App() {
                         </div>
                     </div>
 
-                    {/* FACT (Jetzt im Header) */}
+                    {/* FACT */}
                     <div className="mt-3 flex items-start gap-2 opacity-80">
                         <div className="min-w-[3px] h-full bg-indigo-300 rounded-full"></div>
-                        <p className="text-m text-slate-500 italic leading-snug">
+                        <p className="text-xs text-slate-500 italic leading-snug">
                             "{dailyFact}"
                         </p>
                     </div>
+                    
+                    {/* OFFLINE WARNUNG (Nur sichtbar wenn offline) */}
+                    {apiStatus === 'offline' && (
+                        <div className="mt-3 bg-red-50 border border-red-100 text-red-600 px-3 py-2 rounded-xl text-[10px] font-bold flex items-center gap-2 animate-in slide-in-from-top-2">
+                            <WifiOff size={14}/>
+                            <span>AI Systems unreachable. Check internet.</span>
+                        </div>
+                    )}
                 </div>
 
                 {/* --- SCROLLABLE CONTENT --- */}
                 <div className="space-y-4 px-1">
 
-                    {/* 1. PROGRESS CARD (Wieder als eigene Karte unter dem Header) */}
+                    {/* 1. PROGRESS CARD */}
                     {(() => {
                         const milestones = [
                             { limit: 100, label: "Foundation", color: "bg-indigo-500" },
