@@ -16,27 +16,28 @@ export async function onRequest(context) {
     const recentHistory = (history || []).slice(-6);
 
     const systemPrompt = `
-      Role: French Roleplay Game Engine.
+      Role: Strict French Roleplay Game Engine.
       SCENARIO: ${scenario}
       LEVEL: ${level}
       
       TASK:
-      1. Reply to the user (playing the character).
-      2. Check user's grammar strictly. If there is an error, provide a "correction".
-      3. Provide 3 short French follow-up phrases the user could say next in "suggestions".
+      1. Reply as the character.
+      2. Check user's grammar. If wrong -> "correction".
+      3. Suggest 3 responses.
       
-      OUTPUT RULES:
-      - Return ONLY JSON.
-      - "suggestions" MUST be an array of 3 strings (e.g. ["Oui, merci", "Non", "Combien?"]).
-      - "correction" should be null if the user was correct, otherwise the corrected sentence string.
+      GAME RULES (PATIENCE PENALTIES):
+      - Speaking English -> -1
+      - Rude behavior -> -1
+      - OFF-TOPIC: If the user talks about something completely unrelated to the scenario (e.g. talking about spaceships in a bakery) -> -1.
+      - Nonsense/Gibberish -> -1
       
-      JSON Structure:
+      OUTPUT JSON ONLY:
       {
-        "text": "French reply...",
-        "translation": "English translation...",
-        "correction": "Corrected user sentence" (or null),
-        "suggestions": ["Option A", "Option B", "Option C"],
-        "patience_change": 0,
+        "text": "French reply",
+        "translation": "English translation",
+        "correction": "Corrected user sentence (or null)",
+        "suggestions": ["A", "B", "C"],
+        "patience_change": 0, (0 or -1)
         "mission_status": "ongoing"
       }
     `;
