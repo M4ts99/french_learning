@@ -1191,6 +1191,8 @@ function App() {
                 const currentHistoryForApi = [...chatHistory, userMsg];
                 const contextSlice = currentHistoryForApi.slice(-6);
 
+                // ... vor dem fetch ...
+
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1201,6 +1203,8 @@ function App() {
                         level: chatLevel 
                     })
                 });
+                
+                // ... nach dem fetch ...
                 
                 const data = await res.json();
 
@@ -1226,9 +1230,10 @@ function App() {
 
             } catch (e) {
                 console.error(e);
-                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Connection Error." }]);
+                // Wichtig: Zeige einen Fehler im Chat an, statt gar nichts
+                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Connection hiccup. Please try again." }]);
             } finally {
-                setChatLoading(false);
+                setChatLoading(false); // Das muss IMMER ausgeführt werden
             }
         };
 
@@ -1319,11 +1324,12 @@ function App() {
                                     onClick={() => setSelectedMsg(msg)} 
                                 >
                                     {/* Rotes Icon wenn Fehler (nur bei User) */}
-                                    {msg.role === 'user' && msg.correction && (
-                                        <div className="bg-white/20 p-1 rounded-full shrink-0 animate-pulse">
-                                            <AlertCircle size={16} className="text-white" />
-                                        </div>
-                                    )}
+                                    {msg.role === 'user' && msg.correction && msg.correction !== 'null' && msg.correction !== msg.content && (
+                                    <div className="mb-1 mr-1 bg-rose-50 text-rose-700 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-rose-100 animate-in fade-in slide-in-from-bottom-1 max-w-[85%] shadow-sm flex items-start gap-1">
+                                        <span className="mt-0.5">💡</span> 
+                                        <span>{msg.correction}</span>
+                                    </div>
+                                )}
                                     
                                     <div>{msg.content}</div>
                                 </div>
@@ -1335,7 +1341,7 @@ function App() {
                 </div>
 
                 {/* Input & Suggestions */}
-                <div className="bg-white border-t border-slate-200 p-4 pb-12 w-full shrink-0 flex flex-col gap-3">
+                <div className="bg-white border-t border-slate-200 p-4 pb-20 w-full shrink-0 flex flex-col gap-3">
                     {suggestions.length > 0 && !chatLoading && (
                         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                             {suggestions.map((sugg, idx) => (

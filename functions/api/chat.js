@@ -1,71 +1,82 @@
 export async function onRequest(context) {
-  if (context.request.method === "OPTIONS") {
-    return new Response(null, { headers: { "Access-Control-Allow-Origin": "*" } });
-  }
-  if (context.request.method === "GET") {
-    return new Response("Chat API Ready");
-  }
+  // CORS & GET
+  if (context.request.method === "OPTIONS") return new Response(null, { headers: { "Access-Control-Allow-Origin": "*" } });
+  if (context.request.method === "GET") return new Response("Chat API Ready");
 
   try {
-    // NEU: Wir empfangen jetzt auch 'goal'
     const { history, scenario, goal, level } = await context.request.json();
     const apiKey = context.env.GEMINI_API_KEY;
-
     if (!apiKey) return new Response(JSON.stringify({ error: "API Key missing" }), { status: 500 });
 
-    const recentHistory = (history || []).slice(-6);
+    // 1. HISTORY REINIGEN (Wichtig!)
+    // Die KI soll nicht die alten Korrekturen/Übersetzungen sehen, das verwirrt sie.
+    // Wir schicken ihr nur 'user' und 'model' Texte.
+    const cleanHistory = (history || []).slice(-6).map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }] // Nur der Inhalt, keine Metadaten
+    }));
+
+    // Die letzte Nachricht des Users (die wir korrigieren wollen)
+    const lastUserMsg = history[history.length - 1]?.content || "";
 
     const systemPrompt = `
-      Role: French Roleplay Game Engine.
-      SCENARIO: ${scenario}
-      USER GOAL: "${goal}"
-      LEVEL: ${level}
+      Role: Strict French Roleplay Game Engine.
+      Scenario: ${scenario}
+      Goal: ${goal}
+      Level: ${level}
       
-      YOUR TASKS:
-      1. Reply as the character.
-      2. CHECK VICTORY CONDITION: Has the user clearly achieved the "USER GOAL"? 
-         - Example: If goal is "Buy bread", and user asked for it and you agreed to sell/gave it -> SUCCESS.
-         - If success, say a polite goodbye in French and set "mission_status": "success".
-      3. Check grammar errors (strict).
+      YOUR TASK:
+      1. Analyze the user's LAST message: "${lastUserMsg}".
+      2. If it contains grammar errors, put the corrected sentence in "correction". If it is correct, set "correction" to null.
+      3. Reply to the user in character (French).
+      4. Suggest 3 follow-up responses in "suggestions".
       
       GAME RULES:
-      - Speak English -> patience -1
-      - Rude -> patience -1
-      - Goal achieved -> mission_status "success" (IMMEDIATELY)
+      - English/Rude -> patience_change: -1
+      - Goal achieved -> mission_status: "success"
       
-      JSON OUTPUT ONLY:
+      OUTPUT JSON ONLY (No Markdown):
       {
-        "text": "French reply (Keep it under 15 words)",
+        "text": "French reply",
         "translation": "English translation",
-        "correction": "Corrected user sentence (or null)",
+        "correction": "Corrected sentence" (OR null),
         "suggestions": ["A", "B", "C"],
         "patience_change": 0,
-        "mission_status": "ongoing" (or "success" or "failed")
+        "mission_status": "ongoing"
       }
     `;
-
-    const messages = [
-        { role: "user", parts: [{ text: systemPrompt }] },
-        ...recentHistory.map(msg => ({
-            role: msg.role === 'user' ? 'user' : 'model',
-            parts: [{ text: msg.content }]
-        }))
-    ];
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: messages })
+        body: JSON.stringify({ 
+            contents: [
+                { role: "user", parts: [{ text: systemPrompt }] },
+                ...cleanHistory
+            ] 
+        })
       }
     );
 
     const data = await response.json();
     
-    if (!data.candidates) throw new Error("AI Overload");
+    // Fehler abfangen, bevor es crasht
+    if (!data.candidates || !data.candidates[0].content) {
+        // Notfall-Antwort bauen, damit der Chat nicht einfriert (Weiße Nachricht Fix)
+        return new Response(JSON.stringify({
+            text: "Pardon, je n'ai pas compris. Pouvez-vous répéter ?",
+            translation: "Sorry, I didn't understand. Can you repeat?",
+            correction: null,
+            suggestions: ["Répétez, s'il vous plaît", "Je ne comprends pas"],
+            patience_change: 0,
+            mission_status: "ongoing"
+        }), { headers: { "Content-Type": "application/json" } });
+    }
 
     let rawText = data.candidates[0].content.parts[0].text;
+    // Markdown entfernen
     rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
 
     return new Response(rawText, { headers: { "Content-Type": "application/json" } });
