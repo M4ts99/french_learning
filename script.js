@@ -427,7 +427,8 @@ function App() {
     const [chatStatus, setChatStatus] = useState('lobby'); // 'lobby', 'active', 'won', 'lost'
     const [chatInput, setChatInput] = useState('');
     const [chatLoading, setChatLoading] = useState(false);
-    
+    const [suggestions, setSuggestions] = useState([]); 
+    const [activeTranslation, setActiveTranslation] = useState(null); // Für das schöne Popup
     const [apiStatus, setApiStatus] = useState('checking'); // 'online', 'offline', 'checking'
 
     // --- HEALTH CHECK (Beim Start) ---
@@ -1173,8 +1174,6 @@ function App() {
     };
     const renderChat = () => {
         // Lokale UI States für den Chat
-        const [suggestions, setSuggestions] = useState([]); 
-        const [activeTranslation, setActiveTranslation] = useState(null); // Für das schöne Popup
 
         // --- LOGIK: NACHRICHT SENDEN ---
         const sendMessage = async (textOverride = null) => {
