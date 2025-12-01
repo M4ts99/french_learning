@@ -1180,57 +1180,70 @@ function App() {
             const msgText = textOverride || chatInput;
             if (!msgText.trim()) return;
             
-            // Sofort UI updaten
-            const newHistory = [...chatHistory, { role: 'user', content: msgText }];
-            setChatHistory(newHistory);
+            // User Nachricht setzen
+            const userMsg = { role: 'user', content: msgText };
+            // WICHTIG: Wir nutzen hier eine Funktions-Update, um Race Conditions zu vermeiden
+            setChatHistory(prev => [...prev, userMsg]);
+            
             setChatInput('');
             setChatLoading(true);
-            setSuggestions([]); // Vorschläge ausblenden während Laden
+            setSuggestions([]); // Alte Vorschläge löschen während wir laden
 
             try {
+                // Wir bauen die History für den Request
+                // (Wir nehmen den aktuellen State + die neue Nachricht)
+                const currentHistoryForApi = [...chatHistory, userMsg];
+                // Nur die letzten 6 für Kontext nehmen
+                const contextSlice = currentHistoryForApi.slice(-6);
+
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        history: newHistory, 
+                        history: contextSlice, 
                         scenario: chatScenario.title, 
                         level: chatLevel 
                     })
                 });
                 
                 const data = await res.json();
+                console.log("AI Data:", data); // Debugging: Schau in die Konsole ob suggestions da sind
 
-                // 1. KI Antwort
-                setChatHistory(prev => {
-                    const copy = [...prev];
-                    // Korrektur in die letzte User-Nachricht einfügen
-                    if (data.correction && copy.length >= 1) {
-                        // Wir suchen die letzte User Nachricht
-                        for (let i = copy.length - 1; i >= 0; i--) {
-                            if (copy[i].role === 'user') {
-                                copy[i].correction = data.correction;
-                                break;
-                            }
-                        }
-                    }
-                    // Neue Nachricht anhängen
-                    copy.push({ role: 'model', content: data.text, translation: data.translation });
-                    return copy;
-                });
-
-                // 2. Vorschläge updaten
-                if (data.suggestions && Array.isArray(data.suggestions)) {
+                // 1. Vorschläge setzen (WICHTIG)
+                if (data.suggestions && data.suggestions.length > 0) {
                     setSuggestions(data.suggestions);
                 }
+
+                // 2. History Update (Korrektur + Antwort)
+                setChatHistory(prev => {
+                    const newHistory = [...prev];
+                    
+                    // Korrektur einfügen (in die letzte User-Nachricht)
+                    if (data.correction) {
+                        const lastIndex = newHistory.length - 1;
+                        if (newHistory[lastIndex].role === 'user') {
+                            newHistory[lastIndex].correction = data.correction;
+                        }
+                    }
+                    
+                    // KI Antwort hinzufügen
+                    newHistory.push({ 
+                        role: 'model', 
+                        content: data.text, 
+                        translation: data.translation 
+                    });
+                    
+                    return newHistory;
+                });
 
                 // 3. Game Stats
                 if (data.patience_change < 0) setChatHearts(h => Math.max(0, h - 1));
                 if (data.mission_status === 'success') setChatStatus('won');
-                else if (data.mission_status === 'failed' || (chatHearts <= 1 && data.patience_change < 0)) setChatStatus('lost');
+                else if (data.mission_status === 'failed') setChatStatus('lost');
 
             } catch (e) {
                 console.error(e);
-                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Connection lost." }]);
+                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Error. Try again." }]);
             } finally {
                 setChatLoading(false);
             }
@@ -1379,7 +1392,7 @@ function App() {
 
                 {/* TRANSLATION MODAL (Das schöne Overlay) */}
                 {activeTranslation && (
-                    <div className="absolute inset-0 z-50 flex items-end justify-center bg-black/20 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setActiveTranslation(null)}>
+                    <div className="bg-white w-full p-6 pb-12 rounded-t-[2.5rem] shadow-2xl animate-in slide-in-from-bottom-10 duration-300 mb-safe" onClick={e => e.stopPropagation()}>
                         <div className="bg-white w-full p-6 rounded-t-[2rem] shadow-2xl animate-in slide-in-from-bottom-10 duration-300" onClick={e => e.stopPropagation()}>
                             <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6"></div>
                             <div className="mb-4">
