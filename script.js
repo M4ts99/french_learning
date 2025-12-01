@@ -114,6 +114,14 @@ const COLLECTIONS = {
         { id: 'prof', label: 'Professions', sub: 'Work', icon: <Briefcase size={24}/>, ids: [204, 268, 386, 457, 483, 640, 684, 688, 690, 762, 783, 827, 901, 909, 917, 1098, 1150, 1188, 1203, 1232, 1259, 1264, 1323, 1328, 1337, 1341, 1343, 1406, 1411, 1499, 1546, 1552, 1631, 1706, 1722, 1737, 1738, 1789, 1797, 1861, 1876, 1924, 1957, 1961, 2039, 2049, 2089, 2100, 2101, 2119, 2176, 2183, 2201, 2233, 2248, 2276, 2307, 2404, 2415, 2430, 2436, 2443, 2461, 2523, 2587, 2645, 2741, 2768, 2824, 2848, 2906, 2928, 2954, 2963, 2981, 2995, 3003, 3042, 3048, 3072, 3081, 3085, 3100, 3118, 3163, 3167, 3189, 3223, 3241, 3251, 3262, 3283, 3327, 3350, 3371, 3446, 3494, 3503, 3518, 3630, 3745, 3767, 3886, 4052, 4131, 4261, 4282, 4346, 4430, 4422, 4463, 4787, 4309, 4253, 827, 640, 1264] },
     ]
 };
+const CHAT_SCENARIOS = [
+    { id: 'bakery', icon: "🥐", title: "The Bakery", desc: "Buy bread & pastries", goal: "Buy a baguette and pay." },
+    { id: 'cafe', icon: "☕", title: "The Café", desc: "Order a drink", goal: "Order a coffee and ask for the bill." },
+    { id: 'pharmacy', icon: "💊", title: "Pharmacy", desc: "Explain symptoms", goal: "Describe a headache and ask for medicine." },
+    { id: 'direction', icon: "🗺️", title: "Lost in Paris", desc: "Ask for directions", goal: "Find the way to the Eiffel Tower." },
+    { id: 'market', icon: "🍎", title: "The Market", desc: "Bargain prices", goal: "Buy 1kg of apples and negotiate." },
+    { id: 'police', icon: "👮", title: "Police Station", desc: "Report a crime", goal: "Report a stolen wallet." }
+];
 // --- HELPER: IRREGULAR VERBS MAP ---
 // Mappt konjugierte Formen auf den Infinitiv (der in deiner Liste steht)
 const IRREGULAR_MAP = {
@@ -360,10 +368,23 @@ function App() {
         const saved = localStorage.getItem('vocabApp_seenMemes');
         return saved ? JSON.parse(saved) : [];
     });
+    
+    
     // --- MEME STATE & LOGIC (In App einfügen) ---
     const [memesData, setMemesData] = useState([]);
     const [memeIndex, setMemeIndex] = useState(0);
     const [loadingMemes, setLoadingMemes] = useState(false);
+
+
+    // --- CHAT STATES ---
+    const [chatScenario, setChatScenario] = useState(null); // Das gewählte Objekt
+    const [chatLevel, setChatLevel] = useState('A2'); // Default Level
+    const [chatHistory, setChatHistory] = useState([]); // [{role: 'user', content: '...'}, ...]
+    const [chatHearts, setChatHearts] = useState(3); // Leben (3/3)
+    const [chatStatus, setChatStatus] = useState('lobby'); // 'lobby', 'active', 'won', 'lost'
+    const [chatInput, setChatInput] = useState('');
+    const [chatLoading, setChatLoading] = useState(false);
+
 
     // Die sichere Fetch-Funktion (Mix aus All-Time und Week)
     const fetchMixedMemes = async () => {
@@ -1076,6 +1097,195 @@ function App() {
             </div>
         );
     };
+    const renderChat = () => {
+        
+        // --- LOGIK: NACHRICHT SENDEN ---
+        const sendMessage = async () => {
+            if (!chatInput.trim()) return;
+            
+            // 1. User Nachricht anzeigen
+            const newHistory = [...chatHistory, { role: 'user', content: chatInput }];
+            setChatHistory(newHistory);
+            setChatInput('');
+            setChatLoading(true);
+
+            try {
+                // 2. Backend fragen
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        history: newHistory, 
+                        scenario: chatScenario.title, // "The Bakery"
+                        level: chatLevel 
+                    })
+                });
+                
+                const data = await res.json(); // Erwartet: { text, patience_change, mission_status }
+
+                // 3. Antwort verarbeiten
+                if (data.text) {
+                    setChatHistory(prev => [...prev, { role: 'model', content: data.text, translation: data.translation }]);
+                }
+
+                // 4. Spiel-Logik (Herzen)
+                if (data.patience_change < 0) {
+                    setChatHearts(h => Math.max(0, h - 1));
+                    // Visueller Effekt (Vibration) könnte hier hin
+                }
+
+                // 5. Status Check
+                if (data.mission_status === 'success') setChatStatus('won');
+                else if (data.mission_status === 'failed' || chatHearts <= 1 && data.patience_change < 0) setChatStatus('lost');
+
+            } catch (e) {
+                console.error(e);
+                // Fallback Nachricht
+                setChatHistory(prev => [...prev, { role: 'model', content: "(Connection Error) Désolé, je ne vous entends pas." }]);
+            } finally {
+                setChatLoading(false);
+            }
+        };
+
+        // --- VIEW 1: LOBBY (Auswahl) ---
+        if (chatStatus === 'lobby') {
+            return (
+                <div className="w-full animate-in fade-in duration-300 pt-6 pb-24 px-1">
+                    <div className="flex items-center gap-3 mb-6 px-1">
+                        <button onClick={() => setView('skills')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"><ArrowLeft size={24}/></button>
+                        <h2 className="text-2xl font-bold text-slate-800">Roleplay</h2>
+                    </div>
+
+                    {/* Level Selector */}
+                    <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm mb-6">
+                        <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Difficulty</div>
+                        <div className="flex justify-between">
+                            {['A1','A2','B1','B2','C1','C2'].map(lvl => (
+                                <button 
+                                    key={lvl}
+                                    onClick={() => setChatLevel(lvl)}
+                                    className={`w-10 h-10 rounded-xl text-xs font-bold transition-all ${chatLevel === lvl ? 'bg-indigo-600 text-white shadow-md scale-110' : 'bg-slate-50 text-slate-400'}`}
+                                >
+                                    {lvl}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Scenarios Grid */}
+                    <p className="text-slate-500 px-2 text-sm font-medium mb-3">Choose your Mission</p>
+                    <div className="grid grid-cols-2 gap-3">
+                        {CHAT_SCENARIOS.map(s => (
+                            <button 
+                                key={s.id}
+                                onClick={() => {
+                                    setChatScenario(s);
+                                    setChatHistory([]); // Reset History
+                                    setChatHearts(3);   // Reset Hearts
+                                    setChatStatus('active');
+                                }}
+                                className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all h-40 flex flex-col justify-between group hover:border-indigo-200"
+                            >
+                                <div className="text-3xl bg-slate-50 w-12 h-12 flex items-center justify-center rounded-2xl group-hover:scale-110 transition-transform">{s.icon}</div>
+                                <div>
+                                    <h3 className="font-bold text-slate-800">{s.title}</h3>
+                                    <p className="text-[10px] text-slate-400 mt-1 leading-tight">{s.desc}</p>
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // --- VIEW 2: GAME OVER / WIN ---
+        if (chatStatus === 'won' || chatStatus === 'lost') {
+            return (
+                <div className="h-[80vh] flex flex-col items-center justify-center text-center px-6 animate-in zoom-in duration-300">
+                    <div className="text-6xl mb-4">{chatStatus === 'won' ? '🎉' : '💀'}</div>
+                    <h2 className="text-3xl font-bold text-slate-800 mb-2">{chatStatus === 'won' ? 'Mission Accomplished!' : 'Mission Failed'}</h2>
+                    <p className="text-slate-500 mb-8">
+                        {chatStatus === 'won' ? "Great job! You handled the situation perfectly." : "You ran out of patience. Try being more polite or precise."}
+                    </p>
+                    <button onClick={() => setChatStatus('lobby')} className="bg-indigo-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg">Back to Lobby</button>
+                </div>
+            );
+        }
+
+        // --- VIEW 3: ACTIVE CHAT ---
+        return (
+            <div className="fixed inset-0 z-50 bg-slate-50 flex flex-col">
+                {/* Chat Header */}
+                <div className="bg-white border-b border-slate-200 px-4 py-4 pt-safe flex justify-between items-center shadow-sm z-10">
+                    <button onClick={() => setChatStatus('lobby')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full"><ArrowLeft size={24}/></button>
+                    <div className="text-center">
+                        <div className="font-bold text-slate-800">{chatScenario?.title}</div>
+                        <div className="text-[10px] text-slate-400 uppercase tracking-wide">Level {chatLevel}</div>
+                    </div>
+                    {/* Hearts */}
+                    <div className="flex gap-1">
+                        {[1,2,3].map(i => (
+                            <Heart key={i} size={20} className={i <= chatHearts ? "fill-red-500 text-red-500" : "text-slate-200"} />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Chat Messages Area */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-32">
+                    {/* Mission Info Bubble */}
+                    <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-center mb-6">
+                        <span className="text-xs font-bold text-indigo-500 uppercase tracking-wider">Mission Objective</span>
+                        <p className="text-indigo-900 text-sm font-medium mt-1">{chatScenario?.goal}</p>
+                    </div>
+
+                    {chatHistory.map((msg, idx) => (
+                        <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            <div 
+                                className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed relative group ${
+                                    msg.role === 'user' 
+                                    ? 'bg-indigo-600 text-white rounded-tr-none' 
+                                    : 'bg-white border border-slate-100 text-slate-800 rounded-tl-none shadow-sm'
+                                }`}
+                                onClick={() => msg.translation && alert(msg.translation)} // Simple translate on click
+                            >
+                                {msg.content}
+                                {msg.translation && msg.role === 'model' && (
+                                    <div className="absolute -bottom-5 left-0 text-[10px] text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Tap to translate</div>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                    {chatLoading && (
+                         <div className="flex justify-start">
+                             <div className="bg-slate-200 text-slate-500 px-4 py-2 rounded-2xl rounded-tl-none text-xs animate-pulse">Typing...</div>
+                         </div>
+                    )}
+                </div>
+
+                {/* Input Area */}
+                <div className="bg-white border-t border-slate-200 p-4 pb-safe w-full absolute bottom-0">
+                    <div className="flex gap-2">
+                        <input 
+                            type="text" 
+                            value={chatInput}
+                            onChange={(e) => setChatInput(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                            placeholder="Type your reply in French..."
+                            className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                        <button 
+                            onClick={sendMessage} 
+                            disabled={!chatInput.trim() || chatLoading}
+                            className="bg-indigo-600 text-white p-3 rounded-xl disabled:opacity-50"
+                        >
+                            <ArrowUp size={24} className="rotate-90"/> {/* Send Icon Ersatz */}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+    
     // --- SESSION LOGIC ---
     const startSmartSession = () => {
         const now = Date.now();
@@ -2032,8 +2242,7 @@ function App() {
                 </div>
 
                 {/* 1. HERO: AI CONVERSATION (Chat) */}
-                <button 
-                    onClick={() => alert("AI Chat coming soon! Imagine chatting with a virtual barista here.")} 
+                <button onClick={() => setView('chat')} 
                     className="w-full h-40 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white p-6 rounded-[2rem] shadow-xl shadow-fuchsia-200 transition-transform active:scale-[0.98] relative overflow-hidden group text-left"
                 >
                     <div className="relative z-10">
@@ -3429,6 +3638,8 @@ function App() {
             
             case 'topic-hub': // <--- NEU
                 return renderTopicHub();
+            case 'chat': // <--- Das müssen wir im Skills-Tab verlinken
+                return renderChat();    
 
             default: return renderHome();
         }
