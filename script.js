@@ -116,12 +116,54 @@ const COLLECTIONS = {
     ]
 };
 const CHAT_SCENARIOS = [
-    { id: 'bakery', icon: "🥐", title: "The Bakery", desc: "Buy bread & pastries", goal: "Buy a baguette and pay." },
-    { id: 'cafe', icon: "☕", title: "The Café", desc: "Order a drink", goal: "Order a coffee and ask for the bill." },
-    { id: 'pharmacy', icon: "💊", title: "Pharmacy", desc: "Explain symptoms", goal: "Describe a headache and ask for medicine." },
-    { id: 'direction', icon: "🗺️", title: "Lost in Paris", desc: "Ask for directions", goal: "Find the way to the Eiffel Tower." },
-    { id: 'market', icon: "🍎", title: "The Market", desc: "Bargain prices", goal: "Buy 1kg of apples and negotiate." },
-    { id: 'police', icon: "👮", title: "Police Station", desc: "Report a crime", goal: "Report a stolen wallet." }
+    { 
+        id: 'bakery', 
+        icon: "🥐", 
+        title: "The Bakery", 
+        desc: "Buy bread & pastries", 
+        goal: "Buy a baguette and pay.", 
+        intro: "Vous entrez dans la boulangerie. Ça sent bon le pain chaud. La boulangère vous regarde." 
+    },
+    { 
+        id: 'cafe', 
+        icon: "☕", 
+        title: "The Café", 
+        desc: "Order a drink", 
+        goal: "Order a coffee and ask for the bill.", 
+        intro: "Vous êtes assis en terrasse. Le serveur arrive avec son carnet." 
+    },
+    { 
+        id: 'pharmacy', 
+        icon: "💊", 
+        title: "Pharmacy", 
+        desc: "Explain symptoms", 
+        goal: "Describe a headache and ask for medicine.", 
+        intro: "Vous avez mal à la tête. Vous entrez dans la pharmacie. Le pharmacien est là." 
+    },
+    { 
+        id: 'direction', 
+        icon: "🗺️", 
+        title: "Lost in Paris", 
+        desc: "Ask for directions", 
+        goal: "Find the way to the Eiffel Tower.", 
+        intro: "Vous êtes perdu dans une grande rue. Vous voyez une dame promener son chien." 
+    },
+    { 
+        id: 'market', 
+        icon: "🍎", 
+        title: "The Market", 
+        desc: "Bargain prices", 
+        goal: "Buy 1kg of apples and negotiate.", 
+        intro: "Le marché est bruyant. Vous voyez un vendeur de fruits qui crie." 
+    },
+    { 
+        id: 'police', 
+        icon: "👮", 
+        title: "Police Station", 
+        desc: "Report a crime", 
+        goal: "Report a stolen wallet.", 
+        intro: "Vous êtes au commissariat. L'agent de police vous demande ce qui se passe." 
+    }
 ];
 // --- HELPER: IRREGULAR VERBS MAP ---
 // Mappt konjugierte Formen auf den Infinitiv (der in deiner Liste steht)
@@ -1132,56 +1174,59 @@ function App() {
     const renderChat = () => {
         
         // --- LOGIK: NACHRICHT SENDEN ---
-        // --- LOGIK: NACHRICHT SENDEN ---
         const sendMessage = async () => {
             if (!chatInput.trim()) return;
             
-            const newHistory = [...chatHistory, { role: 'user', content: chatInput }];
+            // User Nachricht hinzufügen
+            const userMsg = { role: 'user', content: chatInput };
+            const newHistory = [...chatHistory, userMsg];
             setChatHistory(newHistory);
             setChatInput('');
             setChatLoading(true);
 
             try {
-                console.log("Sending to chat API...", { scenario: chatScenario.title, level: chatLevel });
+                // Speed-Hack: Nur die letzten 6 Nachrichten senden
+                // (Wir senden nicht die 'intro' System-Nachricht, die ist nur lokal für den User)
+                const contextHistory = newHistory.filter(m => m.role !== 'system').slice(-6);
 
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        history: newHistory, 
+                        history: contextHistory, 
                         scenario: chatScenario.title, 
                         level: chatLevel 
                     })
                 });
-
-                if (!res.ok) {
-                    const errText = await res.text();
-                    throw new Error(`API Error: ${res.status} - ${errText}`);
-                }
                 
                 const data = await res.json();
-                console.log("Chat Response:", data);
 
-                if (data.text) {
-                    setChatHistory(prev => [...prev, { role: 'model', content: data.text, translation: data.translation }]);
-                }
+                // Wir updaten die LETZTE User-Nachricht mit der Korrektur (falls vorhanden)
+                // und fügen dann die KI-Antwort hinzu.
+                setChatHistory(prev => {
+                    const historyCopy = [...prev];
+                    // Letzte Nachricht war vom User? Dann Korrektur anhängen
+                    if (data.correction && historyCopy[historyCopy.length - 1].role === 'user') {
+                        historyCopy[historyCopy.length - 1].correction = data.correction;
+                    }
+                    // KI Antwort
+                    historyCopy.push({ role: 'model', content: data.text, translation: data.translation });
+                    return historyCopy;
+                });
 
-                if (data.patience_change < 0) {
-                    setChatHearts(h => Math.max(0, h - 1));
-                }
-
+                if (data.patience_change < 0) setChatHearts(h => Math.max(0, h - 1));
                 if (data.mission_status === 'success') setChatStatus('won');
                 else if (data.mission_status === 'failed' || (chatHearts <= 1 && data.patience_change < 0)) setChatStatus('lost');
 
             } catch (e) {
-                console.error("CHAT ERROR:", e);
-                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Connection Error. Check Console (F12)." }]);
+                console.error(e);
+                setChatHistory(prev => [...prev, { role: 'model', content: "..." }]); // Leere Blase bei Fehler
             } finally {
                 setChatLoading(false);
             }
         };
 
-        // --- VIEW 1: LOBBY (Auswahl) ---
+        // --- VIEW 1: LOBBY ---
         if (chatStatus === 'lobby') {
             return (
                 <div className="w-full animate-in fade-in duration-300 pt-6 pb-24 px-1">
@@ -1190,41 +1235,30 @@ function App() {
                         <h2 className="text-2xl font-bold text-slate-800">Roleplay</h2>
                     </div>
 
-                    {/* Level Selector */}
                     <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm mb-6">
                         <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Difficulty</div>
                         <div className="flex justify-between">
                             {['A1','A2','B1','B2','C1','C2'].map(lvl => (
-                                <button 
-                                    key={lvl}
-                                    onClick={() => setChatLevel(lvl)}
-                                    className={`w-10 h-10 rounded-xl text-xs font-bold transition-all ${chatLevel === lvl ? 'bg-indigo-600 text-white shadow-md scale-110' : 'bg-slate-50 text-slate-400'}`}
-                                >
-                                    {lvl}
-                                </button>
+                                <button key={lvl} onClick={() => setChatLevel(lvl)} className={`w-10 h-10 rounded-xl text-xs font-bold transition-all ${chatLevel === lvl ? 'bg-indigo-600 text-white shadow-md scale-110' : 'bg-slate-50 text-slate-400'}`}>{lvl}</button>
                             ))}
                         </div>
                     </div>
 
-                    {/* Scenarios Grid */}
                     <p className="text-slate-500 px-2 text-sm font-medium mb-3">Choose your Mission</p>
                     <div className="grid grid-cols-2 gap-3">
                         {CHAT_SCENARIOS.map(s => (
-                            <button 
-                                key={s.id}
+                            <button key={s.id} 
                                 onClick={() => {
                                     setChatScenario(s);
-                                    setChatHistory([]); 
+                                    // HIER: Das Intro sofort setzen!
+                                    setChatHistory([{ role: 'system', content: s.intro }]);
                                     setChatHearts(3);   
                                     setChatStatus('active');
                                 }}
                                 className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all h-40 flex flex-col justify-between group hover:border-indigo-200"
                             >
                                 <div className="text-3xl bg-slate-50 w-12 h-12 flex items-center justify-center rounded-2xl group-hover:scale-110 transition-transform">{s.icon}</div>
-                                <div>
-                                    <h3 className="font-bold text-slate-800">{s.title}</h3>
-                                    <p className="text-[10px] text-slate-400 mt-1 leading-tight">{s.desc}</p>
-                                </div>
+                                <div><h3 className="font-bold text-slate-800">{s.title}</h3><p className="text-[10px] text-slate-400 mt-1 leading-tight">{s.desc}</p></div>
                             </button>
                         ))}
                     </div>
@@ -1238,85 +1272,82 @@ function App() {
                 <div className="h-[80vh] flex flex-col items-center justify-center text-center px-6 animate-in zoom-in duration-300">
                     <div className="text-6xl mb-4">{chatStatus === 'won' ? '🎉' : '💀'}</div>
                     <h2 className="text-3xl font-bold text-slate-800 mb-2">{chatStatus === 'won' ? 'Mission Accomplished!' : 'Mission Failed'}</h2>
-                    <p className="text-slate-500 mb-8">
-                        {chatStatus === 'won' ? "Great job! You handled the situation perfectly." : "You ran out of patience. Try being more polite or precise."}
-                    </p>
+                    <p className="text-slate-500 mb-8">{chatStatus === 'won' ? "Great job! You handled the situation perfectly." : "You ran out of patience."}</p>
                     <button onClick={() => setChatStatus('lobby')} className="bg-indigo-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg">Back to Lobby</button>
                 </div>
             );
         }
 
-        // --- VIEW 3: ACTIVE CHAT (DER FIX) ---
+        // --- VIEW 3: ACTIVE CHAT ---
         return (
-            // HIER GEÄNDERT: h-[100dvh] statt inset-0, damit Mobil-Browser-Leisten berücksichtigt werden
             <div className="fixed top-0 left-0 w-full h-[100dvh] z-50 bg-slate-50 flex flex-col">
-                
-                {/* Chat Header */}
+                {/* Header */}
                 <div className="bg-white border-b border-slate-200 px-4 py-4 pt-safe flex justify-between items-center shadow-sm z-10 shrink-0">
                     <button onClick={() => setChatStatus('lobby')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full"><ArrowLeft size={24}/></button>
                     <div className="text-center">
                         <div className="font-bold text-slate-800">{chatScenario?.title}</div>
                         <div className="text-[10px] text-slate-400 uppercase tracking-wide">Level {chatLevel}</div>
                     </div>
-                    <div className="flex gap-1">
-                        {[1,2,3].map(i => (
-                            <Heart key={i} size={20} className={i <= chatHearts ? "fill-red-500 text-red-500" : "text-slate-200"} />
-                        ))}
-                    </div>
+                    <div className="flex gap-1">{[1,2,3].map(i => (<Heart key={i} size={20} className={i <= chatHearts ? "fill-red-500 text-red-500" : "text-slate-200"} />))}</div>
                 </div>
 
-                {/* Chat Messages Area (flex-1 nimmt den restlichen Platz) */}
+                {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {/* Mission Info Bubble */}
-                    <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-center mb-6">
-                        <span className="text-xs font-bold text-indigo-500 uppercase tracking-wider">Mission Objective</span>
-                        <p className="text-indigo-900 text-sm font-medium mt-1">{chatScenario?.goal}</p>
+                    {/* Mission Goal */}
+                    <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-center mb-6 text-xs text-indigo-800">
+                        🎯 Goal: {chatScenario?.goal}
                     </div>
 
-                    {chatHistory.map((msg, idx) => (
-                        <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div 
-                                className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed relative group ${
+                    {chatHistory.map((msg, idx) => {
+                        // System Nachricht (Intro) sieht anders aus
+                        if (msg.role === 'system') {
+                            return <div key={idx} className="text-center text-xs text-slate-400 italic my-4">✨ {msg.content}</div>;
+                        }
+
+                        return (
+                            <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                                
+                                {/* KORREKTUR BUBBLE (über der User Nachricht) */}
+                                {msg.role === 'user' && msg.correction && (
+                                    <div className="mb-1 mr-2 bg-red-50 text-red-600 text-[10px] px-2 py-1 rounded-lg border border-red-100 animate-in fade-in slide-in-from-bottom-1 max-w-[80%]">
+                                        💡 {msg.correction}
+                                    </div>
+                                )}
+
+                                <div className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed relative group shadow-sm ${
                                     msg.role === 'user' 
                                     ? 'bg-indigo-600 text-white rounded-tr-none' 
-                                    : 'bg-white border border-slate-100 text-slate-800 rounded-tl-none shadow-sm'
+                                    : 'bg-white border border-slate-100 text-slate-800 rounded-tl-none'
                                 }`}
                                 onClick={() => msg.translation && alert(msg.translation)} 
-                            >
-                                {msg.content}
-                                {msg.translation && msg.role === 'model' && (
-                                    <div className="absolute -bottom-5 left-0 text-[10px] text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Tap to translate</div>
-                                )}
+                                >
+                                    {msg.content}
+                                    {msg.translation && msg.role === 'model' && (
+                                        <div className="absolute -bottom-5 left-0 text-[10px] text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Tap to translate</div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
+                    
                     {chatLoading && (
-                         <div className="flex justify-start">
-                             <div className="bg-slate-200 text-slate-500 px-4 py-2 rounded-2xl rounded-tl-none text-xs animate-pulse">Typing...</div>
-                         </div>
+                         <div className="flex justify-start"><div className="bg-slate-200 text-slate-500 px-4 py-2 rounded-2xl rounded-tl-none text-xs animate-pulse">...</div></div>
                     )}
-                    {/* Dummy Element um automatisch nach unten zu scrollen (optional) */}
                     <div style={{ height: 10 }}></div>
                 </div>
 
-                {/* Input Area (Kein Absolute mehr!) */}
-                {/* HIER GEÄNDERT: shrink-0 verhindert das Zerquetschen, pb-6 gibt Abstand nach unten */}
-                {/* PB X Abstand zur Balken Chatbalken */}
-                <div className="bg-white border-t border-slate-200 p-4 pb-20 w-full shrink-0">
+                {/* Input */}
+                <div className="bg-white border-t border-slate-200 p-4 pb-12 w-full shrink-0">
                     <div className="flex gap-2">
                         <input 
                             type="text" 
                             value={chatInput}
                             onChange={(e) => setChatInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                            placeholder="Type your reply in French..."
+                            placeholder="Type your reply..."
                             className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"
                         />
-                        <button 
-                            onClick={sendMessage} 
-                            disabled={!chatInput.trim() || chatLoading}
-                            className="bg-indigo-600 text-white p-3 rounded-xl disabled:opacity-50"
-                        >
+                        <button onClick={sendMessage} disabled={!chatInput.trim() || chatLoading} className="bg-indigo-600 text-white p-3 rounded-xl disabled:opacity-50">
                             <ArrowUp size={24} className="rotate-90"/> 
                         </button>
                     </div>
