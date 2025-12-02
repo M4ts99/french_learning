@@ -437,31 +437,43 @@ function App() {
     const [selectedMsg, setSelectedMsg] = useState(null); // Umbenannt von activeTranslation, da es jetzt mehr kann
 
     // --- HEALTH CHECK (Beim Start) ---
-    useEffect(() => {
-        const checkHealth = async () => {
-            try {
-                // Wir pingen einfach das Wort "le" an. Das kostet fast nichts.
-                const res = await fetch('/api/lookup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ word: 'le' })
-                });
-                
-                if (res.ok) {
-                    setApiStatus('online');
-                } else {
-                    setApiStatus('offline');
-                }
-            } catch (e) {
-                console.error("API Check failed", e);
+ // --- 1. DIE FUNKTION (Muss eigenständig sein!) ---
+    const checkHealth = async () => {
+        setApiStatus('checking'); 
+        try {
+            // Kurzer Timeout (3s)
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+            const res = await fetch('/api/lookup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ word: 'le' }),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            
+            if (res.ok) {
+                setApiStatus('online');
+            } else {
+                console.warn("Health Check: Server returned error", res.status);
                 setApiStatus('offline');
             }
-        };
-        
+        } catch (e) {
+            console.error("Health Check failed:", e);
+            setApiStatus('offline');
+        }
+    };
+
+    // --- 2. DER EFFEKT (Ruft die Funktion auf) ---
+    useEffect(() => {
+        // Sofort beim Start prüfen
         checkHealth();
         
-        // Optional: Alle 60 Sekunden erneut prüfen
+        // Alle 60 Sekunden wiederholen
         const interval = setInterval(checkHealth, 60000);
+        
+        // Aufräumen wenn App geschlossen wird
         return () => clearInterval(interval);
     }, []);
 
@@ -1777,26 +1789,31 @@ function App() {
                     
                     <div className="flex justify-between items-start mb-2">
                         <div className="flex flex-col gap-1">
-                            {/* DATUM + STATUS */}
+                            {/* DATUM + STATUS (Klickbar bei Offline) */}
                             <div className="flex items-center gap-2">
                                 <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest opacity-90">
                                     {dateString}
                                 </div>
                                 
-                                {/* DER NEUE STATUS DOT */}
                                 {apiStatus === 'online' ? (
                                     <div className="flex items-center gap-1 bg-emerald-100 px-1.5 py-0.5 rounded-md animate-in fade-in">
                                         <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
                                         <span className="text-[8px] font-bold text-emerald-600 uppercase tracking-wider">Online</span>
                                     </div>
-                                ) : apiStatus === 'offline' ? (
-                                    <div className="flex items-center gap-1 bg-red-100 px-1.5 py-0.5 rounded-md animate-in fade-in">
-                                        <WifiOff size={8} className="text-red-500"/>
-                                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-wider">Offline</span>
+                                ) : apiStatus === 'checking' ? (
+                                    <div className="flex items-center gap-1 bg-amber-100 px-1.5 py-0.5 rounded-md">
+                                        <RotateCcw size={8} className="text-amber-600 animate-spin"/>
+                                        <span className="text-[8px] font-bold text-amber-600 uppercase tracking-wider">Connecting...</span>
                                     </div>
                                 ) : (
-                                    // Checking State (kleiner grauer Punkt)
-                                    <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-ping ml-1"></div>
+                                    // OFFLINE BUTTON
+                                    <button 
+                                        onClick={checkHealth} 
+                                        className="flex items-center gap-1 bg-red-100 px-1.5 py-0.5 rounded-md active:scale-95 transition-transform hover:bg-red-200"
+                                    >
+                                        <RotateCcw size={8} className="text-red-500"/>
+                                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-wider">Retry</span>
+                                    </button>
                                 )}
                             </div>
 
@@ -1820,12 +1837,18 @@ function App() {
                         </p>
                     </div>
                     
-                    {/* OFFLINE WARNUNG (Nur sichtbar wenn offline) */}
+                    {/* GROSSE WARNMELDUNG (Klickbar) */}
                     {apiStatus === 'offline' && (
-                        <div className="mt-3 bg-red-50 border border-red-100 text-red-600 px-3 py-2 rounded-xl text-[10px] font-bold flex items-center gap-2 animate-in slide-in-from-top-2">
-                            <WifiOff size={14}/>
-                            <span>AI Systems unreachable. Check internet.</span>
-                        </div>
+                        <button 
+                            onClick={checkHealth}
+                            className="w-full mt-3 bg-red-50 border border-red-100 text-red-600 px-3 py-2 rounded-xl text-[10px] font-bold flex items-center justify-between gap-2 animate-in slide-in-from-top-2 active:bg-red-100 transition-colors group"
+                        >
+                            <div className="flex items-center gap-2">
+                                <WifiOff size={14}/>
+                                <span>AI Systems disconnected. Tap to reconnect.</span>
+                            </div>
+                            <RotateCcw size={12} className="opacity-50 group-hover:rotate-180 transition-transform"/>
+                        </button>
                     )}
                 </div>
 
