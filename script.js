@@ -65,6 +65,8 @@ const Image = (p) => <Icon {...p} path={<><rect width="18" height="18" x="3" y="
 const Wifi = (p) => <Icon {...p} path={<><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></>} />;
 const WifiOff = (p) => <Icon {...p} path={<><line x1="1" x2="23" y1="1" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></>} />;
 const AlertCircle = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></>} />;
+const Copy = (p) => <Icon {...p} path={<><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>} />;
+
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
         { id: 'home', label: 'Home', icon: <HomeIcon size={24} /> },
@@ -1047,6 +1049,7 @@ function App() {
     const renderTranslatorContent = () => {
         // KEIN useState HIER! Wir nutzen die Variablen von oben aus App()
 
+        // --- LOGIK ---
         const handleTranslate = async () => {
             if (!input.trim()) return;
             setLoading(true);
@@ -1088,29 +1091,20 @@ function App() {
             }
         };
 
-        // Helper für den Switcher Button
-        const SwitcherButton = () => {
-            const isFrToEn = direction === 'fr-en';
-            return (
-                <div className="flex items-center gap-2 p-1 bg-white rounded-xl shadow-sm border border-slate-200">
-                    <div className="px-4 py-2 bg-slate-50 rounded-lg text-slate-700 font-bold text-sm flex items-center gap-2 transition-all">
-                        {isFrToEn ? '🇫🇷 French' : '🇬🇧/🇩🇪 English/German'}
-                    </div>
-                    <button onClick={() => setDirection(prev => prev === 'en-fr' ? 'fr-en' : 'en-fr')} className="p-2 rounded-full hover:bg-slate-100 text-indigo-500 active:scale-90 transition-all">
-                        <RotateCcw size={20} className="text-indigo-600" />
-                    </button>
-                    <div className="px-4 py-2 bg-slate-50 rounded-lg text-slate-700 font-bold text-sm flex items-center gap-2 transition-all">
-                        {isFrToEn ? '🇬🇧 English' : '🇫🇷 French'}
-                    </div>
-                </div>
-            );
+        const copyToClipboard = (text) => {
+            navigator.clipboard.writeText(text);
         };
 
-        // RETURN JSX (Das UI)
+        // Labels bestimmen
+        const isFrToEn = direction === 'fr-en';
+        const sourceLabel = isFrToEn ? "🇫🇷 French" : "🇬🇧 English";
+        const targetLabel = isFrToEn ? "🇬🇧 English" : "🇫🇷 French";
+
+        // --- UI RETURN ---
         return (
             <div className="w-full max-w-xl mx-auto space-y-6">
                 
-                {/* 1. MODE SWITCHER (Tabs) */}
+                {/* 1. MODE TABS (Translator vs Coach) */}
                 <div className="bg-slate-200 p-1 rounded-2xl flex shadow-sm">
                     <button onClick={() => { setMode('translate'); setInput(''); setTranslationData(null); }} className={`flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'translate' ? 'bg-white text-indigo-600 shadow-sm scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}>
                         <ArrowLeftRight size={18}/> Translator
@@ -1120,58 +1114,132 @@ function App() {
                     </button>
                 </div>
 
-                {/* 2. INPUT CARD */}
-                <div className="bg-white rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden">
-                    <div className="bg-slate-50/80 px-4 py-3 border-b border-slate-100 flex justify-between items-center backdrop-blur-sm">
-                        {mode === 'translate' ? <SwitcherButton /> : <span className="text-sm font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-lg"><PenTool size={16}/> Write in French</span>}
-                        {input && <button onClick={() => setInput('')} className="p-2 bg-slate-200 rounded-full hover:bg-slate-300 text-slate-500 transition-colors"><X size={16}/></button>}
-                    </div>
-                    <textarea value={input} onChange={(e) => setInput(e.target.value)} placeholder={mode === 'translate' ? "Enter text here..." : "Ecrivez quelque chose en français..."} className="w-full h-40 p-5 text-lg text-slate-700 outline-none resize-none bg-transparent placeholder-slate-400 font-medium" />
-                    <div className="px-4 py-4 border-t border-slate-50 flex justify-end bg-slate-50/50">
-                        <button onClick={mode === 'translate' ? handleTranslate : handleCorrection} disabled={loading || !input} className={`rounded-xl px-8 py-3 font-bold text-white transition-all flex items-center gap-2 text-base ${loading || !input ? 'bg-slate-300 cursor-not-allowed' : mode === 'translate' ? 'bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 active:scale-[0.98]' : 'bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200 active:scale-[0.98]'}`}>
-                            {loading ? <RotateCcw className="animate-spin" size={20}/> : <Play size={20} fill="currentColor"/>}
-                            {mode === 'translate' ? 'Translate' : 'Check Grammar'}
-                        </button>
-                    </div>
-                </div>
+                {/* --- ANSICHT A: TRANSLATOR (Split View) --- */}
+                {mode === 'translate' && (
+                    <div className="flex flex-col gap-2">
+                        
+                        {/* BLOCK 1: INPUT */}
+                        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden relative z-10">
+                            {/* Header Source */}
+                            <div className="bg-slate-50 px-5 py-3 border-b border-slate-100 flex justify-between items-center">
+                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    {sourceLabel} (Detected)
+                                </span>
+                                {input && <button onClick={() => { setInput(''); setTranslationData(null); }} className="text-slate-400 hover:text-slate-600"><X size={18}/></button>}
+                            </div>
+                            
+                            <textarea 
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Type here..."
+                                className="w-full h-32 p-5 text-lg text-slate-800 outline-none resize-none bg-transparent placeholder-slate-300 font-medium"
+                            />
 
-                {/* 3. RESULTS */}
-                {mode === 'translate' && translationData && (
-                    <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                        <div className="bg-indigo-50 rounded-3xl border border-indigo-100 p-6 relative shadow-sm">
-                            <button onClick={() => speak(translationData.translation)} className="absolute top-4 right-4 p-2 text-indigo-400 hover:text-indigo-700 bg-indigo-100 rounded-full transition-colors"><Volume2 size={20}/></button>
-                            <span className="text-xs font-bold text-indigo-300 uppercase tracking-wide block mb-2">Translation</span>
-                            <p className="text-3xl text-indigo-900 font-serif leading-snug">{translationData.translation}</p>
+                            {/* Translate Action Button (inside Input Block) */}
+                            <div className="px-4 py-3 border-t border-slate-50 flex justify-end bg-white">
+                                <button 
+                                    onClick={handleTranslate}
+                                    disabled={loading || !input}
+                                    className="bg-indigo-600 text-white px-6 py-2 rounded-xl font-bold shadow-md shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all flex items-center gap-2 text-sm"
+                                >
+                                    {loading ? <Loader2 size={16} className="animate-spin"/> : "Translate"}
+                                </button>
+                            </div>
                         </div>
-                        {translationData.examples && (
-                            <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-md shadow-slate-100/50">
-                                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-4 flex items-center gap-2"><Sparkles size={16} className="text-amber-400"/> Context Examples</h4>
-                                <div className="space-y-3">
-                                    {translationData.examples.map((ex, idx) => (
-                                        <div key={idx} className="bg-slate-50 p-4 rounded-xl relative group hover:bg-indigo-50 transition-colors">
-                                            <div className="pr-8"><p className="text-slate-800 font-bold text-lg leading-snug mb-1">{ex.fr}</p><p className="text-slate-500 text-sm italic">{ex.en}</p></div>
-                                            <button onClick={() => speak(ex.fr)} className="absolute right-3 top-3 p-2 text-slate-400 group-hover:text-indigo-600 bg-white rounded-full shadow-sm transition-all opacity-0 group-hover:opacity-100"><Volume2 size={18}/></button>
-                                        </div>
-                                    ))}
+
+                        {/* MIDDLE: SWAP BUTTON */}
+                        <div className="relative h-6 flex justify-center items-center z-20 -my-5">
+                            <button 
+                                onClick={() => setDirection(prev => prev === 'en-fr' ? 'fr-en' : 'en-fr')} 
+                                className="bg-white p-3 rounded-full shadow-lg border border-slate-100 text-indigo-500 hover:text-indigo-700 hover:scale-110 transition-all"
+                            >
+                                <ArrowLeftRight size={20} /> 
+                            </button>
+                        </div>
+
+                        {/* BLOCK 2: OUTPUT */}
+                        <div className="bg-indigo-50 rounded-3xl border border-indigo-100 shadow-sm overflow-hidden min-h-[140px] relative z-0 pt-6">
+                            {/* Header Target */}
+                            <div className="px-5 py-2 flex justify-between items-center">
+                                <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">
+                                    {targetLabel}
+                                </span>
+                                {translationData && (
+                                    <div className="flex gap-2">
+                                        <button onClick={() => copyToClipboard(translationData.translation)} className="p-2 text-indigo-400 hover:text-indigo-600 hover:bg-indigo-100 rounded-full transition-colors"><Copy size={18}/></button>
+                                        <button onClick={() => speak(translationData.translation)} className="p-2 text-indigo-400 hover:text-indigo-600 hover:bg-indigo-100 rounded-full transition-colors"><Volume2 size={20}/></button>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            <div className="p-5 pt-2">
+                                {translationData ? (
+                                    <p className="text-2xl text-indigo-900 font-serif leading-relaxed animate-in fade-in">
+                                        {translationData.translation}
+                                    </p>
+                                ) : (
+                                    <p className="text-indigo-300 text-lg italic">Translation will appear here...</p>
+                                )}
+                            </div>
+
+                            {/* Context Examples (Optional) */}
+                            {translationData && translationData.examples && translationData.examples.length > 0 && (
+                                <div className="px-5 pb-5 animate-in slide-in-from-top-2">
+                                    <div className="h-px w-full bg-indigo-200/50 mb-4"></div>
+                                    <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider mb-2">Context</p>
+                                    <div className="space-y-2">
+                                        {translationData.examples.map((ex, idx) => (
+                                            <div key={idx} className="text-sm text-indigo-800">
+                                                <span className="font-medium">{ex.fr}</span>
+                                                <span className="text-indigo-400 mx-2">•</span>
+                                                <span className="italic opacity-80">{ex.en}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* --- ANSICHT B: WRITING COACH (Bleibt wie vorher, aber mit Copy Button) --- */}
+                {mode === 'coach' && (
+                    <div className="space-y-6">
+                        {/* Input für Coach */}
+                        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div className="bg-emerald-50 px-5 py-3 border-b border-emerald-100 flex justify-between items-center">
+                                <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-2"><PenTool size={16}/> Write French</span>
+                                {input && <button onClick={() => setInput('')} className="text-emerald-400 hover:text-emerald-700"><X size={18}/></button>}
+                            </div>
+                            <textarea value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ecrivez ici..." className="w-full h-32 p-5 text-lg text-slate-800 outline-none resize-none bg-transparent placeholder-slate-300" />
+                            <div className="px-5 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                                <button onClick={handleCorrection} disabled={loading || !input} className="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-700 active:scale-95 flex items-center gap-2">
+                                    {loading ? <Loader2 size={20} className="animate-spin"/> : <Check size={20}/>} Check
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Coach Results */}
+                        {correctionData && (
+                            <div className="space-y-4 animate-in fade-in slide-in-from-top-4">
+                                <div className="bg-emerald-600 rounded-3xl shadow-lg shadow-emerald-200 overflow-hidden text-white p-6 relative">
+                                    <div className="absolute top-4 right-4 flex gap-2">
+                                        {/* COPY BUTTON */}
+                                        <button onClick={() => copyToClipboard(correctionData.corrected)} className="p-2 bg-emerald-700/50 hover:bg-emerald-500 rounded-full transition-colors"><Copy size={18}/></button>
+                                        <button onClick={() => speak(correctionData.corrected)} className="p-2 bg-emerald-700/50 hover:bg-emerald-500 rounded-full transition-colors"><Volume2 size={20}/></button>
+                                    </div>
+                                    <span className="text-xs font-bold text-emerald-200 uppercase tracking-wide block mb-2">Corrected Version</span>
+                                    <p className="text-2xl font-medium leading-snug pr-8">{correctionData.corrected}</p>
+                                </div>
+                                <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm">
+                                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-2 flex items-center gap-2"><Info size={16}/> Teacher's Note</span>
+                                    <p className="text-slate-700 text-base leading-relaxed">{correctionData.explanation}</p>
                                 </div>
                             </div>
                         )}
                     </div>
                 )}
 
-                {mode === 'coach' && correctionData && (
-                    <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                        <div className="bg-emerald-50 rounded-3xl border border-emerald-100 p-6 shadow-sm relative">
-                            <button onClick={() => speak(correctionData.corrected)} className="absolute top-4 right-4 p-2 text-emerald-400 hover:text-emerald-700 bg-emerald-100 rounded-full transition-colors"><Volume2 size={20}/></button>
-                            <span className="text-xs font-bold text-emerald-400 uppercase tracking-wide block mb-2 flex items-center gap-2"><Check size={16}/> Corrected Version</span>
-                            <p className="text-3xl text-emerald-900 font-medium leading-snug">{correctionData.corrected}</p>
-                        </div>
-                        <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-md shadow-slate-100/50">
-                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-2 flex items-center gap-2"><Info size={16}/> Teacher's Note</span>
-                            <p className="text-slate-700 text-base leading-relaxed bg-slate-50 p-4 rounded-xl border-l-4 border-indigo-400">{correctionData.explanation}</p>
-                        </div>
-                    </div>
-                )}
             </div>
         );
     };
