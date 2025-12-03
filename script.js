@@ -86,12 +86,12 @@ const BottomNav = ({ activeTab, onTabChange }) => {
                         <button
                             key={tab.id}
                             onClick={() => onTabChange(tab.id)}
-                            className={`flex flex-col items-center gap-1 min-w-[60px] rounded-xl transition-all duration-300 active:scale-90 ${
+                            className={`flex flex-col items-center gap-1 min-w-[60px] rounded-xl transition-all active:scale-90 ${
                                 isActive ? 'text-indigo-600 -translate-y-1' : 'text-slate-400 hover:text-slate-600'
                             }`}
                         >
                             {tab.icon}
-                            <span className={`text-[10px] font-bold tracking-wide transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+                            <span className={`text-[10px] font-bold tracking-wide transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
                                 {tab.label}
                             </span>
                         </button>
@@ -642,7 +642,7 @@ function App() {
                 )}
 
                 {step === 'result' && feedback && (
-                    <div className="p-6 text-center animate-in zoom-in">
+                    <div className="p-6 text-center">
                         <div className="inline-block p-4 bg-green-100 text-green-600 rounded-full mb-4">
                             <Trophy size={32} />
                         </div>
@@ -1131,7 +1131,7 @@ function App() {
         const content = TOPIC_CONTENT[selectedTopicId]; 
 
         return (
-            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+            <div className="w-full pt-6 pb-24 px-1">
                 
                 {/* 1. HERO HEADER */}
                 <div className="relative mb-6">
@@ -1414,7 +1414,7 @@ function App() {
                             
                             <div className="p-5 pt-2">
                                 {translationData ? (
-                                    <p className="text-2xl text-indigo-900 font-serif leading-relaxed animate-in fade-in">
+                                    <p className="text-2xl text-indigo-900 font-serif leading-relaxed">
                                         {translationData.translation}
                                     </p>
                                 ) : (
@@ -1424,7 +1424,7 @@ function App() {
 
                             {/* Context Examples (Optional) */}
                             {translationData && translationData.examples && translationData.examples.length > 0 && (
-                                <div className="px-5 pb-5 animate-in slide-in-from-top-2">
+                                <div className="px-5 pb-5">
                                     <div className="h-px w-full bg-indigo-200/50 mb-4"></div>
                                     <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider mb-2">Context</p>
                                     <div className="space-y-2">
@@ -1461,7 +1461,7 @@ function App() {
 
                         {/* Coach Results */}
                         {correctionData && (
-                            <div className="space-y-4 animate-in fade-in slide-in-from-top-4">
+                            <div className="space-y-4">
                                 <div className="bg-emerald-600 rounded-3xl shadow-lg shadow-emerald-200 overflow-hidden text-white p-6 relative">
                                     <div className="absolute top-4 right-4 flex gap-2">
                                         {/* COPY BUTTON */}
@@ -1549,7 +1549,7 @@ function App() {
         if (chatStatus === 'lobby') { 
             // ... dein Lobby Code von vorhin ...
              return (
-                <div className="w-full animate-in fade-in duration-300 pt-6 pb-24 px-1">
+                <div className="w-full pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-6 px-1">
                         <button onClick={() => setView('skills')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"><ArrowLeft size={24}/></button>
                         <h2 className="text-2xl font-bold text-slate-800">Roleplay</h2>
@@ -1588,7 +1588,7 @@ function App() {
         }
         if (chatStatus === 'won' || chatStatus === 'lost') {
              return (
-                <div className="h-[80vh] flex flex-col items-center justify-center text-center px-6 animate-in zoom-in duration-300">
+                <div className="h-[80vh] flex flex-col items-center justify-center text-center px-6">
                     <div className="text-6xl mb-4">{chatStatus === 'won' ? '🎉' : '💀'}</div>
                     <h2 className="text-3xl font-bold text-slate-800 mb-2">{chatStatus === 'won' ? 'Mission Accomplished!' : 'Mission Failed'}</h2>
                     <p className="text-slate-500 mb-8">{chatStatus === 'won' ? "Great job! You handled the situation perfectly." : "You ran out of patience."}</p>
@@ -1633,7 +1633,7 @@ function App() {
                                 >
                                     {/* Rotes Icon wenn Fehler (nur bei User) */}
                                     {msg.role === 'user' && msg.correction && msg.correction !== 'null' && msg.correction !== msg.content && (
-                                    <div className="mb-1 mr-1 bg-rose-50 text-rose-700 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-rose-100 animate-in fade-in slide-in-from-bottom-1 max-w-[85%] shadow-sm flex items-start gap-1">
+                                    <div className="mb-1 mr-1 bg-rose-50 text-rose-700 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-rose-100 max-w-[85%] shadow-sm flex items-start gap-1">
                                         <span className="mt-0.5">💡</span> 
                                         <span>{msg.correction}</span>
                                     </div>
@@ -1665,8 +1665,8 @@ function App() {
 
                 {/* --- DETAIL MODAL (Overlay für Korrektur & Übersetzung) --- */}
                 {selectedMsg && (
-                    <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/30 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setSelectedMsg(null)}>
-                        <div className="bg-white w-full p-6 pb-12 rounded-t-[2.5rem] shadow-2xl animate-in slide-in-from-bottom-10 duration-300 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                    <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/30 backdrop-blur-sm" onClick={() => setSelectedMsg(null)}>
+                        <div className="bg-white w-full p-6 pb-12 rounded-t-[2.5rem] shadow-2xl0 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                             
                             <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6"></div>
 
@@ -2079,7 +2079,7 @@ function App() {
                             <div className="flex-1">
                                 <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                                     <div 
-                                        className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-500"
+                                        className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all"
                                         style={{ width: `${Math.min(100, (learnedCount / nextGoal) * 100)}%` }}
                                     ></div>
                                 </div>
@@ -2114,7 +2114,7 @@ function App() {
         const dailyJokePreview = JOKE_DB[new Date().getDate() % JOKE_DB.length]; 
 
         return (
-            <div className="pb-24 pt-[160px] px-1 space-y-6 animate-in fade-in duration-500">
+            <div className="pb-24 pt-[160px] px-1 space-y-6">
                 
                 {/* 1. HERO: SMART LEARNING (Keep) */}
                 <div className="relative">
@@ -2135,7 +2135,7 @@ function App() {
                             <h2 className="text-2xl font-bold mb-1">Start Smart Session</h2>
                             <p className="text-indigo-100 text-sm font-medium opacity-90">Review words & learn new ones.</p>
                         </div>
-                        <GraduationCap size={140} className="absolute -right-6 -bottom-6 text-white opacity-10 rotate-[-15deg] group-hover:scale-110 transition-transform duration-500" />
+                        <GraduationCap size={140} className="absolute -right-6 -bottom-6 text-white opacity-10 rotate-[-15deg] group-hover:scale-110 transition-transform" />
                     </button>
                 </div>
 
@@ -2366,7 +2366,7 @@ function App() {
             if (newsData.length === 0 && !loadingContent) fetchNews();
 
             return (
-                <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
+                <div className="w-full pt-6 pb-24 px-1 h-full">
                     <div className="flex items-center gap-3 mb-4 px-1">
                         <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
                         <h2 className="text-2xl font-bold text-slate-800">News Kiosk</h2>
@@ -2443,7 +2443,7 @@ function App() {
             const isSaved = currentMeme && savedMemes.find(m => m.id === currentMeme.id);
 
             return (
-                <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full flex flex-col">
+                <div className="w-full pt-6 pb-24 px-1 h-full flex flex-col">
                     <div className="flex items-center gap-3 mb-4 px-1">
                         <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
                         <div className="flex-1">
@@ -2463,7 +2463,7 @@ function App() {
                         ) : loadingContent && !currentMeme ? (
                              <div className="text-center text-purple-400 animate-pulse"><Image size={32} className="animate-bounce mx-auto mb-2"/> Mixing best memes...</div>
                         ) : currentMeme ? (
-                            <div className="w-full bg-white p-4 rounded-[2rem] shadow-lg border border-slate-100 relative overflow-hidden animate-in zoom-in duration-200">
+                            <div className="w-full bg-white p-4 rounded-[2rem] shadow-lg border border-slate-100 relative overflow-hidden">
                                 <h3 className="font-bold text-slate-800 text-lg mb-3 text-center leading-snug px-2">{currentMeme.title}</h3>
                                 <div className="rounded-xl overflow-hidden bg-slate-100 border border-slate-100 flex items-center justify-center relative min-h-[250px]">
                                     <img src={currentMeme.url} alt="Meme" className="w-full h-full object-contain max-h-[50vh]" />
@@ -2537,7 +2537,7 @@ function App() {
             if (!currentJoke && !loadingContent) loadNextJoke();
 
             return (
-                <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full flex flex-col">
+                <div className="w-full pt-6 pb-24 px-1 h-full flex flex-col">
                     <div className="flex items-center gap-3 mb-4 px-1">
                         <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
                         <h2 className="text-2xl font-bold text-slate-800">Joke Box</h2>
@@ -2562,7 +2562,7 @@ function App() {
 
                                     {/* Frage übersetzen Button/Text */}
                                     {questionTranslation ? (
-                                        <p className="text-xs text-indigo-500 font-medium animate-in fade-in bg-indigo-50 py-1 px-2 rounded-lg inline-block">
+                                        <p className="text-xs text-indigo-500 font-medium bg-indigo-50 py-1 px-2 rounded-lg inline-block">
                                             🇬🇧 {questionTranslation}
                                         </p>
                                     ) : (
@@ -2578,7 +2578,7 @@ function App() {
 
                                 {/* ANTWORT BEREICH */}
                                 {showPunchline ? (
-                                    <div className="animate-in zoom-in duration-300 border-t border-slate-100 pt-6">
+                                    <div className="border-t border-slate-100 pt-6">
                                         <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Punchline</span>
                                         <h3 className="text-2xl font-bold text-indigo-600 mt-2 mb-4 leading-snug italic">
                                             "{currentJoke.a}"
@@ -2590,7 +2590,7 @@ function App() {
 
                                         {/* Antwort Übersetzung */}
                                         {showTranslation ? (
-                                             <p className="text-slate-400 text-sm bg-slate-50 p-3 rounded-xl animate-in fade-in">
+                                             <p className="text-slate-400 text-sm bg-slate-50 p-3 rounded-xl">
                                                 🇬🇧 {currentJoke.en}
                                              </p>
                                         ) : (
@@ -2624,7 +2624,7 @@ function App() {
             const pageTitle = exploreMode === 'grammar' ? "Vocab Sets" : "Real Life Topics";
             
             return (
-                <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+                <div className="w-full pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-4 px-1">
                         <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
                         <h2 className="text-2xl font-bold text-slate-800">{pageTitle}</h2>
@@ -2664,7 +2664,7 @@ function App() {
         // --- HAUPTMENÜ (VERTICAL STACK - NO GRID) ---
         if (exploreMode === 'main') {
             return (
-                <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-500 pt-6 pb-24 px-1">
+                <div className="space-y-4 pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-4 px-1">
                         <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Compass size={24} /></div>
                         <h2 className="text-2xl font-bold text-slate-800">Explore</h2>
@@ -2717,7 +2717,7 @@ function App() {
         };
 
         return (
-            <div className="space-y-6 animate-in fade-in duration-500 pt-6 pb-24 px-1">
+            <div className="space-y-6 pt-6 pb-24 px-1">
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-4 px-1">
                      <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Dumbbell size={24} /></div>
@@ -2728,10 +2728,10 @@ function App() {
                 <div className="mb-2">
                       <button onClick={() => setView('daily-writer')} className="w-full bg-gradient-to-br from-indigo-600 to-violet-600 p-[2px] rounded-3xl shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all group">
                         <div className="bg-white rounded-[1.4rem] p-5 flex items-center justify-between h-full relative overflow-hidden">
-                            <div className="absolute right-0 top-0 w-32 h-32 bg-indigo-50 rounded-full -mr-10 -mt-10 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+                            <div className="absolute right-0 top-0 w-32 h-32 bg-indigo-50 rounded-full -mr-10 -mt-10 opacity-50 group-hover:scale-150 transition-transform"></div>
                             
                             <div className="flex items-center gap-5 relative z-10">
-                                <div className="bg-indigo-100 w-14 h-14 flex items-center justify-center rounded-2xl text-indigo-600 shadow-sm group-hover:rotate-6 transition-transform duration-300">
+                                <div className="bg-indigo-100 w-14 h-14 flex items-center justify-center rounded-2xl text-indigo-600 shadow-sm group-hover:rotate-6 transition-transform">
                                     <PenTool size={28}/>
                                 </div>
                                 <div className="text-left">
@@ -2753,7 +2753,7 @@ function App() {
                         {GRAMMAR_MODULES.map((module) => {
                             const isOpen = expandedCategory === module.id;
                             return (
-                                <div key={module.id} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300">
+                                <div key={module.id} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden transition-all">
                                     {/* Main Card */}
                                     <button onClick={() => toggleCategory(module.id)} className="w-full p-5 flex items-center gap-4 text-left active:bg-slate-50 transition-colors">
                                         <div className={`w-12 h-12 flex items-center justify-center rounded-2xl ${module.color}`}>{module.icon}</div>
@@ -2761,12 +2761,12 @@ function App() {
                                             <h4 className="font-bold text-slate-800 text-lg">{module.title}</h4>
                                             <p className="text-xs text-slate-400">{module.sub}</p>
                                         </div>
-                                        <ChevronRight size={20} className={`text-slate-300 transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`} />
+                                        <ChevronRight size={20} className={`text-slate-300 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
                                     </button>
                                     
                                     {/* Sub-List (Accordion) */}
                                     {isOpen && (
-                                        <div className="bg-slate-50 border-t border-slate-100 animate-in slide-in-from-top-2 fade-in duration-200">
+                                        <div className="bg-slate-50 border-t border-slate-100">
                                             {module.topics.map((t) => (
                                                 <button key={t.id} onClick={() => alert(`Opening Grammar Sheet: ${t.title}`)} className="w-full p-4 pl-[5rem] text-left hover:bg-slate-100 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0 flex justify-between items-center group">
                                                     <div>
@@ -2828,7 +2828,7 @@ function App() {
         };
 
         return (
-            <div className="w-full animate-in fade-in duration-500 pt-4">
+            <div className="w-full pt-4">
                 
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-6 pl-1">
@@ -2911,7 +2911,7 @@ function App() {
         };
 
         return (
-            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
+            <div className="w-full pt-6 pb-24 px-1 h-full">
                 <div className="flex items-center gap-3 mb-4 px-1">
                     <button onClick={() => setView('skills')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
                     <h2 className="text-2xl font-bold text-slate-800">Daily Writer</h2>
@@ -2990,7 +2990,7 @@ function App() {
                     </div>
 
                     {dailyWriterScore !== null && (
-                        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg text-center animate-in zoom-in duration-300">
+                        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg text-center">
                             <div className="inline-block p-4 bg-green-100 text-green-600 rounded-full mb-4 shadow-sm">
                                 <Trophy size={32} />
                             </div>
@@ -3018,7 +3018,7 @@ function App() {
 
         return (
             // ÄNDERUNG: Kein Wrapper-Container mehr, nur "pt-4"
-            <div className="w-full animate-in fade-in duration-500 pt-4">
+            <div className="w-full pt-4">
                 
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-6 pl-1">
@@ -3067,7 +3067,7 @@ function App() {
 
                         {/* Manuelle Eingabe (Innerhalb der Karte, klappt auf) */}
                         {isCustomActive && (
-                            <div className="mt-4 pt-4 border-t border-slate-100 animate-in fade-in duration-300">
+                            <div className="mt-4 pt-4 border-t border-slate-100">
                                 <div className="flex items-center gap-3">
                                     <input type="number" min="1" value={testConfig.startRank} onChange={(e) => setTestConfig({ ...testConfig, startRank: parseInt(e.target.value) || 1 })} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-center font-bold" placeholder="Start" />
                                     <span className="text-slate-300 font-bold">-</span>
@@ -3100,7 +3100,7 @@ function App() {
         );
     };
     const renderTranslator = () => (
-        <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
+        <div className="w-full pt-6 pb-24 px-1 h-full">
             {/* Header... */}
             {renderTranslatorContent()} 
         </div>
@@ -3199,7 +3199,7 @@ function App() {
         const word = selectedWord;
 
         return (
-            <div className="flex flex-col h-full max-w-xl mx-auto w-full pt-4 animate-in fade-in zoom-in duration-300">
+            <div className="flex flex-col h-full max-w-xl mx-auto w-full pt-4">
                 {/* Header: Zurück zur Library */}
                 <div className="flex items-center justify-between mb-4 pl-1">
                     <button 
@@ -3241,7 +3241,7 @@ function App() {
                             <BookOpen size={20} /> Show Details
                         </button>
                     ) : (
-                        <div className="w-full animate-in fade-in duration-300 flex flex-col items-center border-t border-slate-100 pt-6 mt-2 w-full">
+                        <div className="w-full flex flex-col items-center border-t border-slate-100 pt-6 mt-2 w-full">
                             <div className="text-center mb-6 w-full">
                                 <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
                                 <h3 className="text-3xl font-bold text-indigo-900 mb-2 leading-tight">{word.english || word.german}</h3>
@@ -3257,7 +3257,7 @@ function App() {
                                 )}
                                 {loadingExamples && <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2"><ArrowLeft className="animate-spin" size={16}/> generating...</div>}
                                 {aiExamples && (
-                                    <div className="space-y-3 animate-in fade-in duration-500 text-left">
+                                    <div className="space-y-3 text-left">
                                         {aiExamples.map((ex, idx) => (
                                             <div key={idx} className="bg-white border border-slate-200 p-3 rounded-xl shadow-sm relative">
                                                 <div className="flex justify-between items-start gap-2">
@@ -3299,10 +3299,10 @@ function App() {
                     <div className="w-6"></div> 
                 </div>
                 
-                {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-6"><div className="bg-indigo-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }}></div></div>}
+                {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-6"><div className="bg-indigo-600 h-2 rounded-full transition-all" style={{ width: `${progressPercent}%` }}></div></div>}
                 
                 {/* DIE KARTE */}
-                <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-6 flex flex-col items-center justify-center min-h-[400px] relative transition-all animate-in fade-in zoom-in duration-300">
+                <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-6 flex flex-col items-center justify-center min-h-[400px] relative transition-all">
                     
                     <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Rank #{word.rank}</div>
                     {isSmartMode && userProgress[word.rank] && <div className="absolute top-4 left-4 bg-indigo-50 text-indigo-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
@@ -3324,7 +3324,7 @@ function App() {
                         </>
                     ) : (
                         /* RÜCKSEITE (Englisch + AI) */
-                        <div className="w-full animate-in fade-in duration-300 flex flex-col items-center w-full h-full">
+                        <div className="w-full flex flex-col items-center w-full h-full">
                             <div className="text-center mb-6 w-full">
                                 <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
                                 <h3 className="text-3xl font-bold text-indigo-900 mb-2 leading-tight">{word.english || word.german}</h3>
@@ -3347,7 +3347,7 @@ function App() {
                                             <Sparkles size={16} /> Generate AI Examples
                                         </button>
                                     ) : (
-                                        <div className="space-y-3 animate-in fade-in duration-500 text-left">
+                                        <div className="space-y-3 text-left">
                                             <div className="flex justify-between items-center px-1 mb-1">
                                                  <span className="text-[10px] font-bold text-slate-400 uppercase">AI Context</span>
                                                  <button onClick={() => { setAiExamples(null); setExamplesVisible(false); }} className="text-[10px] text-indigo-400 font-bold hover:underline">Clear</button>
@@ -3495,7 +3495,7 @@ function App() {
         // --- PHASE 1: AUSWAHL ---
         if (readerMode === 'select') {
             return (
-                <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+                <div className="space-y-6 pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-2 px-1">
                         <button onClick={() => setView('explore')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
                             <ArrowLeft size={20} />
@@ -3504,7 +3504,7 @@ function App() {
                     </div>
                     
                     {loadingStory ? (
-                        <div className="h-72 flex flex-col items-center justify-center text-center px-6 space-y-6 animate-in fade-in duration-500">
+                        <div className="h-72 flex flex-col items-center justify-center text-center px-6 space-y-6">
                             <div className="relative">
                                 <div className="absolute inset-0 bg-indigo-100 rounded-full animate-ping opacity-75"></div>
                                 <div className="relative bg-white p-4 rounded-full shadow-sm text-indigo-600">
@@ -3573,7 +3573,7 @@ function App() {
         // --- PHASE 2: LESEN ---
         if (readerMode === 'reading' && currentStory) {
             return (
-                <div className="space-y-6 animate-in fade-in zoom-in duration-300 pt-6 pb-40 px-1 relative min-h-screen">
+                <div className="space-y-6 pt-6 pb-40 px-1 relative min-h-screen">
                      <div className="flex items-center justify-between mb-4 px-1">
                         <button onClick={() => setReaderMode('select')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
                             <ArrowLeft size={20} />
@@ -3594,7 +3594,7 @@ function App() {
                                     <span 
                                         key={i} 
                                         onClick={(e) => handleWordClick(e, wordRaw)}
-                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors duration-200 hover:bg-slate-100 hover:text-indigo-600 ${
+                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors hover:bg-slate-100 hover:text-indigo-600 ${
                                             clickedWord?.french === displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase() ? 'bg-yellow-200 text-slate-900' : ''
                                         }`}
                                     >
@@ -3607,7 +3607,7 @@ function App() {
 
                     {/* INFO POPUP */}
                     {clickedWord && (
-                        <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl animate-in slide-in-from-bottom-4 z-50 flex items-center justify-between">
+                        <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center justify-between">
                             <div>
                                 <div className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 inline-block px-1.5 rounded ${
                                     clickedWord.rank === "API" ? "bg-yellow-500/20 text-yellow-300" : 
@@ -3671,7 +3671,7 @@ function App() {
         // --- PHASE 3: QUIZ ---
         if (readerMode === 'quiz' && currentStory) {
             return (
-                <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+                <div className="space-y-6 pt-6 pb-24 px-1">
                     <div className="flex items-center gap-3 mb-2 px-1">
                         <button onClick={() => setReaderMode('reading')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"><ArrowLeft size={20} /></button>
                         <h2 className="text-xl font-bold text-slate-800">Comprehension Check</h2>
@@ -3707,7 +3707,7 @@ function App() {
         return null;
     };
     const renderResults = () => (
-        <div className="text-center max-w-md mx-auto py-10 animate-in zoom-in duration-300">
+        <div className="text-center max-w-md mx-auto py-10">
             <div className="inline-block p-6 bg-green-100 rounded-full mb-6"><BarChart3 size={48} className="text-green-600" /></div>
             <h2 className="text-3xl font-bold text-slate-800 mb-2">Session Finished!</h2>
             <p className="text-slate-500 mb-8">Here is your summary.</p>
@@ -3720,7 +3720,7 @@ function App() {
     );
     //tetsad
     const renderGrammar = () => (
-        <div className="flex flex-col items-center justify-start min-h-[60vh] space-y-6 animate-in fade-in duration-500 pt-4 pb-20">
+        <div className="flex flex-col items-center justify-start min-h-[60vh] space-y-6 pt-4 pb-20">
             {/* Header */}
             <div className="max-w-xl mx-auto w-full px-1 text-center">
                 <div className="inline-flex items-center justify-center p-3 bg-indigo-100 rounded-full text-indigo-600 mb-4 shadow-sm">
@@ -3739,7 +3739,7 @@ function App() {
         </div>
     );
     const renderPractice = () => (
-        <div className="space-y-6 animate-in fade-in duration-500 pt-4 pb-24">
+        <div className="space-y-6 pt-4 pb-24">
             <div className="flex items-center gap-3 mb-2 px-1">
                  <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><BookCheck size={24} /></div>
                  <h2 className="text-2xl font-bold text-slate-800">Practice Room</h2>
@@ -3775,7 +3775,7 @@ function App() {
         </div>
     );
     const renderDataMgmt = () => (
-        <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in duration-500 pt-6 pb-24 px-1">
+        <div className="max-w-2xl mx-auto space-y-6 pt-6 pb-24 px-1">
             
             {/* Header */}
             <div className="flex items-center gap-3 mb-2 px-1">
@@ -3857,7 +3857,7 @@ function App() {
         };
 
         return (
-            <div className="max-w-xl mx-auto space-y-6 animate-in fade-in duration-500 pt-6 pb-24 px-1">
+            <div className="max-w-xl mx-auto space-y-6 pt-6 pb-24 px-1">
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-4 px-1">
                     <button onClick={() => { setViewingJoke(null); setView('home'); }} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
@@ -4026,7 +4026,7 @@ function App() {
         };
 
         return (
-            <div className="max-w-2xl mx-auto space-y-8 animate-in fade-in duration-500 pt-2 pb-24">
+            <div className="max-w-2xl mx-auto space-y-8 pt-2 pb-24">
                 
                 {/* HEADER */}
                 <div className="flex items-center justify-between px-1">
@@ -4152,7 +4152,7 @@ function App() {
 
                         {/* Inline Stats */}
                         {showStats && (
-                             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 animate-in slide-in-from-top-2 fade-in">
+                             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                                  {[
                                     { l: 100, c: "bg-indigo-500" }, { l: 500, c: "bg-blue-500" }, { l: 1000, c: "bg-cyan-500" }, { l: 2000, c: "bg-teal-500" }, { l: 5000, c: "bg-emerald-500" }
                                  ].map(m => {
@@ -4192,12 +4192,12 @@ function App() {
     
     const renderCollections = () => {
         return (
-            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+            <div className="w-full pt-6 pb-24 px-1">
                 {/* Scroll to Top Button */}
                 {showScrollTop && (
                     <button 
                         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                        className="fixed bottom-24 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-all z-40 animate-in zoom-in duration-200"
+                        className="fixed bottom-24 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-all z-40"
                     >
                         <ChevronRight size={24} className="-rotate-90"/>
                     </button>
@@ -4378,7 +4378,7 @@ function App() {
         });
 
         return (
-            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 relative min-h-screen">
+            <div className="w-full pt-6 pb-24 px-1 relative min-h-screen">
                 
                 {/* Header mit Zurück-Button */}
                 <div className="flex items-center gap-3 mb-6 px-1">
@@ -4434,7 +4434,7 @@ function App() {
 
                 {/* BACK TO TOP BUTTON */}
                 {showScrollTop && (
-                    <button onClick={scrollToTop} className="fixed bottom-24 right-6 bg-indigo-600 text-white p-3 rounded-full shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-90 transition-all z-50 animate-in fade-in">
+                    <button onClick={scrollToTop} className="fixed bottom-24 right-6 bg-indigo-600 text-white p-3 rounded-full shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-90 transition-all z-50">
                         <ArrowUp size={24} />
                     </button>
                 )}
