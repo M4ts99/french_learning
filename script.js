@@ -1100,8 +1100,14 @@ function App() {
 
         // Sonderfall: Wenn es "Hard" war, darf die Box nicht steigen (außer es war 0)
         if (quality === 1 && interval > 0) {
-             // Wir begrenzen die Box visuell auf die aktuelle, damit man nicht "aufsteigt", wenn man es schwer fand
-             const oldBox = calculateBoxFromInterval(interval); // Hilfsfunktion oder Schätzung
+             // Wir begrenzen die Box visuell auf die aktuelle
+             // Inline-Berechnung statt externe Funktion
+             let oldBox = 1;
+             if (interval <= 0) oldBox = 1;
+             else if (interval <= 3) oldBox = 2;
+             else if (interval <= 10) oldBox = 3;
+             else if (interval <= 30) oldBox = 4;
+             else oldBox = 5;
              visualBox = Math.min(visualBox, oldBox);
         }
 
