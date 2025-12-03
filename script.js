@@ -2054,8 +2054,11 @@ function App() {
                             <p className="text-slate-500 text-[10px] md:text-sm font-medium capitalize mt-0.5">{dateStr}</p>
                         </div>
                         <div className="text-right">
-                            <div className="text-xl md:text-3xl lg:text-4xl font-extrabold text-slate-800 font-mono leading-tight">
-                                {currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                            <div className="flex items-center justify-end gap-2">
+                                <div className="text-xl md:text-3xl lg:text-4xl font-extrabold text-slate-800 font-mono leading-tight">
+                                    {currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                                </div>
+                                <div className={`w-2.5 h-2.5 rounded-full ${apiStatus === 'online' ? 'bg-green-500' : apiStatus === 'offline' ? 'bg-red-500' : 'bg-amber-400 animate-pulse'}`} title={`API: ${apiStatus}`}></div>
                             </div>
                             <div className="text-xs md:text-sm text-indigo-600 font-semibold italic mt-0.5 capitalize">
                                 {frenchTime}
