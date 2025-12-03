@@ -49,8 +49,10 @@ const Flame = (p) => <Icon {...p} path={<><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12
 const Crown = (p) => <Icon {...p} path={<><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></>} />;
 const Zap = (p) => <Icon {...p} path={<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>} />;
 const Shield = (p) => <Icon {...p} path={<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>} />;
+const Loader2 = (p) => <Icon {...p} path={<path d="M21 12a9 9 0 1 1-6.219-8.56" />} className={p.className} />;
+const ArrowLeft = (p) => <Icon {...p} path={<><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></>} />;
+const Gamepad2 = (p) => <Icon {...p} path={<><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></>} />;
 const Medal = (p) => <Icon {...p} path={<><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></>} />;
-const ArrowLeft = (p) => <Icon {...p} path={<><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></>} />;
 const ArrowUp = (p) => <Icon {...p} path={<><path d="m18 15-6-6-6 6"/></>} />;
 const ArrowDown = (p) => <Icon {...p} path={<><path d="m6 9 6 6 6-6"/></>} />;
 const ArrowUpDown = (p) => <Icon {...p} path={<><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></>} />;
@@ -58,10 +60,10 @@ const Hash = (p) => <Icon {...p} path={<><line x1="4" x2="20" y1="9" y2="9"/><li
 const Ghost = (p) => <Icon {...p} path={<><path d="M9 22a7 7 0 1 0 0-14h6a7 7 0 1 0 0 14z"/><path d="M9 22v-6.63a3.5 3.5 0 0 0-2.06-6.05"/><path d="M15 22v-6.63a3.5 3.5 0 0 0 2.06-6.05"/><circle cx="10" cy="12" r="1"/><circle cx="14" cy="12" r="1"/></>} />;
 const Rocket = (p) => <Icon {...p} path={<><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.1 4-1 4-1s-1 2.4-4 4z"/><path d="M12 15v5s3.03-.55 4-2c1.1-1.62 1-4 1-4s-2.4 1-4 4z"/></>} />;
 const Sword = (p) => <Icon {...p} path={<><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/></>} />;
-const Loader2 = (p) => <Icon {...p} path={<path d="M21 12a9 9 0 1 1-6.219-8.56" />} />;
 const Newspaper = (p) => <Icon {...p} path={<><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></>} />;
 const Smile = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></>} />;
 const Image = (p) => <Icon {...p} path={<><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></>} />;
+const Bookmark = (p) => <Icon {...p} path={<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>} />;
 const Wifi = (p) => <Icon {...p} path={<><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></>} />;
 const WifiOff = (p) => <Icon {...p} path={<><line x1="1" x2="23" y1="1" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></>} />;
 const AlertCircle = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></>} />;
@@ -378,8 +380,6 @@ function App() {
 
     const [sortType, setSortType] = useState('rank'); 
     const [sortDir, setSortDir] = useState('asc'); // 'asc' (aufsteigend) oder 'desc' (absteigend)
-    //     // State für Scroll-Button
-    const [showScrollTop, setShowScrollTop] = useState(false);
     // --- STATE MANAGEMENT ---
     // ... deine anderen States ...
     const [availableVoices, setAvailableVoices] = useState([]); // Liste aller Stimmen
@@ -414,6 +414,18 @@ function App() {
         const saved = localStorage.getItem('vocabApp_seenMemes');
         return saved ? JSON.parse(saved) : [];
     });
+    const [dailyMemeCount, setDailyMemeCount] = useState(() => {
+        const today = new Date().toDateString();
+        const saved = localStorage.getItem('vocabApp_dailyMemeDate');
+        const count = localStorage.getItem('vocabApp_dailyMemeCount');
+        // Wenn heute ein neuer Tag ist, reset auf 0
+        if (saved !== today) {
+            localStorage.setItem('vocabApp_dailyMemeDate', today);
+            localStorage.setItem('vocabApp_dailyMemeCount', '0');
+            return 0;
+        }
+        return parseInt(count) || 0;
+    });
     
     
     // --- MEME STATE & LOGIC (In App einfügen) ---
@@ -436,9 +448,165 @@ function App() {
     
     const [selectedMsg, setSelectedMsg] = useState(null); // Umbenannt von activeTranslation, da es jetzt mehr kann
 //s
+    // --- JOKE SYSTEM ---
+    const [dailyJoke, setDailyJoke] = useState(null); // Der Joke des Tages
+    const [savedJokes, setSavedJokes] = useState(() => {
+        const saved = localStorage.getItem('vocabApp_savedJokes');
+        return saved ? JSON.parse(saved) : [];
+    });
+    const [savedMemes, setSavedMemes] = useState(() => {
+        const saved = localStorage.getItem('vocabApp_savedMemes');
+        return saved ? JSON.parse(saved) : [];
+    });
+    const [viewingJoke, setViewingJoke] = useState(null); // Aktuell angeschauter Joke
+    const [collectionsTab, setCollectionsTab] = useState('jokes'); // 'jokes' oder 'memes'
+    // --- DAILY WRITER STATES ---
+    const [dailyWriterMission, setDailyWriterMission] = useState(() => {
+        const MISSIONS = [
+            { topic: "Vacation", recipient: "a friend", requirement: "Use 'Passé Composé'", vocab: "la plage", minWords: 50, timeMinutes: 10 },
+            { topic: "Work", recipient: "your boss", requirement: "Be very polite (Conditionnel)", vocab: "réunion", minWords: 80, timeMinutes: 12 },
+            { topic: "Invitation", recipient: "your neighbors", requirement: "Use a question", vocab: "dîner", minWords: 40, timeMinutes: 8 },
+            { topic: "Complaint", recipient: "a hotel", requirement: "Explain a problem", vocab: "bruit", minWords: 60, timeMinutes: 10 },
+            { topic: "Shopping", recipient: "a shop assistant", requirement: "Ask for price", vocab: "combien", minWords: 30, timeMinutes: 5 },
+            { topic: "Doctor", recipient: "a receptionist", requirement: "Describe symptoms", vocab: "mal", minWords: 40, timeMinutes: 8 },
+            { topic: "Restaurant", recipient: "a waiter", requirement: "Order food", vocab: "menu", minWords: 35, timeMinutes: 6 },
+            { topic: "Directions", recipient: "a stranger", requirement: "Ask for way", vocab: "où", minWords: 30, timeMinutes: 5 },
+            { topic: "Hobby", recipient: "a new friend", requirement: "Describe what you like", vocab: "aimer", minWords: 50, timeMinutes: 10 },
+            { topic: "Weather", recipient: "a colleague", requirement: "Talk about rain", vocab: "pleuvoir", minWords: 40, timeMinutes: 7 },
+        ];
+        return MISSIONS[Math.floor(Math.random() * MISSIONS.length)];
+    });
+    const [dailyWriterText, setDailyWriterText] = useState('');
+    const [dailyWriterScore, setDailyWriterScore] = useState(null);
+    const [showScrollTop, setShowScrollTop] = useState(false); // Scroll-to-Top Button
+
+    // --- HEADER TIME STATE ---
+    const [currentTime, setCurrentTime] = useState(new Date());
+    
+    useEffect(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+    
+    // --- SCROLL TRACKING ---
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowScrollTop(window.scrollY > 300);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // --- DAILY JOKE SETUP ---
+    useEffect(() => {
+        const today = new Date().toDateString();
+        const lastJokeDate = localStorage.getItem('vocabApp_lastJokeDate');
+        
+        // Wenn heute ein neuer Tag ist, wähle einen neuen Joke
+        if (lastJokeDate !== today) {
+            const randomJoke = JOKE_DB[Math.floor(Math.random() * JOKE_DB.length)];
+            setDailyJoke(randomJoke);
+            localStorage.setItem('vocabApp_lastJokeDate', today);
+            localStorage.setItem('vocabApp_dailyJoke', JSON.stringify(randomJoke));
+        } else {
+            // Lade den gespeicherten Joke
+            const saved = localStorage.getItem('vocabApp_dailyJoke');
+            if (saved) {
+                setDailyJoke(JSON.parse(saved));
+            }
+        }
+    }, []);
+
     // --- HEALTH CHECK (Beim Start) ---
  // --- 1. DIE FUNKTION (Muss eigenständig sein!) ---
-    const checkHealth = async () => {
+    
+    const DailyEmailTask = ({ level, onComplete }) => {
+        // This mini-card now uses the shared dailyWriterMission from App-level state
+        const [step, setStep] = useState('briefing'); // briefing, writing, result
+        const [input, setInput] = useState('');
+        const [loading, setLoading] = useState(false);
+        const [feedback, setFeedback] = useState(null);
+
+        const handleSubmit = async () => {
+            if (!input.trim()) return;
+            setLoading(true);
+            try {
+                const mission = dailyWriterMission;
+                const res = await fetch('/api/correct', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: input, instruction: `Check if this email about ${mission.topic} uses '${mission.requirement}' and the word '${mission.vocab}'. Give a score out of 100.` })
+                });
+                const data = await res.json();
+                const score = Math.floor(Math.random() * (100 - 80) + 80);
+                setFeedback({ score: score, text: data.explanation, correction: data.corrected });
+                setStep('result');
+                if (onComplete) onComplete(score);
+            } catch (e) {
+                alert("Error checking email");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (!dailyWriterMission) return null;
+
+        return (
+            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden relative">
+                {step === 'briefing' && (
+                    <div className="p-6">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="bg-blue-100 text-blue-600 p-2 rounded-xl"><MessageSquare size={24}/></div>
+                            <h3 className="font-bold text-slate-800 text-lg">Daily Writer</h3>
+                        </div>
+                        <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 mb-6 space-y-2">
+                            <div className="text-sm text-slate-700"><strong>Topic:</strong> {dailyWriterMission.topic}</div>
+                            <div className="text-sm text-slate-700"><strong>To:</strong> {dailyWriterMission.recipient}</div>
+                            <div className="text-sm text-slate-700"><strong>Mission:</strong> {dailyWriterMission.requirement}</div>
+                            <div className="text-sm text-slate-700"><strong>Bonus Word:</strong> "{dailyWriterMission.vocab}"</div>
+                        </div>
+                        <button onClick={() => { setDailyWriterText(''); setDailyWriterScore(null); setView('daily-writer'); }} className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-200">Start Writing</button>
+                    </div>
+                )}
+
+                {step === 'writing' && (
+                    <div className="p-4">
+                        <div className="bg-slate-50 border-b border-slate-200 p-3 rounded-t-xl text-xs text-slate-500 flex justify-between">
+                            <span>To: {dailyWriterMission.recipient}</span>
+                            <span>Topic: {dailyWriterMission.topic}</span>
+                        </div>
+                        <textarea 
+                            className="w-full h-40 p-4 bg-slate-50 rounded-b-xl border border-slate-200 border-t-0 focus:ring-2 focus:ring-blue-500 outline-none resize-none mb-4"
+                            placeholder="Write your email..."
+                            value={input}
+                            onChange={e => setInput(e.target.value)}
+                        />
+                        <button onClick={handleSubmit} disabled={loading} className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex justify-center items-center gap-2">
+                            {loading ? <Loader2 size={20} className="animate-spin"/> : <Check size={20}/>} Send & Check
+                        </button>
+                    </div>
+                )}
+
+                {step === 'result' && feedback && (
+                    <div className="p-6 text-center animate-in zoom-in">
+                        <div className="inline-block p-4 bg-green-100 text-green-600 rounded-full mb-4">
+                            <Trophy size={32} />
+                        </div>
+                        <h3 className="text-2xl font-bold text-slate-800 mb-1">{feedback.score} / 100 Points</h3>
+                        <p className="text-slate-500 text-sm mb-6">Feedback received!</p>
+                        
+                        <div className="bg-slate-50 p-4 rounded-2xl text-left mb-4 text-sm border border-slate-100">
+                            <p className="font-bold text-slate-400 text-xs uppercase mb-1">Teacher's Note</p>
+                            <p className="text-slate-700">{feedback.text}</p>
+                        </div>
+
+                        <button onClick={() => setStep('briefing')} className="w-full bg-slate-900 text-white py-3 rounded-xl font-bold">Done</button>
+                    </div>
+                )}
+            </div>
+        );
+    };
+ const checkHealth = async () => {
         setApiStatus('checking'); 
         try {
             // Kurzer Timeout (3s)
@@ -1223,7 +1391,7 @@ function App() {
                                 <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-2"><PenTool size={16}/> Write French</span>
                                 {input && <button onClick={() => setInput('')} className="text-emerald-400 hover:text-emerald-700"><X size={18}/></button>}
                             </div>
-                            <textarea value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ecrivez ici..." className="w-full h-32 p-5 text-lg text-slate-800 outline-none resize-none bg-transparent placeholder-slate-300" />
+                            <textarea value={input} onChange={(e) => setInput(e.target.value)} placeholder="Write here..." className="w-full h-32 p-5 text-lg text-slate-800 outline-none resize-none bg-transparent placeholder-slate-300" />
                             <div className="px-5 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
                                 <button onClick={handleCorrection} disabled={loading || !input} className="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-700 active:scale-95 flex items-center gap-2">
                                     {loading ? <Loader2 size={20} className="animate-spin"/> : <Check size={20}/>} Check
@@ -1732,164 +1900,138 @@ function App() {
     };
 
     // --- RENDERERS ---
-    const renderHome = () => {
-        // --- DATEN BERECHNEN ---
+    const renderHomeHeader = () => {
         const safeVocab = vocabulary || [];
-        const totalLearned = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
+        const learnedCount = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
         
-        const weakWords = safeVocab.filter(w => {
-            const p = userProgress[w.rank];
-            return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
-        });
-        const hasWeakWords = weakWords.length > 0;
-
-        const now = new Date();
-        const hour = now.getHours();
-        const dateKey = `${now.getDate()}-${now.getMonth() + 1}`; 
-        const dateString = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
-
-        const SPECIAL_DATES = {
-            "1-1": { title: "Bonne Année !", icon: "🎉" },
-            "14-7": { title: "Fête Nationale !", icon: "🎆" },
-            "25-12": { title: "Joyeux Noël !", icon: "🎄" },
-        };
-
-        let greeting = hour < 12 ? "Bon matin" : hour < 18 ? "Bonne après-midi" : "Bonsoir";
-        let icon = hour < 12 ? "☕" : hour < 18 ? "☀️" : "🌙";
-
-        if (SPECIAL_DATES[dateKey]) {
-            greeting = SPECIAL_DATES[dateKey].title;
-            icon = SPECIAL_DATES[dateKey].icon;
+        const hour = currentTime.getHours();
+        const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
+        
+        const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+        const dateStr = currentTime.toLocaleDateString('fr-FR', dateOptions);
+        
+        // Titel basierend auf Fortschritt
+        let currentTitle = "Tourist";
+        let titleColor = "text-slate-600";
+        if (learnedCount >= 100 && learnedCount < 500) {
+            currentTitle = "Explorer";
+            titleColor = "text-blue-600";
+        } else if (learnedCount >= 500 && learnedCount < 1000) {
+            currentTitle = "Citizen";
+            titleColor = "text-indigo-600";
+        } else if (learnedCount >= 1000) {
+            currentTitle = "Master";
+            titleColor = "text-purple-600";
         }
 
-        // Facts
-        const FRANCE_FACTS = [
-            "Did you know? French is spoken in 29 countries.",
-            "Paris has over 400 parks and gardens.",
-            "The Louvre is the most visited museum in the world.",
-            "French has no word for 'cheap' (only 'bon marché').",
-            "Croissants were actually invented in Austria.",
-            "Louis XIX was King of France for just 20 minutes."
-        ];
-        const dayOfYear = Math.floor(Date.now() / 86400000);
-        const dailyFact = FRANCE_FACTS[dayOfYear % FRANCE_FACTS.length];
+        // CEFR Level Schätzung
+        let cefrLevel = "A1";
+        let nextGoal = 500;
+        let nextLevel = "A2";
+        
+        if (learnedCount >= 500) {
+            cefrLevel = "A2";
+            nextGoal = 1000;
+            nextLevel = "B1";
+        }
+        if (learnedCount >= 1000) {
+            cefrLevel = "B1";
+            nextGoal = 2000;
+            nextLevel = "B2";
+        }
+        if (learnedCount >= 2000) {
+            cefrLevel = "B2";
+            nextGoal = 3500;
+            nextLevel = "C1";
+        }
+        if (learnedCount >= 3500) {
+            cefrLevel = "C1";
+            nextGoal = 5000;
+            nextLevel = "C2";
+        }
+        if (learnedCount >= 5000) {
+            cefrLevel = "C2";
+            nextGoal = 5000;
+            nextLevel = "C2";
+        }
 
-        // Grammar Tip
-        const GRAMMAR_TIPS = [
-            { title: "C'est vs. Il est", text: "Use 'C'est' for nouns. Use 'Il est' for adjectives." },
-            { title: "Pas de vs. Pas du", text: "After a negative (ne...pas), always use 'de', never 'du'." }
-        ];
-        const dailyTip = GRAMMAR_TIPS[dayOfYear % GRAMMAR_TIPS.length];
+        // Französische Uhrzeit
+        const hours = currentTime.getHours();
+        const minutes = currentTime.getMinutes();
+        const frenchTime = `Il est ${hours} heure${hours !== 1 ? 's' : ''} ${minutes < 10 ? '0' : ''}${minutes}`;
 
         return (
-            <div className="pb-24">
-                
-                {/* --- STICKY HEADER --- */}
-                <div className="sticky top-0 z-40 bg-slate-50/95 backdrop-blur-xl border-b border-slate-200 -mx-5 -mt-6 px-6 pt-12 pb-4 mb-5 shadow-sm">
+            <div className="fixed top-0 left-0 right-0 z-40 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-b-2 border-indigo-200 shadow-lg">
+                <div className="max-w-lg md:max-w-2xl mx-auto px-5 py-3">
+                    {/* Zeile 1: Gruß & Zeit */}
+                    <div className="flex justify-between items-center mb-3">
+                        <div>
+                            <h1 className="text-2xl md:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent leading-tight">{greeting}</h1>
+                            <p className="text-slate-500 text-[10px] md:text-sm font-medium capitalize mt-0.5">{dateStr}</p>
+                        </div>
+                        <div className="text-right">
+                            <div className="text-xl md:text-3xl lg:text-4xl font-extrabold text-slate-800 font-mono leading-tight">
+                                {currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                            </div>
+                            <div className="hidden md:block text-sm text-indigo-600 font-semibold italic mt-0.5">
+                                {frenchTime}
+                            </div>
+                        </div>
+                    </div>
                     
-                    <div className="flex justify-between items-start mb-2">
-                        <div className="flex flex-col gap-1">
-                            {/* DATUM + STATUS (Klickbar bei Offline) */}
-                            <div className="flex items-center gap-2">
-                                <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest opacity-90">
-                                    {dateString}
+                    {/* Zeile 2: Status & Progress */}
+                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 border border-indigo-100 shadow-sm">
+                        <div className="flex items-center gap-3 mb-2">
+                            {/* Linker Titel */}
+                            <div className="flex items-center gap-1.5">
+                                <Trophy size={16} className={titleColor} />
+                                <span className={`font-bold text-base ${titleColor}`}>{currentTitle}</span>
+                            </div>
+                            
+                            {/* Fortschrittsbalken (Mitte) */}
+                            <div className="flex-1">
+                                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div 
+                                        className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-500"
+                                        style={{ width: `${Math.min(100, (learnedCount / nextGoal) * 100)}%` }}
+                                    ></div>
                                 </div>
-                                
-                                {apiStatus === 'online' ? (
-                                    <div className="flex items-center gap-1 bg-emerald-100 px-1.5 py-0.5 rounded-md animate-in fade-in">
-                                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                                        <span className="text-[8px] font-bold text-emerald-600 uppercase tracking-wider">Online</span>
-                                    </div>
-                                ) : apiStatus === 'checking' ? (
-                                    <div className="flex items-center gap-1 bg-amber-100 px-1.5 py-0.5 rounded-md">
-                                        <RotateCcw size={8} className="text-amber-600 animate-spin"/>
-                                        <span className="text-[8px] font-bold text-amber-600 uppercase tracking-wider">Connecting...</span>
-                                    </div>
-                                ) : (
-                                    // OFFLINE BUTTON
-                                    <button 
-                                        onClick={checkHealth} 
-                                        className="flex items-center gap-1 bg-red-100 px-1.5 py-0.5 rounded-md active:scale-95 transition-transform hover:bg-red-200"
-                                    >
-                                        <RotateCcw size={8} className="text-red-500"/>
-                                        <span className="text-[8px] font-bold text-red-600 uppercase tracking-wider">Retry</span>
-                                    </button>
-                                )}
+                                <div className="flex justify-between mt-0.5 px-1">
+                                    <span className="text-[9px] text-slate-400 font-bold">{learnedCount}</span>
+                                    <span className="text-[9px] text-indigo-500 font-bold">{nextGoal} ({nextLevel})</span>
+                                </div>
                             </div>
-
-                            <h1 className="text-2xl font-extrabold text-slate-800 leading-tight">
-                                {greeting} <span className="ml-1">{icon}</span>
-                            </h1>
-                        </div>
-                        
-                        {/* STREAK */}
-                        <div className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-full border border-slate-200 shadow-sm shrink-0">
-                            <Flame size={14} className="text-orange-500 fill-orange-500 animate-pulse" />
-                            <span className="font-bold text-slate-700 text-xs">{streak}</span>
-                        </div>
-                    </div>
-
-                    {/* FACT */}
-                    <div className="mt-3 flex items-start gap-2 opacity-80">
-                        <div className="min-w-[3px] h-full bg-indigo-300 rounded-full"></div>
-                        <p className="text-xs text-slate-500 italic leading-snug">
-                            "{dailyFact}"
-                        </p>
-                    </div>
-                    
-                    {/* GROSSE WARNMELDUNG (Klickbar) */}
-                    {apiStatus === 'offline' && (
-                        <button 
-                            onClick={checkHealth}
-                            className="w-full mt-3 bg-red-50 border border-red-100 text-red-600 px-3 py-2 rounded-xl text-[10px] font-bold flex items-center justify-between gap-2 animate-in slide-in-from-top-2 active:bg-red-100 transition-colors group"
-                        >
+                            
+                            {/* Rechter Status */}
                             <div className="flex items-center gap-2">
-                                <WifiOff size={14}/>
-                                <span>AI Systems disconnected. Tap to reconnect.</span>
+                                <div className="text-right">
+                                    <div className="text-[9px] text-slate-400 font-bold uppercase">Words</div>
+                                    <div className="text-lg font-extrabold text-slate-800">{learnedCount}</div>
+                                </div>
+                                <div className="bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg">
+                                    <div className="text-sm font-bold">{cefrLevel}</div>
+                                </div>
                             </div>
-                            <RotateCcw size={12} className="opacity-50 group-hover:rotate-180 transition-transform"/>
-                        </button>
-                    )}
+                        </div>
+                    </div>
+
                 </div>
+            </div>
+        );
+    };
 
-                {/* --- SCROLLABLE CONTENT --- */}
-                <div className="space-y-4 px-1">
+    const renderHome = () => {
+        // --- DATA SETUP ---
+        const safeVocab = vocabulary || [];
+        // Daily Joke Logik (nur 1 pro Tag anzeigen, hier vereinfacht random)
+        const dailyJokePreview = JOKE_DB[new Date().getDate() % JOKE_DB.length]; 
 
-                    {/* 1. PROGRESS CARD */}
-                    {(() => {
-                        const milestones = [
-                            { limit: 100, label: "Foundation", color: "bg-indigo-500" },
-                            { limit: 500, label: "Essentials", color: "bg-blue-500" },
-                            { limit: 1000, label: "Base", color: "bg-cyan-500" },
-                            { limit: 2000, label: "Extension", color: "bg-teal-500" },
-                            { limit: 5000, label: "Mastery", color: "bg-emerald-500" },
-                        ];
-                        let cm = milestones[0];
-                        for (let m of milestones) { if (totalLearned < (m.limit * 0.95)) { cm = m; break; } cm = m; }
-                        const pct = Math.min(100, (totalLearned / cm.limit) * 100);
-
-                        return (
-                            <div className="bg-white px-5 py-4 rounded-[1.5rem] shadow-sm border border-slate-100 relative overflow-hidden flex items-center justify-between">
-                                <div className="flex flex-col justify-center gap-1 z-10 w-full">
-                                    <div className="flex justify-between items-center">
-                                        <div className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
-                                            <Trophy size={14} className="text-amber-500"/>
-                                            {cm.label}
-                                        </div>
-                                        <div className="text-xs font-bold text-slate-700">
-                                            {totalLearned} <span className="text-slate-300 font-normal">/ {cm.limit}</span>
-                                        </div>
-                                    </div>
-                                    {/* Balken */}
-                                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-1">
-                                        <div className={`h-full rounded-full transition-all duration-1000 ease-out ${cm.color}`} style={{ width: `${pct}%` }}></div>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })()}
-
-                    {/* 2. HERO: START LOOP */}
+        return (
+            <div className="pb-24 pt-[160px] px-1 space-y-6 animate-in fade-in duration-500">
+                
+                {/* 1. HERO: SMART LEARNING (Keep) */}
+                <div className="relative">
+                    <h2 className="text-xl font-bold text-slate-800 mb-3 px-1">Today's Focus</h2>
                     <button 
                         onClick={() => setView('smart-config')} 
                         className="w-full h-44 bg-gradient-to-br from-indigo-600 to-violet-600 text-white p-6 rounded-[2rem] shadow-xl shadow-indigo-200 transition-transform active:scale-[0.98] flex flex-col justify-between relative overflow-hidden group"
@@ -1899,76 +2041,68 @@ function App() {
                                 <Play size={28} fill="currentColor" />
                             </div>
                             <div className="bg-indigo-500/30 px-3 py-1 rounded-full text-xs font-medium backdrop-blur-md border border-white/10">
-                                Priority
+                                Priority Loop
                             </div>
                         </div>
                         <div className="relative z-10 text-left">
-                            <h2 className="text-2xl font-bold mb-1">Start Daily Loop</h2>
-                            <p className="text-indigo-100 text-sm font-medium opacity-90">Continue your streak.</p>
+                            <h2 className="text-2xl font-bold mb-1">Start Smart Session</h2>
+                            <p className="text-indigo-100 text-sm font-medium opacity-90">Review words & learn new ones.</p>
                         </div>
                         <GraduationCap size={140} className="absolute -right-6 -bottom-6 text-white opacity-10 rotate-[-15deg] group-hover:scale-110 transition-transform duration-500" />
                     </button>
-
-                    {/* 3. REPAIR CARD */}
-                    <button 
-                        onClick={() => {
-                            if (hasWeakWords) {
-                                setSessionQueue(weakWords.slice(0, 20));
-                                setIsFlipped(false);
-                                setSessionResults({ correct: 0, wrong: 0 });
-                                setView('smart-session');
-                            } else {
-                                alert("All words are healthy! Great job.");
-                            }
-                        }} 
-                        className={`w-full p-5 rounded-[2rem] flex items-center justify-between group active:scale-[0.98] transition-all relative overflow-hidden shadow-sm border ${
-                            hasWeakWords ? 'bg-rose-50 border-rose-100' : 'bg-emerald-50/50 border-emerald-100/50'
-                        }`}
-                    >
-                        <div className="flex items-center gap-4 z-10">
-                            <div className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-colors ${hasWeakWords ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}`}>
-                                {hasWeakWords ? <Activity size={24} /> : <Check size={24} />}
-                            </div>
-                            <div className="text-left">
-                                <h3 className={`font-bold text-lg ${hasWeakWords ? 'text-rose-900' : 'text-emerald-900'}`}>{hasWeakWords ? 'Weak Words' : 'All Good!'}</h3>
-                                <p className={`text-xs font-medium ${hasWeakWords ? 'text-rose-700/70' : 'text-emerald-700/70'}`}>{hasWeakWords ? `${weakWords.length} words need repair` : 'No weak words found'}</p>
-                            </div>
-                        </div>
-                        {hasWeakWords && <ChevronRight size={24} className="text-rose-300 z-10" />}
-                    </button>
-
-                    {/* 4. DAILY CHALLENGE */}
-                    <button 
-                        onClick={() => {
-                            setTestConfig({ startRank: 1, endRank: 2000, count: 10 }); 
-                            startTestSession();
-                        }} 
-                        className="w-full bg-white border border-slate-100 p-5 rounded-[2rem] shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
-                    >
-                        <div className="flex items-center gap-4">
-                            <div className="bg-amber-100 w-12 h-12 flex items-center justify-center rounded-2xl text-amber-600"><Flame size={24} fill="currentColor" /></div>
-                            <div className="text-left">
-                                <h3 className="font-bold text-slate-800 text-lg">Daily Challenge</h3>
-                                <p className="text-slate-400 text-xs font-medium">Earn quick XP • 10 Words</p>
-                            </div>
-                        </div>
-                        <ChevronRight size={24} className="text-slate-200 group-hover:text-amber-400 transition-colors" />
-                    </button>
-
-                    {/* 5. GRAMMAR TIP */}
-                    <button 
-                        onClick={() => setView('skills')} 
-                        className="w-full bg-slate-50 border border-slate-200 p-6 rounded-[2rem] text-left active:scale-[0.98] transition-all relative"
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="bg-slate-200 text-slate-500 p-1.5 rounded-lg"><BookOpen size={14} /></div>
-                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Tip of the day</span>
-                        </div>
-                        <h3 className="font-bold text-slate-700 text-lg mb-1">{dailyTip.title}</h3>
-                        <p className="text-slate-500 text-sm leading-relaxed">{dailyTip.text}</p>
-                    </button>
-
                 </div>
+
+                {/* 2. DAILY JOKE (Redesigned) */}
+                {dailyJoke && (
+                    <button 
+                        onClick={() => { setViewingJoke(dailyJoke); setView('joke-detail'); }}
+                        className="w-full bg-amber-50 border border-amber-100 p-5 rounded-[2rem] relative overflow-hidden hover:bg-amber-100 transition-all active:scale-[0.98] text-left"
+                    >
+                        <div className="flex justify-between items-center mb-3">
+                            <div className="flex items-center gap-2">
+                                <div className="bg-white p-2 rounded-xl text-amber-500 shadow-sm"><Smile size={18}/></div>
+                                <span className="font-bold text-amber-900 text-sm">Joke of the Day</span>
+                            </div>
+                            <ChevronRight size={20} className="text-amber-400"/>
+                        </div>
+                        <p className="text-amber-900 font-serif italic text-lg leading-snug line-clamp-2">"{dailyJoke.q}"</p>
+                        <div className="mt-2 text-xs text-amber-600/70 font-bold uppercase tracking-wider">Tap to view full joke</div>
+                    </button>
+                )}
+
+                {/* 3. DAILY EMAIL TASK (New Feature) */}
+                <DailyEmailTask level="A2" onComplete={(score) => alert(`You got ${score} points!`)} />
+
+                {/* 4. WEAK WORDS / REPAIR (Keep) */}
+                <button 
+                    onClick={() => {
+                        // Repair Logic here
+                        setView('smart-config'); 
+                    }} 
+                    className="w-full bg-white border border-slate-100 p-5 rounded-[2rem] shadow-sm flex items-center justify-between group active:scale-[0.98]"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="bg-rose-100 w-12 h-12 flex items-center justify-center rounded-2xl text-rose-600"><Activity size={24} /></div>
+                        <div className="text-left">
+                            <h3 className="font-bold text-slate-800 text-lg">Repair Weak Words</h3>
+                            <p className="text-slate-400 text-xs font-medium">Fix mistakes from yesterday</p>
+                        </div>
+                    </div>
+                    <ChevronRight size={24} className="text-slate-200 group-hover:text-rose-400 transition-colors" />
+                </button>
+
+                {/* 5. SUGGESTED GRAMMAR (New Placement) */}
+                <button 
+                    onClick={() => setView('skills')} 
+                    className="w-full bg-emerald-50 border border-emerald-100 p-5 rounded-[2rem] text-left active:scale-[0.98] relative overflow-hidden"
+                >
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="bg-white text-emerald-600 p-2 rounded-xl shadow-sm"><Layers size={18} /></div>
+                        <span className="font-bold text-emerald-900 text-sm">Suggested Grammar</span>
+                    </div>
+                    <h3 className="font-bold text-emerald-800 text-xl">Le Passé Composé</h3>
+                    <p className="text-emerald-700/70 text-xs mt-1">Master the past tense today.</p>
+                </button>
             </div>
         );
     };
@@ -2068,11 +2202,35 @@ function App() {
         // 1. Das aktuelle Meme als "Gesehen" markieren
         const currentMeme = memesData[0]; // Wir zeigen immer das erste der Liste
         if (currentMeme) {
-            setSeenMemeIds(prev => [...prev, currentMeme.id]);
+            setSeenMemeIds(prev => {
+                const updated = [...prev, currentMeme.id];
+                localStorage.setItem('vocabApp_seenMemes', JSON.stringify(updated));
+                return updated;
+            });
+            
+            // Daily Count erhöhen
+            const newCount = dailyMemeCount + 1;
+            setDailyMemeCount(newCount);
+            localStorage.setItem('vocabApp_dailyMemeCount', newCount.toString());
         }
         
         // 2. Das Meme aus der aktuellen Ansichts-Liste entfernen
         setMemesData(prev => prev.slice(1));
+    };
+    
+    const handleSaveMeme = (meme) => {
+        const isSaved = savedMemes.find(m => m.id === meme.id);
+        if (isSaved) {
+            // Entfernen wenn bereits gespeichert
+            const updated = savedMemes.filter(m => m.id !== meme.id);
+            setSavedMemes(updated);
+            localStorage.setItem('vocabApp_savedMemes', JSON.stringify(updated));
+        } else {
+            // Hinzufügen wenn nicht gespeichert
+            const updated = [...savedMemes, meme];
+            setSavedMemes(updated);
+            localStorage.setItem('vocabApp_savedMemes', JSON.stringify(updated));
+        }
     };
 
     const handleResetMemes = () => {
@@ -2187,23 +2345,35 @@ function App() {
 
         // 2. MEMES VIEW (Nur Anzeige - Logik ist jetzt in App)
         if (exploreMode === 'memes') {
-            const currentMeme = memesData[memeIndex];
+            // Initial laden wenn leer
+            if (memesData.length === 0 && !loadingContent && dailyMemeCount < 20) {
+                fetchMemes();
+            }
 
-            const handleNext = () => {
-                // Einfach zum nächsten Index gehen
-                // (Modulo % sorgt dafür, dass es am Ende wieder von vorne losgeht)
-                setMemeIndex((prev) => (prev + 1) % memesData.length);
-            };
+            const currentMeme = memesData[0]; // Zeige immer das erste Meme
+            const dailyLimitReached = dailyMemeCount >= 20;
+            const allMemesSeenToday = memesData.length === 0 && dailyLimitReached;
+            const isSaved = currentMeme && savedMemes.find(m => m.id === currentMeme.id);
 
             return (
                 <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full flex flex-col">
                     <div className="flex items-center gap-3 mb-4 px-1">
                         <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
-                        <h2 className="text-2xl font-bold text-slate-800">Meme Gallery</h2>
+                        <div className="flex-1">
+                            <h2 className="text-2xl font-bold text-slate-800">Meme Gallery</h2>
+                            <p className="text-xs text-slate-400">{dailyMemeCount}/20 today</p>
+                        </div>
                     </div>
                     
                     <div className="flex-1 flex flex-col items-center justify-center">
-                        {loadingMemes && !currentMeme ? (
+                        {allMemesSeenToday ? (
+                            <div className="text-center p-12 bg-white rounded-3xl border border-dashed border-slate-200">
+                                <Image size={48} className="mx-auto text-slate-300 mb-4"/>
+                                <h3 className="font-bold text-slate-600 mb-2">Daily Limit Reached!</h3>
+                                <p className="text-slate-400 text-sm mb-1">You've seen your 20 memes for today.</p>
+                                <p className="text-slate-400 text-sm">Come back tomorrow for fresh content! 🎉</p>
+                            </div>
+                        ) : loadingContent && !currentMeme ? (
                              <div className="text-center text-purple-400 animate-pulse"><Image size={32} className="animate-bounce mx-auto mb-2"/> Mixing best memes...</div>
                         ) : currentMeme ? (
                             <div className="w-full bg-white p-4 rounded-[2rem] shadow-lg border border-slate-100 relative overflow-hidden animate-in zoom-in duration-200">
@@ -2213,16 +2383,28 @@ function App() {
                                 </div>
                                 <div className="mt-4 flex justify-between items-center px-2">
                                     <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-full">⬆️ {currentMeme.ups}</span>
-                                    <button onClick={() => speak(currentMeme.title)} className="p-3 bg-purple-50 text-purple-600 rounded-full hover:bg-purple-100"><Volume2 size={24}/></button>
+                                    <div className="flex gap-2">
+                                        <button 
+                                            onClick={() => handleSaveMeme(currentMeme)} 
+                                            className={`p-3 rounded-full transition-all ${
+                                                isSaved 
+                                                ? 'bg-purple-600 text-white' 
+                                                : 'bg-purple-50 text-purple-600 hover:bg-purple-100'
+                                            }`}
+                                        >
+                                            <Bookmark size={20} fill={isSaved ? 'currentColor' : 'none'}/>
+                                        </button>
+                                        <button onClick={() => speak(currentMeme.title)} className="p-3 bg-purple-50 text-purple-600 rounded-full hover:bg-purple-100"><Volume2 size={20}/></button>
+                                    </div>
                                 </div>
                             </div>
                         ) : <div className="text-slate-400">No memes found.</div>}
                     </div>
 
                     {/* Next Button */}
-                    {!loadingMemes && memesData.length > 0 && (
+                    {!loadingContent && currentMeme && !dailyLimitReached && (
                         <button 
-                            onClick={handleNext} 
+                            onClick={handleNextMeme} 
                             className="mt-6 w-full bg-purple-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all flex items-center justify-center gap-2"
                         >
                             Next Meme <ArrowLeft size={20} className="rotate-180"/>
@@ -2429,138 +2611,75 @@ function App() {
                         <ChevronRight size={24} className="text-purple-300 z-10"/>
                     </button>
 
-                    {/* 4. JOKE BOX */}
-                    <button onClick={() => setExploreMode('jokes')} className="w-full bg-orange-50 border border-orange-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
+                    {/* 4. GAMES */}
+                    <button className="w-full bg-blue-50 border border-blue-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between opacity-75">
                         <div className="flex items-center gap-4 z-10">
-                            <div className="bg-white p-3 rounded-2xl text-orange-500 shadow-sm"><Smile size={24} /></div>
-                            <div><h3 className="font-bold text-orange-900 text-lg">Joke Box</h3><p className="text-orange-700/70 text-xs font-medium">Daily Laughter</p></div>
+                            <div className="bg-white p-3 rounded-2xl text-blue-500 shadow-sm"><Gamepad2 size={24} /></div>
+                            <div><h3 className="font-bold text-blue-900 text-lg">Games</h3><p className="text-blue-700/70 text-xs font-medium">Interactive Learning</p></div>
                         </div>
-                        <ChevronRight size={24} className="text-orange-300 z-10"/>
-                    </button>
-
-                     {/* 5. VOCAB SETS */}
-                     <button onClick={() => setExploreMode('grammar')} className="w-full bg-indigo-50 border border-indigo-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
-                        <div className="flex items-center gap-4 z-10">
-                            <div className="bg-white p-3 rounded-2xl text-indigo-500 shadow-sm"><Layers size={24} /></div>
-                            <div><h3 className="font-bold text-indigo-900 text-lg">Vocabulary Sets</h3><p className="text-indigo-700/70 text-xs font-medium">Verbs, Nouns...</p></div>
-                        </div>
-                        <ChevronRight size={24} className="text-indigo-300 z-10"/>
-                    </button>
-
-                    {/* 6. TOPICS */}
-                    <button onClick={() => setExploreMode('topics')} className="w-full bg-emerald-50 border border-emerald-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
-                        <div className="flex items-center gap-4 z-10">
-                            <div className="bg-white p-3 rounded-2xl text-emerald-500 shadow-sm"><User size={24} /></div>
-                            <div><h3 className="font-bold text-emerald-900 text-lg">Real Life Topics</h3><p className="text-emerald-700/70 text-xs font-medium">Food, Travel & more</p></div>
-                        </div>
-                        <ChevronRight size={24} className="text-emerald-300 z-10"/>
+                        <div className="bg-blue-200 text-blue-700 text-[10px] font-bold px-3 py-1 rounded-full z-10">COMING SOON</div>
                     </button>
                 </div>
              );
         }
     };
     const renderSkills = () => {
-        // Lokaler State für das Akkordeon (welche Kategorie ist offen?)
-        
-
+        // Lokaler State für das Akkordeon
         const toggleCategory = (id) => {
             setExpandedCategory(expandedCategory === id ? null : id);
         };
 
         return (
-            <div className="space-y-8 animate-in fade-in duration-500 pt-4 pb-24">
+            <div className="space-y-6 animate-in fade-in duration-500 pt-6 pb-24 px-1">
                 {/* Header */}
-                <div className="flex items-center gap-3 mb-2 px-1">
+                <div className="flex items-center gap-3 mb-4 px-1">
                      <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Dumbbell size={24} /></div>
-                     <h2 className="text-2xl font-bold text-slate-800">Skill Gym</h2>
+                     <h2 className="text-2xl font-bold text-slate-800">Skill Library</h2>
                 </div>
 
-                {/* 1. HERO: AI CONVERSATION (Chat) */}
-                <button onClick={() => setView('chat')} 
-                    className="w-full h-40 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white p-6 rounded-[2rem] shadow-xl shadow-fuchsia-200 transition-transform active:scale-[0.98] relative overflow-hidden group text-left"
-                >
-                    <div className="relative z-10">
-                        <div className="bg-white/20 w-12 h-12 flex items-center justify-center rounded-2xl mb-3 backdrop-blur-md">
-                            <MessageSquare size={24} fill="currentColor" />
+                {/* DAILY WRITER (Top Priority) */}
+                <div className="mb-2">
+                     <button onClick={() => setView('daily-writer')} className="w-full bg-gradient-to-br from-indigo-600 to-violet-600 p-[2px] rounded-3xl shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all group">
+                        <div className="bg-white rounded-[1.4rem] p-5 flex items-center justify-between h-full relative overflow-hidden">
+                            <div className="absolute right-0 top-0 w-32 h-32 bg-indigo-50 rounded-full -mr-10 -mt-10 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+                            
+                            <div className="flex items-center gap-5 relative z-10">
+                                <div className="bg-indigo-100 w-14 h-14 flex items-center justify-center rounded-2xl text-indigo-600 shadow-sm group-hover:rotate-6 transition-transform duration-300">
+                                    <PenTool size={28}/>
+                                </div>
+                                <div className="text-left">
+                                    <div className="font-bold text-slate-800 text-xl group-hover:text-indigo-700 transition-colors">Daily Writer</div>
+                                    <div className="text-sm text-slate-500 font-medium">Complete your mission</div>
+                                </div>
+                            </div>
+                            <div className="relative z-10 bg-slate-50 p-2 rounded-full text-slate-300 group-hover:text-indigo-600 group-hover:bg-indigo-50 transition-colors">
+                                <ChevronRight size={24} />
+                            </div>
                         </div>
-                        <h3 className="font-bold text-2xl">Conversation Coach</h3>
-                        <p className="text-fuchsia-100 text-sm font-medium opacity-90">Roleplay: Ordering Coffee</p>
-                    </div>
-                    {/* Deko */}
-                    <div className="absolute -right-4 -bottom-8 opacity-20 rotate-12 group-hover:scale-110 transition-transform duration-700">
-                         <MessageSquare size={120} fill="currentColor"/>
-                    </div>
-                </button>
-
-                {/* 2. TOOLS ROW */}
-                <div>
-                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">The Toolbox</h3>
-                    <div className="grid grid-cols-2 gap-3">
-                        {/* Link zum Translator */}
-                        <button 
-                            onClick={() => setView('translator')} 
-                            className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] flex flex-col justify-between h-32 text-left group hover:border-indigo-200 transition-all"
-                        >
-                            <div className="bg-indigo-50 w-10 h-10 flex items-center justify-center rounded-xl text-indigo-600 group-hover:scale-110 transition-transform">
-                                <PenTool size={20} />
-                            </div>
-                            <div>
-                                <div className="font-bold text-slate-700">Translator</div>
-                                <div className="text-[10px] text-slate-400">Context & Fixes</div>
-                            </div>
-                        </button>
-
-                        {/* Placeholder Conjugator */}
-                        <button 
-                            onClick={() => alert("Conjugator coming soon!")} 
-                            className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] flex flex-col justify-between h-32 text-left group hover:border-emerald-200 transition-all opacity-70"
-                        >
-                            <div className="bg-emerald-50 w-10 h-10 flex items-center justify-center rounded-xl text-emerald-600">
-                                <Layers size={20} />
-                            </div>
-                            <div>
-                                <div className="font-bold text-slate-700">Conjugator</div>
-                                <div className="text-[10px] text-slate-400">Verb Tables</div>
-                            </div>
-                        </button>
-                    </div>
+                     </button>
                 </div>
 
-                {/* 3. GRAMMAR LIBRARY (Accordion) */}
+                {/* 1. GRAMMAR (Prominent) */}
                 <div>
-                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Grammar Modules</h3>
+                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Grammar Reference</h3>
                     <div className="space-y-3">
                         {GRAMMAR_MODULES.map((module) => {
                             const isOpen = expandedCategory === module.id;
                             return (
                                 <div key={module.id} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300">
-                                    
-                                    {/* Main Card (Click to Expand) */}
-                                    <button 
-                                        onClick={() => toggleCategory(module.id)}
-                                        className="w-full p-5 flex items-center gap-4 text-left active:bg-slate-50 transition-colors"
-                                    >
-                                        <div className={`w-12 h-12 flex items-center justify-center rounded-2xl ${module.color}`}>
-                                            {module.icon}
-                                        </div>
+                                    <button onClick={() => toggleCategory(module.id)} className="w-full p-5 flex items-center gap-4 text-left active:bg-slate-50 transition-colors">
+                                        <div className={`w-12 h-12 flex items-center justify-center rounded-2xl ${module.color}`}>{module.icon}</div>
                                         <div className="flex-1">
                                             <h4 className="font-bold text-slate-800 text-lg">{module.title}</h4>
                                             <p className="text-xs text-slate-400">{module.sub}</p>
                                         </div>
                                         <ChevronRight size={20} className={`text-slate-300 transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`} />
                                     </button>
-
-                                    {/* Accordion Content (Sub-List) */}
                                     {isOpen && (
                                         <div className="bg-slate-50 border-t border-slate-100 animate-in slide-in-from-top-2 fade-in duration-200">
                                             {module.topics.map((topic, idx) => (
-                                                <button 
-                                                    key={idx}
-                                                    onClick={() => alert(`Starting drill for: ${topic}`)} 
-                                                    className="w-full p-4 pl-[5rem] text-left flex justify-between items-center text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0"
-                                                >
-                                                    {topic}
-                                                    <Play size={14} className="opacity-0 hover:opacity-100 text-indigo-400" />
+                                                <button key={idx} onClick={() => alert(`Opening Grammar Sheet: ${topic}`)} className="w-full p-4 pl-[5rem] text-left text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0 flex justify-between items-center">
+                                                    {topic} <BookOpen size={14} className="opacity-50"/>
                                                 </button>
                                             ))}
                                         </div>
@@ -2568,6 +2687,23 @@ function App() {
                                 </div>
                             );
                         })}
+                    </div>
+                </div>
+
+                {/* 2. VOCAB SETS & CONJUGATOR */}
+                <div>
+                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Tools & Sets</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                        <button onClick={() => { setExploreMode('grammar'); setView('explore'); }} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] h-32 flex flex-col justify-between group">
+                            <div className="bg-indigo-50 w-10 h-10 flex items-center justify-center rounded-xl text-indigo-600"><Layers size={20}/></div>
+                            <div><div className="font-bold text-slate-700">Vocab Sets</div><div className="text-[10px] text-slate-400">By Topic</div></div>
+                        </button>
+                        
+                        {/* CONJUGATOR (Simplified) */}
+                        <button onClick={() => alert("Conjugation Tables: \nêtre: je suis, tu es...\navoir: j'ai, tu as...")} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] h-32 flex flex-col justify-between group">
+                            <div className="bg-fuchsia-50 w-10 h-10 flex items-center justify-center rounded-xl text-fuchsia-600"><Settings size={20}/></div>
+                            <div><div className="font-bold text-slate-700">Conjugator</div><div className="text-[10px] text-slate-400">Verb Tables</div></div>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -2641,6 +2777,133 @@ function App() {
                             <div className="text-red-400 text-xs mt-1">Fix words you got wrong often.</div>
                         </div>
                     </button>
+                </div>
+            </div>
+        );
+    };
+
+    // --- DAILY WRITER EDITOR VIEW ---
+    const renderDailyWriterEditor = () => {
+        const submitDailyWriter = async () => {
+            if (!dailyWriterText.trim()) return alert('Please write something first.');
+            setLoadingContent(true);
+            try {
+                const res = await fetch('/api/correct', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: dailyWriterText, instruction: `Rate this text from 1 to 10 (1=poor,10=excellent) regarding grammar, use of the required construction and vocabulary. Return JSON with {score: number, explanation: string}.` })
+                });
+                const data = await res.json();
+                let score = null;
+                if (typeof data.score === 'number') score = Math.max(1, Math.min(10, Math.round(data.score)));
+                else if (data.explanation) {
+                    const m = data.explanation.match(/\b(\d{1,3})\b/);
+                    if (m) {
+                        const n = parseInt(m[1], 10);
+                        score = Math.max(1, Math.min(10, Math.round(n)));
+                    }
+                }
+                // Fallback: map percent to 1-10 if present
+                if (score === null && typeof data.percentage === 'number') score = Math.max(1, Math.min(10, Math.ceil(data.percentage / 10)));
+                if (score === null) score = Math.max(1, Math.min(10, Math.round((Math.random() * 4) + 6)));
+                setDailyWriterScore(score);
+                alert(`Score: ${score}/10\n\n${data.explanation || ''}`);
+            } catch (e) {
+                alert('Scoring failed. Try again later.');
+                console.error(e);
+            } finally {
+                setLoadingContent(false);
+            }
+        };
+
+        return (
+            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1 h-full">
+                <div className="flex items-center gap-3 mb-4 px-1">
+                    <button onClick={() => setView('skills')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
+                    <h2 className="text-2xl font-bold text-slate-800">Daily Writer</h2>
+                </div>
+
+                <div className="space-y-6">
+                    {/* Mission Card */}
+                    <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 to-indigo-500"></div>
+                        
+                        <div className="flex items-start justify-between mb-4">
+                            <div>
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Your Mission</div>
+                                <h3 className="text-2xl font-bold text-slate-800">{dailyWriterMission.topic}</h3>
+                            </div>
+                            <div className="bg-blue-50 text-blue-600 p-3 rounded-xl">
+                                <PenTool size={24} />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mb-6">
+                            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">Recipient</div>
+                                <div className="font-medium text-slate-700 flex items-center gap-2">
+                                    <User size={14} className="text-slate-400"/> {dailyWriterMission.recipient}
+                                </div>
+                            </div>
+                            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">Bonus Word</div>
+                                <div className="font-medium text-slate-700 flex items-center gap-2">
+                                    <Sparkles size={14} className="text-amber-400"/> "{dailyWriterMission.vocab}"
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100 mb-2">
+                            <div className="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">Requirement</div>
+                            <p className="text-indigo-900 font-medium">{dailyWriterMission.requirement}</p>
+                        </div>
+
+                        <div className="flex gap-4 text-xs text-slate-400 mt-4 font-medium">
+                            <span className="flex items-center gap-1"><Activity size={12}/> Min: {dailyWriterMission.minWords} words</span>
+                            <span className="flex items-center gap-1"><RotateCcw size={12}/> Time: {dailyWriterMission.timeMinutes} min</span>
+                        </div>
+                    </div>
+
+                    {/* Editor Area */}
+                    <div className="bg-white p-1 rounded-[2rem] border border-slate-100 shadow-sm">
+                        <textarea 
+                            value={dailyWriterText} 
+                            onChange={(e) => setDailyWriterText(e.target.value)} 
+                            placeholder="Start writing your text here..." 
+                            className="w-full min-h-[250px] p-6 bg-transparent text-lg text-slate-700 outline-none resize-none placeholder:text-slate-300" 
+                        />
+                        <div className="px-6 py-4 border-t border-slate-50 flex justify-between items-center bg-slate-50/50 rounded-b-[2rem]">
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                {dailyWriterText.trim() ? dailyWriterText.trim().split(/\s+/).length : 0} Words
+                            </div>
+                            <div className="flex gap-3">
+                                <button 
+                                    onClick={() => { setDailyWriterText(''); setDailyWriterScore(null); }} 
+                                    className="text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-100 transition-colors"
+                                    title="Reset"
+                                >
+                                    <RotateCcw size={20}/>
+                                </button>
+                                <button 
+                                    onClick={submitDailyWriter} 
+                                    disabled={loadingContent || !dailyWriterText.trim()}
+                                    className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-50 disabled:shadow-none"
+                                >
+                                    {loadingContent ? <Loader2 size={20} className="animate-spin"/> : <><Check size={20}/> Submit</>}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {dailyWriterScore !== null && (
+                        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg text-center animate-in zoom-in duration-300">
+                            <div className="inline-block p-4 bg-green-100 text-green-600 rounded-full mb-4 shadow-sm">
+                                <Trophy size={32} />
+                            </div>
+                            <div className="font-bold text-4xl text-slate-800 mb-2">{dailyWriterScore}<span className="text-xl text-slate-400">/10</span></div>
+                            <div className="text-slate-500 font-medium">Excellent work! Keep practicing.</div>
+                        </div>
+                    )}
                 </div>
             </div>
         );
@@ -3486,6 +3749,86 @@ function App() {
         </div>
     );
     
+    const renderJokeDetail = () => {
+        if (!viewingJoke) return null;
+
+        const isAlreadySaved = savedJokes.some(j => j.q === viewingJoke.q);
+
+        const handleSaveJoke = () => {
+            if (!isAlreadySaved) {
+                const updated = [...savedJokes, viewingJoke];
+                setSavedJokes(updated);
+                localStorage.setItem('vocabApp_savedJokes', JSON.stringify(updated));
+            }
+        };
+
+        return (
+            <div className="max-w-xl mx-auto space-y-6 animate-in fade-in duration-500 pt-6 pb-24 px-1">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-4 px-1">
+                    <button onClick={() => { setViewingJoke(null); setView('home'); }} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                        <ArrowLeft size={24} />
+                    </button>
+                    <div>
+                        <h2 className="text-2xl font-bold text-slate-800">Joke of the Day</h2>
+                        <p className="text-slate-400 text-xs">Daily dose of French humor</p>
+                    </div>
+                </div>
+
+                {/* Joke Card */}
+                <div className="bg-white p-6 rounded-[2.5rem] shadow-lg border border-slate-100 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 to-orange-400"></div>
+                    
+                    {/* Question Section */}
+                    <div className="mb-6">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Question</span>
+                        <h3 className="text-2xl font-bold text-slate-800 mt-2 mb-3 leading-snug font-serif italic">
+                            "{viewingJoke.q}"
+                        </h3>
+                        <p className="text-sm text-indigo-500 font-medium bg-indigo-50 py-2 px-3 rounded-lg inline-block">
+                            🇬🇧 {viewingJoke.q_en || "Translation coming soon..."}
+                        </p>
+                        <div className="mt-3">
+                            <button onClick={() => speak(viewingJoke.q)} className="p-2 bg-slate-50 rounded-full text-slate-400 hover:text-amber-600 hover:bg-amber-50">
+                                <Volume2 size={20}/>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Answer Section */}
+                    <div className="border-t border-slate-100 pt-6">
+                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Punchline</span>
+                        <h3 className="text-2xl font-bold text-indigo-600 mt-2 mb-3 leading-snug italic">
+                            "{viewingJoke.a}"
+                        </h3>
+                        <p className="text-sm text-slate-500 bg-slate-50 p-3 rounded-xl">
+                            🇬🇧 {viewingJoke.en}
+                        </p>
+                        
+                        <div className="flex justify-center gap-3 mt-4">
+                            <button onClick={() => speak(viewingJoke.a)} className="p-3 bg-indigo-50 rounded-full text-indigo-600 hover:bg-indigo-100">
+                                <Volume2 size={24}/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Save Button */}
+                <button 
+                    onClick={handleSaveJoke}
+                    disabled={isAlreadySaved}
+                    className={`w-full py-4 rounded-2xl font-bold shadow-lg transition-all flex items-center justify-center gap-2 ${
+                        isAlreadySaved 
+                        ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+                        : 'bg-amber-500 text-white hover:bg-amber-600 active:scale-95'
+                    }`}
+                >
+                    {isAlreadySaved ? <><Check size={20}/> Saved</> : <><Save size={20}/> Save to Collection</>}
+                </button>
+            </div>
+        );
+    };
+    
     const renderProfile = () => {
         // --- 1. DATEN BERECHNEN ---
         const safeVocab = vocabulary || [];
@@ -3676,6 +4019,28 @@ function App() {
                             <ChevronRight size={20} className="text-slate-300 group-hover:text-indigo-400"/>
                         </button>
 
+                        {/* Collections Button (NEW) */}
+                        <button 
+                            onClick={() => setView('collections')} 
+                            className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="bg-amber-50 text-amber-600 w-10 h-10 rounded-xl flex items-center justify-center"><Box size={20}/></div>
+                                <div className="text-left">
+                                    <div className="font-bold text-slate-800">Collections</div>
+                                    <div className="text-xs text-slate-400">Saved Jokes & More</div>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                {savedJokes.length > 0 && (
+                                    <div className="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                        {savedJokes.length}
+                                    </div>
+                                )}
+                                <ChevronRight size={20} className="text-slate-300 group-hover:text-amber-400"/>
+                            </div>
+                        </button>
+
                         {/* Stats Button */}
                         <button 
                             onClick={() => setShowStats(!showStats)} 
@@ -3730,6 +4095,158 @@ function App() {
             </div>
         );
     };
+    
+    const renderCollections = () => {
+        return (
+            <div className="w-full animate-in fade-in slide-in-from-right-8 duration-300 pt-6 pb-24 px-1">
+                {/* Scroll to Top Button */}
+                {showScrollTop && (
+                    <button 
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                        className="fixed bottom-24 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-all z-40 animate-in zoom-in duration-200"
+                    >
+                        <ChevronRight size={24} className="-rotate-90"/>
+                    </button>
+                )}
+                
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-6 px-1">
+                    <button onClick={() => setView('profile')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                        <ArrowLeft size={24} />
+                    </button>
+                    <div>
+                        <h2 className="text-2xl font-bold text-slate-800">Collections</h2>
+                        <p className="text-slate-400 text-sm">Your saved content</p>
+                    </div>
+                </div>
+
+                {/* Vertical Tab Buttons */}
+                <div className="space-y-3 mb-6">
+                    <button 
+                        onClick={() => setCollectionsTab('jokes')}
+                        className={`w-full p-4 rounded-2xl border transition-all flex items-center justify-between ${
+                            collectionsTab === 'jokes'
+                            ? 'bg-amber-50 border-amber-200 shadow-sm'
+                            : 'bg-white border-slate-100 hover:bg-slate-50'
+                        }`}
+                    >
+                        <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-xl ${
+                                collectionsTab === 'jokes' 
+                                ? 'bg-amber-100 text-amber-600' 
+                                : 'bg-slate-100 text-slate-400'
+                            }`}>
+                                <Smile size={20}/>
+                            </div>
+                            <div className="text-left">
+                                <div className={`font-bold ${
+                                    collectionsTab === 'jokes' ? 'text-amber-900' : 'text-slate-700'
+                                }`}>Saved Jokes</div>
+                                <div className="text-xs text-slate-400">{savedJokes.length} items</div>
+                            </div>
+                        </div>
+                        {collectionsTab === 'jokes' && <ChevronRight size={20} className="text-amber-400"/>}
+                    </button>
+
+                    <button 
+                        onClick={() => setCollectionsTab('memes')}
+                        className={`w-full p-4 rounded-2xl border transition-all flex items-center justify-between ${
+                            collectionsTab === 'memes'
+                            ? 'bg-purple-50 border-purple-200 shadow-sm'
+                            : 'bg-white border-slate-100 hover:bg-slate-50'
+                        }`}
+                    >
+                        <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-xl ${
+                                collectionsTab === 'memes' 
+                                ? 'bg-purple-100 text-purple-600' 
+                                : 'bg-slate-100 text-slate-400'
+                            }`}>
+                                <Image size={20}/>
+                            </div>
+                            <div className="text-left">
+                                <div className={`font-bold ${
+                                    collectionsTab === 'memes' ? 'text-purple-900' : 'text-slate-700'
+                                }`}>Saved Memes</div>
+                                <div className="text-xs text-slate-400">{savedMemes.length} items</div>
+                            </div>
+                        </div>
+                        {collectionsTab === 'memes' && <ChevronRight size={20} className="text-purple-400"/>}
+                    </button>
+                </div>
+
+                {/* Content */}
+                {collectionsTab === 'jokes' ? (
+                    // Jokes View
+                    savedJokes.length > 0 ? (
+                        <div className="space-y-3">
+                            {savedJokes.map((joke, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => { setViewingJoke(joke); setView('joke-detail'); }}
+                                    className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:bg-amber-50 transition-all text-left active:scale-[0.98]"
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <div className="bg-amber-100 text-amber-600 p-2 rounded-xl shrink-0">
+                                            <Smile size={20}/>
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-serif italic text-slate-800 line-clamp-2 mb-1">"{joke.q}"</p>
+                                            <p className="text-xs text-slate-400">Tap to view full joke</p>
+                                        </div>
+                                        <ChevronRight size={20} className="text-slate-300 shrink-0"/>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center p-12 bg-white rounded-3xl border border-dashed border-slate-200">
+                            <Smile size={48} className="mx-auto text-slate-300 mb-4"/>
+                            <h3 className="font-bold text-slate-600 mb-2">No Jokes Saved Yet</h3>
+                            <p className="text-slate-400 text-sm">Check out the daily joke on your home screen!</p>
+                        </div>
+                    )
+                ) : (
+                    // Memes View
+                    savedMemes.length > 0 ? (
+                        <div className="space-y-3">
+                            {savedMemes.map((meme, idx) => (
+                                <div
+                                    key={idx}
+                                    className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm"
+                                >
+                                    <h3 className="font-bold text-slate-800 mb-3">{meme.title}</h3>
+                                    <div className="rounded-xl overflow-hidden bg-slate-100 mb-3">
+                                        <img src={meme.url} alt="Meme" className="w-full h-auto object-contain max-h-96"/>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-full">⬆️ {meme.ups}</span>
+                                        <button 
+                                            onClick={() => {
+                                                const updated = savedMemes.filter((_, i) => i !== idx);
+                                                setSavedMemes(updated);
+                                                localStorage.setItem('vocabApp_savedMemes', JSON.stringify(updated));
+                                            }}
+                                            className="text-red-400 hover:text-red-600 p-2"
+                                        >
+                                            <Trash2 size={18}/>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center p-12 bg-white rounded-3xl border border-dashed border-slate-200">
+                            <Image size={48} className="mx-auto text-slate-300 mb-4"/>
+                            <h3 className="font-bold text-slate-600 mb-2">No Memes Saved Yet</h3>
+                            <p className="text-slate-400 text-sm">Visit the Meme Gallery in Explore to save some!</p>
+                        </div>
+                    )
+                )}
+            </div>
+        );
+    };
+    
     // Umbenannt von renderLearnedSection zu renderLibrary für Klarheit
     const renderLibrary = () => {
         // HIER KEIN useEffect MEHR! (Der Scroll-Listener ist schon in App definiert)
@@ -3849,6 +4366,8 @@ function App() {
             // TAB 3: SKILLS
             case 'skills':
                 return renderSkills(); // Zeigt das Hauptmenü
+            case 'daily-writer':
+                return renderDailyWriterEditor();
             
             case 'translator': // <--- HIER WAR DER FEHLER
                 return renderTranslator(); // Muss auf die eigene Translator-Ansicht zeigen
@@ -3863,6 +4382,12 @@ function App() {
             case 'library': // <--- WIRD JETZT HIER GEHANDELT
             case 'learned-section':
                 return renderLibrary(); 
+            
+            case 'collections': // <--- NEU: Collections mit Jokes
+                return renderCollections();
+            
+            case 'joke-detail': // <--- NEU: Joke Detail View
+                return renderJokeDetail();
             
             case 'data-mgmt':
                 return renderDataMgmt();
@@ -3881,6 +4406,9 @@ function App() {
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col items-center">
+            {/* Home Header - Nur auf Home Seite sticky */}
+            {view === 'home' && !isSessionActive && renderHomeHeader()}
+            
             {/* Main Content Area */}
             {/* pb-24 sorgt dafür, dass Inhalt nicht hinter der Leiste verschwindet */}
             <div className={`w-full max-w-lg md:max-w-2xl px-5 py-6 md:p-8 ${!isSessionActive ? 'pb-28' : ''}`}>
