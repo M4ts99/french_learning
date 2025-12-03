@@ -49,7 +49,7 @@ const Flame = (p) => <Icon {...p} path={<><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12
 const Crown = (p) => <Icon {...p} path={<><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></>} />;
 const Zap = (p) => <Icon {...p} path={<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>} />;
 const Shield = (p) => <Icon {...p} path={<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>} />;
-const Loader2 = (p) => <Icon {...p} path={<path d="M21 12a9 9 0 1 1-6.219-8.56" />} className={p.className} />;
+const Loader2 = (p) => <Icon {...p} path={<path d="M21 12a9 9 0 1 1-6.219-8.56" />} />;
 const ArrowLeft = (p) => <Icon {...p} path={<><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></>} />;
 const Gamepad2 = (p) => <Icon {...p} path={<><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></>} />;
 const Medal = (p) => <Icon {...p} path={<><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></>} />;
@@ -277,16 +277,16 @@ const GRAMMAR_MODULES = [
         icon: <Box size={24}/>, 
         color: 'bg-blue-50 text-blue-600',
         topics: [
-            { id: "a1_01", title: "Nomen & Artikel", desc: "Le, la, les und un, une, des" },
-            { id: "a1_02", title: "Subjektpronomen", desc: "Je, tu, il, elle, on..." },
-            { id: "a1_03", title: "Die Hilfsverben", desc: "Être (sein) und Avoir (haben)" },
-            { id: "a1_04", title: "Verben auf -er", desc: "Parler, manger, aimer (Präsens)" },
-            { id: "a1_05", title: "Die Verneinung", desc: "Die Klammer: ne ... pas" },
-            { id: "a1_06", title: "Adjektive (Basis)", desc: "Anpassung an Männlich/Weiblich" },
-            { id: "a1_07", title: "Fragesätze", desc: "Est-ce que & Intonation" },
-            { id: "a1_08", title: "Präpositionen (Ort)", desc: "À, en, chez, dans" },
-            { id: "a1_09", title: "Der Teilungsartikel", desc: "Du, de la, des (Ich esse Brot)" },
-            { id: "a1_10", title: "Demonstrativbegleiter", desc: "Ce, cet, cette, ces" }
+            { id: "a1_01", title: "Nouns & Articles", desc: "Le, la, les and un, une, des" },
+            { id: "a1_02", title: "Subject Pronouns", desc: "Je, tu, il, elle, on..." },
+            { id: "a1_03", title: "Auxiliary Verbs", desc: "Être (to be) & Avoir (to have)" },
+            { id: "a1_04", title: "Verbs ending in -er", desc: "Parler, manger (Present Tense)" },
+            { id: "a1_05", title: "Negation", desc: "The sandwich: ne ... pas" },
+            { id: "a1_06", title: "Basic Adjectives", desc: "Agreement (Male/Female)" },
+            { id: "a1_07", title: "Asking Questions", desc: "Est-ce que & Intonation" },
+            { id: "a1_08", title: "Prepositions (Place)", desc: "À, en, chez, dans" },
+            { id: "a1_09", title: "Partitive Articles", desc: "Du, de la (Some/Any)" },
+            { id: "a1_10", title: "Demonstratives", desc: "Ce, cet, cette, ces (This/That)" }
         ] 
     },
     { 
@@ -296,17 +296,17 @@ const GRAMMAR_MODULES = [
         icon: <Compass size={24}/>, 
         color: 'bg-sky-50 text-sky-600',
         topics: [
-            { id: "a2_01", title: "Passé Composé (Avoir)", desc: "Vergangenheit mit haben" },
-            { id: "a2_02", title: "Passé Composé (Être)", desc: "Bewegungsverben & Angleichung" },
-            { id: "a2_03", title: "Reflexive Verben", desc: "Se laver, se lever (Präsens)" },
-            { id: "a2_04", title: "Das Imparfait", desc: "Beschreibungen in der Vergangenheit" },
-            { id: "a2_05", title: "Imparfait vs. P.C.", desc: "Wann benutzt man was?" },
-            { id: "a2_06", title: "Futur Proche", desc: "Aller + Infinitiv" },
-            { id: "a2_07", title: "Futur Simple", desc: "Die Zukunft für Pläne" },
-            { id: "a2_08", title: "Objektpronomen (COD)", desc: "Me, te, le, la, les (Direkt)" },
-            { id: "a2_09", title: "Objektpronomen (COI)", desc: "Lui und leur (Indirekt)" },
-            { id: "a2_10", title: "Imperativ", desc: "Befehlsform" },
-            { id: "a2_11", title: "Der Vergleich", desc: "Plus ... que / Moins ... que" }
+            { id: "a2_01", title: "Passé Composé (Avoir)", desc: "Past tense with 'have'" },
+            { id: "a2_02", title: "Passé Composé (Être)", desc: "Motion verbs & Agreement" },
+            { id: "a2_03", title: "Reflexive Verbs", desc: "Se laver, se lever (Daily Routine)" },
+            { id: "a2_04", title: "L'Imparfait", desc: "Describing the past / Habits" },
+            { id: "a2_05", title: "Imparfait vs. P.C.", desc: "Completed vs. Ongoing" },
+            { id: "a2_06", title: "Futur Proche", desc: "Going to... (Aller + Verb)" },
+            { id: "a2_07", title: "Futur Simple", desc: "Will... (Future plans)" },
+            { id: "a2_08", title: "Direct Objects (COD)", desc: "Replacing nouns (le, la, les)" },
+            { id: "a2_09", title: "Indirect Objects (COI)", desc: "To whom? (lui, leur)" },
+            { id: "a2_10", title: "Imperative", desc: "Giving commands" },
+            { id: "a2_11", title: "Comparisons", desc: "Plus ... que / Moins ... que" }
         ] 
     },
     { 
@@ -316,17 +316,17 @@ const GRAMMAR_MODULES = [
         icon: <Layers size={24}/>, 
         color: 'bg-emerald-50 text-emerald-600',
         topics: [
-            { id: "b1_01", title: "Pronomen 'y' und 'en'", desc: "Orte und Mengen ersetzen" },
-            { id: "b1_02", title: "Relativpronomen (Basis)", desc: "Qui, que, où" },
-            { id: "b1_03", title: "Relativpronomen (Dont)", desc: "Das Wörtchen 'dessen'" },
-            { id: "b1_04", title: "Conditionnel Présent", desc: "Wünsche und Höflichkeit" },
-            { id: "b1_05", title: "Hypothese (Si-Satz 1 & 2)", desc: "Real & Irreal der Gegenwart" },
-            { id: "b1_06", title: "Subjonctif (Einführung)", desc: "Bildung & Auslöser (Il faut que)" },
-            { id: "b1_07", title: "Subjonctif (Gefühle)", desc: "Wunsch, Angst, Zweifel" },
-            { id: "b1_08", title: "Gérondif", desc: "Gleichzeitigkeit (En parlant)" },
-            { id: "b1_09", title: "Plus-que-parfait", desc: "Vorvergangenheit" },
-            { id: "b1_10", title: "Passiv (Le Passif)", desc: "Être + Partizip" },
-            { id: "b1_11", title: "Indirekte Rede (Präsens)", desc: "Er sagt, dass..." }
+            { id: "b1_01", title: "Pronouns 'y' and 'en'", desc: "Replacing places & quantities" },
+            { id: "b1_02", title: "Relative Pronouns I", desc: "Qui, que, où" },
+            { id: "b1_03", title: "Relative Pronouns II", desc: "Using 'Dont' correctly" },
+            { id: "b1_04", title: "Conditional Present", desc: "Politeness & Wishes" },
+            { id: "b1_05", title: "Hypothesis (Si clauses)", desc: "If I do X, Y happens" },
+            { id: "b1_06", title: "Subjonctif (Basics)", desc: "Necessity (Il faut que...)" },
+            { id: "b1_07", title: "Subjonctif (Emotions)", desc: "Fear, Joy, Doubt" },
+            { id: "b1_08", title: "Le Gérondif", desc: "While doing... (En parlant)" },
+            { id: "b1_09", title: "Plus-que-parfait", desc: "Had done (Past Perfect)" },
+            { id: "b1_10", title: "Passive Voice", desc: "Être + Past Participle" },
+            { id: "b1_11", title: "Reported Speech I", desc: "He says that..." }
         ] 
     },
     { 
@@ -336,16 +336,16 @@ const GRAMMAR_MODULES = [
         icon: <Crown size={24}/>, 
         color: 'bg-purple-50 text-purple-600',
         topics: [
-            { id: "b2_01", title: "Hypothese (Si-Satz 3)", desc: "Irreal der Vergangenheit" },
-            { id: "b2_02", title: "Conditionnel Passé", desc: "Bedauern ausdrücken" },
-            { id: "b2_03", title: "Subjonctif Passé", desc: "Abgeschlossene Handlung" },
-            { id: "b2_04", title: "Subjonctif vs. Indikativ", desc: "Feinheiten (Espérer, Penser...)" },
-            { id: "b2_05", title: "Logische Konnektoren", desc: "Cependant, pourtant..." },
-            { id: "b2_06", title: "Mise en relief", desc: "Betonung (C'est moi qui...)" },
-            { id: "b2_07", title: "Indirekte Rede (Verg.)", desc: "Zeitenfolge (Concordance)" },
-            { id: "b2_08", title: "Participe Présent", desc: "Als Adjektiv oder Verbform" },
-            { id: "b2_09", title: "Futur Antérieur", desc: "Vollendete Zukunft" },
-            { id: "b2_10", title: "Passé Simple (Rezeptiv)", desc: "Nur Erkennen für Literatur" }
+            { id: "b2_01", title: "Hypothesis (Past)", desc: "If I had known..." },
+            { id: "b2_02", title: "Conditional Past", desc: "Regrets (I should have...)" },
+            { id: "b2_03", title: "Subjonctif Past", desc: "Completed subjective actions" },
+            { id: "b2_04", title: "Subjonctif vs Indicative", desc: "Nuances (Espérer, Penser)" },
+            { id: "b2_05", title: "Logical Connectors", desc: "However, Although, Despite" },
+            { id: "b2_06", title: "Emphasis (Mise en relief)", desc: "C'est moi qui..." },
+            { id: "b2_07", title: "Reported Speech II", desc: "Sequence of Tenses" },
+            { id: "b2_08", title: "Participe Présent", desc: "Used as adjective or verb" },
+            { id: "b2_09", title: "Future Perfect", desc: "Will have done" },
+            { id: "b2_10", title: "Passé Simple", desc: "Literary Past (Reading only)" }
         ] 
     }
 ];
