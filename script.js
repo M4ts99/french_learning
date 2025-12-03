@@ -435,7 +435,7 @@ function App() {
     const [apiStatus, setApiStatus] = useState('checking'); // 'online', 'offline', 'checking'
     
     const [selectedMsg, setSelectedMsg] = useState(null); // Umbenannt von activeTranslation, da es jetzt mehr kann
-
+//s
     // --- HEALTH CHECK (Beim Start) ---
  // --- 1. DIE FUNKTION (Muss eigenständig sein!) ---
     const checkHealth = async () => {
