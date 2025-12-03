@@ -271,28 +271,82 @@ const JOKE_DB = [
 // --- GRAMMAR DATA ---
 const GRAMMAR_MODULES = [
     { 
-        id: 'basics', 
-        title: 'The Basics', 
-        sub: 'Nouns, Articles & Numbers',
+        id: 'a1', 
+        title: 'Level A1', 
+        sub: 'The Absolute Basics', 
         icon: <Box size={24}/>, 
         color: 'bg-blue-50 text-blue-600',
-        topics: ['Articles (le/la)', 'Plural Forms', 'Adjectives', 'Numbers 1-100'] 
+        topics: [
+            { id: "a1_01", title: "Nomen & Artikel", desc: "Le, la, les und un, une, des" },
+            { id: "a1_02", title: "Subjektpronomen", desc: "Je, tu, il, elle, on..." },
+            { id: "a1_03", title: "Die Hilfsverben", desc: "Être (sein) und Avoir (haben)" },
+            { id: "a1_04", title: "Verben auf -er", desc: "Parler, manger, aimer (Präsens)" },
+            { id: "a1_05", title: "Die Verneinung", desc: "Die Klammer: ne ... pas" },
+            { id: "a1_06", title: "Adjektive (Basis)", desc: "Anpassung an Männlich/Weiblich" },
+            { id: "a1_07", title: "Fragesätze", desc: "Est-ce que & Intonation" },
+            { id: "a1_08", title: "Präpositionen (Ort)", desc: "À, en, chez, dans" },
+            { id: "a1_09", title: "Der Teilungsartikel", desc: "Du, de la, des (Ich esse Brot)" },
+            { id: "a1_10", title: "Demonstrativbegleiter", desc: "Ce, cet, cette, ces" }
+        ] 
     },
     { 
-        id: 'tenses', 
-        title: 'Time Travel', 
-        sub: 'Verbs & Tenses',
-        icon: <RotateCcw size={24}/>, 
-        color: 'bg-purple-50 text-purple-600',
-        topics: ['Le Présent', 'Avoir & Être', 'Passé Composé', 'Imparfait', 'Le Futur'] 
+        id: 'a2', 
+        title: 'Level A2', 
+        sub: 'Elementary', 
+        icon: <Compass size={24}/>, 
+        color: 'bg-sky-50 text-sky-600',
+        topics: [
+            { id: "a2_01", title: "Passé Composé (Avoir)", desc: "Vergangenheit mit haben" },
+            { id: "a2_02", title: "Passé Composé (Être)", desc: "Bewegungsverben & Angleichung" },
+            { id: "a2_03", title: "Reflexive Verben", desc: "Se laver, se lever (Präsens)" },
+            { id: "a2_04", title: "Das Imparfait", desc: "Beschreibungen in der Vergangenheit" },
+            { id: "a2_05", title: "Imparfait vs. P.C.", desc: "Wann benutzt man was?" },
+            { id: "a2_06", title: "Futur Proche", desc: "Aller + Infinitiv" },
+            { id: "a2_07", title: "Futur Simple", desc: "Die Zukunft für Pläne" },
+            { id: "a2_08", title: "Objektpronomen (COD)", desc: "Me, te, le, la, les (Direkt)" },
+            { id: "a2_09", title: "Objektpronomen (COI)", desc: "Lui und leur (Indirekt)" },
+            { id: "a2_10", title: "Imperativ", desc: "Befehlsform" },
+            { id: "a2_11", title: "Der Vergleich", desc: "Plus ... que / Moins ... que" }
+        ] 
     },
     { 
-        id: 'structure', 
-        title: 'Architecture', 
-        sub: 'Sentence Building',
+        id: 'b1', 
+        title: 'Level B1', 
+        sub: 'Intermediate', 
         icon: <Layers size={24}/>, 
         color: 'bg-emerald-50 text-emerald-600',
-        topics: ['Asking Questions', 'Negation (ne...pas)', 'Pronouns', 'Prepositions'] 
+        topics: [
+            { id: "b1_01", title: "Pronomen 'y' und 'en'", desc: "Orte und Mengen ersetzen" },
+            { id: "b1_02", title: "Relativpronomen (Basis)", desc: "Qui, que, où" },
+            { id: "b1_03", title: "Relativpronomen (Dont)", desc: "Das Wörtchen 'dessen'" },
+            { id: "b1_04", title: "Conditionnel Présent", desc: "Wünsche und Höflichkeit" },
+            { id: "b1_05", title: "Hypothese (Si-Satz 1 & 2)", desc: "Real & Irreal der Gegenwart" },
+            { id: "b1_06", title: "Subjonctif (Einführung)", desc: "Bildung & Auslöser (Il faut que)" },
+            { id: "b1_07", title: "Subjonctif (Gefühle)", desc: "Wunsch, Angst, Zweifel" },
+            { id: "b1_08", title: "Gérondif", desc: "Gleichzeitigkeit (En parlant)" },
+            { id: "b1_09", title: "Plus-que-parfait", desc: "Vorvergangenheit" },
+            { id: "b1_10", title: "Passiv (Le Passif)", desc: "Être + Partizip" },
+            { id: "b1_11", title: "Indirekte Rede (Präsens)", desc: "Er sagt, dass..." }
+        ] 
+    },
+    { 
+        id: 'b2', 
+        title: 'Level B2', 
+        sub: 'Upper Intermediate', 
+        icon: <Crown size={24}/>, 
+        color: 'bg-purple-50 text-purple-600',
+        topics: [
+            { id: "b2_01", title: "Hypothese (Si-Satz 3)", desc: "Irreal der Vergangenheit" },
+            { id: "b2_02", title: "Conditionnel Passé", desc: "Bedauern ausdrücken" },
+            { id: "b2_03", title: "Subjonctif Passé", desc: "Abgeschlossene Handlung" },
+            { id: "b2_04", title: "Subjonctif vs. Indikativ", desc: "Feinheiten (Espérer, Penser...)" },
+            { id: "b2_05", title: "Logische Konnektoren", desc: "Cependant, pourtant..." },
+            { id: "b2_06", title: "Mise en relief", desc: "Betonung (C'est moi qui...)" },
+            { id: "b2_07", title: "Indirekte Rede (Verg.)", desc: "Zeitenfolge (Concordance)" },
+            { id: "b2_08", title: "Participe Présent", desc: "Als Adjektiv oder Verbform" },
+            { id: "b2_09", title: "Futur Antérieur", desc: "Vollendete Zukunft" },
+            { id: "b2_10", title: "Passé Simple (Rezeptiv)", desc: "Nur Erkennen für Literatur" }
+        ] 
     }
 ];
 // --- NEWS SOURCES ---
@@ -1955,10 +2009,34 @@ function App() {
             nextLevel = "C2";
         }
 
-        // Französische Uhrzeit
+        // Französische Uhrzeit (Ausgeschrieben)
+        const getFrenchNumber = (n) => {
+            if (n === 0) return "";
+            const units = ["", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf", "dix", "onze", "douze", "treize", "quatorze", "quinze", "seize", "dix-sept", "dix-huit", "dix-neuf"];
+            const tens = ["", "dix", "vingt", "trente", "quarante", "cinquante"];
+            
+            if (n < 20) return units[n];
+            const ten = Math.floor(n / 10);
+            const unit = n % 10;
+            if (unit === 0) return tens[ten];
+            if (unit === 1) return `${tens[ten]}-et-un`;
+            return `${tens[ten]}-${units[unit]}`;
+        };
+
         const hours = currentTime.getHours();
         const minutes = currentTime.getMinutes();
-        const frenchTime = `Il est ${hours} heure${hours !== 1 ? 's' : ''} ${minutes < 10 ? '0' : ''}${minutes}`;
+        
+        let hStr = getFrenchNumber(hours);
+        if (hours === 0) hStr = "minuit";
+        else if (hours === 12) hStr = "midi";
+        else if (hours === 1) hStr = "une"; 
+        
+        let frenchTime = `Il est ${hStr}`;
+        if (hours !== 0 && hours !== 12) frenchTime += ` heure${hours !== 1 ? 's' : ''}`;
+        
+        if (minutes > 0) {
+            frenchTime += ` ${getFrenchNumber(minutes)}`;
+        }
 
         return (
             <div className="fixed top-0 left-0 right-0 z-40 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-b-2 border-indigo-200 shadow-lg">
@@ -1971,9 +2049,9 @@ function App() {
                         </div>
                         <div className="text-right">
                             <div className="text-xl md:text-3xl lg:text-4xl font-extrabold text-slate-800 font-mono leading-tight">
-                                {currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                                {currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                             </div>
-                            <div className="hidden md:block text-sm text-indigo-600 font-semibold italic mt-0.5">
+                            <div className="text-xs md:text-sm text-indigo-600 font-semibold italic mt-0.5 capitalize">
                                 {frenchTime}
                             </div>
                         </div>
@@ -2639,7 +2717,7 @@ function App() {
 
                 {/* DAILY WRITER (Top Priority) */}
                 <div className="mb-2">
-                     <button onClick={() => setView('daily-writer')} className="w-full bg-gradient-to-br from-indigo-600 to-violet-600 p-[2px] rounded-3xl shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all group">
+                      <button onClick={() => setView('daily-writer')} className="w-full bg-gradient-to-br from-indigo-600 to-violet-600 p-[2px] rounded-3xl shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all group">
                         <div className="bg-white rounded-[1.4rem] p-5 flex items-center justify-between h-full relative overflow-hidden">
                             <div className="absolute right-0 top-0 w-32 h-32 bg-indigo-50 rounded-full -mr-10 -mt-10 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
                             
@@ -2656,10 +2734,10 @@ function App() {
                                 <ChevronRight size={24} />
                             </div>
                         </div>
-                     </button>
+                      </button>
                 </div>
 
-                {/* 1. GRAMMAR (Prominent) */}
+                {/* 1. GRAMMAR (Updated to Swift Data Structure) */}
                 <div>
                     <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Grammar Reference</h3>
                     <div className="space-y-3">
@@ -2667,6 +2745,7 @@ function App() {
                             const isOpen = expandedCategory === module.id;
                             return (
                                 <div key={module.id} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300">
+                                    {/* Main Card */}
                                     <button onClick={() => toggleCategory(module.id)} className="w-full p-5 flex items-center gap-4 text-left active:bg-slate-50 transition-colors">
                                         <div className={`w-12 h-12 flex items-center justify-center rounded-2xl ${module.color}`}>{module.icon}</div>
                                         <div className="flex-1">
@@ -2675,11 +2754,17 @@ function App() {
                                         </div>
                                         <ChevronRight size={20} className={`text-slate-300 transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`} />
                                     </button>
+                                    
+                                    {/* Sub-List (Accordion) */}
                                     {isOpen && (
                                         <div className="bg-slate-50 border-t border-slate-100 animate-in slide-in-from-top-2 fade-in duration-200">
-                                            {module.topics.map((topic, idx) => (
-                                                <button key={idx} onClick={() => alert(`Opening Grammar Sheet: ${topic}`)} className="w-full p-4 pl-[5rem] text-left text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0 flex justify-between items-center">
-                                                    {topic} <BookOpen size={14} className="opacity-50"/>
+                                            {module.topics.map((t) => (
+                                                <button key={t.id} onClick={() => alert(`Opening Grammar Sheet: ${t.title}`)} className="w-full p-4 pl-[5rem] text-left hover:bg-slate-100 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0 flex justify-between items-center group">
+                                                    <div>
+                                                        <div className="text-sm font-bold text-slate-700 group-hover:text-indigo-700">{t.title}</div>
+                                                        <div className="text-xs text-slate-400 group-hover:text-indigo-400/80 font-medium">{t.desc}</div>
+                                                    </div>
+                                                    <BookOpen size={14} className="opacity-0 group-hover:opacity-100 text-indigo-400 transition-opacity"/>
                                                 </button>
                                             ))}
                                         </div>
@@ -3244,7 +3329,7 @@ function App() {
                                         <RotateCcw className="animate-spin" size={16}/> Generiere Kontext...
                                     </div>
                                 ) : (
-                                    !currentExamples ? (
+                                    (!currentExamples || !Array.isArray(currentExamples)) ? (
                                         <button 
                                             // HIER IST DER FIX: Wir übergeben das Wort-Objekt!
                                             onClick={() => fetchAiExamples(word)} 
