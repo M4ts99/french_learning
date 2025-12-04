@@ -226,18 +226,35 @@ const GRAMMAR_MODULES = [
         sub: 'The Absolute Basics', 
         icon: <Box size={24}/>, 
         color: 'bg-blue-50 text-blue-600',
-        topics: [
-            { id: "a1_01", title: "Nouns & Articles", desc: "Le, la, les and un, une, des" },
-            { id: "a1_02", title: "Subject Pronouns", desc: "Je, tu, il, elle, on..." },
-            { id: "a1_03", title: "Auxiliary Verbs", desc: "Être (to be) & Avoir (to have)" },
-            { id: "a1_04", title: "Verbs ending in -er", desc: "Parler, manger (Present Tense)" },
-            { id: "a1_05", title: "Negation", desc: "The sandwich: ne ... pas" },
-            { id: "a1_06", title: "Basic Adjectives", desc: "Agreement (Male/Female)" },
-            { id: "a1_07", title: "Asking Questions", desc: "Est-ce que & Intonation" },
-            { id: "a1_08", title: "Prepositions (Place)", desc: "À, en, chez, dans" },
-            { id: "a1_09", title: "Partitive Articles", desc: "Du, de la (Some/Any)" },
-            { id: "a1_10", title: "Demonstratives", desc: "Ce, cet, cette, ces (This/That)" }
-        ] 
+        topics: // In script.js -> GRAMMAR_MODULES -> topics:
+
+            [
+                // 1. Die absoluten Grundlagen
+                { id: "a1_01", title: "Nouns & Articles", desc: "Le, la, les and un, une, des" },
+                { id: "a1_02", title: "Subject Pronouns", desc: "Je, tu, il, elle, on..." },
+                
+                // 2. Die wichtigsten Verben zuerst (Damit man Sätze bauen kann)
+                { id: "a1_03", title: "Auxiliary Verbs", desc: "Être (to be) & Avoir (to have)" },
+                { id: "a1_04", title: "Verbs ending in -er", desc: "Parler, manger (Present Tense)" },
+                
+                // 3. Struktur reinbringen (Bevor wir MEHR Verben lernen, lernen wir sie zu benutzen)
+                { id: "a1_05", title: "Negation", desc: "The sandwich: ne ... pas" },
+                { id: "a1_06", title: "Asking Questions", desc: "Est-ce que & Intonation" },
+                
+                // 4. Die wichtigen Unregelmäßigen (Vorgezogen!)
+                // Aller braucht man für "Wie geht's" und Zukunft. Faire für fast alles.
+                { id: "a1_07", title: "Irregular: Aller & Faire", desc: "To go & To make/do" },
+
+                // 5. Jetzt die restlichen Verbgruppen (Teile & Herrsche)
+                { id: "a1_08", title: "Verbs ending in -ir", desc: "Finir, Choisir (Group 2)" },
+                { id: "a1_09", title: "Verbs ending in -re", desc: "Vendre, Attendre (Group 3)" },
+
+                // 6. Die Sätze ausschmücken (Details)
+                { id: "a1_10", title: "Basic Adjectives", desc: "Agreement (Male/Female)" },
+                { id: "a1_11", title: "Prepositions (Place)", desc: "À, en, chez, dans" },
+                { id: "a1_12", title: "Partitive Articles", desc: "Du, de la (Some/Any)" },
+                { id: "a1_13", title: "Demonstratives", desc: "Ce, cet, cette, ces (This/That)" }
+            ]
     },
     { 
         id: 'a2', 
@@ -353,26 +370,32 @@ const GrammarDetail = ({ topicId, onBack }) => {
     const [currentExIndex, setCurrentExIndex] = useState(0);
     const [userAnswer, setUserAnswer] = useState('');
     const [feedback, setFeedback] = useState(null); // 'correct', 'wrong', null
+    const [correctAnswer, setCorrectAnswer] = useState(''); // Speichert die richtige Antwort bei Fehler
     const [isComplete, setIsComplete] = useState(false); // Lesson complete state
-    const [shuffledPractice, setShuffledPractice] = useState(null); // Shuffled exercises
+    const [correctCount, setCorrectCount] = useState(0); // Anzahl richtiger Antworten
 
-    // Prüfen ob Lektion schon mal gemacht wurde (localStorage)
-    const storageKey = `grammar_completed_${topicId}`;
-    const wasCompletedBefore = localStorage.getItem(storageKey) === 'true';
+    // Prüfen ob Lektion schon bestanden wurde (localStorage)
+    const storageKey = `grammar_passed_${topicId}`;
+    const isPassed = localStorage.getItem(storageKey) === 'true';
 
-    // Übungen vorbereiten (shuffle wenn schon mal gemacht)
+    // Übungen vorbereiten (IMMER shuffle, 10 Fragen)
     const exerciseList = React.useMemo(() => {
         if (!data) return [];
         const exercises = [...data.practice];
-        if (wasCompletedBefore) {
-            // Shuffle für Wiederholung
-            for (let i = exercises.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [exercises[i], exercises[j]] = [exercises[j], exercises[i]];
+        // Immer shufflen
+        for (let i = exercises.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [exercises[i], exercises[j]] = [exercises[j], exercises[i]];
+        }
+        // Falls weniger als 10 Übungen: mit Duplikaten auffüllen
+        const result = [];
+        while (result.length < 10) {
+            for (const ex of exercises) {
+                if (result.length < 10) result.push({...ex, _uniqueId: result.length});
             }
         }
-        return exercises;
-    }, [topicId, wasCompletedBefore]);
+        return result.slice(0, 10);
+    }, [topicId, activeTab]); // Re-shuffle wenn Tab wechselt
 
     // Falls ID nicht gefunden wurde (oder Datei fehlt)
     if (!data) return (
@@ -384,49 +407,69 @@ const GrammarDetail = ({ topicId, onBack }) => {
     );
 
     const { meta, learn } = data;
-    const practice = exerciseList; // Verwende die (ggf. geshuffleten) Übungen
+    const practice = exerciseList;
+    const totalQuestions = 10;
 
-    const checkAnswer = (correctAnswer) => {
+    const checkAnswer = (correctAns) => {
         // Einfacher String-Vergleich (ignoriert Groß/Kleinschreibung und Leerzeichen)
-        if (userAnswer.trim().toLowerCase() === correctAnswer.trim().toLowerCase()) {
+        if (userAnswer.trim().toLowerCase() === correctAns.trim().toLowerCase()) {
             setFeedback('correct');
+            setCorrectCount(prev => prev + 1);
         } else {
             setFeedback('wrong');
+            setCorrectAnswer(correctAns);
         }
     };
 
     const nextExercise = () => {
         setFeedback(null);
         setUserAnswer('');
-        if (currentExIndex < practice.length - 1) {
+        setCorrectAnswer('');
+        if (currentExIndex < totalQuestions - 1) {
             setCurrentExIndex(prev => prev + 1);
         } else {
-            // Lesson complete - in localStorage speichern
-            localStorage.setItem(storageKey, 'true');
+            // Test complete - prüfen ob 10/10
+            const finalScore = correctCount + (feedback === 'correct' ? 0 : 0); // correctCount wurde schon erhöht
+            if (correctCount === totalQuestions) {
+                localStorage.setItem(storageKey, 'true');
+            }
             setIsComplete(true);
         }
     };
 
+    const restartPractice = () => {
+        setIsComplete(false);
+        setCurrentExIndex(0);
+        setUserAnswer('');
+        setFeedback(null);
+        setCorrectCount(0);
+        setCorrectAnswer('');
+    };
+
     // --- LESSON COMPLETE SCREEN ---
     if (isComplete) {
+        const passed = correctCount === totalQuestions;
         return (
             <div className="w-full pt-6 pb-24 px-4 h-full flex flex-col items-center justify-center text-center">
                 <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl max-w-sm w-full">
-                    <div className="text-6xl mb-4">🎉</div>
-                    <h2 className="text-2xl font-bold text-slate-800 mb-2">Lesson Complete!</h2>
-                    <p className="text-slate-500 mb-6">You've mastered <span className="font-bold text-indigo-600">{meta.title}</span></p>
+                    <h2 className="text-2xl font-bold text-slate-800 mb-4">
+                        {passed ? 'Perfect Score!' : 'Keep Practicing!'}
+                    </h2>
+                    <p className="text-slate-500 mb-2">
+                        You scored <span className={`font-bold ${passed ? 'text-green-600' : 'text-amber-600'}`}>{correctCount}/{totalQuestions}</span>
+                    </p>
+                    {passed ? (
+                        <p className="text-green-600 font-medium mb-6">✓ Lesson passed!</p>
+                    ) : (
+                        <p className="text-amber-600 font-medium mb-6">Score 10/10 to pass this lesson</p>
+                    )}
                     
                     <div className="space-y-3">
                         <button 
-                            onClick={() => {
-                                setIsComplete(false);
-                                setCurrentExIndex(0);
-                                setUserAnswer('');
-                                setFeedback(null);
-                            }} 
+                            onClick={restartPractice} 
                             className="w-full bg-indigo-100 text-indigo-700 py-3 rounded-xl font-bold hover:bg-indigo-200 transition-colors"
                         >
-                            🔄 Practice Again
+                            🔄 Try Again
                         </button>
                         <button 
                             onClick={onBack} 
@@ -455,10 +498,10 @@ const GrammarDetail = ({ topicId, onBack }) => {
 
             {/* Tabs */}
             <div className="bg-slate-200 p-1 rounded-2xl flex mb-6 mx-1 shrink-0">
-                <button onClick={() => setActiveTab('learn')} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'learn' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>
+                <button onClick={() => { setActiveTab('learn'); restartPractice(); }} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'learn' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>
                     📖 Learn
                 </button>
-                <button onClick={() => setActiveTab('practice')} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'practice' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>
+                <button onClick={() => { setActiveTab('practice'); restartPractice(); }} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'practice' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>
                     🏋️ Practice
                 </button>
             </div>
@@ -468,12 +511,11 @@ const GrammarDetail = ({ topicId, onBack }) => {
                 <div className="flex-1 overflow-y-auto px-1 space-y-6">
                     {/* Cheat Sheet */}
                     {learn.cheat_sheet && (
-                        <div className="bg-amber-50 p-5 rounded-3xl border border-amber-100 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-3 opacity-10"><Zap size={40} className="text-amber-600"/></div>
-                            <h3 className="font-bold text-amber-800 text-sm uppercase tracking-wider mb-2">Cheat Sheet</h3>
-                            <p className="text-amber-900 font-medium mb-3 leading-relaxed">{learn.cheat_sheet.summary}</p>
-                            <div className="bg-white/60 p-3 rounded-xl text-sm text-amber-800 font-bold border border-amber-100/50">
-                                {learn.cheat_sheet.key_rule}
+                        <div className="bg-blue-50 p-5 rounded-3xl border border-blue-100 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-3 opacity-10"><Zap size={40} className="text-blue-600"/></div>
+                            <h3 className="font-bold text-blue-800 text-sm uppercase tracking-wider mb-2">Cheat Sheet</h3>
+                            <p className="text-blue-900 font-medium mb-3 leading-relaxed" dangerouslySetInnerHTML={{__html: learn.cheat_sheet.summary.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>')}}></p>
+                            <div className="bg-white/60 p-3 rounded-xl text-sm text-blue-800 font-bold border border-blue-100/50" dangerouslySetInnerHTML={{__html: learn.cheat_sheet.key_rule.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>')}}>
                             </div>
                         </div>
                     )}
@@ -481,14 +523,20 @@ const GrammarDetail = ({ topicId, onBack }) => {
                     {/* Explanation Content */}
                     <div className="space-y-4">
                         {learn.explanation.map((block, idx) => {
-                            if (block.type === 'text') return <p key={idx} className="text-slate-600 leading-relaxed text-lg">{block.content}</p>;
+                            // Helper function to render markdown-style formatting
+                            const renderMarkdown = (text) => text
+                                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                                .replace(/\n/g, '<br/>');
+                            
+                            if (block.type === 'text') return <p key={idx} className="text-slate-600 leading-relaxed text-lg" dangerouslySetInnerHTML={{__html: renderMarkdown(block.content)}}></p>;
                             
                             if (block.type === 'warning') return (
                                 <div key={idx} className="bg-rose-50 p-4 rounded-2xl border border-rose-100 flex gap-3">
                                     <AlertCircle size={24} className="text-rose-500 shrink-0"/>
                                     <div>
-                                        {block.title && <div className="font-bold text-rose-700 text-sm mb-1">{block.title}</div>}
-                                        <div className="text-rose-800 text-sm">{block.content}</div>
+                                        {block.title && <div className="font-bold text-rose-700 text-sm mb-1" dangerouslySetInnerHTML={{__html: renderMarkdown(block.title)}}></div>}
+                                        <div className="text-rose-800 text-sm" dangerouslySetInnerHTML={{__html: renderMarkdown(block.content)}}></div>
                                     </div>
                                 </div>
                             );
@@ -527,12 +575,13 @@ const GrammarDetail = ({ topicId, onBack }) => {
                             {/* Progress Bar */}
                             <div className="mb-6">
                                 <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                                    <span>Question {currentExIndex + 1}</span>
-                                    <span>{practice.length} Total</span>
+                                    <span>Question {currentExIndex + 1}/{totalQuestions}</span>
+                                    <span className="text-green-600">✓ {correctCount}</span>
                                 </div>
                                 <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                                    <div className="bg-indigo-500 h-full transition-all duration-500" style={{width: `${((currentExIndex + 1) / practice.length) * 100}%`}}></div>
+                                    <div className="bg-indigo-500 h-full transition-all duration-500" style={{width: `${((currentExIndex + 1) / totalQuestions) * 100}%`}}></div>
                                 </div>
+                                <p className="text-center text-xs text-slate-400 mt-2">Score 10/10 to pass this lesson</p>
                             </div>
 
                             {/* Card */}
@@ -583,8 +632,13 @@ const GrammarDetail = ({ topicId, onBack }) => {
                                                             disabled={feedback !== null}
                                                             onClick={() => {
                                                                 setUserAnswer(opt);
-                                                                if(idx === ex.correct) setFeedback('correct');
-                                                                else setFeedback('wrong');
+                                                                if(idx === ex.correct) {
+                                                                    setFeedback('correct');
+                                                                    setCorrectCount(prev => prev + 1);
+                                                                } else {
+                                                                    setFeedback('wrong');
+                                                                    setCorrectAnswer(ex.options[ex.correct]);
+                                                                }
                                                             }}
                                                             className={`w-full p-4 rounded-xl font-bold border transition-all text-left flex justify-between items-center ${
                                                                 feedback && idx === ex.correct ? 'bg-green-100 border-green-200 text-green-700' :
@@ -639,9 +693,12 @@ const GrammarDetail = ({ topicId, onBack }) => {
                                 )}
                                 
                                 {feedback === 'wrong' && (
-                                    <div className="absolute bottom-0 left-0 w-full p-4 bg-red-50 border-t border-red-100 flex items-center justify-between px-6">
-                                        <span className="text-red-600 font-bold">Wrong! Try again.</span>
-                                        <button onClick={() => { setFeedback(null); setUserAnswer(''); }} className="bg-red-200 text-red-700 px-4 py-2 rounded-lg font-bold text-sm">Retry</button>
+                                    <div className="absolute bottom-0 left-0 w-full p-4 bg-red-50 border-t border-red-100">
+                                        <div className="text-center mb-3">
+                                            <span className="text-red-600 font-bold">Correct answer: </span>
+                                            <span className="text-red-800 font-bold">{correctAnswer || practice[currentExIndex]?.options?.[practice[currentExIndex]?.correct]}</span>
+                                        </div>
+                                        <button onClick={nextExercise} className="w-full bg-red-500 text-white py-3 rounded-xl font-bold shadow-lg shadow-red-200">Next Question</button>
                                     </div>
                                 )}
 
@@ -2558,17 +2615,52 @@ function App() {
                 </button>
 
                 {/* 5. SUGGESTED GRAMMAR (New Placement) */}
-                <button 
-                    onClick={() => setView('skills')} 
-                    className="w-full bg-emerald-50 border border-emerald-100 p-5 rounded-[2rem] text-left active:scale-[0.98] relative overflow-hidden"
-                >
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="bg-white text-emerald-600 p-2 rounded-xl shadow-sm"><Layers size={18} /></div>
-                        <span className="font-bold text-emerald-900 text-sm">Suggested Grammar</span>
-                    </div>
-                    <h3 className="font-bold text-emerald-800 text-xl">Le Passé Composé</h3>
-                    <p className="text-emerald-700/70 text-xs mt-1">Master the past tense today.</p>
-                </button>
+                {(() => {
+                    // Find the next unpassed grammar lesson
+                    let nextLesson = null;
+                    let nextModule = null;
+                    for (const module of GRAMMAR_MODULES) {
+                        for (const topic of module.topics) {
+                            if (localStorage.getItem(`grammar_passed_${topic.id}`) !== 'true') {
+                                nextLesson = topic;
+                                nextModule = module;
+                                break;
+                            }
+                        }
+                        if (nextLesson) break;
+                    }
+                    
+                    // If all lessons are passed, show congratulations
+                    if (!nextLesson) {
+                        return (
+                            <div className="w-full bg-green-50 border border-green-100 p-5 rounded-[2rem] text-left relative overflow-hidden">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="bg-white text-green-600 p-2 rounded-xl shadow-sm"><GraduationCap size={18} /></div>
+                                    <span className="font-bold text-green-900 text-sm">Grammar Complete!</span>
+                                </div>
+                                <h3 className="font-bold text-green-800 text-xl">All lessons passed!</h3>
+                                <p className="text-green-700/70 text-xs mt-1">Amazing work. Keep practicing!</p>
+                            </div>
+                        );
+                    }
+                    
+                    return (
+                        <button 
+                            onClick={() => { 
+                                setSelectedGrammarId(nextLesson.id); 
+                                setView('grammar-detail'); 
+                            }} 
+                            className="w-full bg-emerald-50 border border-emerald-100 p-5 rounded-[2rem] text-left active:scale-[0.98] relative overflow-hidden"
+                        >
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="bg-white text-emerald-600 p-2 rounded-xl shadow-sm"><Layers size={18} /></div>
+                                <span className="font-bold text-emerald-900 text-sm">Next Grammar • {nextModule.title}</span>
+                            </div>
+                            <h3 className="font-bold text-emerald-800 text-xl">{nextLesson.title}</h3>
+                            <p className="text-emerald-700/70 text-xs mt-1">{nextLesson.desc}</p>
+                        </button>
+                    );
+                })()}
             </div>
         );
     };
@@ -2963,7 +3055,9 @@ function App() {
                                     {/* Sub-List (Accordion) */}
                                     {isOpen && (
                                         <div className="bg-slate-50 border-t border-slate-100 animate-in slide-in-from-top-2 fade-in duration-200">
-                                            {module.topics.map((t) => (
+                                            {module.topics.map((t) => {
+                                                const isPassed = localStorage.getItem(`grammar_passed_${t.id}`) === 'true';
+                                                return (
                                                 <button 
                                                     key={t.id} 
                                                     // HIER IST DIE NAVIGATIONS-LOGIK:
@@ -2971,15 +3065,16 @@ function App() {
                                                         setSelectedGrammarId(t.id); 
                                                         setView('grammar-detail'); 
                                                     }} 
-                                                    className="w-full p-4 pl-[5rem] text-left hover:bg-slate-100 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0 flex justify-between items-center group"
+                                                    className={`w-full p-4 pl-[5rem] text-left transition-colors border-b border-slate-100 last:border-0 flex justify-between items-center group ${isPassed ? 'bg-green-50 hover:bg-green-100' : 'hover:bg-slate-100 hover:text-indigo-600'}`}
                                                 >
                                                     <div>
-                                                        <div className="text-sm font-bold text-slate-700 group-hover:text-indigo-700">{t.title}</div>
-                                                        <div className="text-xs text-slate-400 group-hover:text-indigo-400/80 font-medium">{t.desc}</div>
+                                                        <div className={`text-sm font-bold ${isPassed ? 'text-green-700' : 'text-slate-700 group-hover:text-indigo-700'}`}>{t.title}</div>
+                                                        <div className={`text-xs font-medium ${isPassed ? 'text-green-600' : 'text-slate-400 group-hover:text-indigo-400/80'}`}>{t.desc}</div>
                                                     </div>
                                                     <BookOpen size={14} className="opacity-0 group-hover:opacity-100 text-indigo-400 transition-opacity"/>
                                                 </button>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
                                     )}
                                 </div>
