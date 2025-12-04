@@ -120,56 +120,6 @@ const COLLECTIONS = {
         { id: 'prof', label: 'Professions', sub: 'Work', icon: <Briefcase size={24}/>, ids: [204, 268, 386, 457, 483, 640, 684, 688, 690, 762, 783, 827, 901, 909, 917, 1098, 1150, 1188, 1203, 1232, 1259, 1264, 1323, 1328, 1337, 1341, 1343, 1406, 1411, 1499, 1546, 1552, 1631, 1706, 1722, 1737, 1738, 1789, 1797, 1861, 1876, 1924, 1957, 1961, 2039, 2049, 2089, 2100, 2101, 2119, 2176, 2183, 2201, 2233, 2248, 2276, 2307, 2404, 2415, 2430, 2436, 2443, 2461, 2523, 2587, 2645, 2741, 2768, 2824, 2848, 2906, 2928, 2954, 2963, 2981, 2995, 3003, 3042, 3048, 3072, 3081, 3085, 3100, 3118, 3163, 3167, 3189, 3223, 3241, 3251, 3262, 3283, 3327, 3350, 3371, 3446, 3494, 3503, 3518, 3630, 3745, 3767, 3886, 4052, 4131, 4261, 4282, 4346, 4430, 4422, 4463, 4787, 4309, 4253, 827, 640, 1264] },
     ]
 };
-const CHAT_SCENARIOS = [
-    { 
-        id: 'bakery', 
-        icon: "🥐", 
-        title: "The Bakery", 
-        desc: "Buy bread & pastries", 
-        goal: "Buy a baguette and pay.", 
-        intro: "Vous entrez dans la boulangerie. Ça sent bon le pain chaud. La boulangère vous regarde." 
-    },
-    { 
-        id: 'cafe', 
-        icon: "☕", 
-        title: "The Café", 
-        desc: "Order a drink", 
-        goal: "Order a coffee and ask for the bill.", 
-        intro: "Vous êtes assis en terrasse. Le serveur arrive avec son carnet." 
-    },
-    { 
-        id: 'pharmacy', 
-        icon: "💊", 
-        title: "Pharmacy", 
-        desc: "Explain symptoms", 
-        goal: "Describe a headache and ask for medicine.", 
-        intro: "Vous avez mal à la tête. Vous entrez dans la pharmacie. Le pharmacien est là." 
-    },
-    { 
-        id: 'direction', 
-        icon: "🗺️", 
-        title: "Lost in Paris", 
-        desc: "Ask for directions", 
-        goal: "Find the way to the Eiffel Tower.", 
-        intro: "Vous êtes perdu dans une grande rue. Vous voyez une dame promener son chien." 
-    },
-    { 
-        id: 'market', 
-        icon: "🍎", 
-        title: "The Market", 
-        desc: "Bargain prices", 
-        goal: "Buy 1kg of apples and negotiate.", 
-        intro: "Le marché est bruyant. Vous voyez un vendeur de fruits qui crie." 
-    },
-    { 
-        id: 'police', 
-        icon: "👮", 
-        title: "Police Station", 
-        desc: "Report a crime", 
-        goal: "Report a stolen wallet.", 
-        intro: "Vous êtes au commissariat. L'agent de police vous demande ce qui se passe." 
-    }
-];
 // --- HELPER: IRREGULAR VERBS MAP ---
 // Mappt konjugierte Formen auf den Infinitiv (der in deiner Liste steht)
 const IRREGULAR_MAP = {
@@ -390,6 +340,335 @@ const NEWS_SOURCES = [
 // --- NEW COMPONENTS ---
 // --- NEW COMPONENTS ---
 
+// --- GRAMMAR DETAIL COMPONENT (Außerhalb von App, um Re-Render-Probleme zu vermeiden) ---
+const GrammarDetail = ({ topicId, onBack }) => {
+    // Zugriff auf die globale Variable aus grammar_data.js
+    const data = (typeof GRAMMAR_DATA !== 'undefined' && GRAMMAR_DATA[topicId]) 
+                ? GRAMMAR_DATA[topicId] 
+                : null;
+
+    const [activeTab, setActiveTab] = useState('learn'); // 'learn' oder 'practice'
+    
+    // State für Übungen
+    const [currentExIndex, setCurrentExIndex] = useState(0);
+    const [userAnswer, setUserAnswer] = useState('');
+    const [feedback, setFeedback] = useState(null); // 'correct', 'wrong', null
+    const [isComplete, setIsComplete] = useState(false); // Lesson complete state
+    const [shuffledPractice, setShuffledPractice] = useState(null); // Shuffled exercises
+
+    // Prüfen ob Lektion schon mal gemacht wurde (localStorage)
+    const storageKey = `grammar_completed_${topicId}`;
+    const wasCompletedBefore = localStorage.getItem(storageKey) === 'true';
+
+    // Übungen vorbereiten (shuffle wenn schon mal gemacht)
+    const exerciseList = React.useMemo(() => {
+        if (!data) return [];
+        const exercises = [...data.practice];
+        if (wasCompletedBefore) {
+            // Shuffle für Wiederholung
+            for (let i = exercises.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [exercises[i], exercises[j]] = [exercises[j], exercises[i]];
+            }
+        }
+        return exercises;
+    }, [topicId, wasCompletedBefore]);
+
+    // Falls ID nicht gefunden wurde (oder Datei fehlt)
+    if (!data) return (
+        <div className="pt-10 px-6 text-center">
+            <h3 className="font-bold text-slate-800">Content not found</h3>
+            <p className="text-slate-500 text-sm mb-4">ID: {topicId}</p>
+            <button onClick={onBack} className="bg-slate-200 px-4 py-2 rounded-xl text-sm font-bold">Go Back</button>
+        </div>
+    );
+
+    const { meta, learn } = data;
+    const practice = exerciseList; // Verwende die (ggf. geshuffleten) Übungen
+
+    const checkAnswer = (correctAnswer) => {
+        // Einfacher String-Vergleich (ignoriert Groß/Kleinschreibung und Leerzeichen)
+        if (userAnswer.trim().toLowerCase() === correctAnswer.trim().toLowerCase()) {
+            setFeedback('correct');
+        } else {
+            setFeedback('wrong');
+        }
+    };
+
+    const nextExercise = () => {
+        setFeedback(null);
+        setUserAnswer('');
+        if (currentExIndex < practice.length - 1) {
+            setCurrentExIndex(prev => prev + 1);
+        } else {
+            // Lesson complete - in localStorage speichern
+            localStorage.setItem(storageKey, 'true');
+            setIsComplete(true);
+        }
+    };
+
+    // --- LESSON COMPLETE SCREEN ---
+    if (isComplete) {
+        return (
+            <div className="w-full pt-6 pb-24 px-4 h-full flex flex-col items-center justify-center text-center">
+                <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl max-w-sm w-full">
+                    <div className="text-6xl mb-4">🎉</div>
+                    <h2 className="text-2xl font-bold text-slate-800 mb-2">Lesson Complete!</h2>
+                    <p className="text-slate-500 mb-6">You've mastered <span className="font-bold text-indigo-600">{meta.title}</span></p>
+                    
+                    <div className="space-y-3">
+                        <button 
+                            onClick={() => {
+                                setIsComplete(false);
+                                setCurrentExIndex(0);
+                                setUserAnswer('');
+                                setFeedback(null);
+                            }} 
+                            className="w-full bg-indigo-100 text-indigo-700 py-3 rounded-xl font-bold hover:bg-indigo-200 transition-colors"
+                        >
+                            🔄 Practice Again
+                        </button>
+                        <button 
+                            onClick={onBack} 
+                            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-colors"
+                        >
+                            ✓ Done
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="w-full pt-6 pb-24 px-1 h-full flex flex-col">
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-4 px-1">
+                <button onClick={onBack} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                    <ArrowLeft size={24} />
+                </button>
+                <div className="flex-1">
+                    <h2 className="text-xl font-bold text-slate-800 leading-tight">{meta.title}</h2>
+                    <p className="text-xs text-slate-400">{meta.tags.join(' • ')}</p>
+                </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="bg-slate-200 p-1 rounded-2xl flex mb-6 mx-1 shrink-0">
+                <button onClick={() => setActiveTab('learn')} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'learn' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>
+                    📖 Learn
+                </button>
+                <button onClick={() => setActiveTab('practice')} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'practice' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>
+                    🏋️ Practice
+                </button>
+            </div>
+
+            {/* --- TAB: LEARN --- */}
+            {activeTab === 'learn' && (
+                <div className="flex-1 overflow-y-auto px-1 space-y-6">
+                    {/* Cheat Sheet */}
+                    {learn.cheat_sheet && (
+                        <div className="bg-amber-50 p-5 rounded-3xl border border-amber-100 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-3 opacity-10"><Zap size={40} className="text-amber-600"/></div>
+                            <h3 className="font-bold text-amber-800 text-sm uppercase tracking-wider mb-2">Cheat Sheet</h3>
+                            <p className="text-amber-900 font-medium mb-3 leading-relaxed">{learn.cheat_sheet.summary}</p>
+                            <div className="bg-white/60 p-3 rounded-xl text-sm text-amber-800 font-bold border border-amber-100/50">
+                                {learn.cheat_sheet.key_rule}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Explanation Content */}
+                    <div className="space-y-4">
+                        {learn.explanation.map((block, idx) => {
+                            if (block.type === 'text') return <p key={idx} className="text-slate-600 leading-relaxed text-lg">{block.content}</p>;
+                            
+                            if (block.type === 'warning') return (
+                                <div key={idx} className="bg-rose-50 p-4 rounded-2xl border border-rose-100 flex gap-3">
+                                    <AlertCircle size={24} className="text-rose-500 shrink-0"/>
+                                    <div>
+                                        {block.title && <div className="font-bold text-rose-700 text-sm mb-1">{block.title}</div>}
+                                        <div className="text-rose-800 text-sm">{block.content}</div>
+                                    </div>
+                                </div>
+                            );
+
+                            if (block.type === 'table') return (
+                                <div key={idx} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                                    <table className="w-full text-sm text-left">
+                                        <thead className="bg-slate-50 text-slate-500 font-bold uppercase text-xs">
+                                            <tr>{block.headers.map((h, i) => <th key={i} className="px-4 py-3">{h}</th>)}</tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-100">
+                                            {block.rows.map((row, rIdx) => (
+                                                <tr key={rIdx}>
+                                                    {row.map((cell, cIdx) => (
+                                                        <td key={cIdx} className={`px-4 py-3 ${cIdx === 0 ? 'font-bold text-slate-400 bg-slate-50/50' : 'text-slate-700'}`}>{cell}</td>
+                                                    ))}
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            );
+                            return null;
+                        })}
+                    </div>
+                </div>
+            )}
+
+            {/* --- TAB: PRACTICE --- */}
+            {activeTab === 'practice' && (
+                <div className="flex-1 flex flex-col px-1">
+                    {practice.length === 0 ? (
+                        <div className="text-center p-10 text-slate-400">Exercises coming soon.</div>
+                    ) : (
+                        <>
+                            {/* Progress Bar */}
+                            <div className="mb-6">
+                                <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                    <span>Question {currentExIndex + 1}</span>
+                                    <span>{practice.length} Total</span>
+                                </div>
+                                <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                    <div className="bg-indigo-500 h-full transition-all duration-500" style={{width: `${((currentExIndex + 1) / practice.length) * 100}%`}}></div>
+                                </div>
+                            </div>
+
+                            {/* Card */}
+                            <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg flex-1 flex flex-col justify-center items-center relative overflow-hidden">
+                                {(() => {
+                                    const ex = practice[currentExIndex];
+                                    
+                                    // --- INPUT TYPE ---
+                                    if (ex.type === 'input' || ex.type === 'cloze') {
+                                        const parts = ex.question.split('___');
+                                        return (
+                                            <div className="w-full text-center space-y-6 mb-20">
+                                                <h3 className="text-2xl font-medium text-slate-700 leading-relaxed">
+                                                    {parts[0]}
+                                                    <span className={`inline-block border-b-2 font-bold px-2 mx-1 min-w-[80px] ${feedback === 'correct' ? 'text-green-600 border-green-500' : feedback === 'wrong' ? 'text-red-600 border-red-500' : 'text-indigo-600 border-indigo-300'}`}>
+                                                        {userAnswer || "?"}
+                                                    </span>
+                                                    {parts[1]}
+                                                </h3>
+                                                {ex.hint && <p className="text-slate-400 text-sm italic bg-slate-50 inline-block px-3 py-1 rounded-lg">💡 {ex.hint}</p>}
+                                                
+                                                {!feedback && (
+                                                    <input 
+                                                        type="text" 
+                                                        value={userAnswer}
+                                                        onChange={(e) => setUserAnswer(e.target.value)}
+                                                        onKeyDown={(e) => e.stopPropagation()}
+                                                        autoComplete="off"
+                                                        autoFocus
+                                                        placeholder="Type here..." 
+                                                        className="w-full p-4 bg-slate-50 rounded-xl text-center text-lg border-2 border-slate-200 focus:border-indigo-500 focus:outline-none"
+                                                    />
+                                                )}
+                                            </div>
+                                        );
+                                    } 
+                                    
+                                    // --- CHOICE TYPE ---
+                                    if (ex.type === 'choice') {
+                                        return (
+                                            <div className="w-full space-y-6">
+                                                <h3 className="text-xl font-bold text-slate-800 text-center mb-6">{ex.question}</h3>
+                                                {ex.hint && <div className="text-center mb-4"><p className="text-slate-400 text-sm italic bg-slate-50 inline-block px-3 py-1 rounded-lg">💡 {ex.hint}</p></div>}
+                                                <div className="space-y-3">
+                                                    {ex.options.map((opt, idx) => (
+                                                        <button 
+                                                            key={idx}
+                                                            disabled={feedback !== null}
+                                                            onClick={() => {
+                                                                setUserAnswer(opt);
+                                                                if(idx === ex.correct) setFeedback('correct');
+                                                                else setFeedback('wrong');
+                                                            }}
+                                                            className={`w-full p-4 rounded-xl font-bold border transition-all text-left flex justify-between items-center ${
+                                                                feedback && idx === ex.correct ? 'bg-green-100 border-green-200 text-green-700' :
+                                                                feedback === 'wrong' && userAnswer === opt ? 'bg-red-100 border-red-200 text-red-700' :
+                                                                'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                                                            }`}
+                                                        >
+                                                            {opt}
+                                                            {feedback && idx === ex.correct && <Check size={20}/>}
+                                                            {feedback === 'wrong' && userAnswer === opt && <X size={20}/>}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        );
+                                    }
+                                    
+                                    // --- SORT TYPE ---
+                                    if (ex.type === 'sort') {
+                                        return (
+                                            <div className="w-full text-center mb-20">
+                                                <h3 className="text-lg font-bold text-slate-400 uppercase tracking-wider mb-4">{ex.question}</h3>
+                                                <div className="flex flex-wrap gap-2 justify-center mb-8 min-h-[50px]">
+                                                    {/* User Input Area */}
+                                                    {userAnswer.split(' ').filter(Boolean).map((word, i) => (
+                                                        <button key={i} onClick={() => setUserAnswer(userAnswer.replace(word + ' ', ''))} className="bg-indigo-100 text-indigo-700 px-3 py-2 rounded-lg font-bold shadow-sm">{word}</button>
+                                                    ))}
+                                                </div>
+                                                <div className="flex flex-wrap gap-2 justify-center pb-4">
+                                                    {/* Source Blocks */}
+                                                    {ex.blocks.map((block, i) => (
+                                                        <button 
+                                                            key={i} 
+                                                            disabled={userAnswer.includes(block)}
+                                                            onClick={() => setUserAnswer(prev => prev + block + ' ')}
+                                                            className={`px-3 py-2 rounded-lg font-bold border shadow-sm transition-all ${userAnswer.includes(block) ? 'opacity-0' : 'bg-white border-slate-200 text-slate-700'}`}
+                                                        >
+                                                            {block}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                })()}
+
+                                {/* FEEDBACK ACTIONS */}
+                                {feedback === 'correct' && (
+                                    <div className="absolute bottom-0 left-0 w-full p-4 bg-green-50 border-t border-green-100">
+                                        <button onClick={nextExercise} className="w-full bg-green-500 text-white py-3 rounded-xl font-bold shadow-lg shadow-green-200">Next Question</button>
+                                    </div>
+                                )}
+                                
+                                {feedback === 'wrong' && (
+                                    <div className="absolute bottom-0 left-0 w-full p-4 bg-red-50 border-t border-red-100 flex items-center justify-between px-6">
+                                        <span className="text-red-600 font-bold">Wrong! Try again.</span>
+                                        <button onClick={() => { setFeedback(null); setUserAnswer(''); }} className="bg-red-200 text-red-700 px-4 py-2 rounded-lg font-bold text-sm">Retry</button>
+                                    </div>
+                                )}
+
+                                {/* CHECK BUTTON (Für Input/Sort) */}
+                                {!feedback && (practice[currentExIndex].type === 'input' || practice[currentExIndex].type === 'sort') && (
+                                    <div className="absolute bottom-0 left-0 w-full p-4 bg-white border-t border-slate-100">
+                                        <button 
+                                            onClick={() => {
+                                                const ex = practice[currentExIndex];
+                                                const correct = ex.type === 'sort' ? ex.correct_order.join(' ') : ex.answer;
+                                                checkAnswer(correct + (ex.type === 'sort' ? ' ' : '')); // Hack für Leerzeichen beim Sort
+                                            }} 
+                                            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold shadow-lg active:scale-95 transition-transform"
+                                        >
+                                            Check Answer
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+};
+
 function App() {
     // --- STATE MANAGEMENT ---
     const [view, setView] = useState('home'); 
@@ -461,7 +740,8 @@ function App() {
     const [jokeRevealed, setJokeRevealed] = useState(false);
     // Audio & Voices (WICHTIG!)
     // ... oben in function App() ...
-    
+    // ... deine anderen States ...
+    const [selectedGrammarId, setSelectedGrammarId] = useState(null); // <--- NEU
     const [questionTranslation, setQuestionTranslation] = useState(null); // <--- NEU: Für die Frage
     // ...
     const [seenMemeIds, setSeenMemeIds] = useState(() => {
@@ -572,8 +852,6 @@ function App() {
     }, []);
 
     // --- HEALTH CHECK (Beim Start) ---
- // --- 1. DIE FUNKTION (Muss eigenständig sein!) ---
-    
     const DailyEmailTask = ({ level, onComplete }) => {
         // This mini-card now uses the shared dailyWriterMission from App-level state
         const [step, setStep] = useState('briefing'); // briefing, writing, result
@@ -755,6 +1033,40 @@ function App() {
             ]);
         } finally {
             setLoadingMemes(false);
+        }
+    };
+
+    // MEME HANDLER FUNKTIONEN
+    const handleNextMeme = () => {
+        if (memesData.length <= 1) return;
+        
+        // Markiere das aktuelle Meme als "gesehen"
+        const currentMeme = memesData[0];
+        if (currentMeme && !seenMemeIds.includes(currentMeme.id)) {
+            setSeenMemeIds(prev => [...prev, currentMeme.id]);
+        }
+        
+        // Zähle den täglichen Counter hoch
+        const newCount = dailyMemeCount + 1;
+        setDailyMemeCount(newCount);
+        localStorage.setItem('vocabApp_dailyMemeCount', String(newCount));
+        
+        // Entferne das erste Meme aus der Liste (shift)
+        setMemesData(prev => prev.slice(1));
+    };
+
+    const handleSaveMeme = (meme) => {
+        const alreadySaved = savedMemes.find(m => m.id === meme.id);
+        if (alreadySaved) {
+            // Entfernen wenn schon gespeichert
+            const updated = savedMemes.filter(m => m.id !== meme.id);
+            setSavedMemes(updated);
+            localStorage.setItem('vocabApp_savedMemes', JSON.stringify(updated));
+        } else {
+            // Hinzufügen
+            const updated = [...savedMemes, meme];
+            setSavedMemes(updated);
+            localStorage.setItem('vocabApp_savedMemes', JSON.stringify(updated));
         }
     };
 
@@ -2601,7 +2913,7 @@ function App() {
         };
 
         return (
-            <div className="space-y-6 pt-6 pb-24 px-1">
+            <div className="space-y-6 animate-in fade-in duration-500 pt-6 pb-24 px-1">
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-4 px-1">
                      <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Dumbbell size={24} /></div>
@@ -2612,10 +2924,10 @@ function App() {
                 <div className="mb-2">
                       <button onClick={() => setView('daily-writer')} className="w-full bg-gradient-to-br from-indigo-600 to-violet-600 p-[2px] rounded-3xl shadow-lg shadow-indigo-200 active:scale-[0.98] transition-all group">
                         <div className="bg-white rounded-[1.4rem] p-5 flex items-center justify-between h-full relative overflow-hidden">
-                            <div className="absolute right-0 top-0 w-32 h-32 bg-indigo-50 rounded-full -mr-10 -mt-10 opacity-50 group-hover:scale-150 transition-transform"></div>
+                            <div className="absolute right-0 top-0 w-32 h-32 bg-indigo-50 rounded-full -mr-10 -mt-10 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
                             
                             <div className="flex items-center gap-5 relative z-10">
-                                <div className="bg-indigo-100 w-14 h-14 flex items-center justify-center rounded-2xl text-indigo-600 shadow-sm group-hover:rotate-6 transition-transform">
+                                <div className="bg-indigo-100 w-14 h-14 flex items-center justify-center rounded-2xl text-indigo-600 shadow-sm group-hover:rotate-6 transition-transform duration-300">
                                     <PenTool size={28}/>
                                 </div>
                                 <div className="text-left">
@@ -2630,14 +2942,14 @@ function App() {
                       </button>
                 </div>
 
-                {/* 1. GRAMMAR (Updated to Swift Data Structure) */}
+                {/* 1. GRAMMAR (Updated Navigation) */}
                 <div>
                     <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Grammar Reference</h3>
                     <div className="space-y-3">
                         {GRAMMAR_MODULES.map((module) => {
                             const isOpen = expandedCategory === module.id;
                             return (
-                                <div key={module.id} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden transition-all">
+                                <div key={module.id} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300">
                                     {/* Main Card */}
                                     <button onClick={() => toggleCategory(module.id)} className="w-full p-5 flex items-center gap-4 text-left active:bg-slate-50 transition-colors">
                                         <div className={`w-12 h-12 flex items-center justify-center rounded-2xl ${module.color}`}>{module.icon}</div>
@@ -2645,14 +2957,22 @@ function App() {
                                             <h4 className="font-bold text-slate-800 text-lg">{module.title}</h4>
                                             <p className="text-xs text-slate-400">{module.sub}</p>
                                         </div>
-                                        <ChevronRight size={20} className={`text-slate-300 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
+                                        <ChevronRight size={20} className={`text-slate-300 transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`} />
                                     </button>
                                     
                                     {/* Sub-List (Accordion) */}
                                     {isOpen && (
-                                        <div className="bg-slate-50 border-t border-slate-100">
+                                        <div className="bg-slate-50 border-t border-slate-100 animate-in slide-in-from-top-2 fade-in duration-200">
                                             {module.topics.map((t) => (
-                                                <button key={t.id} onClick={() => alert(`Opening Grammar Sheet: ${t.title}`)} className="w-full p-4 pl-[5rem] text-left hover:bg-slate-100 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0 flex justify-between items-center group">
+                                                <button 
+                                                    key={t.id} 
+                                                    // HIER IST DIE NAVIGATIONS-LOGIK:
+                                                    onClick={() => { 
+                                                        setSelectedGrammarId(t.id); 
+                                                        setView('grammar-detail'); 
+                                                    }} 
+                                                    className="w-full p-4 pl-[5rem] text-left hover:bg-slate-100 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0 flex justify-between items-center group"
+                                                >
                                                     <div>
                                                         <div className="text-sm font-bold text-slate-700 group-hover:text-indigo-700">{t.title}</div>
                                                         <div className="text-xs text-slate-400 group-hover:text-indigo-400/80 font-medium">{t.desc}</div>
@@ -4398,6 +4718,8 @@ function App() {
                 return renderTopicHub();
             case 'chat': // <--- Das müssen wir im Skills-Tab verlinken
                 return renderChat();    
+            case 'grammar-detail': // <--- NEU
+                return <GrammarDetail topicId={selectedGrammarId} onBack={() => setView('skills')} />;    
 
             default: return renderHome();
         }
