@@ -904,6 +904,76 @@ function App() {
     // --- ARTICLE READER LOGIC (Optimiert) ---
     // --- ARTICLE READER LOGIC (Verbesserter Cleaner) ---
     // --- ARTICLE READER LOGIC (Aggressiver Cleaner) ---
+    // --- IN FUNCTION APP (Verschoben aus renderExplore) ---
+
+    // 1. NEWS FETCHER
+    const fetchNews = async (sourceOverride = null) => {
+        const source = sourceOverride || currentNewsSource;
+        setLoadingContent(true);
+        try {
+            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.rss)}`;
+            const res = await fetch(apiUrl);
+            const data = await res.json();
+            
+            if (data.status === 'ok' && data.items) {
+                setNewsData(data.items.slice(0, 15));
+            } else {
+                throw new Error("Feed error");
+            }
+        } catch (e) { 
+            console.error(e);
+            setNewsData([]); 
+        } finally {
+            setLoadingContent(false);
+        }
+    };
+
+    // 2. JOKE HELPERS
+    const loadNextJoke = () => {
+        setJokeRevealed(false); 
+        setQuestionTranslation(null);
+        setLoadingContent(true);
+        setTimeout(() => {
+            // Verhindert, dass der gleiche Witz zweimal hintereinander kommt
+            let randomJoke;
+            do {
+                randomJoke = JOKE_DB[Math.floor(Math.random() * JOKE_DB.length)];
+            } while (currentJoke && randomJoke.q === currentJoke.q && JOKE_DB.length > 1);
+
+            setCurrentJoke(randomJoke);
+            setLoadingContent(false);
+        }, 300);
+    };
+
+    const translateQuestion = async () => {
+        if (!currentJoke) return;
+        try {
+            const res = await fetch('/api/translate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: currentJoke.q, targetLang: 'en' })
+            });
+            const data = await res.json();
+            setQuestionTranslation(data.translation);
+        } catch (e) {
+            setQuestionTranslation("Translation unavailable offline");
+        }
+    };
+    // --- SICHERHEITS-EFFECT (Verhindert API Loops) ---
+    useEffect(() => {
+        if (view === 'explore') {
+            // Nur laden, wenn wir im Artikel-Modus sind UND die Liste leer ist UND wir nicht schon laden
+            if (exploreMode === 'articles' && newsData.length === 0 && !loadingContent) {
+                fetchNews();
+            }
+            // Nur laden, wenn wir im Witz-Modus sind UND kein Witz da ist UND wir nicht schon laden
+            if (exploreMode === 'jokes' && !currentJoke && !loadingContent) {
+                loadNextJoke();
+            }
+            // Memes Logic ist bereits separat, das ist ok.
+        }
+    }, [view, exploreMode]); // Feuert nur, wenn man den Tab wechselt
+    
     const openArticle = async (url) => {
         setView('reader');
         setReaderMode('select');
@@ -2192,160 +2262,14 @@ function App() {
         );
     };
     const renderExplore = () => {
-        // --- STATE (Muss ganz oben stehen!) ---
- 
-
-        // --- DATA FETCHERS ---
-        // 1. NEWS FETCHER (Dynamisch)
-        const fetchNews = async (sourceOverride = null) => {
-            // Wenn wir die Funktion aufrufen, können wir optional eine neue Quelle erzwingen
-            const source = sourceOverride || currentNewsSource;
-            
-            setLoadingContent(true);
-            try {
-                // RSS2JSON API nutzen
-                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.rss)}`;
-                const res = await fetch(apiUrl);
-                const data = await res.json();
-                
-                if (data.status === 'ok' && data.items) {
-                    setNewsData(data.items.slice(0, 15));
-                } else {
-                    throw new Error("Feed error");
-                }
-            } catch (e) { 
-                console.error(e);
-                setNewsData([]); // Leere Liste bei Fehler
-            }
-            setLoadingContent(false);
-        };
-
-        const fetchMemes = async () => {
-            if (memesData.length > 0) return;
-            
-            setLoadingContent(true);
-            console.log("🚀 Starting Meme Fetch..."); // Debug 1
-
-            // Fallbacks definieren
-            const fallbackMemes = [
-                { id: "f1", title: "Le pain", url: "https://i.kym-cdn.com/photos/images/newsfeed/001/535/068/29d.jpg", ups: 1200 },
-                { id: "f2", title: "Quand tu ne comprends rien", url: "https://i.imgflip.com/1ur9b0.jpg", ups: 850 },
-                { id: "f3", title: "French Grammar be like", url: "https://preview.redd.it/french-grammar-be-like-v0-7t84b5345d8a1.jpg?auto=webp&s=59447563945698562103945698", ups: 400 }
-            ];
-
-            try {
-                // Neuer, schnellerer Proxy
-                // Wir nutzen 'hot' statt 'top', da gibt es meist mehr Bilder
-                const targetUrl = "https://www.reddit.com/r/FrenchMemes/hot.json?limit=50";
-                const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(targetUrl);
-
-                console.log("🌍 Fetching URL:", proxyUrl); // Debug 2
-
-                const res = await fetch(proxyUrl);
-                
-                if (!res.ok) {
-                    throw new Error(`HTTP Error: ${res.status}`);
-                }
-
-                const data = await res.json();
-                console.log("📦 Raw Data received:", data); // Debug 3: Was kommt wirklich an?
-
-                const freshMemes = data.data.children
-                    .map(c => c.data)
-                    .filter(post => 
-                        post.url && 
-                        // Wir prüfen auf gängige Bild-Endungen
-                        (post.url.match(/\.(jpeg|jpg|gif|png)$/) != null) &&
-                        !post.over_18 &&
-                        !seenMemeIds.includes(post.id) 
-                    )
-                    .map(post => ({
-                        id: post.id,
-                        title: post.title,
-                        url: post.url,
-                        ups: post.ups
-                    }));
-
-                console.log("✅ Filtered Memes:", freshMemes.length); // Debug 4
-
-                if (freshMemes.length > 0) {
-                    setMemesData(freshMemes);
-                } else {
-                    console.warn("⚠️ No memes found after filter.");
-                    setMemesData(fallbackMemes.filter(m => !seenMemeIds.includes(m.id)));
-                }
-
-            } catch (e) { 
-                console.error("❌ MEME ERROR DETAILS:", e); // Debug 5: Der echte Fehler
-                setMemesData(fallbackMemes.filter(m => !seenMemeIds.includes(m.id)));
-            } finally {
-                setLoadingContent(false);
-            }
-        };
-
-    const handleNextMeme = () => {
-        // 1. Das aktuelle Meme als "Gesehen" markieren
-        const currentMeme = memesData[0]; // Wir zeigen immer das erste der Liste
-        if (currentMeme) {
-            setSeenMemeIds(prev => {
-                const updated = [...prev, currentMeme.id];
-                localStorage.setItem('vocabApp_seenMemes', JSON.stringify(updated));
-                return updated;
-            });
-            
-            // Daily Count erhöhen
-            const newCount = dailyMemeCount + 1;
-            setDailyMemeCount(newCount);
-            localStorage.setItem('vocabApp_dailyMemeCount', newCount.toString());
-        }
-        
-        // 2. Das Meme aus der aktuellen Ansichts-Liste entfernen
-        setMemesData(prev => prev.slice(1));
-    };
-    
-    const handleSaveMeme = (meme) => {
-        const isSaved = savedMemes.find(m => m.id === meme.id);
-        if (isSaved) {
-            // Entfernen wenn bereits gespeichert
-            const updated = savedMemes.filter(m => m.id !== meme.id);
-            setSavedMemes(updated);
-            localStorage.setItem('vocabApp_savedMemes', JSON.stringify(updated));
-        } else {
-            // Hinzufügen wenn nicht gespeichert
-            const updated = [...savedMemes, meme];
-            setSavedMemes(updated);
-            localStorage.setItem('vocabApp_savedMemes', JSON.stringify(updated));
-        }
-    };
-
-    const handleResetMemes = () => {
-        if(window.confirm("Watch all memes again?")) {
-            setSeenMemeIds([]); // History löschen
-            setMemesData([]);   // Daten leeren
-            setTimeout(fetchMemes, 100); // Neu laden triggern
-        }
-    };
-
-        const nextJoke = () => {
-            // Reset States
-            setShowPunchline(false);
-            setShowTranslation(false);
-            setLoadingContent(true);
-            
-            setTimeout(() => {
-                const randomJoke = JOKE_DB[Math.floor(Math.random() * JOKE_DB.length)];
-                setCurrentJoke(randomJoke);
-                setLoadingContent(false);
-            }, 300);
-        };
-
-        // --- HELPER ---
+        // --- HELPER (Reine Berechnung, daher hier ok) ---
         const getCategoryProgress = (ids) => {
             if (!ids || ids.length === 0) return 0;
             const safeVocab = vocabulary || [];
             const learnedCount = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
             return Math.round((learnedCount / ids.length) * 100);
         };
+        
         const getCategoryStats = (ids) => {
             if (!ids || ids.length === 0) return "0/0";
             const safeVocab = vocabulary || [];
@@ -2354,14 +2278,10 @@ function App() {
         };
 
         // =========================================
-        // ANSICHTEN
+        // 1. ARTICLES VIEW (News Kiosk)
         // =========================================
-
-        // 1. ARTICLES VIEW (Updated)
-        // 1. ARTICLES VIEW (Multi-Source News Kiosk)
         if (exploreMode === 'articles') {
-            // Initial laden, wenn leer
-            if (newsData.length === 0 && !loadingContent) fetchNews();
+            // HINWEIS: Automatisches fetchNews() wurde hier entfernt (jetzt im useEffect in App)
 
             return (
                 <div className="w-full pt-6 pb-24 px-1 h-full">
@@ -2370,7 +2290,7 @@ function App() {
                         <h2 className="text-2xl font-bold text-slate-800">News Kiosk</h2>
                     </div>
 
-                    {/* QUELLEN AUSWAHL (Horizontal Scroll) */}
+                    {/* QUELLEN AUSWAHL */}
                     <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide mb-2">
                         {NEWS_SOURCES.map(source => {
                             const isActive = currentNewsSource.id === source.id;
@@ -2379,8 +2299,8 @@ function App() {
                                     key={source.id}
                                     onClick={() => {
                                         setCurrentNewsSource(source);
-                                        setNewsData([]); // Liste leeren für Ladeeffekt
-                                        fetchNews(source); // Sofort neu laden
+                                        setNewsData([]); 
+                                        fetchNews(source); // Manueller Aufruf beim Klick ist OK!
                                     }}
                                     className={`flex flex-col items-start px-4 py-2 rounded-xl border transition-all min-w-[120px] ${
                                         isActive 
@@ -2428,14 +2348,13 @@ function App() {
             );
         }
 
-        // 2. MEMES VIEW (Nur Anzeige - Logik ist jetzt in App)
+        // =========================================
+        // 2. MEMES VIEW
+        // =========================================
         if (exploreMode === 'memes') {
-            // Initial laden wenn leer
-            if (memesData.length === 0 && !loadingContent && dailyMemeCount < 20) {
-                fetchMemes();
-            }
+            // HINWEIS: fetchMemes() Logik wurde entfernt (jetzt im useEffect in App)
 
-            const currentMeme = memesData[0]; // Zeige immer das erste Meme
+            const currentMeme = memesData[0]; 
             const dailyLimitReached = dailyMemeCount >= 20;
             const allMemesSeenToday = memesData.length === 0 && dailyLimitReached;
             const isSaved = currentMeme && savedMemes.find(m => m.id === currentMeme.id);
@@ -2486,7 +2405,6 @@ function App() {
                         ) : <div className="text-slate-400">No memes found.</div>}
                     </div>
 
-                    {/* Next Button */}
                     {!loadingContent && currentMeme && !dailyLimitReached && (
                         <button 
                             onClick={handleNextMeme} 
@@ -2499,40 +2417,12 @@ function App() {
             );
         }
 
-        // 3. JOKES VIEW (Update: Smiley weg, Frage-Übersetzung)
+        // =========================================
+        // 3. JOKES VIEW
+        // =========================================
         if (exploreMode === 'jokes') {
-            
-            // Helper zum Laden (muss hier definiert sein, um Zugriff auf States zu haben)
-            const loadNextJoke = () => {
-                setJokeRevealed(false); 
-                setQuestionTranslation(null); // Reset Übersetzung
-                setLoadingContent(true);
-                setTimeout(() => {
-                    const randomJoke = JOKE_DB[Math.floor(Math.random() * JOKE_DB.length)];
-                    setCurrentJoke(randomJoke);
-                    setLoadingContent(false);
-                }, 300);
-            };
-
-            // Helper für Frage-Übersetzung
-            const translateQuestion = async () => {
-                if (!currentJoke) return;
-                try {
-                    // Wir nutzen deine existierende Translator API
-                    const res = await fetch('/api/translate', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ text: currentJoke.q, targetLang: 'en' })
-                    });
-                    const data = await res.json();
-                    setQuestionTranslation(data.translation);
-                } catch (e) {
-                    setQuestionTranslation("Translation unavailable offline");
-                }
-            };
-
-            // Initiale Ladung
-            if (!currentJoke && !loadingContent) loadNextJoke();
+            // HINWEIS: loadNextJoke() und translateQuestion() sind jetzt in App definiert.
+            // Automatischer Aufruf beim Rendern wurde entfernt.
 
             return (
                 <div className="w-full pt-6 pb-24 px-1 h-full flex flex-col">
@@ -2548,17 +2438,12 @@ function App() {
                             <div className="w-full bg-white p-8 rounded-[2.5rem] shadow-lg border border-slate-100 text-center relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 to-orange-400"></div>
                                 
-                                {/* Smiley ist hier GELÖSCHT */}
-
                                 <div className="mb-6">
                                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Question</span>
-                                    
-                                    {/* Die Frage */}
                                     <h3 className="text-xl font-bold text-slate-800 mt-2 mb-2 leading-snug font-serif italic">
                                         "{currentJoke.q}"
                                     </h3>
 
-                                    {/* Frage übersetzen Button/Text */}
                                     {questionTranslation ? (
                                         <p className="text-xs text-indigo-500 font-medium bg-indigo-50 py-1 px-2 rounded-lg inline-block">
                                             🇬🇧 {questionTranslation}
@@ -2574,7 +2459,6 @@ function App() {
                                     </div>
                                 </div>
 
-                                {/* ANTWORT BEREICH */}
                                 {showPunchline ? (
                                     <div className="border-t border-slate-100 pt-6">
                                         <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Punchline</span>
@@ -2586,7 +2470,6 @@ function App() {
                                              <button onClick={() => speak(currentJoke.a)} className="p-3 bg-indigo-50 rounded-full text-indigo-600 hover:bg-indigo-100"><Volume2 size={24}/></button>
                                         </div>
 
-                                        {/* Antwort Übersetzung */}
                                         {showTranslation ? (
                                              <p className="text-slate-400 text-sm bg-slate-50 p-3 rounded-xl">
                                                 🇬🇧 {currentJoke.en}
@@ -2616,7 +2499,9 @@ function App() {
             );
         }
 
-        // 4. LISTEN (Topics & Grammar)
+        // =========================================
+        // 4. TOPICS & GRAMMAR (Lists)
+        // =========================================
         if (exploreMode === 'grammar' || exploreMode === 'topics') {
             const activeCollection = exploreMode === 'grammar' ? COLLECTIONS.grammar : COLLECTIONS.topics;
             const pageTitle = exploreMode === 'grammar' ? "Vocab Sets" : "Real Life Topics";
@@ -2659,7 +2544,9 @@ function App() {
             );
         }
 
-        // --- HAUPTMENÜ (VERTICAL STACK - NO GRID) ---
+        // =========================================
+        // 5. MAIN MENU (Explore Start)
+        // =========================================
         if (exploreMode === 'main') {
             return (
                 <div className="space-y-4 pt-6 pb-24 px-1">
@@ -2668,7 +2555,7 @@ function App() {
                         <h2 className="text-2xl font-bold text-slate-800">Explore</h2>
                     </div>
 
-                    {/* 1. READING ROOM (Hero) */}
+                    {/* 1. READING ROOM */}
                     <button onClick={() => setView('reader')} className="w-full bg-amber-50 border border-amber-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
                         <div className="flex items-center gap-4 z-10">
                             <div className="bg-white p-3 rounded-2xl text-amber-500 shadow-sm"><BookCheck size={24} /></div>
@@ -2678,7 +2565,7 @@ function App() {
                         <BookOpen size={80} className="absolute -right-4 -bottom-6 text-amber-100/50 rotate-12"/>
                     </button>
 
-                    {/* 2. CULTURE FEED (News) */}
+                    {/* 2. CULTURE FEED */}
                     <button onClick={() => setExploreMode('articles')} className="w-full bg-rose-50 border border-rose-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
                          <div className="flex items-center gap-4 z-10">
                             <div className="bg-white p-3 rounded-2xl text-rose-500 shadow-sm"><Newspaper size={24} /></div>
@@ -2696,7 +2583,7 @@ function App() {
                         <ChevronRight size={24} className="text-purple-300 z-10"/>
                     </button>
 
-                    {/* 4. GAMES */}
+                    {/* 4. GAMES (Coming Soon) */}
                     <button className="w-full bg-blue-50 border border-blue-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between opacity-75">
                         <div className="flex items-center gap-4 z-10">
                             <div className="bg-white p-3 rounded-2xl text-blue-500 shadow-sm"><Gamepad2 size={24} /></div>
