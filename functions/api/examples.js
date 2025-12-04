@@ -1,4 +1,6 @@
 // functions/api/examples.js
+import { getGeminiUrl } from './_config.js';
+
 export async function onRequestPost(context) {
   try {
     const { word } = await context.request.json();
@@ -15,7 +17,7 @@ export async function onRequestPost(context) {
     `;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
+      getGeminiUrl(apiKey),
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

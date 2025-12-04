@@ -1,3 +1,5 @@
+import { getGeminiUrl } from './_config.js';
+
 export async function onRequestPost(context) {
   try {
     const { genre, level, weakWords, length } = await context.request.json();
@@ -121,7 +123,7 @@ Constraints for C2:
     `;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
+      getGeminiUrl(apiKey),
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

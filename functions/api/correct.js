@@ -1,3 +1,5 @@
+import { getGeminiUrl } from './_config.js';
+
 export async function onRequest(context) {
   // CORS & GET Handling (Verhindert 405 Fehler)
   if (context.request.method === "OPTIONS") {
@@ -47,7 +49,7 @@ export async function onRequest(context) {
 
     // Wir nutzen das schnelle, neue Modell
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
+      getGeminiUrl(apiKey),
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
