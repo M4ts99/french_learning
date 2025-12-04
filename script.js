@@ -3307,26 +3307,47 @@ function App() {
 
                     {/* VORDERSEITE (Französisch) */}
                     {!isFlipped ? (
-                        <>
-                            <div className="mb-8 text-center w-full">
+                        <div className="flex flex-col items-center justify-center flex-1 w-full">
+                            <div className="text-center w-full flex-1 flex flex-col items-center justify-center">
                                 <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">French</div>
-                                <div className="flex items-center justify-center gap-3">
+                                <div className="flex items-center justify-center gap-3 mb-4">
                                     <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words text-center leading-tight">{word.french}</h2>
                                     <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all shadow-sm shrink-0"><Volume2 size={24} /></button>
                                 </div>
-                                {word.example_fr && <p className="text-slate-500 italic mt-6 text-lg px-4 border-l-2 border-slate-200 pl-4 text-left">"{word.example_fr}"</p>}
+                                {word.example_fr && (
+                                    <div className="flex items-center justify-center gap-2 mt-4 px-4">
+                                        <p className="text-slate-500 italic text-base text-center">"{word.example_fr}"</p>
+                                        <button onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all shrink-0"><Volume2 size={16} /></button>
+                                    </div>
+                                )}
                             </div>
-                            <button onClick={() => setIsFlipped(true)} className="mt-auto bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-200 transition-all flex items-center gap-2 w-full justify-center">
+                            <button onClick={() => setIsFlipped(true)} className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-200 transition-all flex items-center gap-2 w-full justify-center">
                                 <BookOpen size={20} /> Show Translation
                             </button>
-                        </>
+                        </div>
                     ) : (
                         /* RÜCKSEITE (Englisch + AI) */
-                        <div className="w-full flex flex-col items-center w-full h-full">
-                            <div className="text-center mb-6 w-full">
-                                <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
-                                <h3 className="text-3xl font-bold text-indigo-900 mb-2 leading-tight">{word.english || word.german}</h3>
-                                {word.example_en && <p className="text-indigo-400 italic text-sm mt-2 px-4">"{word.example_en}"</p>}
+                        <div className="w-full flex flex-col items-center h-full">
+                            {/* Französisches Wort oben zentriert */}
+                            <div className="text-center mb-3 w-full">
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">French</div>
+                                <div className="flex items-center justify-center gap-2">
+                                    <h2 className="text-3xl font-bold text-slate-800">{word.french}</h2>
+                                    <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-full transition-all"><Volume2 size={20} /></button>
+                                </div>
+                                {word.example_fr && (
+                                    <div className="flex items-center justify-center gap-2 mt-2">
+                                        <p className="text-slate-500 italic text-sm">"{word.example_fr}"</p>
+                                        <button onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }} className="p-1 text-slate-400 hover:text-indigo-600 rounded-full transition-all"><Volume2 size={14} /></button>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            {/* Übersetzung zentriert */}
+                            <div className="text-center mb-4 w-full border-t border-slate-100 pt-3">
+                                <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-1">English</div>
+                                <h3 className="text-2xl font-bold text-indigo-900 leading-tight">{word.english || word.german}</h3>
+                                {word.example_en && <p className="text-indigo-400 italic text-sm mt-2 px-4 text-center">"{word.example_en}"</p>}
                             </div>
 
                             {/* --- AI SECTION --- */}
