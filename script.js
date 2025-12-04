@@ -688,15 +688,13 @@ function App() {
     };
 
     // --- 2. DER EFFEKT (Ruft die Funktion auf) ---
+    // --- 2. DER EFFEKT (Korrigiert: Nur EINMAL beim Start) ---
     useEffect(() => {
-        // Sofort beim Start prüfen
+        // Sofort beim Start einmal prüfen
         checkHealth();
         
-        // Alle 60 Sekunden wiederholen
-        const interval = setInterval(checkHealth, 60000);
-        
-        // Aufräumen wenn App geschlossen wird
-        return () => clearInterval(interval);
+        // WICHTIG: Das Interval wurde entfernt, um API-Quota zu sparen!
+        // Wir prüfen nicht mehr jede Minute.
     }, []);
 
 
