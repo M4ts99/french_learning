@@ -667,10 +667,9 @@ function App() {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 3000);
 
+            // NUR GET-Request - das nutzt KEINE Gemini API!
             const res = await fetch('/api/lookup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ word: 'le' }),
+                method: 'GET',
                 signal: controller.signal
             });
             clearTimeout(timeoutId);
