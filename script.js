@@ -373,6 +373,9 @@ const GrammarDetail = ({ topicId, onBack }) => {
     const [correctAnswer, setCorrectAnswer] = useState(''); // Speichert die richtige Antwort bei Fehler
     const [isComplete, setIsComplete] = useState(false); // Lesson complete state
     const [correctCount, setCorrectCount] = useState(0); // Anzahl richtiger Antworten
+    const [shuffleKey, setShuffleKey] = useState(0); // Trigger für Neu-Shuffle
+    const [hintsUsed, setHintsUsed] = useState(0); // Max 3 Hints pro Session
+    const [showHint, setShowHint] = useState(false); // Hint für aktuelle Frage anzeigen
 
     // Prüfen ob Lektion schon bestanden wurde (localStorage)
     const storageKey = `grammar_passed_${topicId}`;
@@ -395,7 +398,7 @@ const GrammarDetail = ({ topicId, onBack }) => {
             }
         }
         return result.slice(0, 10);
-    }, [topicId, activeTab]); // Re-shuffle wenn Tab wechselt
+    }, [topicId, activeTab, shuffleKey]); // Re-shuffle wenn Tab wechselt oder Neustart
 
     // Falls ID nicht gefunden wurde (oder Datei fehlt)
     if (!data) return (
@@ -425,6 +428,7 @@ const GrammarDetail = ({ topicId, onBack }) => {
         setFeedback(null);
         setUserAnswer('');
         setCorrectAnswer('');
+        setShowHint(false); // Reset hint für nächste Frage
         if (currentExIndex < totalQuestions - 1) {
             setCurrentExIndex(prev => prev + 1);
         } else {
@@ -444,6 +448,9 @@ const GrammarDetail = ({ topicId, onBack }) => {
         setFeedback(null);
         setCorrectCount(0);
         setCorrectAnswer('');
+        setShuffleKey(prev => prev + 1); // Trigger neues Shuffle
+        setHintsUsed(0);
+        setShowHint(false);
     };
 
     // --- LESSON COMPLETE SCREEN ---
@@ -581,7 +588,7 @@ const GrammarDetail = ({ topicId, onBack }) => {
                                 <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
                                     <div className="bg-indigo-500 h-full transition-all duration-500" style={{width: `${((currentExIndex + 1) / totalQuestions) * 100}%`}}></div>
                                 </div>
-                                <p className="text-center text-xs text-slate-400 mt-2">Score 10/10 to pass this lesson</p>
+                                <p className="text-center text-sm text-slate-500 mt-2 font-medium">Score <span className="font-bold text-indigo-600">10/10</span> to pass this lesson</p>
                             </div>
 
                             {/* Card */}
@@ -601,7 +608,20 @@ const GrammarDetail = ({ topicId, onBack }) => {
                                                     </span>
                                                     {parts[1]}
                                                 </h3>
-                                                {ex.hint && <p className="text-slate-400 text-sm italic bg-slate-50 inline-block px-3 py-1 rounded-lg">💡 {ex.hint}</p>}
+                                                {ex.hint && (
+                                                    showHint ? (
+                                                        <p className="text-indigo-600 text-sm italic bg-indigo-50 inline-block px-3 py-1 rounded-lg">💡 {ex.hint}</p>
+                                                    ) : hintsUsed < 3 ? (
+                                                        <button 
+                                                            onClick={() => { setShowHint(true); setHintsUsed(prev => prev + 1); }}
+                                                            className="text-slate-400 text-sm bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-lg transition-colors"
+                                                        >
+                                                            💡 Show Hint ({3 - hintsUsed} left)
+                                                        </button>
+                                                    ) : (
+                                                        <p className="text-slate-300 text-sm italic">No hints remaining</p>
+                                                    )
+                                                )}
                                                 
                                                 {!feedback && (
                                                     <input 
@@ -624,7 +644,22 @@ const GrammarDetail = ({ topicId, onBack }) => {
                                         return (
                                             <div className="w-full space-y-6">
                                                 <h3 className="text-xl font-bold text-slate-800 text-center mb-6">{ex.question}</h3>
-                                                {ex.hint && <div className="text-center mb-4"><p className="text-slate-400 text-sm italic bg-slate-50 inline-block px-3 py-1 rounded-lg">💡 {ex.hint}</p></div>}
+                                                {ex.hint && (
+                                                    <div className="text-center mb-4">
+                                                        {showHint ? (
+                                                            <p className="text-indigo-600 text-sm italic bg-indigo-50 inline-block px-3 py-1 rounded-lg">💡 {ex.hint}</p>
+                                                        ) : hintsUsed < 3 ? (
+                                                            <button 
+                                                                onClick={() => { setShowHint(true); setHintsUsed(prev => prev + 1); }}
+                                                                className="text-slate-400 text-sm bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-lg transition-colors"
+                                                            >
+                                                                💡 Show Hint ({3 - hintsUsed} left)
+                                                            </button>
+                                                        ) : (
+                                                            <p className="text-slate-300 text-sm italic">No hints remaining</p>
+                                                        )}
+                                                    </div>
+                                                )}
                                                 <div className="space-y-3">
                                                     {ex.options.map((opt, idx) => (
                                                         <button 
@@ -850,25 +885,76 @@ function App() {
         return saved ? JSON.parse(saved) : [];
     });
     const [viewingJoke, setViewingJoke] = useState(null); // Aktuell angeschauter Joke
+    const [showJokeModal, setShowJokeModal] = useState(false); // Popup für Joke
     const [collectionsTab, setCollectionsTab] = useState('jokes'); // 'jokes' oder 'memes'
+    
     // --- DAILY WRITER STATES ---
-    const [dailyWriterMission, setDailyWriterMission] = useState(() => {
-        const MISSIONS = [
-            { topic: "Vacation", recipient: "a friend", requirement: "Use 'Passé Composé'", vocab: "la plage", minWords: 50, timeMinutes: 10 },
-            { topic: "Work", recipient: "your boss", requirement: "Be very polite (Conditionnel)", vocab: "réunion", minWords: 80, timeMinutes: 12 },
-            { topic: "Invitation", recipient: "your neighbors", requirement: "Use a question", vocab: "dîner", minWords: 40, timeMinutes: 8 },
-            { topic: "Complaint", recipient: "a hotel", requirement: "Explain a problem", vocab: "bruit", minWords: 60, timeMinutes: 10 },
-            { topic: "Shopping", recipient: "a shop assistant", requirement: "Ask for price", vocab: "combien", minWords: 30, timeMinutes: 5 },
-            { topic: "Doctor", recipient: "a receptionist", requirement: "Describe symptoms", vocab: "mal", minWords: 40, timeMinutes: 8 },
-            { topic: "Restaurant", recipient: "a waiter", requirement: "Order food", vocab: "menu", minWords: 35, timeMinutes: 6 },
-            { topic: "Directions", recipient: "a stranger", requirement: "Ask for way", vocab: "où", minWords: 30, timeMinutes: 5 },
-            { topic: "Hobby", recipient: "a new friend", requirement: "Describe what you like", vocab: "aimer", minWords: 50, timeMinutes: 10 },
-            { topic: "Weather", recipient: "a colleague", requirement: "Talk about rain", vocab: "pleuvoir", minWords: 40, timeMinutes: 7 },
-        ];
-        return MISSIONS[Math.floor(Math.random() * MISSIONS.length)];
-    });
+    const [dailyWriterMission, setDailyWriterMission] = useState(null);
+    const [dailyWriterLoading, setDailyWriterLoading] = useState(false);
     const [dailyWriterText, setDailyWriterText] = useState('');
     const [dailyWriterScore, setDailyWriterScore] = useState(null);
+    const [completedMiniTasks, setCompletedMiniTasks] = useState([]);
+    
+    // Helper: Find next grammar topic to learn
+    const getNextGrammarTopic = () => {
+        for (const module of GRAMMAR_MODULES) {
+            for (const topic of module.topics) {
+                if (localStorage.getItem(`grammar_passed_${topic.id}`) !== 'true') {
+                    return { topic, module };
+                }
+            }
+        }
+        return null; // All completed
+    };
+    
+    // Load Daily Writer Mission from API
+    const loadDailyWriterMission = async () => {
+        setDailyWriterLoading(true);
+        try {
+            const nextGrammar = getNextGrammarTopic();
+            const res = await fetch('/api/daily-writer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    grammarTopic: nextGrammar?.topic?.id || null,
+                    grammarTitle: nextGrammar?.topic?.title || 'General French',
+                    level: nextGrammar?.module?.id?.toUpperCase() || 'A2'
+                })
+            });
+            
+            if (!res.ok) throw new Error('Failed to load mission');
+            
+            const mission = await res.json();
+            setDailyWriterMission(mission);
+            setCompletedMiniTasks([]);
+            setDailyWriterText('');
+            setDailyWriterScore(null);
+        } catch (err) {
+            console.error('Error loading mission:', err);
+            // Fallback mission
+            setDailyWriterMission({
+                mainTask: "Write an email to a friend about your weekend plans.",
+                topic: "Weekend Plans",
+                recipient: "a friend",
+                type: "email",
+                grammarFocus: "General French",
+                miniTasks: [
+                    "Start with a friendly greeting",
+                    "Mention what you did last weekend (passé composé)",
+                    "Describe your plans for this weekend",
+                    "Ask your friend about their plans",
+                    "End with a warm closing"
+                ],
+                bonusWord: "génial",
+                minWords: 50,
+                timeMinutes: 10,
+                exampleOpener: "Salut ! Comment vas-tu ?"
+            });
+            setCompletedMiniTasks([]);
+        } finally {
+            setDailyWriterLoading(false);
+        }
+    };
     const [showScrollTop, setShowScrollTop] = useState(false); // Scroll-to-Top Button
 
     // --- HEADER TIME STATE ---
@@ -910,88 +996,55 @@ function App() {
 
     // --- HEALTH CHECK (Beim Start) ---
     const DailyEmailTask = ({ level, onComplete }) => {
-        // This mini-card now uses the shared dailyWriterMission from App-level state
-        const [step, setStep] = useState('briefing'); // briefing, writing, result
-        const [input, setInput] = useState('');
-        const [loading, setLoading] = useState(false);
-        const [feedback, setFeedback] = useState(null);
-
-        const handleSubmit = async () => {
-            if (!input.trim()) return;
-            setLoading(true);
-            try {
-                const mission = dailyWriterMission;
-                const res = await fetch('/api/correct', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: input, instruction: `Check if this email about ${mission.topic} uses '${mission.requirement}' and the word '${mission.vocab}'. Give a score out of 100.` })
-                });
-                const data = await res.json();
-                const score = Math.floor(Math.random() * (100 - 80) + 80);
-                setFeedback({ score: score, text: data.explanation, correction: data.corrected });
-                setStep('result');
-                if (onComplete) onComplete(score);
-            } catch (e) {
-                alert("Error checking email");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (!dailyWriterMission) return null;
+        // This mini-card shows a preview and links to the full Daily Writer
+        const nextGrammar = getNextGrammarTopic();
 
         return (
-            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden relative">
-                {step === 'briefing' && (
-                    <div className="p-6">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="bg-blue-100 text-blue-600 p-2 rounded-xl"><MessageSquare size={24}/></div>
+            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+                <div className="p-5">
+                    {/* Header */}
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="bg-indigo-100 text-indigo-600 p-2.5 rounded-xl"><PenTool size={22}/></div>
+                        <div>
                             <h3 className="font-bold text-slate-800 text-lg">Daily Writer</h3>
+                            {nextGrammar && (
+                                <p className="text-xs text-indigo-500 font-medium">Focus: {nextGrammar.topic.title}</p>
+                            )}
                         </div>
-                        <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 mb-6 space-y-2">
-                            <div className="text-sm text-slate-700"><strong>Topic:</strong> {dailyWriterMission.topic}</div>
-                            <div className="text-sm text-slate-700"><strong>To:</strong> {dailyWriterMission.recipient}</div>
-                            <div className="text-sm text-slate-700"><strong>Mission:</strong> {dailyWriterMission.requirement}</div>
-                            <div className="text-sm text-slate-700"><strong>Bonus Word:</strong> "{dailyWriterMission.vocab}"</div>
-                        </div>
-                        <button onClick={() => { setDailyWriterText(''); setDailyWriterScore(null); setView('daily-writer'); }} className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-200">Start Writing</button>
                     </div>
-                )}
 
-                {step === 'writing' && (
-                    <div className="p-4">
-                        <div className="bg-slate-50 border-b border-slate-200 p-3 rounded-t-xl text-xs text-slate-500 flex justify-between">
-                            <span>To: {dailyWriterMission.recipient}</span>
-                            <span>Topic: {dailyWriterMission.topic}</span>
+                    {/* Preview Info */}
+                    {dailyWriterMission ? (
+                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-4">
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="text-xs font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded">{dailyWriterMission.type}</span>
+                                <span className="text-xs text-slate-400">→ {dailyWriterMission.recipient}</span>
+                            </div>
+                            <p className="text-slate-700 font-medium mb-2">{dailyWriterMission.topic}</p>
+                            <div className="text-xs text-slate-500">{dailyWriterMission.miniTasks?.length || 5} tasks • Min. {dailyWriterMission.minWords || 50} words</div>
                         </div>
-                        <textarea 
-                            className="w-full h-40 p-4 bg-slate-50 rounded-b-xl border border-slate-200 border-t-0 focus:ring-2 focus:ring-blue-500 outline-none resize-none mb-4"
-                            placeholder="Write your email..."
-                            value={input}
-                            onChange={e => setInput(e.target.value)}
-                        />
-                        <button onClick={handleSubmit} disabled={loading} className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex justify-center items-center gap-2">
-                            {loading ? <Loader2 size={20} className="animate-spin"/> : <Check size={20}/>} Send & Check
-                        </button>
-                    </div>
-                )}
+                    ) : (
+                        <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100 mb-4 text-center">
+                            <p className="text-indigo-700 text-sm">Click to generate your personalized writing mission!</p>
+                        </div>
+                    )}
 
-                {step === 'result' && feedback && (
-                    <div className="p-6 text-center">
-                        <div className="inline-block p-4 bg-green-100 text-green-600 rounded-full mb-4">
-                            <Trophy size={32} />
-                        </div>
-                        <h3 className="text-2xl font-bold text-slate-800 mb-1">{feedback.score} / 100 Points</h3>
-                        <p className="text-slate-500 text-sm mb-6">Feedback received!</p>
-                        
-                        <div className="bg-slate-50 p-4 rounded-2xl text-left mb-4 text-sm border border-slate-100">
-                            <p className="font-bold text-slate-400 text-xs uppercase mb-1">Teacher's Note</p>
-                            <p className="text-slate-700">{feedback.text}</p>
-                        </div>
-
-                        <button onClick={() => setStep('briefing')} className="w-full bg-slate-900 text-white py-3 rounded-xl font-bold">Done</button>
-                    </div>
-                )}
+                    {/* CTA Button */}
+                    <button 
+                        onClick={() => { 
+                            if (!dailyWriterMission) {
+                                loadDailyWriterMission();
+                            }
+                            setDailyWriterText(''); 
+                            setDailyWriterScore(null); 
+                            setCompletedMiniTasks([]);
+                            setView('daily-writer'); 
+                        }} 
+                        className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all flex items-center justify-center gap-2"
+                    >
+                        <Play size={18}/> {dailyWriterMission ? 'Continue Writing' : 'Start Mission'}
+                    </button>
+                </div>
             </div>
         );
     };
@@ -2575,22 +2628,87 @@ function App() {
                     </button>
                 </div>
 
-                {/* 2. DAILY JOKE (Redesigned) */}
+                {/* 2. DAILY JOKE (Redesigned as Modal Trigger) */}
                 {dailyJoke && (
                     <button 
-                        onClick={() => { setViewingJoke(dailyJoke); setView('joke-detail'); }}
-                        className="w-full bg-amber-50 border border-amber-100 p-5 rounded-[2rem] relative overflow-hidden hover:bg-amber-100 transition-all active:scale-[0.98] text-left"
+                        onClick={() => setShowJokeModal(true)}
+                        className="w-full bg-amber-50 border border-amber-100 p-4 rounded-2xl relative overflow-hidden hover:bg-amber-100 transition-all active:scale-[0.98] text-left flex items-center gap-4"
                     >
-                        <div className="flex justify-between items-center mb-3">
-                            <div className="flex items-center gap-2">
-                                <div className="bg-white p-2 rounded-xl text-amber-500 shadow-sm"><Smile size={18}/></div>
-                                <span className="font-bold text-amber-900 text-sm">Joke of the Day</span>
-                            </div>
-                            <ChevronRight size={20} className="text-amber-400"/>
+                        <div className="bg-white p-2 rounded-xl text-amber-500 shadow-sm shrink-0"><Smile size={20}/></div>
+                        <div className="flex-1 min-w-0">
+                            <span className="font-bold text-amber-900 text-sm">Joke of the Day</span>
+                            <p className="text-amber-800 text-sm truncate mt-0.5">{dailyJoke.q}</p>
                         </div>
-                        <p className="text-amber-900 font-serif italic text-lg leading-snug line-clamp-2">"{dailyJoke.q}"</p>
-                        <div className="mt-2 text-xs text-amber-600/70 font-bold uppercase tracking-wider">Tap to view full joke</div>
+                        <ChevronRight size={20} className="text-amber-400 shrink-0"/>
                     </button>
+                )}
+
+                {/* JOKE MODAL */}
+                {showJokeModal && dailyJoke && (
+                    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowJokeModal(false)}>
+                        <div className="bg-white rounded-3xl max-w-sm w-full shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+                            {/* Header */}
+                            <div className="bg-gradient-to-r from-amber-400 to-orange-400 p-4 flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                    <Smile size={20} className="text-white"/>
+                                    <span className="font-bold text-white">Joke of the Day</span>
+                                </div>
+                                <button onClick={() => setShowJokeModal(false)} className="text-white/80 hover:text-white">
+                                    <X size={20}/>
+                                </button>
+                            </div>
+                            
+                            {/* Content */}
+                            <div className="p-5">
+                                {/* Question */}
+                                <div className="mb-4">
+                                    <div className="flex items-start gap-2">
+                                        <p className="text-lg font-bold text-slate-800 italic">"{dailyJoke.q}"</p>
+                                        <button onClick={() => speak(dailyJoke.q)} className="p-1.5 text-slate-400 hover:text-amber-600 shrink-0">
+                                            <Volume2 size={16}/>
+                                        </button>
+                                    </div>
+                                    <p className="text-xs text-slate-500 mt-1">🇬🇧 {dailyJoke.q_en || "..."}</p>
+                                </div>
+                                
+                                {/* Divider */}
+                                <div className="border-t border-slate-100 my-4"></div>
+                                
+                                {/* Answer */}
+                                <div>
+                                    <div className="flex items-start gap-2">
+                                        <p className="text-lg font-bold text-indigo-600 italic">"{dailyJoke.a}"</p>
+                                        <button onClick={() => speak(dailyJoke.a)} className="p-1.5 text-slate-400 hover:text-indigo-600 shrink-0">
+                                            <Volume2 size={16}/>
+                                        </button>
+                                    </div>
+                                    <p className="text-xs text-slate-500 mt-1">🇬🇧 {dailyJoke.en}</p>
+                                </div>
+                            </div>
+                            
+                            {/* Footer */}
+                            <div className="px-5 pb-5">
+                                <button 
+                                    onClick={() => {
+                                        if (!savedJokes.some(j => j.q === dailyJoke.q)) {
+                                            const updated = [...savedJokes, dailyJoke];
+                                            setSavedJokes(updated);
+                                            localStorage.setItem('vocabApp_savedJokes', JSON.stringify(updated));
+                                        }
+                                        setShowJokeModal(false);
+                                    }}
+                                    disabled={savedJokes.some(j => j.q === dailyJoke.q)}
+                                    className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
+                                        savedJokes.some(j => j.q === dailyJoke.q)
+                                        ? 'bg-slate-100 text-slate-400' 
+                                        : 'bg-amber-500 text-white hover:bg-amber-600 active:scale-95'
+                                    }`}
+                                >
+                                    {savedJokes.some(j => j.q === dailyJoke.q) ? <><Check size={16}/> Saved</> : <><Save size={16}/> Save Joke</>}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 )}
 
                 {/* 3. DAILY EMAIL TASK (New Feature) */}
@@ -3181,10 +3299,18 @@ function App() {
             if (!dailyWriterText.trim()) return alert('Please write something first.');
             setLoadingContent(true);
             try {
+                const miniTasksText = dailyWriterMission?.miniTasks?.join(', ') || '';
                 const res = await fetch('/api/correct', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: dailyWriterText, instruction: `Rate this text from 1 to 10 (1=poor,10=excellent) regarding grammar, use of the required construction and vocabulary. Return JSON with {score: number, explanation: string}.` })
+                    body: JSON.stringify({ 
+                        text: dailyWriterText, 
+                        instruction: `Rate this text from 1 to 10 (1=poor,10=excellent). 
+                        Check if the text fulfills these mini-tasks: ${miniTasksText}
+                        Grammar focus: ${dailyWriterMission?.grammarFocus || 'General'}
+                        Bonus word to use: "${dailyWriterMission?.bonusWord || ''}"
+                        Return JSON with {score: number, explanation: string, completedTasks: [array of task indices that were completed, 0-indexed]}.` 
+                    })
                 });
                 const data = await res.json();
                 let score = null;
@@ -3196,10 +3322,12 @@ function App() {
                         score = Math.max(1, Math.min(10, Math.round(n)));
                     }
                 }
-                // Fallback: map percent to 1-10 if present
                 if (score === null && typeof data.percentage === 'number') score = Math.max(1, Math.min(10, Math.ceil(data.percentage / 10)));
                 if (score === null) score = Math.max(1, Math.min(10, Math.round((Math.random() * 4) + 6)));
                 setDailyWriterScore(score);
+                if (data.completedTasks && Array.isArray(data.completedTasks)) {
+                    setCompletedMiniTasks(data.completedTasks);
+                }
                 alert(`Score: ${score}/10\n\n${data.explanation || ''}`);
             } catch (e) {
                 alert('Scoring failed. Try again later.');
@@ -3209,92 +3337,247 @@ function App() {
             }
         };
 
+        const toggleMiniTask = (index) => {
+            setCompletedMiniTasks(prev => 
+                prev.includes(index) 
+                    ? prev.filter(i => i !== index) 
+                    : [...prev, index]
+            );
+        };
+
+        // Loading State
+        if (dailyWriterLoading) {
+            return (
+                <div className="w-full pt-6 pb-24 px-1 h-full flex items-center justify-center">
+                    <div className="text-center">
+                        <Loader2 size={48} className="animate-spin text-indigo-500 mx-auto mb-4" />
+                        <p className="text-slate-500 font-medium">Generating your mission...</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // No Mission State - Load one
+        if (!dailyWriterMission) {
+            return (
+                <div className="w-full pt-6 pb-24 px-1 h-full">
+                    <div className="flex items-center gap-3 mb-4 px-1">
+                        <button onClick={() => setView('skills')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
+                        <h2 className="text-2xl font-bold text-slate-800">Daily Writer</h2>
+                    </div>
+                    <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-lg text-center">
+                        <div className="bg-indigo-100 text-indigo-600 p-4 rounded-full inline-block mb-4">
+                            <PenTool size={32} />
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-800 mb-2">Ready to Write?</h3>
+                        <p className="text-slate-500 mb-6">Get a personalized writing mission based on your current grammar level.</p>
+                        <button 
+                            onClick={loadDailyWriterMission}
+                            className="bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all"
+                        >
+                            Generate Mission
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        const nextGrammar = getNextGrammarTopic();
+        const wordCount = dailyWriterText.trim() ? dailyWriterText.trim().split(/\s+/).length : 0;
+
         return (
             <div className="w-full pt-6 pb-24 px-1 h-full">
-                <div className="flex items-center gap-3 mb-4 px-1">
-                    <button onClick={() => setView('skills')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
-                    <h2 className="text-2xl font-bold text-slate-800">Daily Writer</h2>
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4 px-1">
+                    <div className="flex items-center gap-3">
+                        <button onClick={() => setView('skills')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
+                        <h2 className="text-2xl font-bold text-slate-800">Daily Writer</h2>
+                    </div>
+                    <button 
+                        onClick={loadDailyWriterMission}
+                        className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-indigo-600 transition-colors"
+                        title="New Mission"
+                    >
+                        <RotateCcw size={20}/>
+                    </button>
                 </div>
 
-                <div className="space-y-6">
-                    {/* Mission Card */}
-                    <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 to-indigo-500"></div>
-                        
+                <div className="space-y-4">
+                    {/* Grammar Focus Badge */}
+                    {dailyWriterMission.grammarFocus && (
+                        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-4 rounded-2xl text-white shadow-lg">
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="bg-white/20 p-2 rounded-xl">
+                                    <GraduationCap size={20} />
+                                </div>
+                                <div>
+                                    <div className="text-xs font-medium text-white/70 uppercase tracking-wider">Grammar Focus</div>
+                                    <div className="font-bold text-lg">{dailyWriterMission.grammarFocus}</div>
+                                </div>
+                            </div>
+                            {dailyWriterMission.grammarExplanation && (
+                                <p className="text-white/80 text-sm pl-11">{dailyWriterMission.grammarExplanation}</p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Mission Card - Redesigned */}
+                    <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm">
+                        {/* Header */}
                         <div className="flex items-start justify-between mb-4">
-                            <div>
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Your Mission</div>
-                                <h3 className="text-2xl font-bold text-slate-800">{dailyWriterMission.topic}</h3>
+                            <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="text-xs font-bold text-indigo-500 bg-indigo-50 px-2 py-1 rounded-lg uppercase">{dailyWriterMission.type}</span>
+                                    <span className="text-xs text-slate-400">→ {dailyWriterMission.recipient}</span>
+                                </div>
+                                <h3 className="text-xl font-bold text-slate-800">{dailyWriterMission.topic}</h3>
                             </div>
-                            <div className="bg-blue-50 text-blue-600 p-3 rounded-xl">
-                                <PenTool size={24} />
+                            <div className="bg-indigo-50 text-indigo-600 p-2.5 rounded-xl">
+                                <PenTool size={20} />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 mb-6">
-                            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                                <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">Recipient</div>
-                                <div className="font-medium text-slate-700 flex items-center gap-2">
-                                    <User size={14} className="text-slate-400"/> {dailyWriterMission.recipient}
+                        {/* Main Task */}
+                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-4">
+                            <p className="text-slate-700 leading-relaxed">{dailyWriterMission.mainTask}</p>
+                        </div>
+
+                        {/* Grammar Requirement - Highlighted */}
+                        <div className="bg-purple-50 p-4 rounded-xl border border-purple-200 mb-4">
+                            <div className="flex items-start gap-3">
+                                <div className="bg-purple-100 text-purple-600 p-2 rounded-lg shrink-0">
+                                    <GraduationCap size={18} />
+                                </div>
+                                <div>
+                                    <div className="text-xs font-bold text-purple-500 uppercase tracking-wider mb-1">Required Grammar</div>
+                                    <p className="text-purple-900 font-semibold">{dailyWriterMission.grammarFocus || getNextGrammarTopic()?.topic?.title || 'General French'}</p>
+                                    {dailyWriterMission.grammarExplanation && (
+                                        <p className="text-purple-700 text-sm mt-1">{dailyWriterMission.grammarExplanation}</p>
+                                    )}
                                 </div>
                             </div>
-                            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                                <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">Bonus Word</div>
-                                <div className="font-medium text-slate-700 flex items-center gap-2">
-                                    <Sparkles size={14} className="text-amber-400"/> "{dailyWriterMission.vocab}"
-                                </div>
+                        </div>
+
+                        {/* Mini Tasks Checklist */}
+                        <div className="mb-4">
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <Layers size={14} />
+                                Tasks ({completedMiniTasks.length}/{dailyWriterMission.miniTasks?.length || 0})
+                            </div>
+                            <div className="space-y-2">
+                                {dailyWriterMission.miniTasks?.map((task, idx) => {
+                                    const isCompleted = completedMiniTasks.includes(idx);
+                                    return (
+                                        <button
+                                            key={idx}
+                                            onClick={() => toggleMiniTask(idx)}
+                                            className={`w-full flex items-start gap-3 p-3 rounded-xl border transition-all text-left ${
+                                                isCompleted 
+                                                    ? 'bg-green-50 border-green-200 text-green-700' 
+                                                    : 'bg-white border-slate-100 text-slate-600 hover:border-indigo-200 hover:bg-indigo-50/50'
+                                            }`}
+                                        >
+                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 ${
+                                                isCompleted 
+                                                    ? 'bg-green-500 border-green-500 text-white' 
+                                                    : 'border-slate-300'
+                                            }`}>
+                                                {isCompleted && <Check size={12} />}
+                                            </div>
+                                            <span className={`text-sm ${isCompleted ? 'line-through opacity-70' : ''}`}>
+                                                {task}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
 
-                        <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100 mb-2">
-                            <div className="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">Requirement</div>
-                            <p className="text-indigo-900 font-medium">{dailyWriterMission.requirement}</p>
-                        </div>
-
-                        <div className="flex gap-4 text-xs text-slate-400 mt-4 font-medium">
-                            <span className="flex items-center gap-1"><Activity size={12}/> Min: {dailyWriterMission.minWords} words</span>
-                            <span className="flex items-center gap-1"><RotateCcw size={12}/> Time: {dailyWriterMission.timeMinutes} min</span>
+                        {/* Meta Info */}
+                        <div className="flex flex-wrap gap-3 pt-3 border-t border-slate-100">
+                            <div className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg">
+                                <Sparkles size={12} className="text-amber-400"/>
+                                <span className="font-medium text-slate-600">"{dailyWriterMission.bonusWord}"</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg">
+                                <Activity size={12}/>
+                                <span>Min {dailyWriterMission.minWords} words</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg">
+                                <RotateCcw size={12}/>
+                                <span>~{dailyWriterMission.timeMinutes} min</span>
+                            </div>
                         </div>
                     </div>
 
+                    {/* Example Opener - Helpful Hint */}
+                    {dailyWriterMission.exampleOpener && (
+                        <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl">
+                            <div className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                <Info size={12}/> Example Opener
+                            </div>
+                            <p className="text-amber-800 italic">"{dailyWriterMission.exampleOpener}"</p>
+                        </div>
+                    )}
+
                     {/* Editor Area */}
-                    <div className="bg-white p-1 rounded-[2rem] border border-slate-100 shadow-sm">
+                    <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
                         <textarea 
                             value={dailyWriterText} 
                             onChange={(e) => setDailyWriterText(e.target.value)} 
                             placeholder="Start writing your text here..." 
-                            className="w-full min-h-[250px] p-6 bg-transparent text-lg text-slate-700 outline-none resize-none placeholder:text-slate-300" 
+                            className="w-full min-h-[200px] p-5 bg-transparent text-base text-slate-700 outline-none resize-none placeholder:text-slate-300" 
                         />
-                        <div className="px-6 py-4 border-t border-slate-50 flex justify-between items-center bg-slate-50/50 rounded-b-[2rem]">
-                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                                {dailyWriterText.trim() ? dailyWriterText.trim().split(/\s+/).length : 0} Words
+                        <div className="px-5 py-3 border-t border-slate-100 flex justify-between items-center bg-slate-50/50">
+                            <div className={`text-xs font-bold uppercase tracking-wider ${
+                                wordCount >= (dailyWriterMission.minWords || 50) 
+                                    ? 'text-green-500' 
+                                    : 'text-slate-400'
+                            }`}>
+                                {wordCount} / {dailyWriterMission.minWords || 50} words
                             </div>
-                            <div className="flex gap-3">
+                            <div className="flex gap-2">
                                 <button 
-                                    onClick={() => { setDailyWriterText(''); setDailyWriterScore(null); }} 
+                                    onClick={() => { setDailyWriterText(''); setDailyWriterScore(null); setCompletedMiniTasks([]); }} 
                                     className="text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-100 transition-colors"
                                     title="Reset"
                                 >
-                                    <RotateCcw size={20}/>
+                                    <Trash2 size={18}/>
                                 </button>
                                 <button 
                                     onClick={submitDailyWriter} 
                                     disabled={loadingContent || !dailyWriterText.trim()}
-                                    className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-50 disabled:shadow-none"
+                                    className="bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-50 disabled:shadow-none text-sm"
                                 >
-                                    {loadingContent ? <Loader2 size={20} className="animate-spin"/> : <><Check size={20}/> Submit</>}
+                                    {loadingContent ? <Loader2 size={18} className="animate-spin"/> : <><Check size={18}/> Submit</>}
                                 </button>
                             </div>
                         </div>
                     </div>
 
+                    {/* Score Result */}
                     {dailyWriterScore !== null && (
-                        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg text-center">
-                            <div className="inline-block p-4 bg-green-100 text-green-600 rounded-full mb-4 shadow-sm">
-                                <Trophy size={32} />
+                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-[2rem] border border-green-100 shadow-sm">
+                            <div className="flex items-center gap-4">
+                                <div className="bg-green-100 text-green-600 p-4 rounded-2xl shadow-sm">
+                                    <Trophy size={28} />
+                                </div>
+                                <div>
+                                    <div className="font-bold text-3xl text-slate-800">{dailyWriterScore}<span className="text-lg text-slate-400">/10</span></div>
+                                    <div className="text-green-700 font-medium text-sm">Great work! Keep it up.</div>
+                                </div>
                             </div>
-                            <div className="font-bold text-4xl text-slate-800 mb-2">{dailyWriterScore}<span className="text-xl text-slate-400">/10</span></div>
-                            <div className="text-slate-500 font-medium">Excellent work! Keep practicing.</div>
+                            <div className="mt-4 pt-4 border-t border-green-200/50">
+                                <div className="text-xs text-green-700 font-medium mb-2">Completed tasks: {completedMiniTasks.length}/{dailyWriterMission.miniTasks?.length || 0}</div>
+                                <div className="flex gap-1">
+                                    {dailyWriterMission.miniTasks?.map((_, idx) => (
+                                        <div 
+                                            key={idx} 
+                                            className={`h-2 flex-1 rounded-full ${completedMiniTasks.includes(idx) ? 'bg-green-500' : 'bg-slate-200'}`}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>

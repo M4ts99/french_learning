@@ -540,7 +540,7 @@ const GRAMMAR_DATA = {
             {
                 id: "a1_02_q06",
                 type: "choice",
-                question: "Replace 'La voiture' (The car - fem): ___ est rapide.",
+                question: "Replace 'La voiture': ___ est rapide.",
                 options: ["Il", "Elle", "Tu"],
                 correct: 1,
                 hint: "Voiture is feminine."
@@ -1364,34 +1364,39 @@ const GRAMMAR_DATA = {
         },
         learn: {
             cheat_sheet: {
-                summary: "90% of French verbs end in '-er'. They are regular and follow a strict pattern.",
-                key_rule: "🔥 Drop the '-er'. Add: e, es, e, ons, ez, ent. (Pronunciation hack: 'ent' is silent!)"
+                summary: "The vast majority (90%) of French verbs end in **-er** (Group 1). They are regular and easy to learn!",
+                key_rule: "🔥 **The Formula:**\n1. Drop the **-er** to get the stem (e.g., *Parl-*).\n2. Add: **e, es, e, ons, ez, ent**."
             },
             explanation: [
                 {
                     type: "text",
-                    content: "Let's conjugate 'Parler' (to speak). The stem is 'Parl-'."
+                    content: "Here is the conjugation of 'Parler' (to speak). Pay attention to the pronunciation notes!"
                 },
                 {
                     type: "table",
-                    headers: ["Subject", "Ending", "Full Verb"],
+                    headers: ["Subject", "Ending", "Full Verb", "Pronunciation"],
                     rows: [
-                        ["Je", "-e", "parle"],
-                        ["Tu", "-es", "parles"],
-                        ["Il/Elle", "-e", "parle"],
-                        ["Nous", "-ons", "parlons"],
-                        ["Vous", "-ez", "parlez"],
-                        ["Ils/Elles", "-ent", "parlent (silent!)"]
+                        ["Je", "-e", "parle", "parl (silent e)"],
+                        ["Tu", "-es", "parles", "parl (silent es)"],
+                        ["Il/Elle/On", "-e", "parle", "parl (silent e)"],
+                        ["Nous", "-ons", "parlons", "parl-on"],
+                        ["Vous", "-ez", "parlez", "parl-ay"],
+                        ["Ils/Elles", "-ent", "parlent", "parl (silent ent!)"]
                     ]
                 },
                 {
                     type: "warning",
-                    title: "⚠️ The 'G' Rule (Manger)",
-                    content: "For verbs ending in -ger (like Manger), we keep the 'e' in the 'Nous' form to keep the soft G sound. So it becomes 'Nous mangeons' (not mangons)."
+                    title: "⚠️ Spelling Changes (-ger & -cer)",
+                    content: "To keep pronunciation smooth:\n* **-ger verbs** (Manger): Add an **e** in the *Nous* form -> *Nous mang**e**ons* (to keep the soft G).\n* **-cer verbs** (Commencer): Add a **ç** in the *Nous* form -> *Nous commen**ç**ons* (to keep the soft S)."
+                },
+                 {
+                    type: "text",
+                    content: "**Common -ER Verbs:** Aimer (to like), Habiter (to live), Regarder (to watch), Travailler (to work), Écouter (to listen), Jouer (to play)."
                 }
             ]
         },
         practice: [
+            // --- Basic Conjugation Drills ---
             {
                 id: "a1_04_q01",
                 type: "choice",
@@ -1402,34 +1407,401 @@ const GRAMMAR_DATA = {
             },
             {
                 id: "a1_04_q02",
-                type: "input",
-                question: "Nous ___ (aimer) la France.",
-                answer: "aimons",
-                hint: "The ending is -ons."
+                type: "choice",
+                question: "Je ___ (habiter) à Paris.",
+                options: ["habite", "habites", "habiter"],
+                correct: 0,
+                hint: "Ending for 'Je' is -e."
             },
             {
                 id: "a1_04_q03",
                 type: "choice",
-                question: "Ils ___ (habiter) à Paris.",
-                options: ["habite", "habitent", "habitons"],
+                question: "Il ___ (aimer) le chocolat.",
+                options: ["aimes", "aime", "aimons"],
                 correct: 1,
-                hint: "Plural 'They' needs the silent '-ent' ending."
+                hint: "Ending for 'Il' is -e."
             },
             {
                 id: "a1_04_q04",
                 type: "choice",
-                question: "Special Rule: Nous ___ (manger) une pizza.",
+                question: "Nous ___ (travailler) ici.",
+                options: ["travaillons", "travaillez", "travaillent"],
+                correct: 0,
+                hint: "Ending for 'Nous' is -ons."
+            },
+            {
+                id: "a1_04_q05",
+                type: "choice",
+                question: "Vous ___ (regarder) la télé.",
+                options: ["regardez", "regardons", "regardes"],
+                correct: 0,
+                hint: "Ending for 'Vous' is -ez."
+            },
+            {
+                id: "a1_04_q06",
+                type: "choice",
+                question: "Elles ___ (danser) bien.",
+                options: ["dansent", "dansez", "danse"],
+                correct: 0,
+                hint: "Plural 'Elles' ends in -ent."
+            },
+            {
+                id: "a1_04_q07",
+                type: "input",
+                question: "J'___ (écoute) la radio.",
+                answer: "écoute",
+                hint: "Drop -er, add -e."
+            },
+            {
+                id: "a1_04_q08",
+                type: "input",
+                question: "Tu ___ (jouer) au foot ?",
+                answer: "joues",
+                hint: "Drop -er, add -es."
+            },
+
+            // --- Spelling Changes (-ger / -cer) ---
+            {
+                id: "a1_04_q09",
+                type: "choice",
+                question: "Nous ___ (manger) une pizza.",
                 options: ["mangons", "mangeons", "manges"],
                 correct: 1,
                 hint: "We need the extra 'e' to keep the G soft."
             },
             {
-                id: "a1_04_q05",
+                id: "a1_04_q10",
+                type: "choice",
+                question: "Nous ___ (commencer) le cours.",
+                options: ["commençons", "commencons", "commenceons"],
+                correct: 0,
+                hint: "We need the cédille (ç) to keep the C soft."
+            },
+            {
+                id: "a1_04_q11",
+                type: "choice",
+                question: "Nous ___ (voyager) en France.",
+                options: ["voyageons", "voyagons"],
+                correct: 0,
+                hint: "Voyager ends in -ger, so add 'e'."
+            },
+            {
+                id: "a1_04_q12",
+                type: "choice",
+                question: "Nous ___ (nager - to swim).",
+                options: ["nageons", "nagons"],
+                correct: 0,
+                hint: "Nager -> Nageons."
+            },
+            {
+                id: "a1_04_q13",
+                type: "input",
+                question: "Nous ___ (changer) de train.",
+                answer: "changeons",
+                hint: "Change -> Changeons."
+            },
+
+            // --- Sentence Structure & Context ---
+            {
+                id: "a1_04_q14",
                 type: "sort",
                 question: "Build: 'She watches TV' (regarder)",
                 blocks: ["regarde", "la", "télé", "Elle"],
                 correct_order: ["Elle", "regarde", "la", "télé"],
                 hint: "Verb ending is -e for She."
+            },
+            {
+                id: "a1_04_q15",
+                type: "sort",
+                question: "Build: 'We love Paris'",
+                blocks: ["aimons", "Paris", "Nous"],
+                correct_order: ["Nous", "aimons", "Paris"],
+                hint: "Subject + Verb + Object."
+            },
+            {
+                id: "a1_04_q16",
+                type: "sort",
+                question: "Build: 'They play tennis'",
+                blocks: ["jouent", "au", "tennis", "Ils"],
+                correct_order: ["Ils", "jouent", "au", "tennis"],
+                hint: "Verb ending is -ent."
+            },
+
+            // --- Pronunciation Check (Conceptual) ---
+            {
+                id: "a1_04_q17",
+                type: "choice",
+                question: "Which ending is silent?",
+                options: ["-ez", "-ent", "-ons"],
+                correct: 1,
+                hint: "The plural 'they' ending is never pronounced."
+            },
+            {
+                id: "a1_04_q18",
+                type: "choice",
+                question: "Which ending sounds like 'ay'?",
+                options: ["-e", "-ez", "-ent"],
+                correct: 1,
+                hint: "Vous form (-ez)."
+            },
+
+            // --- Identifying Verbs ---
+            {
+                id: "a1_04_q19",
+                type: "choice",
+                question: "Which verb means 'to help'?",
+                options: ["Aider", "Aimer", "Aller"],
+                correct: 0,
+                hint: "Aimer is love, Aller is go."
+            },
+            {
+                id: "a1_04_q20",
+                type: "choice",
+                question: "Which verb means 'to find'?",
+                options: ["Chercher", "Trouver", "Donner"],
+                correct: 1,
+                hint: "Chercher is look for, Donner is give."
+            },
+            {
+                id: "a1_04_q21",
+                type: "choice",
+                question: "Which verb means 'to think'?",
+                options: ["Penser", "Parler", "Porter"],
+                correct: 0,
+                hint: "Parler is speak, Porter is wear."
+            },
+
+            // --- Mixed Drills ---
+            {
+                id: "a1_04_q22",
+                type: "choice",
+                question: "On ___ (dîner) ensemble.",
+                options: ["dîne", "dînent", "dînes"],
+                correct: 0,
+                hint: "On = 3rd person singular (-e)."
+            },
+            {
+                id: "a1_04_q23",
+                type: "choice",
+                question: "Marie et Paul ___ (chanter).",
+                options: ["chantent", "chantez", "chantons"],
+                correct: 0,
+                hint: "Mixed plural -> Ils -> -ent."
+            },
+            {
+                id: "a1_04_q24",
+                type: "choice",
+                question: "Vous ___ (chercher) vos clés ?",
+                options: ["cherchez", "cherches"],
+                correct: 0,
+                hint: "Vous -> -ez."
+            },
+            {
+                id: "a1_04_q25",
+                type: "input",
+                question: "Tu ___ (donner) un cadeau.",
+                answer: "donnes",
+                hint: "Tu -> -es."
+            },
+            {
+                id: "a1_04_q26",
+                type: "choice",
+                question: "Je ___ (détester) le lundi.",
+                options: ["déteste", "détester"],
+                correct: 0,
+                hint: "Je -> -e."
+            },
+            {
+                id: "a1_04_q27",
+                type: "choice",
+                question: "Nous ___ (étudier) le français.",
+                options: ["étudions", "étudiez"],
+                correct: 0,
+                hint: "Nous -> -ons."
+            },
+            {
+                id: "a1_04_q28",
+                type: "choice",
+                question: "Ils ___ (fermer) le magasin.",
+                options: ["ferment", "fermons"],
+                correct: 0,
+                hint: "Ils -> -ent."
+            },
+            {
+                id: "a1_04_q29",
+                type: "choice",
+                question: "Elle ___ (demander) de l'aide.",
+                options: ["demande", "demandes"],
+                correct: 0,
+                hint: "Elle -> -e."
+            },
+            {
+                id: "a1_04_q30",
+                type: "input",
+                question: "On ___ (rester) ici.",
+                answer: "reste",
+                hint: "On -> -e."
+            },
+
+            // --- Rapid Fire: Subject-Verb Agreement ---
+            {
+                id: "a1_04_q31",
+                type: "choice",
+                question: "___ cuisine.",
+                options: ["Je", "Tu", "Nous"],
+                correct: 0,
+                hint: "Verb ends in -e."
+            },
+            {
+                id: "a1_04_q32",
+                type: "choice",
+                question: "___ cuisines.",
+                options: ["Tu", "Il", "Vous"],
+                correct: 0,
+                hint: "Verb ends in -es."
+            },
+            {
+                id: "a1_04_q33",
+                type: "choice",
+                question: "___ cuisinons.",
+                options: ["Nous", "Vous", "Ils"],
+                correct: 0,
+                hint: "Verb ends in -ons."
+            },
+            {
+                id: "a1_04_q34",
+                type: "choice",
+                question: "___ cuisinez.",
+                options: ["Vous", "Nous", "Tu"],
+                correct: 0,
+                hint: "Verb ends in -ez."
+            },
+            {
+                id: "a1_04_q35",
+                type: "choice",
+                question: "___ cuisinent.",
+                options: ["Ils", "Nous", "Vous"],
+                correct: 0,
+                hint: "Verb ends in -ent."
+            },
+            
+            // --- Elision (J') ---
+            {
+                id: "a1_04_q36",
+                type: "choice",
+                question: "___ (I) habite à Lyon.",
+                options: ["J'", "Je"],
+                correct: 0,
+                hint: "Verb starts with H (vowel sound)."
+            },
+            {
+                id: "a1_04_q37",
+                type: "choice",
+                question: "___ (I) aime la musique.",
+                options: ["J'", "Je"],
+                correct: 0,
+                hint: "Verb starts with A (vowel)."
+            },
+            {
+                id: "a1_04_q38",
+                type: "choice",
+                question: "___ (I) parle français.",
+                options: ["Je", "J'"],
+                correct: 0,
+                hint: "Verb starts with consonant P."
+            },
+            {
+                id: "a1_04_q39",
+                type: "choice",
+                question: "___ (I) écoute.",
+                options: ["J'", "Je"],
+                correct: 0,
+                hint: "Verb starts with E."
+            },
+            {
+                id: "a1_04_q40",
+                type: "input",
+                question: "___ (I) oublie (forget) tout.",
+                answer: "j'",
+                hint: "Starts with O."
+            },
+
+            // --- Final Challenge ---
+            {
+                id: "a1_04_q41",
+                type: "choice",
+                question: "Tu ___ (préparer) le dîner ?",
+                options: ["prépares", "prépare"],
+                correct: 0,
+                hint: "-es."
+            },
+            {
+                id: "a1_04_q42",
+                type: "choice",
+                question: "Nous ___ (laver) la voiture.",
+                options: ["lavons", "lavez"],
+                correct: 0,
+                hint: "-ons."
+            },
+            {
+                id: "a1_04_q43",
+                type: "choice",
+                question: "Il ___ (tomber).",
+                options: ["tombe", "tombes"],
+                correct: 0,
+                hint: "-e."
+            },
+            {
+                id: "a1_04_q44",
+                type: "choice",
+                question: "Elles ___ (porter) des lunettes.",
+                options: ["portent", "portons"],
+                correct: 0,
+                hint: "-ent."
+            },
+            {
+                id: "a1_04_q45",
+                type: "choice",
+                question: "Vous ___ (marcher) vite.",
+                options: ["marchez", "marchons"],
+                correct: 0,
+                hint: "-ez."
+            },
+            {
+                id: "a1_04_q46",
+                type: "input",
+                question: "Je ___ (visiter) le musée.",
+                answer: "visite",
+                hint: "Regular."
+            },
+            {
+                id: "a1_04_q47",
+                type: "input",
+                question: "Tu ___ (danser) bien.",
+                answer: "danses",
+                hint: "Regular."
+            },
+            {
+                id: "a1_04_q48",
+                type: "input",
+                question: "Nous ___ (partager) le gâteau.",
+                answer: "partageons",
+                hint: "Warning: -ger verb!"
+            },
+            {
+                id: "a1_04_q49",
+                type: "input",
+                question: "Vous ___ (manger) quoi ?",
+                answer: "mangez",
+                hint: "Regular for Vous."
+            },
+            {
+                id: "a1_04_q50",
+                type: "sort",
+                question: "Build: 'I love to travel.'",
+                blocks: ["voyager", "J'", "aime"],
+                correct_order: ["J'", "aime", "voyager"],
+                hint: "Conjugated verb first, then infinitive."
             }
         ]
     },
@@ -1441,48 +1813,447 @@ const GRAMMAR_DATA = {
         },
         learn: {
             cheat_sheet: {
-                summary: "To say 'not', you create a sandwich around the verb.",
-                key_rule: "🔥 The Sandwich: ne + VERB + pas. (Je ne mange pas)."
+                summary: "To make a sentence negative ('I do not eat'), French uses a two-part structure around the verb.",
+                key_rule: "🔥 **The Sandwich Rule:** Subject + **ne** + VERB + **pas**.\n(e.g., *Je **ne** suis **pas** d'accord*)."
             },
             explanation: [
                 {
                     type: "text",
-                    content: "Example: 'Je suis fatigué' (I am tired) -> 'Je NE suis PAS fatigué' (I am not tired)."
+                    content: "Think of the verb as the meat in a sandwich. 'Ne' and 'Pas' are the bread slices."
+                },
+                {
+                    type: "table",
+                    headers: ["Subject", "Part 1", "Verb", "Part 2", "Complement"],
+                    rows: [
+                        ["Je", "ne", "mange", "pas", "de viande."],
+                        ["Il", "n'", "est", "pas", "triste."],
+                        ["Nous", "ne", "sommes", "pas", "fatigués."]
+                    ]
                 },
                 {
                     type: "warning",
-                    title: "⚠️ The Vowel Crash",
-                    content: "If the verb starts with a vowel, 'ne' becomes n'. Example: 'Je n'aime pas' (not 'Je ne aime pas')."
+                    title: "⚠️ The Vowel Clash (N')",
+                    content: "If the verb starts with a vowel (a, e, i, o, u) or a silent 'h', **ne** becomes **n'**. \n* Correct: *Je **n'**aime pas.*\n* Incorrect: *Je ~~ne~~ aime pas.*"
+                },
+                {
+                    type: "warning",
+                    title: "⚠️ The 'Pas de' Rule (Vital!)",
+                    content: "After a negation, indefinite articles (**un, une, des, du**) change to **DE** (or d').\n* J'ai **un** chien -> Je n'ai **pas de** chien.\n* Je mange **du** pain -> Je ne mange **pas de** pain.\n* Exception: This rule does NOT apply with the verb **Être** (C'est une pomme -> Ce n'est pas **une** pomme)."
                 },
                 {
                     type: "text",
-                    content: "In fast spoken French, people often drop the 'ne'. You might just hear 'Je mange pas'."
+                    content: "**Spoken French:** In casual conversation, French people often drop the 'ne'. You will hear *'J'sais pas'* instead of *'Je ne sais pas'*. But you must write it!"
                 }
             ]
         },
         practice: [
+            // --- Basic Structure (Ne ... Pas) ---
             {
                 id: "a1_05_q01",
                 type: "sort",
-                question: "Negate: 'Je parle'",
+                question: "Negate: 'Je parle' (I speak)",
                 blocks: ["pas", "ne", "parle", "Je"],
                 correct_order: ["Je", "ne", "parle", "pas"],
-                hint: "Sandwich the verb."
+                hint: "Sandwich the verb 'parle'."
             },
             {
                 id: "a1_05_q02",
                 type: "choice",
-                question: "Correct negation for: 'J'aime le café'.",
-                options: ["Je ne aime pas le café", "Je n'aime pas le café", "Je aime ne pas le café"],
-                correct: 1,
-                hint: "Aime starts with a vowel, so 'ne' becomes n'."
+                question: "Tu ___ (are not) triste.",
+                options: ["n'es pas", "ne es pas", "pas es"],
+                correct: 0,
+                hint: "Es starts with a vowel -> n'."
             },
             {
                 id: "a1_05_q03",
+                type: "choice",
+                question: "Il ___ (does not eat).",
+                options: ["ne mange pas", "mange pas", "ne mange"],
+                correct: 0,
+                hint: "You need both parts: ne + pas."
+            },
+            {
+                id: "a1_05_q04",
+                type: "sort",
+                question: "Build: 'She is not here.'",
+                blocks: ["pas", "ici", "n'", "est", "Elle"],
+                correct_order: ["Elle", "n'", "est", "pas", "ici"],
+                hint: "Est starts with vowel."
+            },
+            {
+                id: "a1_05_q05",
                 type: "input",
-                question: "Tu ___ (are not) triste.",
-                answer: "n'es pas",
-                hint: "Verb is 'es'. Don't forget the n'."
+                question: "Nous ___ (do not look) la télé.",
+                answer: "ne regardons pas",
+                hint: "ne + regardons + pas."
+            },
+
+            // --- Elision Drills (Ne vs N') ---
+            {
+                id: "a1_05_q06",
+                type: "choice",
+                question: "Je ___ habite pas ici.",
+                options: ["n'", "ne"],
+                correct: 0,
+                hint: "Habite starts with silent H."
+            },
+            {
+                id: "a1_05_q07",
+                type: "choice",
+                question: "Tu ___ comprends pas.",
+                options: ["ne", "n'"],
+                correct: 0,
+                hint: "Comprends starts with a consonant."
+            },
+            {
+                id: "a1_05_q08",
+                type: "choice",
+                question: "Il ___ écoute pas.",
+                options: ["n'", "ne"],
+                correct: 0,
+                hint: "Écoute starts with E."
+            },
+            {
+                id: "a1_05_q09",
+                type: "choice",
+                question: "Elle ___ aime pas le foot.",
+                options: ["n'", "ne"],
+                correct: 0,
+                hint: "Aime starts with A."
+            },
+            {
+                id: "a1_05_q10",
+                type: "choice",
+                question: "Nous ___ voulons pas partir.",
+                options: ["ne", "n'"],
+                correct: 0,
+                hint: "Voulons starts with V."
+            },
+            {
+                id: "a1_05_q11",
+                type: "choice",
+                question: "Vous ___ avez pas faim.",
+                options: ["n'", "ne"],
+                correct: 0,
+                hint: "Avez starts with A."
+            },
+            {
+                id: "a1_05_q12",
+                type: "choice",
+                question: "Ils ___ vont pas au cinéma.",
+                options: ["ne", "n'"],
+                correct: 0,
+                hint: "Vont starts with V."
+            },
+            {
+                id: "a1_05_q13",
+                type: "choice",
+                question: "On ___ oublie pas.",
+                options: ["n'", "ne"],
+                correct: 0,
+                hint: "Oublie starts with O."
+            },
+            {
+                id: "a1_05_q14",
+                type: "choice",
+                question: "Ce ___ est pas vrai.",
+                options: ["n'", "ne"],
+                correct: 0,
+                hint: "Est starts with E."
+            },
+            {
+                id: "a1_05_q15",
+                type: "choice",
+                question: "Je ___ sais pas.",
+                options: ["ne", "n'"],
+                correct: 0,
+                hint: "Sais starts with S."
+            },
+
+            // --- The "Pas de" Rule (Article Change) ---
+            {
+                id: "a1_05_q16",
+                type: "choice",
+                question: "J'ai un chien -> Je n'ai pas ___ chien.",
+                options: ["de", "un", "du"],
+                correct: 0,
+                hint: "Un changes to De after negation."
+            },
+            {
+                id: "a1_05_q17",
+                type: "choice",
+                question: "Tu manges une pomme -> Tu ne manges pas ___ pomme.",
+                options: ["de", "une", "la"],
+                correct: 0,
+                hint: "Une changes to De."
+            },
+            {
+                id: "a1_05_q18",
+                type: "choice",
+                question: "Il a des amis -> Il n'a pas ___ amis.",
+                options: ["d'", "des", "les"],
+                correct: 0,
+                hint: "Des changes to D' (before vowel)."
+            },
+            {
+                id: "a1_05_q19",
+                type: "choice",
+                question: "Elle boit du café -> Elle ne boit pas ___ café.",
+                options: ["de", "du", "le"],
+                correct: 0,
+                hint: "Du changes to De."
+            },
+            {
+                id: "a1_05_q20",
+                type: "choice",
+                question: "Nous avons de la chance -> Nous n'avons pas ___ chance.",
+                options: ["de", "de la", "la"],
+                correct: 0,
+                hint: "De la changes to De."
+            },
+            {
+                id: "a1_05_q21",
+                type: "choice",
+                question: "EXCEPTION: C'est une voiture -> Ce n'est pas ___ voiture.",
+                options: ["une", "de"],
+                correct: 0,
+                hint: "With verb Être, the article does NOT change."
+            },
+            {
+                id: "a1_05_q22",
+                type: "choice",
+                question: "Ce sont des livres -> Ce ne sont pas ___ livres.",
+                options: ["des", "de"],
+                correct: 0,
+                hint: "Verb Être -> No change."
+            },
+            {
+                id: "a1_05_q23",
+                type: "choice",
+                question: "J'ai acheté de l'eau -> Je n'ai pas acheté ___ eau.",
+                options: ["d'", "de l'", "l'"],
+                correct: 0,
+                hint: "De l' changes to d'."
+            },
+            {
+                id: "a1_05_q24",
+                type: "choice",
+                question: "Il y a un problème -> Il n'y a pas ___ problème.",
+                options: ["de", "un"],
+                correct: 0,
+                hint: "Il n'y a pas DE..."
+            },
+            {
+                id: "a1_05_q25",
+                type: "choice",
+                question: "Je veux du sucre -> Je ne veux pas ___ sucre.",
+                options: ["de", "du"],
+                correct: 0,
+                hint: "Vouloir is not Être, so it changes to De."
+            },
+
+            // --- Sentence Sorting Drills ---
+            {
+                id: "a1_05_q26",
+                type: "sort",
+                question: "Build: 'I do not like coffee.'",
+                blocks: ["pas", "le", "n'", "Je", "café", "aime"],
+                correct_order: ["Je", "n'", "aime", "pas", "le", "café"],
+                hint: "Je n'aime pas..."
+            },
+            {
+                id: "a1_05_q27",
+                type: "sort",
+                question: "Build: 'He is not English.'",
+                blocks: ["est", "Il", "pas", "anglais", "n'"],
+                correct_order: ["Il", "n'", "est", "pas", "anglais"],
+                hint: "Verb is Est."
+            },
+            {
+                id: "a1_05_q28",
+                type: "sort",
+                question: "Build: 'They do not work.'",
+                blocks: ["travaillent", "ne", "pas", "Ils"],
+                correct_order: ["Ils", "ne", "travaillent", "pas"],
+                hint: "Regular order."
+            },
+            {
+                id: "a1_05_q29",
+                type: "sort",
+                question: "Build: 'We do not have time.'",
+                blocks: ["pas", "temps", "n'", "le", "avons", "Nous"],
+                correct_order: ["Nous", "n'", "avons", "pas", "le", "temps"],
+                hint: "Nous n'avons pas..."
+            },
+            {
+                id: "a1_05_q30",
+                type: "sort",
+                question: "Build: 'I don't know.'",
+                blocks: ["sais", "pas", "Je", "ne"],
+                correct_order: ["Je", "ne", "sais", "pas"],
+                hint: "Classic phrase."
+            },
+
+            // --- Translation / Input ---
+            {
+                id: "a1_05_q31",
+                type: "input",
+                question: "Translate 'not' (the second part).",
+                answer: "pas",
+                hint: "Ne ... ___"
+            },
+            {
+                id: "a1_05_q32",
+                type: "input",
+                question: "Negate 'Je peux' (I can).",
+                answer: "je ne peux pas",
+                hint: "Sandwich 'peux'."
+            },
+            {
+                id: "a1_05_q33",
+                type: "input",
+                question: "Negate 'C'est' (It is).",
+                answer: "ce n'est pas",
+                hint: "Watch the apostrophes."
+            },
+            {
+                id: "a1_05_q34",
+                type: "input",
+                question: "Negate 'Il pleut' (It rains).",
+                answer: "il ne pleut pas",
+                hint: "Sandwich 'pleut'."
+            },
+            {
+                id: "a1_05_q35",
+                type: "input",
+                question: "Negate 'J'ai' (I have).",
+                answer: "je n'ai pas",
+                hint: "J' becomes Je n'..."
+            },
+
+            // --- Mixed & Context ---
+            {
+                id: "a1_05_q36",
+                type: "choice",
+                question: "Ça ___ marche pas.",
+                options: ["ne", "n'", "non"],
+                correct: 0,
+                hint: "Marche starts with consonant."
+            },
+            {
+                id: "a1_05_q37",
+                type: "choice",
+                question: "Je ___ suis pas d'accord.",
+                options: ["ne", "pas", "n'"],
+                correct: 0,
+                hint: "Verb Suis."
+            },
+            {
+                id: "a1_05_q38",
+                type: "choice",
+                question: "Il n'y a ___ de problème.",
+                options: ["pas", "point", "ne"],
+                correct: 0,
+                hint: "Standard negation."
+            },
+            {
+                id: "a1_05_q39",
+                type: "choice",
+                question: "Spoken French: 'J'aime pas ça'. What is missing?",
+                options: ["Ne / N'", "Pas", "Le"],
+                correct: 0,
+                hint: "In spoken French, 'ne' is often dropped."
+            },
+            {
+                id: "a1_05_q40",
+                type: "choice",
+                question: "Tu ne ___ (parler) pas fort.",
+                options: ["parles", "parle", "parlez"],
+                correct: 0,
+                hint: "Conjugate 'parler' for Tu inside the negation."
+            },
+
+            // --- Variations (Jamais / Rien / Personne) - Intro ---
+            {
+                id: "a1_05_q41",
+                type: "choice",
+                question: "Je ne mange ___ (never) de viande.",
+                options: ["jamais", "pas", "rien"],
+                correct: 0,
+                hint: "Jamais replaces Pas."
+            },
+            {
+                id: "a1_05_q42",
+                type: "choice",
+                question: "Je ne vois ___ (nothing).",
+                options: ["rien", "pas", "jamais"],
+                correct: 0,
+                hint: "Rien replaces Pas."
+            },
+            {
+                id: "a1_05_q43",
+                type: "choice",
+                question: "Il n'y a ___ (nobody) ici.",
+                options: ["personne", "pas", "rien"],
+                correct: 0,
+                hint: "Personne replaces Pas."
+            },
+            {
+                id: "a1_05_q44",
+                type: "sort",
+                question: "Build: 'I never smoke.'",
+                blocks: ["fume", "jamais", "ne", "Je"],
+                correct_order: ["Je", "ne", "fume", "jamais"],
+                hint: "Jamais takes the spot of Pas."
+            },
+            {
+                id: "a1_05_q45",
+                type: "sort",
+                question: "Build: 'I understand nothing.'",
+                blocks: ["comprends", "rien", "Je", "ne"],
+                correct_order: ["Je", "ne", "comprends", "rien"],
+                hint: "Rien takes the spot of Pas."
+            },
+
+            // --- Final Challenge ---
+            {
+                id: "a1_05_q46",
+                type: "input",
+                question: "Full sentence: I am not ready (prêt).",
+                answer: "je ne suis pas prêt",
+                hint: "Don't forget spaces."
+            },
+            {
+                id: "a1_05_q47",
+                type: "choice",
+                question: "Which is correct?",
+                options: ["Je ne pas mange.", "Je ne mange pas.", "Je mange ne pas."],
+                correct: 1,
+                hint: "The sandwich rule."
+            },
+            {
+                id: "a1_05_q48",
+                type: "choice",
+                question: "Which is correct?",
+                options: ["Je n'ai pas de argent.", "Je n'ai pas d'argent."],
+                correct: 1,
+                hint: "De + Argent = D'argent."
+            },
+            {
+                id: "a1_05_q49",
+                type: "choice",
+                question: "Which is correct? (Être exception)",
+                options: ["Ce n'est pas un chat.", "Ce n'est pas de chat."],
+                correct: 0,
+                hint: "With Être, 'un' stays 'un'."
+            },
+            {
+                id: "a1_05_q50",
+                type: "sort",
+                question: "Build: 'You do not have a car.'",
+                blocks: ["de", "voiture", "n'", "Tu", "pas", "as"],
+                correct_order: ["Tu", "n'", "as", "pas", "de", "voiture"],
+                hint: "Tu n'as pas + de + noun."
             }
         ]
     },
@@ -1494,48 +2265,444 @@ const GRAMMAR_DATA = {
         },
         learn: {
             cheat_sheet: {
-                summary: "There are 3 ways to ask a question in French: Intonation (Easy), Est-ce que (Standard), and Inversion (Formal).",
-                key_rule: "🔥 Easiest way: Just add '?' and raise your voice at the end. (Tu aimes le café ?)."
+                summary: "There are 3 ways to ask a question in French: **Intonation** (Casual), **Est-ce que** (Standard), and **Inversion** (Formal).",
+                key_rule: "🔥 **The Magic Phrase:** When in doubt, use **'Est-ce que'** at the start of any sentence to turn it into a question instantly!"
             },
             explanation: [
                 {
                     type: "table",
-                    headers: ["Method", "Example (You speak French?)"],
+                    headers: ["Method", "Structure", "Example"],
                     rows: [
-                        ["1. Intonation (Casual)", "Tu parles français ?"],
-                        ["2. Est-ce que (Standard)", "Est-ce que tu parles français ?"],
-                        ["3. Inversion (Formal)", "Parles-tu français ?"]
+                        ["1. Intonation (Casual)", "Statement + ?", "Tu aimes le café ?"],
+                        ["2. Est-ce que (Standard)", "Est-ce que + Statement + ?", "Est-ce que tu aimes le café ?"],
+                        ["3. Inversion (Formal)", "Verb-Subject + ?", "Aimes-tu le café ?"]
                     ]
                 },
                 {
                     type: "text",
-                    content: "Question words go at the beginning or end: 'Où' (Where), 'Quand' (When), 'Qui' (Who), 'Comment' (How)."
+                    content: "**Question Words:**\nThese usually go at the **beginning** (formal) or **end** (casual) of the sentence.\n* **Où** (Where)\n* **Quand** (When)\n* **Qui** (Who)\n* **Quoi / Que** (What)\n* **Comment** (How)\n* **Pourquoi** (Why)\n* **Combien** (How much)"
+                },
+                {
+                    type: "warning",
+                    title: "⚠️ The 't' for Sound (Inversion)",
+                    content: "In Inversion, if the verb ends in a vowel and the subject starts with a vowel (il/elle), we add a **-t-** in the middle.\n* *A-t-il faim ?* (Is he hungry?)"
                 }
             ]
         },
         practice: [
+            // --- Method 1: Intonation (Casual) ---
             {
                 id: "a1_06_q01",
                 type: "choice",
-                question: "Make it a question: 'Il est ici.'",
-                options: ["Est-ce qu'il est ici ?", "Il est ici est-ce que ?", "Quoi il est ici ?"],
+                question: "Which is an 'Intonation' question?",
+                options: ["Tu viens ?", "Est-ce que tu viens ?", "Viens-tu ?"],
                 correct: 0,
-                hint: "Start with 'Est-ce que'."
+                hint: "It looks exactly like a statement."
             },
             {
                 id: "a1_06_q02",
-                type: "input",
-                question: "___ (Where) habites-tu ?",
-                answer: "Où",
-                hint: "3 letters. Means 'Where'."
+                type: "choice",
+                question: "Casual: 'You are French?'",
+                options: ["Tu es français ?", "Es-tu français ?", "Est-ce que tu es français ?"],
+                correct: 0,
+                hint: "Simplest form."
             },
             {
                 id: "a1_06_q03",
                 type: "sort",
-                question: "Build: 'Do you like Paris?' (Standard way)",
-                blocks: ["tu", "aimes", "Est-ce", "que", "Paris", "?"],
-                correct_order: ["Est-ce", "que", "tu", "aimes", "Paris", "?"],
-                hint: "Start with the magic phrase 'Est-ce que'."
+                question: "Build (Casual): 'You are eating?'",
+                blocks: ["manges", "Tu", "?", "mangez", "est-ce"], // Distractors: mangez, est-ce
+                correct_order: ["Tu", "manges", "?"],
+                hint: "Subject + Verb + ?"
+            },
+            {
+                id: "a1_06_q04",
+                type: "input",
+                question: "Turn into question (Casual): 'Il est là.'",
+                answer: "il est là ?",
+                hint: "Just add a question mark."
+            },
+            {
+                id: "a1_06_q05",
+                type: "choice",
+                question: "Spoken French: 'C'est bon ?'",
+                options: ["Is it good?", "It is good."],
+                correct: 0,
+                hint: "Intonation rises at the end."
+            },
+
+            // --- Method 2: Est-ce que (Standard) ---
+            {
+                id: "a1_06_q06",
+                type: "sort",
+                question: "Build: 'Do you speak English?'",
+                blocks: ["parles", "que", "Est-ce", "tu", "anglais", "?", "parlez", "qui"], // Distractors: parlez, qui
+                correct_order: ["Est-ce", "que", "tu", "parles", "anglais", "?"],
+                hint: "Start with Est-ce que."
+            },
+            {
+                id: "a1_06_q07",
+                type: "choice",
+                question: "___ tu habites ici ?",
+                options: ["Est-ce que", "Est-ce qui", "Est-ce"],
+                correct: 0,
+                hint: "Full phrase is 'Est-ce que'."
+            },
+            {
+                id: "a1_06_q08",
+                type: "choice",
+                question: "Est-ce ___ (he) est prêt ?",
+                options: ["qu'il", "que il", "qui il"],
+                correct: 0,
+                hint: "Que + il = Qu'il."
+            },
+            {
+                id: "a1_06_q09",
+                type: "sort",
+                question: "Build: 'Is she arriving?'",
+                blocks: ["qu'", "arrive", "Est-ce", "elle", "?", "que", "il"], // Distractors: que, il
+                correct_order: ["Est-ce", "qu'", "elle", "arrive", "?"],
+                hint: "Elision: Qu'elle."
+            },
+            {
+                id: "a1_06_q10",
+                type: "choice",
+                question: "Est-ce que nous ___ (have) le temps ?",
+                options: ["avons", "avez", "ont"],
+                correct: 0,
+                hint: "Conjugate Avoir for Nous."
+            },
+
+            // --- Method 3: Inversion (Formal) ---
+            {
+                id: "a1_06_q11",
+                type: "choice",
+                question: "Inversion: 'Vous parlez.' -> ___ ?",
+                options: ["Parlez-vous", "Vous parlez", "Parlez vous"],
+                correct: 0,
+                hint: "Don't forget the hyphen (-)."
+            },
+            {
+                id: "a1_06_q12",
+                type: "choice",
+                question: "Inversion: 'Tu as faim.' -> ___ ?",
+                options: ["As-tu faim", "A-tu faim", "Tu as faim"],
+                correct: 0,
+                hint: "Verb-Subject."
+            },
+            {
+                id: "a1_06_q13",
+                type: "sort",
+                question: "Build (Formal): 'Are you happy?'",
+                blocks: ["Êtes-vous", "content", "?", "Vous êtes", "es-tu"], // Distractors: Vous êtes, es-tu
+                correct_order: ["Êtes-vous", "content", "?"],
+                hint: "Verb first."
+            },
+            {
+                id: "a1_06_q14",
+                type: "choice",
+                question: "Special -t- rule: 'Il a un chien' -> ___ un chien ?",
+                options: ["A-t-il", "A-il", "As-il"],
+                correct: 0,
+                hint: "Vowel clash (A - Il) needs a 't' in between."
+            },
+            {
+                id: "a1_06_q15",
+                type: "sort",
+                question: "Build (Formal): 'Does she speak?'",
+                blocks: ["Parle-t-elle", "?", "Parle-elle", "t", "Parles-elle"], // Distractors: Parle-elle, Parles-elle
+                correct_order: ["Parle-t-elle", "?"],
+                hint: "Needs the extra 't' for sound."
+            },
+
+            // --- Question Words (Context) ---
+            {
+                id: "a1_06_q16",
+                type: "input",
+                question: "___ (Where) vas-tu ?",
+                answer: "Où",
+                hint: "Accent grave on the u."
+            },
+            {
+                id: "a1_06_q17",
+                type: "choice",
+                question: "___ (When) partons-nous ?",
+                options: ["Quand", "Qui", "Quoi"],
+                correct: 0,
+                hint: "Time."
+            },
+            {
+                id: "a1_06_q18",
+                type: "choice",
+                question: "___ (Who) est là ?",
+                options: ["Qui", "Que", "Quand"],
+                correct: 0,
+                hint: "Person."
+            },
+            {
+                id: "a1_06_q19",
+                type: "choice",
+                question: "___ (How) ça va ?",
+                options: ["Comment", "Combien", "Pourquoi"],
+                correct: 0,
+                hint: "Manner / State."
+            },
+            {
+                id: "a1_06_q20",
+                type: "choice",
+                question: "___ (Why) pleures-tu ?",
+                options: ["Pourquoi", "Parce que", "Pour"],
+                correct: 0,
+                hint: "Reason."
+            },
+            {
+                id: "a1_06_q21",
+                type: "choice",
+                question: "___ (How much) ça coûte ?",
+                options: ["Combien", "Comment", "Quand"],
+                correct: 0,
+                hint: "Quantity / Price."
+            },
+            {
+                id: "a1_06_q22",
+                type: "choice",
+                question: "___ (What) fais-tu ?",
+                options: ["Que", "Qui", "Où"],
+                correct: 0,
+                hint: "Formal 'What' at start of sentence."
+            },
+            {
+                id: "a1_06_q23",
+                type: "choice",
+                question: "Tu fais ___ (what) ?",
+                options: ["quoi", "que", "qui"],
+                correct: 0,
+                hint: "Informal 'What' at end of sentence."
+            },
+            {
+                id: "a1_06_q24",
+                type: "choice",
+                question: "___ est ce garçon ?",
+                options: ["Qui", "Que", "Quoi"],
+                correct: 0,
+                hint: "Asking about a person."
+            },
+            {
+                id: "a1_06_q25",
+                type: "input",
+                question: "___ (What) est-ce que tu aimes ?",
+                answer: "Qu'",
+                hint: "Que + est = Qu'."
+            },
+
+            // --- Mixed Sorting with Distractors ---
+            {
+                id: "a1_06_q26",
+                type: "sort",
+                question: "Build: 'Where do you live?' (Est-ce que)",
+                blocks: ["Où", "est-ce", "que", "tu", "habites", "?", "quand", "habitez"], // Distractors: quand, habitez
+                correct_order: ["Où", "est-ce", "que", "tu", "habites", "?"],
+                hint: "Question word goes first."
+            },
+            {
+                id: "a1_06_q27",
+                type: "sort",
+                question: "Build: 'How are you?' (Formal Inversion)",
+                blocks: ["Allez-vous", "Comment", "?", "va", "tu"], // Distractors: va, tu
+                correct_order: ["Comment", "Allez-vous", "?"],
+                hint: "Comment + Inversion."
+            },
+            {
+                id: "a1_06_q28",
+                type: "sort",
+                question: "Build: 'Why are you crying?' (Standard)",
+                blocks: ["Pourquoi", "est-ce", "que", "tu", "pleures", "?", "qui", "pleurez"], // Distractors: qui, pleurez
+                correct_order: ["Pourquoi", "est-ce", "que", "tu", "pleures", "?"],
+                hint: "Q-Word + Est-ce que + Subject + Verb."
+            },
+            {
+                id: "a1_06_q29",
+                type: "sort",
+                question: "Build: 'Who is it?' (C'est qui)",
+                blocks: ["C'", "est", "qui", "?", "que", "ce"], // Distractors: que, ce
+                correct_order: ["C'", "est", "qui", "?"],
+                hint: "Informal phrasing."
+            },
+            {
+                id: "a1_06_q30",
+                type: "sort",
+                question: "Build: 'Do you have a car?' (Inversion)",
+                blocks: ["As-tu", "une", "voiture", "?", "A-tu", "la"], // Distractors: A-tu, la
+                correct_order: ["As-tu", "une", "voiture", "?"],
+                hint: "Avoir conjugation."
+            },
+
+            // --- Qu'est-ce que vs Qui est-ce que ---
+            {
+                id: "a1_06_q31",
+                type: "choice",
+                question: "___ (What) c'est ?",
+                options: ["Qu'est-ce que", "Qui est-ce que"],
+                correct: 0,
+                hint: "Asking about a thing."
+            },
+            {
+                id: "a1_06_q32",
+                type: "choice",
+                question: "___ (Who) regarde la télé ?",
+                options: ["Qui est-ce qui", "Qu'est-ce qui"],
+                correct: 0,
+                hint: "Asking about a person (subject)."
+            },
+            
+            // --- Rapid Fire Translation ---
+            {
+                id: "a1_06_q33",
+                type: "choice",
+                question: "Translate: 'Are we going?'",
+                options: ["On y va ?", "On est va ?", "Allons on ?"],
+                correct: 0,
+                hint: "Common expression: On y va."
+            },
+            {
+                id: "a1_06_q34",
+                type: "choice",
+                question: "Translate: 'Can you help?' (Formal)",
+                options: ["Pouvez-vous aider ?", "Peux-tu aider ?", "Aidez-vous ?"],
+                correct: 0,
+                hint: "Inversion of Pouvoir."
+            },
+            {
+                id: "a1_06_q35",
+                type: "choice",
+                question: "Translate: 'What is your name?' (Comment...)",
+                options: ["Comment t'appelles-tu ?", "Où t'appelles-tu ?", "Pourquoi t'appelles-tu ?"],
+                correct: 0,
+                hint: "How do you call yourself."
+            },
+
+            // --- Correction Drills (Spot the mistake) ---
+            {
+                id: "a1_06_q36",
+                type: "choice",
+                question: "Which is correct?",
+                options: ["Où habites-tu ?", "Où tu habites ?", "Où est-ce que tu habites ?"],
+                correct: 0,
+                hint: "Strictly speaking, 'Où tu habites' is bad grammar (though used casually). Inversion is safest here."
+            },
+            {
+                id: "a1_06_q37",
+                type: "choice",
+                question: "Which is correct (Inversion)?",
+                options: ["A-t-il faim ?", "A-il faim ?", "Est-il faim ?"],
+                correct: 0,
+                hint: "Needs the T, and uses Avoir."
+            },
+            {
+                id: "a1_06_q38",
+                type: "choice",
+                question: "Which is correct?",
+                options: ["Est-ce qu'il pleut ?", "Est-ce il pleut ?", "Est-ce que pleut ?"],
+                correct: 0,
+                hint: "Que + il = Qu'il."
+            },
+
+            // --- Complex Sorts (Words + Structure) ---
+            {
+                id: "a1_06_q39",
+                type: "sort",
+                question: "Build: 'When does the train leave?'",
+                blocks: ["part", "le", "Quand", "train", "?", "est", "quoi"], // Distractors: est, quoi
+                correct_order: ["Quand", "le", "train", "part", "?"],
+                hint: "Intonation style with Q-word."
+            },
+            {
+                id: "a1_06_q40",
+                type: "sort",
+                question: "Build: 'Why do you like France?' (Est-ce que)",
+                blocks: ["Pourquoi", "est-ce", "que", "tu", "aimes", "la", "France", "?", "le", "parce"], // Distractors: le, parce
+                correct_order: ["Pourquoi", "est-ce", "que", "tu", "aimes", "la", "France", "?"],
+                hint: "Long standard structure."
+            },
+            
+            // --- Final Challenge ---
+            {
+                id: "a1_06_q41",
+                type: "input",
+                question: "Formal: ___ (Do you speak) anglais ?",
+                answer: "parlez-vous",
+                hint: "Inversion of Parler (Vous)."
+            },
+            {
+                id: "a1_06_q42",
+                type: "input",
+                question: "Casual: Tu ___ (want) du café ?",
+                answer: "veux",
+                hint: "Tu form of Vouloir."
+            },
+            {
+                id: "a1_06_q43",
+                type: "choice",
+                question: "Combien ___ (costs) ce t-shirt ?",
+                options: ["coûte", "coûtes", "coûtent"],
+                correct: 0,
+                hint: "Singular subject (ce t-shirt)."
+            },
+            {
+                id: "a1_06_q44",
+                type: "choice",
+                question: "___ (Who) est ton professeur ?",
+                options: ["Qui", "Que"],
+                correct: 0,
+                hint: "Person."
+            },
+            {
+                id: "a1_06_q45",
+                type: "choice",
+                question: "___ (When) est ton anniversaire ?",
+                options: ["C'est quand", "C'est où", "C'est qui"],
+                correct: 0,
+                hint: "Time."
+            },
+            {
+                id: "a1_06_q46",
+                type: "sort",
+                question: "Build: 'Are they (fem) coming?' (Inversion)",
+                blocks: ["Viennent-elles", "?", "Viennent-ils", "Elles-viennent"], // Distractors: Viennent-ils, Elles-viennent
+                correct_order: ["Viennent-elles", "?"],
+                hint: "Verb first."
+            },
+            {
+                id: "a1_06_q47",
+                type: "sort",
+                question: "Build: 'What are you doing?' (Qu'est-ce que)",
+                blocks: ["Qu'", "est-ce", "que", "tu", "fais", "?", "Qui", "faites"], // Distractors: Qui, faites
+                correct_order: ["Qu'", "est-ce", "que", "tu", "fais", "?"],
+                hint: "What + is it + that + you + do."
+            },
+            {
+                id: "a1_06_q48",
+                type: "choice",
+                question: "Response to 'Pourquoi ?'",
+                options: ["Parce que...", "Pour...", "Oui"],
+                correct: 0,
+                hint: "Because..."
+            },
+            {
+                id: "a1_06_q49",
+                type: "choice",
+                question: "Response to 'Qui est-ce ?'",
+                options: ["C'est Pierre.", "C'est un livre.", "Il est à Paris."],
+                correct: 0,
+                hint: "Asking about a person."
+            },
+            {
+                id: "a1_06_q50",
+                type: "sort",
+                question: "Build: 'Can we go?'",
+                blocks: ["Peut-on", "y", "aller", "?", "Peux-je", "allons"], // Distractors: Peux-je, allons
+                correct_order: ["Peut-on", "y", "aller", "?"],
+                hint: "Using 'On' for We. Inversion. 'Y' stands for 'there'."
             }
         ]
     },
@@ -1547,13 +2714,13 @@ const GRAMMAR_DATA = {
         },
         learn: {
             cheat_sheet: {
-                summary: "You cannot speak French without 'Aller' (to go) and 'Faire' (to do/make). They follow NO pattern.",
-                key_rule: "🔥 Memorize these! 'Je vais' (I go) and 'Je fais' (I do)."
+                summary: "You cannot speak French without **Aller** (to go) and **Faire** (to do/make). They are completely irregular and follow NO pattern.",
+                key_rule: "🔥 **Memorize these!** Especially the plurals: *Ils vont* (They go) and *Ils font* (They do)."
             },
             explanation: [
                 {
                     type: "text",
-                    content: "These are completely irregular. Don't try to find a rule."
+                    content: "These verbs change their stem completely. 'Aller' sounds like 'V-' in singular, and 'Faire' has a unique 'Faites' form for 'Vous'."
                 },
                 {
                     type: "table",
@@ -1561,98 +2728,886 @@ const GRAMMAR_DATA = {
                     rows: [
                         ["Je", "vais", "fais"],
                         ["Tu", "vas", "fais"],
-                        ["Il/Elle", "va", "fait"],
+                        ["Il / Elle", "va", "fait"],
                         ["Nous", "allons", "faisons"],
                         ["Vous", "allez", "faites (!)",],
-                        ["Ils/Elles", "vont (!)", "font (!)"]
+                        ["Ils / Elles", "vont (!)", "font (!)"]
                     ]
                 },
                 {
                     type: "warning",
-                    title: "⚠️ Watch out!",
-                    content: "Note the plural forms: 'Ils vont' (not allent) and 'Ils font' (not faisent). Also 'Vous faites' is very special!"
+                    title: "⚠️ The Plural Trap",
+                    content: "Be careful! \n* **Ils vont** (NOT allent)\n* **Ils font** (NOT faisent)\n* **Vous faites** (NOT faisez). This is one of only 3 verbs in French where 'Vous' does not end in -ez (Êtes, Faites, Dites)."
+                },
+                {
+                    type: "text",
+                    content: "**Common Expressions:**\n* *Comment ça va ?* (How is it going?)\n* *Je fais du sport.* (I do sports.)\n* *Il fait beau.* (The weather is nice - lit. It makes nice.)"
                 }
             ]
         },
         practice: [
+            // --- Conjugation: Aller ---
             {
-                id: "a1_13_q01",
+                id: "a1_07_q01",
                 type: "choice",
-                question: "Je ___ (aller) au cinéma.",
-                options: ["alle", "vais", "vas"],
+                question: "Je ___ au cinéma.",
+                options: ["vais", "vas", "va"],
+                correct: 0,
+                hint: "First person singular of Aller."
+            },
+            {
+                id: "a1_07_q02",
+                type: "choice",
+                question: "Tu ___ bien ?",
+                options: ["va", "vas", "allez"],
                 correct: 1,
-                hint: "It sounds like 'vay'."
+                hint: "How are you doing? (Tu form)."
             },
             {
-                id: "a1_13_q02",
-                type: "choice",
-                question: "Vous ___ (faire) du sport ?",
-                options: ["faisez", "faisons", "faites"],
-                correct: 2,
-                hint: "It's a strict exception: faites."
-            },
-            {
-                id: "a1_13_q03",
+                id: "a1_07_q03",
                 type: "input",
-                question: "Ils ___ (aller) à Paris.",
-                answer: "vont",
-                hint: "Starts with v."
+                question: "Il ___ (goes) à l'école.",
+                answer: "va",
+                hint: "3rd person singular."
+            },
+            {
+                id: "a1_07_q04",
+                type: "choice",
+                question: "Nous ___ (go) au parc.",
+                options: ["allons", "avons", "vont"],
+                correct: 0,
+                hint: "Regular ending for Nous."
+            },
+            {
+                id: "a1_07_q05",
+                type: "choice",
+                question: "Vous ___ (go) où ?",
+                options: ["allez", "avez", "aller"],
+                correct: 0,
+                hint: "Regular ending for Vous."
+            },
+            {
+                id: "a1_07_q06",
+                type: "choice",
+                question: "Ils ___ (go) vite.",
+                options: ["vont", "allent", "sont"],
+                correct: 0,
+                hint: "Irregular plural! Starts with V."
+            },
+             {
+                id: "a1_07_q07",
+                type: "sort",
+                question: "Build: 'I go to Paris.'",
+                blocks: ["Paris", "vais", "à", "Je", "va", "suis"], // Distractors: va, suis
+                correct_order: ["Je", "vais", "à", "Paris"],
+                hint: "Subject + Verb + Preposition + City."
+            },
+
+            // --- Conjugation: Faire ---
+            {
+                id: "a1_07_q08",
+                type: "choice",
+                question: "Je ___ (do) mes devoirs.",
+                options: ["fais", "fait", "font"],
+                correct: 0,
+                hint: "Je form ends in s."
+            },
+            {
+                id: "a1_07_q09",
+                type: "choice",
+                question: "Tu ___ (do) quoi ?",
+                options: ["fait", "fais", "faites"],
+                correct: 1,
+                hint: "Tu form ends in s."
+            },
+            {
+                id: "a1_07_q10",
+                type: "choice",
+                question: "Elle ___ (does) du yoga.",
+                options: ["fais", "fait", "font"],
+                correct: 1,
+                hint: "Elle form ends in t."
+            },
+            {
+                id: "a1_07_q11",
+                type: "input",
+                question: "Nous ___ (make) un gâteau.",
+                answer: "faisons",
+                hint: "Regular ending for Nous."
+            },
+            {
+                id: "a1_07_q12",
+                type: "choice",
+                question: "Vous ___ (do) du sport ?",
+                options: ["faisez", "faites", "faisons"],
+                correct: 1,
+                hint: "Major irregularity! No -ez here."
+            },
+            {
+                id: "a1_07_q13",
+                type: "choice",
+                question: "Elles ___ (make) du bruit.",
+                options: ["font", "faisent", "sont"],
+                correct: 0,
+                hint: "Irregular plural! Starts with F."
+            },
+             {
+                id: "a1_07_q14",
+                type: "sort",
+                question: "Build: 'He makes a cake.'",
+                blocks: ["gâteau", "fait", "Il", "un", "fais", "a"], // Distractors: fais, a
+                correct_order: ["Il", "fait", "un", "gâteau"],
+                hint: "3rd person singular."
+            },
+
+            // --- 'Ça va' Expressions ---
+            {
+                id: "a1_07_q15",
+                type: "choice",
+                question: "Comment ça ___ ?",
+                options: ["va", "vas", "aller"],
+                correct: 0,
+                hint: "'Ça' takes the 3rd person singular (like Il)."
+            },
+            {
+                id: "a1_07_q16",
+                type: "choice",
+                question: "Answer: Ça ___ bien.",
+                options: ["va", "est", "fais"],
+                correct: 0,
+                hint: "It 'goes' well."
+            },
+
+            // --- Faire Expressions (Weather, Sports) ---
+            {
+                id: "a1_07_q17",
+                type: "choice",
+                question: "Il ___ (is) beau aujourd'hui.",
+                options: ["fait", "est", "a"],
+                correct: 0,
+                hint: "Weather uses Faire (It makes nice)."
+            },
+            {
+                id: "a1_07_q18",
+                type: "choice",
+                question: "Il ___ (is) froid.",
+                options: ["fait", "est"],
+                correct: 0,
+                hint: "Weather = Faire."
+            },
+            {
+                id: "a1_07_q19",
+                type: "input",
+                question: "Je ___ (do) de la natation.",
+                answer: "fais",
+                hint: "Je form."
+            },
+            {
+                id: "a1_07_q20",
+                type: "choice",
+                question: "Nous ___ la cuisine.",
+                options: ["faisons", "jouons", "allons"],
+                correct: 0,
+                hint: "To cook = Faire la cuisine."
+            },
+
+            // --- Mixed Discrimination (Aller vs Faire vs Avoir/Être) ---
+            {
+                id: "a1_07_q21",
+                type: "choice",
+                question: "Ils ___ (are) contents.",
+                options: ["sont", "vont", "font"],
+                correct: 0,
+                hint: "State -> Être."
+            },
+            {
+                id: "a1_07_q22",
+                type: "choice",
+                question: "Ils ___ (go) au parc.",
+                options: ["vont", "sont", "font"],
+                correct: 0,
+                hint: "Motion -> Aller."
+            },
+            {
+                id: "a1_07_q23",
+                type: "choice",
+                question: "Ils ___ (do) leurs devoirs.",
+                options: ["font", "vont", "sont"],
+                correct: 0,
+                hint: "Action -> Faire."
+            },
+            {
+                id: "a1_07_q24",
+                type: "choice",
+                question: "Vous ___ (are) français ?",
+                options: ["êtes", "faites", "allez"],
+                correct: 0,
+                hint: "Identity -> Être."
+            },
+            {
+                id: "a1_07_q25",
+                type: "choice",
+                question: "Vous ___ (make) un dessin ?",
+                options: ["faites", "êtes", "allez"],
+                correct: 0,
+                hint: "Creation -> Faire."
+            },
+            {
+                id: "a1_07_q26",
+                type: "choice",
+                question: "Vous ___ (go) bien ?",
+                options: ["allez", "êtes", "avez"],
+                correct: 0,
+                hint: "Health/State -> Aller."
+            },
+
+            // --- The "Vont/Font/Sont/Ont" Challenge ---
+            {
+                id: "a1_07_q27",
+                type: "choice",
+                question: "Ils ___ (have) un chat.",
+                options: ["ont", "sont", "vont"],
+                correct: 0,
+                hint: "Avoir."
+            },
+            {
+                id: "a1_07_q28",
+                type: "choice",
+                question: "Ils ___ (are) ici.",
+                options: ["sont", "font", "vont"],
+                correct: 0,
+                hint: "Être."
+            },
+            {
+                id: "a1_07_q29",
+                type: "choice",
+                question: "Ils ___ (make) du pain.",
+                options: ["font", "vont", "sont"],
+                correct: 0,
+                hint: "Faire."
+            },
+            {
+                id: "a1_07_q30",
+                type: "choice",
+                question: "Ils ___ (go) à la plage.",
+                options: ["vont", "font", "ont"],
+                correct: 0,
+                hint: "Aller."
+            },
+
+            // --- Sentence Sorting Drills ---
+            {
+                id: "a1_07_q31",
+                type: "sort",
+                question: "Build: 'What are you doing?'",
+                blocks: ["fais", "Qu'est-ce", "que", "tu", "?", "vas", "fait"], // Distractors: vas, fait
+                correct_order: ["Qu'est-ce", "que", "tu", "fais", "?"],
+                hint: "Standard question structure."
+            },
+            {
+                id: "a1_07_q32",
+                type: "sort",
+                question: "Build: 'We are going home.'",
+                blocks: ["maison", "allons", "à", "la", "Nous", "sommes"], // Distractors: sommes
+                correct_order: ["Nous", "allons", "à", "la", "maison"],
+                hint: "Subject + Aller + Destination."
+            },
+            {
+                id: "a1_07_q33",
+                type: "sort",
+                question: "Build: 'He makes a cake.'",
+                blocks: ["gâteau", "fait", "Il", "un", "va", "est"], // Distractors: va, est
+                correct_order: ["Il", "fait", "un", "gâteau"],
+                hint: "Faire conjugation."
+            },
+            {
+                id: "a1_07_q34",
+                type: "sort",
+                question: "Build: 'You (formal) do sports.'",
+                blocks: ["sport", "du", "faites", "Vous", "faisez", "allez"], // Distractors: faisez, allez
+                correct_order: ["Vous", "faites", "du", "sport"],
+                hint: "Remember: Vous FAITES."
+            },
+
+            // --- Rapid Fire Translation ---
+            {
+                id: "a1_07_q35",
+                type: "choice",
+                question: "Translate: 'I go'",
+                options: ["Je vais", "Je go", "Je marche"],
+                correct: 0,
+                hint: "Aller."
+            },
+            {
+                id: "a1_07_q36",
+                type: "choice",
+                question: "Translate: 'You (friend) do'",
+                options: ["Tu fais", "Tu fait", "Tu vas"],
+                correct: 0,
+                hint: "Faire ending s."
+            },
+            {
+                id: "a1_07_q37",
+                type: "choice",
+                question: "Translate: 'She goes'",
+                options: ["Elle va", "Elle vas", "Elle aller"],
+                correct: 0,
+                hint: "No 's' for 3rd person."
+            },
+            {
+                id: "a1_07_q38",
+                type: "choice",
+                question: "Translate: 'They (fem) make'",
+                options: ["Elles font", "Elles faisent", "Elles vont"],
+                correct: 0,
+                hint: "Irregular plural."
+            },
+            {
+                id: "a1_07_q39",
+                type: "input",
+                question: "Translate: 'We go' (Nous)",
+                answer: "allons",
+                hint: "Nous ___"
+            },
+            {
+                id: "a1_07_q40",
+                type: "input",
+                question: "Translate: 'You (plural) do'",
+                answer: "faites",
+                hint: "Vous ___"
+            },
+
+            // --- Advanced Context ---
+            {
+                id: "a1_07_q41",
+                type: "choice",
+                question: "Je ___ les courses (shopping).",
+                options: ["fais", "vais"],
+                correct: 0,
+                hint: "To DO the shopping."
+            },
+            {
+                id: "a1_07_q42",
+                type: "choice",
+                question: "Tu ___ les devoirs.",
+                options: ["fais", "vas"],
+                correct: 0,
+                hint: "To DO homework."
+            },
+            {
+                id: "a1_07_q43",
+                type: "choice",
+                question: "On ___ au restaurant.",
+                options: ["va", "fait"],
+                correct: 0,
+                hint: "Movement to a place."
+            },
+            {
+                id: "a1_07_q44",
+                type: "choice",
+                question: "Il ___ la vaisselle (dishes).",
+                options: ["fait", "va"],
+                correct: 0,
+                hint: "Doing a chore."
+            },
+            {
+                id: "a1_07_q45",
+                type: "choice",
+                question: "Nous ___ en vacances.",
+                options: ["allons", "faisons"],
+                correct: 0,
+                hint: "Going on vacation."
+            },
+            {
+                id: "a1_07_q46",
+                type: "choice",
+                question: "Vous ___ attention.",
+                options: ["faites", "allez"],
+                correct: 0,
+                hint: "Expression: To pay (make) attention."
+            },
+            {
+                id: "a1_07_q47",
+                type: "choice",
+                question: "Ils ___ la fête.",
+                options: ["font", "vont"],
+                correct: 0,
+                hint: "To party (make the party)."
+            },
+            {
+                id: "a1_07_q48",
+                type: "sort",
+                question: "Build: 'Are you doing okay?'",
+                blocks: ["va", "ça", "Est-ce", "que", "?", "fais", "bien"], // Distractors: fais, bien
+                correct_order: ["Est-ce", "que", "ça", "va", "?"],
+                hint: "Using 'Aller' for well-being."
+            },
+            {
+                id: "a1_07_q49",
+                type: "choice",
+                question: "Qu'est-ce qu'ils ___ ?",
+                options: ["font", "faisent"],
+                correct: 0,
+                hint: "What are they doing?"
+            },
+            {
+                id: "a1_07_q50",
+                type: "choice",
+                question: "Final Check: 'I am going (aller) to do (faire) it.'",
+                options: ["Je vais le faire", "Je fais le aller"],
+                correct: 0,
+                hint: "Conjugated Aller + Infinitive Faire."
             }
         ]
     },
     "a1_08": {
         meta: {
             title: "Verbs ending in -ir",
-            tags: ["Grammar", "Verbs", "Group 2"],
+            tags: ["Grammar", "Verbs", "Group 2", "A1"],
             color: "text-blue-600 bg-blue-50"
         },
         learn: {
             cheat_sheet: {
-                summary: "This is the '2nd Group'. They follow a regular pattern, but watch out for the plural forms!",
-                key_rule: "🔥 The 'SS' Rule: In plural (nous/vous/ils), add '-iss-' before the ending. (Finir -> Nous finissons)."
+                summary: "This is the **2nd Group** of French verbs. They are regular but have a special characteristic in the plural forms.",
+                key_rule: "🔥 **The 'SS' Rule:** For plural subjects (Nous, Vous, Ils), you MUST insert **-iss-** before the ending!\n* *Finir -> Nous fin**iss**ons*"
             },
             explanation: [
                 {
                     type: "text",
-                    content: "Common verbs: Finir (to finish), Choisir (to choose), Réussir (to succeed). Drop the -ir and add:"
+                    content: "To conjugate these verbs (Finir, Choisir, Réussir), drop the **-ir** and add these endings:"
                 },
                 {
                     type: "table",
-                    headers: ["Subject", "Ending", "Example (Finir)"],
+                    headers: ["Subject", "Ending", "Example (Finir)", "Pronunciation"],
                     rows: [
-                        ["Je", "-is", "finis"],
-                        ["Tu", "-is", "finis"],
-                        ["Il/Elle", "-it", "finit"],
-                        ["Nous", "-issons", "finissons"],
-                        ["Vous", "-issez", "finissez"],
-                        ["Ils/Elles", "-issent", "finissent"]
+                        ["Je", "-is", "finis", "fin-ee"],
+                        ["Tu", "-is", "finis", "fin-ee"],
+                        ["Il/Elle", "-it", "finit", "fin-ee"],
+                        ["Nous", "-issons", "finissons", "fin-ee-son"],
+                        ["Vous", "-issez", "finissez", "fin-ee-say"],
+                        ["Ils/Elles", "-issent", "finissent", "fin-iss"]
                     ]
+                },
+                {
+                    type: "warning",
+                    title: "⚠️ False Friends (Group 3)",
+                    content: "Not all -IR verbs follow this pattern! Some (like **Partir, Dormir, Sortir**) are irregular (Group 3) and do NOT take the -iss- stem. \n* *Nous partons* (NOT partissons).\n* *Nous dormons* (NOT dormissons)."
+                },
+                {
+                    type: "text",
+                    content: "**Common Group 2 Verbs:** Finir (to finish), Choisir (to choose), Réussir (to succeed), Réfléchir (to think/reflect), Grandir (to grow), Grossir (to gain weight), Rougir (to blush)."
                 }
             ]
         },
         practice: [
+            // --- Basic Conjugation: Finir (To finish) ---
             {
-                id: "a1_11_q01",
+                id: "a1_08_q01",
                 type: "choice",
-                question: "Tu ___ (choisir) le dessert.",
+                question: "Je ___ (finir) mon travail.",
+                options: ["finis", "finit", "finissons"],
+                correct: 0,
+                hint: "Je ends in -is."
+            },
+            {
+                id: "a1_08_q02",
+                type: "choice",
+                question: "Tu ___ (finir) ton repas.",
+                options: ["finis", "finit", "finissez"],
+                correct: 0,
+                hint: "Tu ends in -is."
+            },
+            {
+                id: "a1_08_q03",
+                type: "choice",
+                question: "Il ___ (finir) la course.",
+                options: ["finit", "finis", "finissent"],
+                correct: 0,
+                hint: "Il ends in -it."
+            },
+            {
+                id: "a1_08_q04",
+                type: "input",
+                question: "Nous ___ (finir) le projet.",
+                answer: "finissons",
+                hint: "Don't forget the -iss- + ons."
+            },
+            {
+                id: "a1_08_q05",
+                type: "choice",
+                question: "Vous ___ (finir) à quelle heure ?",
+                options: ["finissez", "finisez", "finiez"],
+                correct: 0,
+                hint: "-iss- + ez."
+            },
+            {
+                id: "a1_08_q06",
+                type: "choice",
+                question: "Elles ___ (finir) leurs devoirs.",
+                options: ["finissent", "finisent", "finirent"],
+                correct: 0,
+                hint: "-iss- + ent."
+            },
+
+            // --- Basic Conjugation: Choisir (To choose) ---
+            {
+                id: "a1_08_q07",
+                type: "choice",
+                question: "Tu ___ (choisir) le rouge ou le bleu ?",
                 options: ["choisis", "choisit", "choisissez"],
                 correct: 0,
-                hint: "Tu always ends in 's' here."
+                hint: "Tu form."
             },
             {
-                id: "a1_11_q02",
+                id: "a1_08_q08",
                 type: "input",
-                question: "Nous ___ (finir) le travail.",
-                answer: "finissons",
-                hint: "Don't forget the 'iss' for plural!"
+                question: "Je ___ (choisir) la liberté.",
+                answer: "choisis",
+                hint: "Je form."
             },
             {
-                id: "a1_11_q03",
+                id: "a1_08_q09",
+                type: "choice",
+                question: "Nous ___ (choisir) ce restaurant.",
+                options: ["choisissons", "choisons", "choisisons"],
+                correct: 0,
+                hint: "Double S: Choisiss-."
+            },
+            {
+                id: "a1_08_q10",
+                type: "choice",
+                question: "Ils ___ (choisir) bien.",
+                options: ["choisissent", "choisent", "choisisent"],
+                correct: 0,
+                hint: "Double S: Choisiss-."
+            },
+
+            // --- Other Common Verbs ---
+            {
+                id: "a1_08_q11",
+                type: "choice",
+                question: "Elle ___ (réussir - succeed) à l'examen.",
+                options: ["réussit", "réussis", "réussit"],
+                correct: 0,
+                hint: "Ending -it for Elle."
+            },
+            {
+                id: "a1_08_q12",
+                type: "input",
+                question: "Vous ___ (réussir) toujours.",
+                answer: "réussissez",
+                hint: "Réuss-iss-ez."
+            },
+            {
+                id: "a1_08_q13",
+                type: "choice",
+                question: "Je ___ (réfléchir - think) au problème.",
+                options: ["réfléchis", "réfléchit"],
+                correct: 0,
+                hint: "Ending -is."
+            },
+            {
+                id: "a1_08_q14",
+                type: "choice",
+                question: "Nous ___ (réfléchir) ensemble.",
+                options: ["réfléchissons", "réfléchons"],
+                correct: 0,
+                hint: "The SS rule applies."
+            },
+            {
+                id: "a1_08_q15",
+                type: "input",
+                question: "Tu ___ (grandir - grow) vite !",
+                answer: "grandis",
+                hint: "Ending -is."
+            },
+            {
+                id: "a1_08_q16",
+                type: "choice",
+                question: "Les enfants ___ (grandir).",
+                options: ["grandissent", "grandisent"],
+                correct: 0,
+                hint: "Double S."
+            },
+            {
+                id: "a1_08_q17",
+                type: "choice",
+                question: "Elle ___ (rougir - blush) facilement.",
+                options: ["rougit", "rougis"],
+                correct: 0,
+                hint: "Ending -it."
+            },
+            {
+                id: "a1_08_q18",
+                type: "choice",
+                question: "Nous ___ (remplir - fill) les verres.",
+                options: ["remplissons", "remplisons"],
+                correct: 0,
+                hint: "Remplir is a regular Group 2 verb."
+            },
+            {
+                id: "a1_08_q19",
+                type: "choice",
+                question: "Le chat ___ (grossir - get fat).",
+                options: ["grossit", "grossis"],
+                correct: 0,
+                hint: "3rd person singular."
+            },
+            {
+                id: "a1_08_q20",
+                type: "choice",
+                question: "Vous ___ (obéir - obey) aux règles.",
+                options: ["obéissez", "obéiez"],
+                correct: 0,
+                hint: "Obéir is Group 2."
+            },
+
+            // --- Sentence Sorting (Structure) ---
+            {
+                id: "a1_08_q21",
                 type: "sort",
-                question: "Build: 'She succeeds.'",
-                blocks: ["Elle", "réussit", "réussis"],
-                correct_order: ["Elle", "réussit"],
-                hint: "3rd person singular ends in 't'."
+                question: "Build: 'She finishes the book.'",
+                blocks: ["livre", "finit", "le", "Elle", "finis", "la"], // Distractors: finis, la
+                correct_order: ["Elle", "finit", "le", "livre"],
+                hint: "Verb ends in -it."
+            },
+            {
+                id: "a1_08_q22",
+                type: "sort",
+                question: "Build: 'We choose the pizza.'",
+                blocks: ["choisissons", "Nous", "la", "pizza", "choisons", "le"], // Distractors: choisons, le
+                correct_order: ["Nous", "choisissons", "la", "pizza"],
+                hint: "Remember the SS."
+            },
+            {
+                id: "a1_08_q23",
+                type: "sort",
+                question: "Build: 'You (formal) succeed.'",
+                blocks: ["réussissez", "Vous", "réussis", "tu"], // Distractors: réussis, tu
+                correct_order: ["Vous", "réussissez"],
+                hint: "Vous form."
+            },
+            {
+                id: "a1_08_q24",
+                type: "sort",
+                question: "Build: 'They reflect (think).'",
+                blocks: ["réfléchissent", "Ils", "réfléchit", "Elles", "sont"], // Distractors: réfléchit
+                correct_order: ["Ils", "réfléchissent"],
+                hint: "Plural conjugation."
+            },
+
+            // --- False Friends (Group 2 vs Group 3) ---
+            {
+                id: "a1_08_q25",
+                type: "choice",
+                question: "Nous ___ (partir - Group 3!) en vacances.",
+                options: ["partons", "partissons"],
+                correct: 0,
+                hint: "Partir is irregular! No SS."
+            },
+            {
+                id: "a1_08_q26",
+                type: "choice",
+                question: "Nous ___ (dormir - Group 3!) bien.",
+                options: ["dormons", "dormissons"],
+                correct: 0,
+                hint: "Dormir is irregular. No SS."
+            },
+            {
+                id: "a1_08_q27",
+                type: "choice",
+                question: "Nous ___ (sortir - Group 3!) ce soir.",
+                options: ["sortons", "sortissons"],
+                correct: 0,
+                hint: "Sortir is irregular. No SS."
+            },
+            {
+                id: "a1_08_q28",
+                type: "choice",
+                question: "But: Nous ___ (finir - Group 2!).",
+                options: ["finissons", "finons"],
+                correct: 0,
+                hint: "Finir is regular Group 2 -> SS."
+            },
+
+            // --- Pronunciation Checks ---
+            {
+                id: "a1_08_q29",
+                type: "choice",
+                question: "Which ending is silent?",
+                options: ["-it", "-issons", "-issez"],
+                correct: 0,
+                hint: "The T at the end of 'finit' is usually not pronounced."
+            },
+            {
+                id: "a1_08_q30",
+                type: "choice",
+                question: "Which ending sounds like 'S'?",
+                options: ["-is", "-it", "-issons"],
+                correct: 2,
+                hint: "Issons has the strong S sound."
+            },
+
+            // --- Rapid Fire ---
+            {
+                id: "a1_08_q31",
+                type: "choice",
+                question: "Je fin___",
+                options: ["-is", "-it", "-issons"],
+                correct: 0,
+                hint: "is."
+            },
+            {
+                id: "a1_08_q32",
+                type: "choice",
+                question: "Tu fin___",
+                options: ["-is", "-it", "-issez"],
+                correct: 0,
+                hint: "is."
+            },
+            {
+                id: "a1_08_q33",
+                type: "choice",
+                question: "Il fin___",
+                options: ["-it", "-is", "-issent"],
+                correct: 0,
+                hint: "it."
+            },
+            {
+                id: "a1_08_q34",
+                type: "choice",
+                question: "Nous fin___",
+                options: ["-issons", "-ons", "-iss"],
+                correct: 0,
+                hint: "issons."
+            },
+            {
+                id: "a1_08_q35",
+                type: "choice",
+                question: "Vous fin___",
+                options: ["-issez", "-ez", "-issiez"],
+                correct: 0,
+                hint: "issez."
+            },
+            {
+                id: "a1_08_q36",
+                type: "choice",
+                question: "Ils fin___",
+                options: ["-issent", "-ent", "-issont"],
+                correct: 0,
+                hint: "issent."
+            },
+
+            // --- Advanced Context ---
+            {
+                id: "a1_08_q37",
+                type: "input",
+                question: "Tu ___ (agir - act) bizarrement.",
+                answer: "agis",
+                hint: "Agir -> Agis."
+            },
+            {
+                id: "a1_08_q38",
+                type: "choice",
+                question: "Les plantes ___ (fleurir - bloom).",
+                options: ["fleurissent", "fleurisent"],
+                correct: 0,
+                hint: "Double S."
+            },
+            {
+                id: "a1_08_q39",
+                type: "choice",
+                question: "Il ___ (guérir - heal) vite.",
+                options: ["guérit", "guéris"],
+                correct: 0,
+                hint: "3rd person."
+            },
+            {
+                id: "a1_08_q40",
+                type: "choice",
+                question: "Nous ___ (applaudir) le spectacle.",
+                options: ["applaudissons", "applaudons"],
+                correct: 0,
+                hint: "Applaudir is regular Group 2."
+            },
+            {
+                id: "a1_08_q41",
+                type: "choice",
+                question: "Vous ___ (punir) le chien ?",
+                options: ["punissez", "punisez"],
+                correct: 0,
+                hint: "Double S."
+            },
+            {
+                id: "a1_08_q42",
+                type: "choice",
+                question: "Je ne ___ (finir) pas.",
+                options: ["finis", "finit"],
+                correct: 0,
+                hint: "Negation doesn't change conjugation."
+            },
+            {
+                id: "a1_08_q43",
+                type: "sort",
+                question: "Build: 'Do you choose?' (Standard)",
+                blocks: ["Est-ce", "que", "tu", "choisis", "?", "choisit", "qui"], // Distractors: choisit, qui
+                correct_order: ["Est-ce", "que", "tu", "choisis", "?"],
+                hint: "Question structure."
+            },
+            {
+                id: "a1_08_q44",
+                type: "input",
+                question: "Ils ___ (bâtir - build) une maison.",
+                answer: "bâtissent",
+                hint: "Bâtir -> Bâtissent."
+            },
+            {
+                id: "a1_08_q45",
+                type: "choice",
+                question: "On ___ (réussir) ensemble.",
+                options: ["réussit", "réussis"],
+                correct: 0,
+                hint: "On = 3rd person singular (-it)."
+            },
+            {
+                id: "a1_08_q46",
+                type: "choice",
+                question: "Qui ___ (finir) en premier ?",
+                options: ["finit", "finis"],
+                correct: 0,
+                hint: "Qui acts as singular subject."
+            },
+            {
+                id: "a1_08_q47",
+                type: "choice",
+                question: "Je ___ (haïr - hate) les lundis.",
+                options: ["hais", "hait"],
+                correct: 0,
+                hint: "Pronounced 'Ay' (silent s)."
+            },
+            {
+                id: "a1_08_q48",
+                type: "sort",
+                question: "Build: 'We are growing.'",
+                blocks: ["grandissons", "Nous", "grandons", "sommes"], // Distractors: grandons, sommes
+                correct_order: ["Nous", "grandissons"],
+                hint: "Regular conjugation."
+            },
+            {
+                id: "a1_08_q49",
+                type: "choice",
+                question: "Tu ___ (nourrir - feed) le chat.",
+                options: ["nourris", "nourrit"],
+                correct: 0,
+                hint: "-is."
+            },
+            {
+                id: "a1_08_q50",
+                type: "choice",
+                question: "Final Check: 'They finish the work.'",
+                options: ["Ils finissent le travail", "Ils finisent le travail"],
+                correct: 0,
+                hint: "Don't forget the double S!"
             }
         ]
     },
@@ -1664,43 +3619,452 @@ const GRAMMAR_DATA = {
         },
         learn: {
             cheat_sheet: {
-                summary: "Regular -re verbs (like Vendre or Attendre). They are easy because the 'Il/Elle' form has NO ending!",
-                key_rule: "🔥 Drop the -re. Add: s, s, (nothing), ons, ez, ent."
+                summary: "These are the 'Regular -RE' verbs. They are the easiest group because the *Il/Elle* form adds NOTHING!",
+                key_rule: "🔥 **The Formula:**\n1. Drop the **-re** to get the stem.\n2. Add: **s, s, (nothing), ons, ez, ent**."
             },
             explanation: [
                 {
                     type: "text",
-                    content: "Common verbs: Vendre (sell), Attendre (wait), Descendre (go down)."
+                    content: "Let's conjugate **Vendre** (to sell). The stem is **Vend-**."
                 },
                 {
                     type: "table",
-                    headers: ["Subject", "Ending", "Example (Vendre)"],
+                    headers: ["Subject", "Ending", "Full Verb", "Note"],
                     rows: [
-                        ["Je", "-s", "vends"],
-                        ["Tu", "-s", "vends"],
-                        ["Il/Elle", "-(nothing)", "vend"],
-                        ["Nous", "-ons", "vendons"],
-                        ["Vous", "-ez", "vendez"],
-                        ["Ils/Elles", "-ent", "vendent"]
+                        ["Je", "-s", "je vends", "Silent 's'"],
+                        ["Tu", "-s", "tu vends", "Silent 's'"],
+                        ["Il / Elle", "-(nothing)", "il vend", "Stop at the 'd'!"],
+                        ["Nous", "-ons", "nous vendons", "Regular"],
+                        ["Vous", "-ez", "vous vendez", "Regular"],
+                        ["Ils / Elles", "-ent", "ils vendent", "Silent 'ent'"]
                     ]
+                },
+                {
+                    type: "warning",
+                    title: "⚠️ Watch out for Irregulars",
+                    content: "Many -re verbs are irregular! For example, **Prendre** (to take) changes its stem in plural (*nous prenons*). The rule above only works for 'Regular -RE' verbs like **Attendre, Descendre, Entendre, Perdre, Répondre**."
+                },
+                {
+                    type: "text",
+                    content: "**Common Verbs:**\n* *Attendre* (to wait)\n* *Descendre* (to go down)\n* *Entendre* (to hear)\n* *Perdre* (to lose)\n* *Répondre* (to answer)\n* *Rendre* (to give back)"
                 }
             ]
         },
         practice: [
+            // --- Basic Conjugation: Vendre (To sell) ---
             {
-                id: "a1_12_q01",
+                id: "a1_09_q01",
                 type: "choice",
-                question: "Il ___ (attendre) le bus.",
-                options: ["attends", "attend", "attendent"],
-                correct: 1,
-                hint: "He/She form has no extra ending letter."
+                question: "Je ___ (vendre) ma voiture.",
+                options: ["vends", "vend", "vendez"],
+                correct: 0,
+                hint: "Je adds -s."
             },
             {
-                id: "a1_12_q02",
+                id: "a1_09_q02",
+                type: "choice",
+                question: "Tu ___ (vendre) des fleurs ?",
+                options: ["vends", "vend", "vent"],
+                correct: 0,
+                hint: "Tu adds -s."
+            },
+            {
+                id: "a1_09_q03",
+                type: "choice",
+                question: "Il ___ (vendre) sa maison.",
+                options: ["vend", "vends", "vent"],
+                correct: 0,
+                hint: "Il adds nothing (stop at the stem)."
+            },
+            {
+                id: "a1_09_q04",
                 type: "input",
-                question: "Je ___ (vendre) mon vélo.",
-                answer: "vends",
-                hint: "First person adds 's'."
+                question: "Nous ___ (vendre) des livres.",
+                answer: "vendons",
+                hint: "Regular -ons ending."
+            },
+            {
+                id: "a1_09_q05",
+                type: "choice",
+                question: "Vous ___ (vendre) le vélo ?",
+                options: ["vendez", "vends", "vendezz"],
+                correct: 0,
+                hint: "Vous adds -ez."
+            },
+            {
+                id: "a1_09_q06",
+                type: "choice",
+                question: "Ils ___ (vendre) tout.",
+                options: ["vendent", "vendons", "vend"],
+                correct: 0,
+                hint: "Ils adds -ent."
+            },
+
+            // --- Attendre (To wait) ---
+            {
+                id: "a1_09_q07",
+                type: "choice",
+                question: "J'___ (attendre) le bus.",
+                options: ["attends", "attend", "attender"],
+                correct: 0,
+                hint: "Je adds -s."
+            },
+            {
+                id: "a1_09_q08",
+                type: "input",
+                question: "Tu ___ (attendre) qui ?",
+                answer: "attends",
+                hint: "Tu form."
+            },
+            {
+                id: "a1_09_q09",
+                type: "choice",
+                question: "Elle ___ (attendre) son ami.",
+                options: ["attend", "attends", "attent"],
+                correct: 0,
+                hint: "No ending. Just the stem."
+            },
+            {
+                id: "a1_09_q10",
+                type: "choice",
+                question: "Nous ___ (attendre) depuis une heure.",
+                options: ["attendons", "attendez"],
+                correct: 0,
+                hint: "-ons."
+            },
+
+            // --- Descendre (To go down / get off) ---
+            {
+                id: "a1_09_q11",
+                type: "choice",
+                question: "Je ___ (descendre) l'escalier.",
+                options: ["descends", "descend", "descen"],
+                correct: 0,
+                hint: "Add -s."
+            },
+            {
+                id: "a1_09_q12",
+                type: "choice",
+                question: "Il ___ (descendre) du train.",
+                options: ["descend", "descends", "descent"],
+                correct: 0,
+                hint: "Stop at the 'd'. No 't'!"
+            },
+            {
+                id: "a1_09_q13",
+                type: "input",
+                question: "Vous ___ (descendre) ici ?",
+                answer: "descendez",
+                hint: "Vous form."
+            },
+            {
+                id: "a1_09_q14",
+                type: "choice",
+                question: "Elles ___ (descendre) à la plage.",
+                options: ["descendent", "descendons"],
+                correct: 0,
+                hint: "Plural."
+            },
+
+            // --- Entendre (To hear) ---
+            {
+                id: "a1_09_q15",
+                type: "choice",
+                question: "Tu ___ (entendre) la musique ?",
+                options: ["entends", "entend"],
+                correct: 0,
+                hint: "Tu adds -s."
+            },
+            {
+                id: "a1_09_q16",
+                type: "choice",
+                question: "On n'___ (entendre) rien.",
+                options: ["entend", "entends", "entent"],
+                correct: 0,
+                hint: "On = Il/Elle (Nothing added)."
+            },
+            {
+                id: "a1_09_q17",
+                type: "input",
+                question: "Nous ___ (entendre) un bruit.",
+                answer: "entendons",
+                hint: "Standard Nous form."
+            },
+
+            // --- Perdre (To lose) ---
+            {
+                id: "a1_09_q18",
+                type: "choice",
+                question: "Je ___ (perdre) toujours mes clés.",
+                options: ["perds", "perd"],
+                correct: 0,
+                hint: "Je = -s."
+            },
+            {
+                id: "a1_09_q19",
+                type: "choice",
+                question: "Il ___ (perdre) son temps.",
+                options: ["perd", "perds", "pert"],
+                correct: 0,
+                hint: "Stop at the 'd'."
+            },
+            {
+                id: "a1_09_q20",
+                type: "choice",
+                question: "Ils ___ (perdre) le match.",
+                options: ["perdent", "perdez"],
+                correct: 0,
+                hint: "-ent."
+            },
+
+            // --- Répondre (To answer) ---
+            {
+                id: "a1_09_q21",
+                type: "choice",
+                question: "Tu ___ (répondre) au téléphone ?",
+                options: ["réponds", "répond"],
+                correct: 0,
+                hint: "Tu = -s."
+            },
+            {
+                id: "a1_09_q22",
+                type: "choice",
+                question: "Elle ne ___ (répondre) pas.",
+                options: ["répond", "réponds", "répont"],
+                correct: 0,
+                hint: "Stop at the 'd'."
+            },
+            {
+                id: "a1_09_q23",
+                type: "input",
+                question: "Vous ___ (répondre) à la question.",
+                answer: "répondez",
+                hint: "Vous form."
+            },
+
+            // --- Rendre (To give back / return) ---
+            {
+                id: "a1_09_q24",
+                type: "choice",
+                question: "Je te ___ (rendre) ton livre.",
+                options: ["rends", "rend"],
+                correct: 0,
+                hint: "Je = -s."
+            },
+            {
+                id: "a1_09_q25",
+                type: "choice",
+                question: "Nous ___ (rendre) visite à Paul.",
+                options: ["rendons", "rendez"],
+                correct: 0,
+                hint: "Expression: Rendre visite (to visit someone)."
+            },
+
+            // --- Sentence Sorting (Structure & Distractors) ---
+            {
+                id: "a1_09_q26",
+                type: "sort",
+                question: "Build: 'I wait for the bus.'",
+                blocks: ["attends", "bus", "le", "J'", "attend", "la"], // Distractors: attend, la
+                correct_order: ["J'", "attends", "le", "bus"],
+                hint: "J' adds -s."
+            },
+            {
+                id: "a1_09_q27",
+                type: "sort",
+                question: "Build: 'He goes down.'",
+                blocks: ["descend", "Il", "descends", "descent"], // Distractors: descends, descent
+                correct_order: ["Il", "descend"],
+                hint: "No ending for Il."
+            },
+            {
+                id: "a1_09_q28",
+                type: "sort",
+                question: "Build: 'We hear a noise.'",
+                blocks: ["bruit", "un", "entendons", "Nous", "entendez", "une"], // Distractors: entendez, une
+                correct_order: ["Nous", "entendons", "un", "bruit"],
+                hint: "-ons ending."
+            },
+            {
+                id: "a1_09_q29",
+                type: "sort",
+                question: "Build: 'Do you sell apples?'",
+                blocks: ["vendez", "des", "pommes", "Vous", "?", "vendent", "le"], // Distractors: vendent, le
+                correct_order: ["Vous", "vendez", "des", "pommes", "?"],
+                hint: "Vous form."
+            },
+            {
+                id: "a1_09_q30",
+                type: "sort",
+                question: "Build: 'She answers no.'",
+                blocks: ["non", "répond", "Elle", "réponds", "répont"], // Distractors: réponds, répont
+                correct_order: ["Elle", "répond", "non"],
+                hint: "Stem only."
+            },
+
+            // --- Rapid Fire ---
+            {
+                id: "a1_09_q31",
+                type: "choice",
+                question: "Je per___",
+                options: ["-ds", "-d", "-t"],
+                correct: 0,
+                hint: "ds."
+            },
+            {
+                id: "a1_09_q32",
+                type: "choice",
+                question: "Tu descen___",
+                options: ["-ds", "-d", "-dez"],
+                correct: 0,
+                hint: "ds."
+            },
+            {
+                id: "a1_09_q33",
+                type: "choice",
+                question: "Il enten___",
+                options: ["-d", "-ds", "-t"],
+                correct: 0,
+                hint: "d (nothing added to stem)."
+            },
+            {
+                id: "a1_09_q34",
+                type: "choice",
+                question: "Nous ven___",
+                options: ["-dons", "-dez", "-dent"],
+                correct: 0,
+                hint: "dons."
+            },
+            {
+                id: "a1_09_q35",
+                type: "choice",
+                question: "Vous atten___",
+                options: ["-dez", "-dezz", "-dous"],
+                correct: 0,
+                hint: "dez."
+            },
+            {
+                id: "a1_09_q36",
+                type: "choice",
+                question: "Elles répon___",
+                options: ["-dent", "-don", "-dez"],
+                correct: 0,
+                hint: "dent."
+            },
+
+            // --- Distinguishing from Irregulars ---
+            {
+                id: "a1_09_q37",
+                type: "choice",
+                question: "Which one is regular? (Standard -RE)",
+                options: ["Vendre", "Prendre", "Boire"],
+                correct: 0,
+                hint: "Prendre and Boire have irregular stems."
+            },
+            {
+                id: "a1_09_q38",
+                type: "choice",
+                question: "Conjugate 'Prendre' (Irregular): Nous ___.",
+                options: ["prenons", "prendons"],
+                correct: 0,
+                hint: "Prendre drops the 'd' in plural. Vendre keeps it."
+            },
+            {
+                id: "a1_09_q39",
+                type: "choice",
+                question: "Conjugate 'Vendre' (Regular): Nous ___.",
+                options: ["vendons", "venons"],
+                correct: 0,
+                hint: "Vendre keeps the 'd'."
+            },
+
+            // --- Context & Vocabulary ---
+            {
+                id: "a1_09_q40",
+                type: "choice",
+                question: "Il ___ (mordre - bite) la pomme.",
+                options: ["mord", "mords"],
+                correct: 0,
+                hint: "Mordre is regular. Il form."
+            },
+            {
+                id: "a1_09_q41",
+                type: "choice",
+                question: "Je ___ (défendre - defend).",
+                options: ["défends", "défend"],
+                correct: 0,
+                hint: "Je form."
+            },
+            {
+                id: "a1_09_q42",
+                type: "choice",
+                question: "Tu ___ (perdre) le nord.",
+                options: ["perds", "perd"],
+                correct: 0,
+                hint: "Expression: To get lost/confused."
+            },
+            {
+                id: "a1_09_q43",
+                type: "choice",
+                question: "On ___ (attendre) le train.",
+                options: ["attend", "attends"],
+                correct: 0,
+                hint: "On = Il."
+            },
+            {
+                id: "a1_09_q44",
+                type: "input",
+                question: "Elles ___ (vendre) des gâteaux.",
+                answer: "vendent",
+                hint: "Plural."
+            },
+            {
+                id: "a1_09_q45",
+                type: "sort",
+                question: "Build: 'I do not lose.'",
+                blocks: ["perds", "pas", "ne", "Je", "perd", "la"], // Distractors: perd, la
+                correct_order: ["Je", "ne", "perds", "pas"],
+                hint: "Negation sandwich."
+            },
+            {
+                id: "a1_09_q46",
+                type: "choice",
+                question: "Qui ___ (répondre) ?",
+                options: ["répond", "réponds"],
+                correct: 0,
+                hint: "Qui acts as singular subject."
+            },
+            {
+                id: "a1_09_q47",
+                type: "choice",
+                question: "Ça ___ (dépendre - depend).",
+                options: ["dépend", "dépends"],
+                correct: 0,
+                hint: "Meaning 'It depends'."
+            },
+            {
+                id: "a1_09_q48",
+                type: "choice",
+                question: "Tu ___ (fondre - melt) au soleil.",
+                options: ["fonds", "fond"],
+                correct: 0,
+                hint: "Tu form."
+            },
+            {
+                id: "a1_09_q49",
+                type: "choice",
+                question: "La glace ___ (fondre).",
+                options: ["fond", "fonds"],
+                correct: 0,
+                hint: "La glace = Elle."
+            },
+            {
+                id: "a1_09_q50",
+                type: "choice",
+                question: "Final Check: 'She waits.'",
+                options: ["Elle attend", "Elle attends", "Elle attent"],
+                correct: 0,
+                hint: "No ending!"
             }
         ]
     },
@@ -1712,61 +4076,444 @@ const GRAMMAR_DATA = {
         },
         learn: {
             cheat_sheet: {
-                summary: "Adjectives must match the noun they describe in gender (masc/fem) and number (singular/plural).",
-                key_rule: "🔥 General Rule: Add 'e' for feminine. Add 's' for plural. (Petit -> Petite -> Petits -> Petites)."
+                summary: "Adjectives describe nouns (big, red, happy). In French, they must match the noun's **Gender** (M/F) and **Number** (Singular/Plural).",
+                key_rule: "🔥 **The Agreement Rule:**\n* Feminine: Add **-e** (Petit -> Petite)\n* Plural: Add **-s** (Petit -> Petits)\n* Fem Plural: Add **-es** (Petites)"
             },
             explanation: [
                 {
                     type: "text",
-                    content: "Most adjectives go AFTER the noun (une voiture rouge). But everyday adjectives (BAGS: Beauty, Age, Goodness, Size) go BEFORE (un petit garçon)."
+                    content: "Most adjectives go **AFTER** the noun (*une voiture rouge*). However, a small group of common adjectives go **BEFORE** the noun. Remember **BAGS**:\n* **B**eauty (Beau, Joli)\n* **A**ge (Jeune, Vieux, Nouveau)\n* **G**oodness (Bon, Mauvais)\n* **S**ize (Petit, Grand, Gros)"
                 },
                 {
                     type: "table",
-                    headers: ["Masc", "Fem (+e)", "Masc Plural (+s)", "Fem Plural (+es)"],
+                    headers: ["Masculine", "Feminine (+e)", "Masc Plural (+s)", "Fem Plural (+es)"],
                     rows: [
                         ["Grand (Tall)", "Grande", "Grands", "Grandes"],
                         ["Joli (Pretty)", "Jolie", "Jolis", "Jolies"],
-                        ["Français", "Française", "Français (stays same)", "Françaises"]
+                        ["Français", "Française", "Français (no change)", "Françaises"],
+                        ["Heureux", "Heureuse (x->se)", "Heureux (no change)", "Heureuses"]
                     ]
                 },
                 {
                     type: "warning",
                     title: "⚠️ Silent Letters",
-                    content: "In 'Grand' (masc), the D is silent. In 'Grande' (fem), you pronounce the D because of the E at the end!"
+                    content: "In masculine forms like *Grand* or *Petit*, the final consonant is usually silent. In feminine forms (*Grande*, *Petite*), the 'e' makes you pronounce that consonant!"
                 }
             ]
         },
         practice: [
+            // --- Basic Agreement: Feminine (+e) ---
             {
                 id: "a1_10_q01",
                 type: "choice",
-                question: "Une ___ (green) pomme.",
-                options: ["vert", "verte", "verts"],
-                correct: 1,
-                hint: "Pomme is feminine (une), so add 'e'."
+                question: "Une pomme ___ (green).",
+                options: ["verte", "vert"],
+                correct: 0,
+                hint: "Pomme is feminine -> add 'e'."
             },
             {
                 id: "a1_10_q02",
                 type: "choice",
-                question: "Des chats ___ (black).",
-                options: ["noir", "noire", "noirs"],
-                correct: 2,
-                hint: "Chats is plural masculine."
+                question: "La fille est ___ (intelligent).",
+                options: ["intelligente", "intelligent"],
+                correct: 0,
+                hint: "Feminine subject."
             },
             {
                 id: "a1_10_q03",
-                type: "input",
-                question: "Elle est ___ (intelligent).",
-                answer: "intelligente",
-                hint: "Add 'e' for feminine."
+                type: "choice",
+                question: "Une maison ___ (blue).",
+                options: ["bleue", "bleu"],
+                correct: 0,
+                hint: "Maison is feminine."
             },
             {
                 id: "a1_10_q04",
+                type: "input",
+                question: "Elle est ___ (tall).",
+                answer: "grande",
+                hint: "Grand + e."
+            },
+            {
+                id: "a1_10_q05",
+                type: "choice",
+                question: "Ma mère est ___ (content).",
+                options: ["contente", "content"],
+                correct: 0,
+                hint: "Mother is female."
+            },
+
+            // --- Basic Agreement: Plural (+s) ---
+            {
+                id: "a1_10_q06",
+                type: "choice",
+                question: "Des chats ___ (black).",
+                options: ["noirs", "noir"],
+                correct: 0,
+                hint: "Plural -> add 's'."
+            },
+            {
+                id: "a1_10_q07",
+                type: "choice",
+                question: "Ils sont ___ (strong).",
+                options: ["forts", "fort"],
+                correct: 0,
+                hint: "Ils = Plural."
+            },
+            {
+                id: "a1_10_q08",
+                type: "choice",
+                question: "Les livres sont ___ (interesting).",
+                options: ["intéressants", "intéressant"],
+                correct: 0,
+                hint: "Livres is plural."
+            },
+            {
+                id: "a1_10_q09",
+                type: "choice",
+                question: "Des stylos ___ (blue).",
+                options: ["bleus", "bleu"],
+                correct: 0,
+                hint: "Plural."
+            },
+            {
+                id: "a1_10_q10",
+                type: "input",
+                question: "Ils sont ___ (small).",
+                answer: "petits",
+                hint: "Petit + s."
+            },
+
+            // --- Feminine Plural (+es) ---
+            {
+                id: "a1_10_q11",
+                type: "choice",
+                question: "Les voitures sont ___ (red).",
+                options: ["rouges", "rouge"],
+                correct: 0,
+                hint: "Voiture is Fem Plural. Rouge ends in 'e' already, so just add 's'."
+            },
+            {
+                id: "a1_10_q12",
+                type: "choice",
+                question: "Des filles ___ (blonde).",
+                options: ["blondes", "blonds"],
+                correct: 0,
+                hint: "Fem Plural -> es."
+            },
+            {
+                id: "a1_10_q13",
+                type: "choice",
+                question: "Elles sont ___ (happy).",
+                options: ["contentes", "contents"],
+                correct: 0,
+                hint: "Fem Plural."
+            },
+            {
+                id: "a1_10_q14",
+                type: "choice",
+                question: "Les tables sont ___ (round).",
+                options: ["rondes", "ronds"],
+                correct: 0,
+                hint: "Table is feminine."
+            },
+            {
+                id: "a1_10_q15",
+                type: "input",
+                question: "Elles sont ___ (jolie).",
+                answer: "jolies",
+                hint: "Fem Plural."
+            },
+
+            // --- Adjective Placement (Before vs After) ---
+            {
+                id: "a1_10_q16",
                 type: "sort",
-                question: "Build: 'A little house' (Maison is fem)",
-                blocks: ["Maison", "Une", "petite"],
-                correct_order: ["Une", "petite", "Maison"],
-                hint: "Size adjectives go BEFORE the noun."
+                question: "Build: 'A red car.' (Standard)",
+                blocks: ["rouge", "voiture", "Une", "rouges"], // Distractors: rouges
+                correct_order: ["Une", "voiture", "rouge"],
+                hint: "Color goes AFTER."
+            },
+            {
+                id: "a1_10_q17",
+                type: "sort",
+                question: "Build: 'A small boy.' (BAGS)",
+                blocks: ["petit", "garçon", "Un", "petite"], // Distractors: petite
+                correct_order: ["Un", "petit", "garçon"],
+                hint: "Size goes BEFORE."
+            },
+            {
+                id: "a1_10_q18",
+                type: "sort",
+                question: "Build: 'A good friend.' (BAGS)",
+                blocks: ["bon", "ami", "Un", "bons"], // Distractors: bons
+                correct_order: ["Un", "bon", "ami"],
+                hint: "Goodness goes BEFORE."
+            },
+            {
+                id: "a1_10_q19",
+                type: "sort",
+                question: "Build: 'An Italian pizza.'",
+                blocks: ["italienne", "pizza", "Une", "italien"], // Distractors: italien
+                correct_order: ["Une", "pizza", "italienne"],
+                hint: "Nationality goes AFTER."
+            },
+            {
+                id: "a1_10_q20",
+                type: "sort",
+                question: "Build: 'A beautiful house.' (BAGS)",
+                blocks: ["belle", "maison", "Une", "beau"], // Distractors: beau
+                correct_order: ["Une", "belle", "maison"],
+                hint: "Beauty goes BEFORE."
+            },
+
+            // --- Irregular Adjectives (Beau/Nouveau/Vieux) ---
+            {
+                id: "a1_10_q21",
+                type: "choice",
+                question: "Un ___ (beautiful) homme.",
+                options: ["bel", "beau", "belle"],
+                correct: 0,
+                hint: "Before a vowel, 'Beau' becomes 'Bel'."
+            },
+            {
+                id: "a1_10_q22",
+                type: "choice",
+                question: "Un ___ (old) ami.",
+                options: ["vieil", "vieux", "vieille"],
+                correct: 0,
+                hint: "Before a vowel, 'Vieux' becomes 'Vieil'."
+            },
+            {
+                id: "a1_10_q23",
+                type: "choice",
+                question: "Un ___ (new) hôtel.",
+                options: ["nouvel", "nouveau", "nouvelle"],
+                correct: 0,
+                hint: "Before a vowel/h, 'Nouveau' becomes 'Nouvel'."
+            },
+            {
+                id: "a1_10_q24",
+                type: "choice",
+                question: "Une ___ (beautiful) fille.",
+                options: ["belle", "beau", "bel"],
+                correct: 0,
+                hint: "Feminine form."
+            },
+            {
+                id: "a1_10_q25",
+                type: "choice",
+                question: "Un ___ (beautiful) chien.",
+                options: ["beau", "bel", "belle"],
+                correct: 0,
+                hint: "Consonant start -> Beau."
+            },
+
+            // --- Nationalities (Capitalization Rule) ---
+            {
+                id: "a1_10_q26",
+                type: "choice",
+                question: "Il est ___ (American).",
+                options: ["américain", "Américain"],
+                correct: 0,
+                hint: "Adjectives are NOT capitalized in French."
+            },
+            {
+                id: "a1_10_q27",
+                type: "choice",
+                question: "Elle est ___ (French).",
+                options: ["française", "Française"],
+                correct: 0,
+                hint: "Lowercase for adjectives."
+            },
+            {
+                id: "a1_10_q28",
+                type: "input",
+                question: "Elle est ___ (Spanish).",
+                answer: "espagnole",
+                hint: "Espagnol + e."
+            },
+            {
+                id: "a1_10_q29",
+                type: "choice",
+                question: "Ils sont ___ (English).",
+                options: ["anglais", "anglaises"],
+                correct: 0,
+                hint: "Masc Plural. (Ends in s, stays s)."
+            },
+            {
+                id: "a1_10_q30",
+                type: "choice",
+                question: "Elles sont ___ (Chinese).",
+                options: ["chinoises", "chinois"],
+                correct: 0,
+                hint: "Fem Plural."
+            },
+
+            // --- Ending Changes (f->ve, x->se, er->ère) ---
+            {
+                id: "a1_10_q31",
+                type: "choice",
+                question: "Il est actif. Elle est ___.",
+                options: ["active", "actif", "actife"],
+                correct: 0,
+                hint: "-f becomes -ve."
+            },
+            {
+                id: "a1_10_q32",
+                type: "choice",
+                question: "Il est heureux. Elle est ___.",
+                options: ["heureuse", "heureux", "heureuxe"],
+                correct: 0,
+                hint: "-x becomes -se."
+            },
+            {
+                id: "a1_10_q33",
+                type: "choice",
+                question: "Il est premier. Elle est ___.",
+                options: ["première", "premier", "premiere"],
+                correct: 0,
+                hint: "-er becomes -ère."
+            },
+            {
+                id: "a1_10_q34",
+                type: "choice",
+                question: "Il est cher. Elle est ___.",
+                options: ["chère", "cher", "chere"],
+                correct: 0,
+                hint: "Accent grave."
+            },
+            {
+                id: "a1_10_q35",
+                type: "choice",
+                question: "Il est sportif. Elle est ___.",
+                options: ["sportive", "sportife"],
+                correct: 0,
+                hint: "-ve."
+            },
+
+            // --- "Invariable" Colors (Orange/Marron) ---
+            {
+                id: "a1_10_q36",
+                type: "choice",
+                question: "Des chaussures ___ (brown).",
+                options: ["marron", "marrons", "marrones"],
+                correct: 0,
+                hint: "Marron comes from a noun (chestnut) and NEVER changes!"
+            },
+            {
+                id: "a1_10_q37",
+                type: "choice",
+                question: "Des fleurs ___ (orange).",
+                options: ["orange", "oranges"],
+                correct: 0,
+                hint: "Orange (fruit) never changes."
+            },
+            {
+                id: "a1_10_q38",
+                type: "choice",
+                question: "Des pantalons ___ (blue).",
+                options: ["bleus", "bleu"],
+                correct: 0,
+                hint: "Bleu is a normal adjective -> add s."
+            },
+
+            // --- Sentence Sorting with Distractors ---
+            {
+                id: "a1_10_q39",
+                type: "sort",
+                question: "Build: 'The big black dog.'",
+                blocks: ["grand", "chien", "noir", "Le", "grande", "noire"], // Distractors: grande, noire
+                correct_order: ["Le", "grand", "chien", "noir"],
+                hint: "Size before, color after."
+            },
+            {
+                id: "a1_10_q40",
+                type: "sort",
+                question: "Build: 'A young French girl.'",
+                blocks: ["jeune", "fille", "française", "Une", "français", "vieux"], // Distractors: français, vieux
+                correct_order: ["Une", "jeune", "fille", "française"],
+                hint: "Age before, nationality after."
+            },
+
+            // --- Mixed Review ---
+            {
+                id: "a1_10_q41",
+                type: "choice",
+                question: "C'est une ___ (good) idée.",
+                options: ["bonne", "bon"],
+                correct: 0,
+                hint: "Bon doubles the N in feminine -> Bonne."
+            },
+            {
+                id: "a1_10_q42",
+                type: "choice",
+                question: "Il est ___ (gentle/nice).",
+                options: ["gentil", "gentille"],
+                correct: 0,
+                hint: "Masc form."
+            },
+            {
+                id: "a1_10_q43",
+                type: "choice",
+                question: "Elle est ___ (gentle/nice).",
+                options: ["gentille", "gentile"],
+                correct: 0,
+                hint: "Doubles the L -> Gentille."
+            },
+            {
+                id: "a1_10_q44",
+                type: "choice",
+                question: "Ils sont ___ (fat/big).",
+                options: ["gros", "grosse"],
+                correct: 0,
+                hint: "Gros (singular) stays Gros (plural) because it ends in S."
+            },
+            {
+                id: "a1_10_q45",
+                type: "choice",
+                question: "Ce sont des exercices ___ (difficult).",
+                options: ["difficiles", "difficile"],
+                correct: 0,
+                hint: "Add s."
+            },
+            {
+                id: "a1_10_q46",
+                type: "input",
+                question: "La soupe est ___ (hot - chaud).",
+                answer: "chaude",
+                hint: "Feminine."
+            },
+            {
+                id: "a1_10_q47",
+                type: "input",
+                question: "Le café est ___ (cold - froid).",
+                answer: "froid",
+                hint: "Masculine."
+            },
+            {
+                id: "a1_10_q48",
+                type: "choice",
+                question: "C'est un ___ (bad) film.",
+                options: ["mauvais", "mauvaise"],
+                correct: 0,
+                hint: "Goodness goes before."
+            },
+            {
+                id: "a1_10_q49",
+                type: "choice",
+                question: "Il est ___ (sad).",
+                options: ["triste", "tristes"],
+                correct: 0,
+                hint: "Singular."
+            },
+            {
+                id: "a1_10_q50",
+                type: "choice",
+                question: "Elle est ___ (funny - drôle).",
+                options: ["drôle", "drôles"],
+                correct: 0,
+                hint: "Drôle ends in e, so it works for M and F."
             }
         ]
     },
@@ -1779,58 +4526,454 @@ const GRAMMAR_DATA = {
         },
         learn: {
             cheat_sheet: {
-                summary: "How to say 'in' or 'at' depends on what follows (City, Country, or Person).",
-                key_rule: "🔥 Cities = À (à Paris). Female Countries = En (en France). Male Countries = Au (au Japon). People = Chez (chez moi)."
+                summary: "How to say 'to', 'in', or 'at' depends entirely on **what follows**: a City, a Country, or a Person.",
+                key_rule: "🔥 **The Map Rule:**\n* **Cities** = À (à Paris)\n* **Countries (Fem)** = En (en France)\n* **Countries (Masc)** = Au (au Canada)\n* **People** = Chez (chez moi)"
             },
             explanation: [
                 {
+                    type: "text",
+                    content: "French prepositions change based on the destination. Memorize this table:"
+                },
+                {
                     type: "table",
-                    headers: ["Destination", "Preposition", "Example"],
+                    headers: ["Destination Type", "Preposition", "Example"],
                     rows: [
-                        ["City", "À", "Je suis à Berlin."],
-                        ["Country (Fem - ends in e)", "En", "Je vais en Espagne."],
-                        ["Country (Masc)", "Au", "Je vais au Canada."],
-                        ["Person / Home", "Chez", "Je vais chez Paul."]
+                        ["City (Any)", "À", "Je vais **à** Berlin."],
+                        ["Country (Feminine - ends in 'e')", "En", "Je suis **en** Espagne."],
+                        ["Country (Masculine - no 'e')", "Au", "Je suis **au** Japon."],
+                        ["Country (Plural)", "Aux", "Je vais **aux** États-Unis."],
+                        ["Person / Home / Pro", "Chez", "Je dors **chez** Paul."]
                     ]
                 },
                 {
                     type: "warning",
-                    title: "⚠️ Within / Inside",
-                    content: "To say physically 'inside' a building or object, use 'Dans'. Example: 'Je suis dans la cuisine' (I am in the kitchen)."
+                    title: "⚠️ Physical Location (Dans)",
+                    content: "To say you are physically **inside** a building, room, or enclosed space, use **Dans**.\n* *Je suis **à** l'école* (General location: I am at school).\n* *Je suis **dans** la classe* (Physical location: I am inside the classroom)."
+                },
+                {
+                    type: "text",
+                    content: "**Tip:** Almost all countries ending in **-e** are feminine (La France, L'Italie, La Chine). The exceptions are rare (Le Mexique, Le Cambodge) - these take 'Au'."
                 }
             ]
         },
         practice: [
+            // --- CITIES (À) ---
             {
                 id: "a1_11_q01",
                 type: "choice",
-                question: "Je habite ___ Londres.",
-                options: ["en", "à", "au"],
-                correct: 1,
-                hint: "Londres is a city."
+                question: "Je vais ___ Paris.",
+                options: ["à", "en", "au"],
+                correct: 0,
+                hint: "Paris is a city."
             },
             {
                 id: "a1_11_q02",
                 type: "choice",
-                question: "Il va ___ Italie.",
-                options: ["au", "à", "en"],
-                correct: 2,
-                hint: "Italie ends in 'e', so it's feminine."
+                question: "Il habite ___ Londres.",
+                options: ["en", "à", "au"],
+                correct: 1,
+                hint: "Londres (London) is a city."
             },
             {
                 id: "a1_11_q03",
-                type: "input",
-                question: "Je dors ___ (at) Thomas.",
-                answer: "chez",
-                hint: "Use this for people's places."
+                type: "choice",
+                question: "Nous sommes ___ New York.",
+                options: ["au", "en", "à"],
+                correct: 2,
+                hint: "City."
             },
             {
                 id: "a1_11_q04",
+                type: "input",
+                question: "Tu vas ___ (to) Tokyo ?",
+                answer: "à",
+                hint: "City."
+            },
+            {
+                id: "a1_11_q05",
                 type: "choice",
-                question: "Le chat est ___ la boîte (inside).",
-                options: ["dans", "en", "à"],
+                question: "Elles vont ___ Madrid.",
+                options: ["à", "en", "dans"],
                 correct: 0,
-                hint: "Physical location inside something."
+                hint: "Madrid is a city."
+            },
+
+            // --- FEMININE COUNTRIES (En) ---
+            {
+                id: "a1_11_q06",
+                type: "choice",
+                question: "Je vais ___ France.",
+                options: ["au", "en", "à"],
+                correct: 1,
+                hint: "France ends in -e (Feminine)."
+            },
+            {
+                id: "a1_11_q07",
+                type: "choice",
+                question: "Il habite ___ Italie.",
+                options: ["en", "au", "aux"],
+                correct: 0,
+                hint: "Italie ends in -e."
+            },
+            {
+                id: "a1_11_q08",
+                type: "choice",
+                question: "Nous voyageons ___ Espagne.",
+                options: ["à", "en", "au"],
+                correct: 1,
+                hint: "Espagne ends in -e."
+            },
+            {
+                id: "a1_11_q09",
+                type: "input",
+                question: "Elle est ___ (in) Chine.",
+                answer: "en",
+                hint: "Chine ends in -e."
+            },
+            {
+                id: "a1_11_q10",
+                type: "choice",
+                question: "On va ___ Allemagne.",
+                options: ["en", "au", "à"],
+                correct: 0,
+                hint: "Allemagne ends in -e."
+            },
+
+            // --- MASCULINE COUNTRIES (Au) ---
+            {
+                id: "a1_11_q11",
+                type: "choice",
+                question: "Je vais ___ Canada.",
+                options: ["en", "au", "à"],
+                correct: 1,
+                hint: "Canada does not end in -e (Masculine)."
+            },
+            {
+                id: "a1_11_q12",
+                type: "choice",
+                question: "Il vit ___ Japon.",
+                options: ["au", "en", "aux"],
+                correct: 0,
+                hint: "Japon is masculine."
+            },
+            {
+                id: "a1_11_q13",
+                type: "choice",
+                question: "Tu vas ___ Brésil ?",
+                options: ["à", "en", "au"],
+                correct: 2,
+                hint: "Brésil is masculine."
+            },
+            {
+                id: "a1_11_q14",
+                type: "input",
+                question: "Nous sommes ___ (in) Portugal.",
+                answer: "au",
+                hint: "Portugal is masculine."
+            },
+            {
+                id: "a1_11_q15",
+                type: "choice",
+                question: "Ils vont ___ Maroc.",
+                options: ["au", "en", "à"],
+                correct: 0,
+                hint: "Maroc is masculine."
+            },
+
+            // --- PLURAL COUNTRIES (Aux) ---
+            {
+                id: "a1_11_q16",
+                type: "choice",
+                question: "Je vais ___ États-Unis (USA).",
+                options: ["aux", "en", "au"],
+                correct: 0,
+                hint: "Plural country."
+            },
+            {
+                id: "a1_11_q17",
+                type: "choice",
+                question: "Il habite ___ Pays-Bas (Netherlands).",
+                options: ["au", "aux", "en"],
+                correct: 1,
+                hint: "Plural."
+            },
+
+            // --- CHEZ (People/Home) ---
+            {
+                id: "a1_11_q18",
+                type: "choice",
+                question: "Je vais ___ Thomas.",
+                options: ["à", "chez", "en"],
+                correct: 1,
+                hint: "Thomas is a person."
+            },
+            {
+                id: "a1_11_q19",
+                type: "choice",
+                question: "Il rentre ___ lui (home).",
+                options: ["chez", "à", "dans"],
+                correct: 0,
+                hint: "To his place."
+            },
+            {
+                id: "a1_11_q20",
+                type: "choice",
+                question: "On va ___ le médecin (doctor).",
+                options: ["au", "chez", "à"],
+                correct: 1,
+                hint: "The doctor is a person."
+            },
+            {
+                id: "a1_11_q21",
+                type: "input",
+                question: "Tu viens ___ (at/to) moi ?",
+                answer: "chez",
+                hint: "My place."
+            },
+            {
+                id: "a1_11_q22",
+                type: "choice",
+                question: "Je suis ___ le coiffeur (hairdresser).",
+                options: ["chez", "au", "à"],
+                correct: 0,
+                hint: "A professional person."
+            },
+
+            // --- DANS (Inside) ---
+            {
+                id: "a1_11_q23",
+                type: "choice",
+                question: "Le chat est ___ la boîte.",
+                options: ["dans", "à", "en"],
+                correct: 0,
+                hint: "Physically inside."
+            },
+            {
+                id: "a1_11_q24",
+                type: "choice",
+                question: "Je suis ___ ma chambre.",
+                options: ["dans", "à", "au"],
+                correct: 0,
+                hint: "Inside a room."
+            },
+            {
+                id: "a1_11_q25",
+                type: "choice",
+                question: "Les clés sont ___ le sac.",
+                options: ["en", "dans", "chez"],
+                correct: 1,
+                hint: "Inside the bag."
+            },
+
+            // --- MIXED DISCRIMINATION (City vs Country) ---
+            {
+                id: "a1_11_q26",
+                type: "choice",
+                question: "Je vais ___ Paris, ___ France.",
+                options: ["à / en", "en / à", "à / au"],
+                correct: 0,
+                hint: "City / Fem Country."
+            },
+            {
+                id: "a1_11_q27",
+                type: "choice",
+                question: "Il est ___ Tokyo, ___ Japon.",
+                options: ["à / en", "à / au", "en / au"],
+                correct: 1,
+                hint: "City / Masc Country."
+            },
+            {
+                id: "a1_11_q28",
+                type: "choice",
+                question: "Tu vas ___ Londres, ___ Angleterre.",
+                options: ["à / en", "à / au"],
+                correct: 0,
+                hint: "Angleterre starts with vowel (treated as Fem/En)."
+            },
+
+            // --- MIXED DISCRIMINATION (À vs Chez vs Au) ---
+            {
+                id: "a1_11_q29",
+                type: "choice",
+                question: "Je vais ___ la banque.",
+                options: ["à", "chez", "en"],
+                correct: 0,
+                hint: "Banque is a place (building), not a person."
+            },
+            {
+                id: "a1_11_q30",
+                type: "choice",
+                question: "Je vais ___ le boulanger (baker).",
+                options: ["à", "chez", "au"],
+                correct: 1,
+                hint: "The baker is a person."
+            },
+            {
+                id: "a1_11_q31",
+                type: "choice",
+                question: "Je vais ___ la boulangerie (bakery).",
+                options: ["à", "chez"],
+                correct: 0,
+                hint: "The bakery is a building."
+            },
+            {
+                id: "a1_11_q32",
+                type: "choice",
+                question: "Il va ___ supermarché.",
+                options: ["au", "chez", "en"],
+                correct: 0,
+                hint: "À + Le = Au."
+            },
+            {
+                id: "a1_11_q33",
+                type: "choice",
+                question: "Elle est ___ école.",
+                options: ["à l'", "en", "chez"],
+                correct: 0,
+                hint: "General location + Vowel."
+            },
+
+            // --- SORTING (Structure) ---
+            {
+                id: "a1_11_q34",
+                type: "sort",
+                question: "Build: 'I go to France.'",
+                blocks: ["France", "en", "vais", "Je", "à", "au"], // Distractors: à, au
+                correct_order: ["Je", "vais", "en", "France"],
+                hint: "Feminine Country."
+            },
+            {
+                id: "a1_11_q35",
+                type: "sort",
+                question: "Build: 'He is at Pierre's place.'",
+                blocks: ["chez", "Pierre", "est", "Il", "à", "dans"], // Distractors: à, dans
+                correct_order: ["Il", "est", "chez", "Pierre"],
+                hint: "Pierre is a person."
+            },
+            {
+                id: "a1_11_q36",
+                type: "sort",
+                question: "Build: 'We live in Canada.'",
+                blocks: ["Canada", "au", "habitons", "Nous", "en", "le"], // Distractors: en, le
+                correct_order: ["Nous", "habitons", "au", "Canada"],
+                hint: "Masculine country."
+            },
+            {
+                id: "a1_11_q37",
+                type: "sort",
+                question: "Build: 'The cat is in the garden.'",
+                blocks: ["jardin", "dans", "est", "chat", "Le", "le", "en"], // Distractors: en
+                correct_order: ["Le", "chat", "est", "dans", "le", "jardin"],
+                hint: "Inside a specific place."
+            },
+
+            // --- RAPID FIRE & TRICKY ONES ---
+            {
+                id: "a1_11_q38",
+                type: "choice",
+                question: "___ Sénégal",
+                options: ["Au", "En"],
+                correct: 0,
+                hint: "Masculine (No 'e')."
+            },
+            {
+                id: "a1_11_q39",
+                type: "choice",
+                question: "___ Belgique",
+                options: ["En", "Au"],
+                correct: 0,
+                hint: "Feminine (Ends in 'e')."
+            },
+            {
+                id: "a1_11_q40",
+                type: "choice",
+                question: "___ Suisse",
+                options: ["En", "Au"],
+                correct: 0,
+                hint: "Feminine (Ends in 'e')."
+            },
+            {
+                id: "a1_11_q41",
+                type: "choice",
+                question: "___ Lisbonne (City)",
+                options: ["À", "En"],
+                correct: 0,
+                hint: "City always À."
+            },
+            {
+                id: "a1_11_q42",
+                type: "choice",
+                question: "___ Europe",
+                options: ["En", "Au"],
+                correct: 0,
+                hint: "Continents starting with vowels are En."
+            },
+            {
+                id: "a1_11_q43",
+                type: "choice",
+                question: "___ cinéma",
+                options: ["Au", "En"],
+                correct: 0,
+                hint: "À + Le = Au."
+            },
+            {
+                id: "a1_11_q44",
+                type: "choice",
+                question: "___ toilettes",
+                options: ["Aux", "En", "Au"],
+                correct: 0,
+                hint: "Plural place."
+            },
+            {
+                id: "a1_11_q45",
+                type: "choice",
+                question: "Je reste ___ la maison.",
+                options: ["à", "chez", "en"],
+                correct: 0,
+                hint: "Idiom: À la maison (At home)."
+            },
+            {
+                id: "a1_11_q46",
+                type: "choice",
+                question: "Je suis ___ moi (at my place).",
+                options: ["chez", "à"],
+                correct: 0,
+                hint: "Pronoun = Person."
+            },
+            
+            // --- EXCEPTION PREVIEW (Le Mexique) ---
+            {
+                id: "a1_11_q47",
+                type: "choice",
+                question: "Exception: Je vais ___ Mexique.",
+                options: ["au", "en"],
+                correct: 0,
+                hint: "Mexique ends in 'e' but is MASCULINE."
+            },
+            
+            // --- FINAL CHALLENGE ---
+            {
+                id: "a1_11_q48",
+                type: "sort",
+                question: "Build: 'I am at the hotel.'",
+                blocks: ["hôtel", "l'", "à", "suis", "Je", "dans"], // Distractors: dans
+                correct_order: ["Je", "suis", "à", "l'", "hôtel"],
+                hint: "General location."
+            },
+            {
+                id: "a1_11_q49",
+                type: "choice",
+                question: "Je travaille ___ bureau (office).",
+                options: ["au", "en"],
+                correct: 0,
+                hint: "Masculine place."
+            },
+            {
+                id: "a1_11_q50",
+                type: "input",
+                question: "Il va ___ (in) Australie.",
+                answer: "en",
+                hint: "Ends in e."
             }
         ]
     },
@@ -1843,62 +4986,451 @@ const GRAMMAR_DATA = {
         },
         learn: {
             cheat_sheet: {
-                summary: "In English, you say 'I eat bread'. In French, you must say 'I eat OF THE bread' (Je mange DU pain). You rarely use nouns without articles.",
-                key_rule: "🔥 Use 'Du' (masc), 'De la' (fem), or 'Des' (plural) for undefined quantities."
+                summary: "In English, you can say 'I eat bread'. In French, you must say 'I eat **some** bread' (Je mange **du** pain). You almost never use a noun without an article.",
+                key_rule: "🔥 **The Quantity Rule:**\n* **Du** (Masc) = Some\n* **De la** (Fem) = Some\n* **Des** (Plural) = Some\n* **De** (Negative) = Not any"
             },
             explanation: [
                 {
+                    type: "text",
+                    content: "Use the Partitive when you are talking about an undefined quantity of something (usually food, drink, or abstract concepts like courage)."
+                },
+                {
                     type: "table",
-                    headers: ["Gender", "Partitive Article", "Example"],
+                    headers: ["Gender/Number", "Article", "Example"],
                     rows: [
-                        ["Masculine", "Du", "Je bois du café."],
-                        ["Feminine", "De la", "Je mange de la salade."],
-                        ["Vowel start", "De l'", "Je bois de l'eau."],
-                        ["Plural", "Des", "Je mange des pâtes."]
+                        ["Masculine", "Du (de + le)", "Je veux **du** fromage."],
+                        ["Feminine", "De la", "Je veux **de la** soupe."],
+                        ["Vowel / H", "De l'", "Je bois **de l'**eau."],
+                        ["Plural", "Des", "Je mange **des** pâtes."]
                     ]
                 },
                 {
                     type: "warning",
-                    title: "⚠️ The Negative Trap",
-                    content: "After a negation (pas, jamais), ALL partitive articles change to simply 'DE'. Example: 'J'ai du pain' -> 'Je n'ai PAS DE pain'."
+                    title: "⚠️ The Preference Trap",
+                    content: "Verbs of preference (**Aimer, Adorer, Détester, Préférer**) ALWAYS take the Definite Article (**Le, La, Les**), not the Partitive.\n* *J'aime **le** café.* (I like coffee in general).\n* *Je bois **du** café.* (I am drinking some coffee right now)."
+                },
+                {
+                    type: "warning",
+                    title: "⚠️ The Negative Rule",
+                    content: "After a negation (*ne...pas*), Du/De la/Des ALL change to **DE** (or d').\n* *J'ai du pain.* -> *Je n'ai pas **de** pain.*"
                 }
             ]
         },
         practice: [
+            // --- Masculine (Du) ---
             {
                 id: "a1_12_q01",
                 type: "choice",
-                question: "Je veux ___ chocolat (m).",
-                options: ["le", "du", "une"],
-                correct: 1,
-                hint: "You want 'some' chocolate, not 'the' chocolate."
+                question: "Je mange ___ pain.",
+                options: ["du", "de la", "des"],
+                correct: 0,
+                hint: "Pain is masculine."
             },
             {
                 id: "a1_12_q02",
                 type: "choice",
-                question: "Je ne mange pas ___ viande.",
-                options: ["de la", "une", "de"],
-                correct: 2,
-                hint: "Negative sentence! Always use 'de'."
+                question: "Il boit ___ thé.",
+                options: ["du", "de la", "de l'"],
+                correct: 0,
+                hint: "Thé is masculine."
             },
             {
                 id: "a1_12_q03",
-                type: "input",
-                question: "Tu bois ___ (some) eau ?",
-                answer: "de l'",
-                hint: "Eau starts with a vowel."
+                type: "choice",
+                question: "Tu veux ___ sucre ?",
+                options: ["du", "de la", "des"],
+                correct: 0,
+                hint: "Sucre is masculine."
             },
             {
                 id: "a1_12_q04",
-                type: "sort",
-                question: "Build: 'I eat fries' (frites)",
-                blocks: ["mange", "Je", "des", "frites"],
-                correct_order: ["Je", "mange", "des", "frites"],
+                type: "choice",
+                question: "Elle achète ___ poisson.",
+                options: ["du", "de la", "le"],
+                correct: 0,
+                hint: "Poisson is masculine."
+            },
+            {
+                id: "a1_12_q05",
+                type: "choice",
+                question: "Nous avons ___ courage.",
+                options: ["du", "de la", "des"],
+                correct: 0,
+                hint: "Abstract noun (Masc)."
+            },
+
+            // --- Feminine (De la) ---
+            {
+                id: "a1_12_q06",
+                type: "choice",
+                question: "Je mange ___ salade.",
+                options: ["de la", "du", "le"],
+                correct: 0,
+                hint: "Salade is feminine."
+            },
+            {
+                id: "a1_12_q07",
+                type: "choice",
+                question: "Il y a ___ glace.",
+                options: ["de la", "du", "des"],
+                correct: 0,
+                hint: "Glace is feminine."
+            },
+            {
+                id: "a1_12_q08",
+                type: "choice",
+                question: "Tu veux ___ soupe ?",
+                options: ["de la", "du", "la"],
+                correct: 0,
+                hint: "Soupe is feminine."
+            },
+            {
+                id: "a1_12_q09",
+                type: "choice",
+                question: "Je mets ___ farine (flour).",
+                options: ["de la", "du", "de"],
+                correct: 0,
+                hint: "Farine is feminine."
+            },
+            {
+                id: "a1_12_q10",
+                type: "choice",
+                question: "Elle a ___ patience.",
+                options: ["de la", "du", "des"],
+                correct: 0,
+                hint: "Abstract noun (Fem)."
+            },
+
+            // --- Vowel / H (De l') ---
+            {
+                id: "a1_12_q11",
+                type: "choice",
+                question: "Je bois ___ eau.",
+                options: ["de l'", "du", "de la"],
+                correct: 0,
+                hint: "Eau starts with vowel."
+            },
+            {
+                id: "a1_12_q12",
+                type: "choice",
+                question: "Il faut ___ argent.",
+                options: ["de l'", "du", "des"],
+                correct: 0,
+                hint: "Argent starts with vowel."
+            },
+            {
+                id: "a1_12_q13",
+                type: "choice",
+                question: "Tu mets ___ huile.",
+                options: ["de l'", "du", "de la"],
+                correct: 0,
+                hint: "Huile starts with silent H."
+            },
+            {
+                id: "a1_12_q14",
+                type: "choice",
+                question: "Elle achète ___ ail (garlic).",
+                options: ["de l'", "du", "de la"],
+                correct: 0,
+                hint: "Starts with vowel."
+            },
+            {
+                id: "a1_12_q15",
+                type: "choice",
+                question: "Nous avons ___ amour.",
+                options: ["de l'", "du", "de la"],
+                correct: 0,
+                hint: "Starts with vowel."
+            },
+
+            // --- Plural (Des) ---
+            {
+                id: "a1_12_q16",
+                type: "choice",
+                question: "Je mange ___ pâtes (pasta).",
+                options: ["des", "de la", "du"],
+                correct: 0,
+                hint: "Pâtes is plural."
+            },
+            {
+                id: "a1_12_q17",
+                type: "choice",
+                question: "Il achète ___ pommes.",
+                options: ["des", "de la", "du"],
+                correct: 0,
+                hint: "Pommes is plural."
+            },
+            {
+                id: "a1_12_q18",
+                type: "choice",
+                question: "Tu veux ___ frites ?",
+                options: ["des", "de la", "du"],
+                correct: 0,
                 hint: "Frites is plural."
+            },
+            {
+                id: "a1_12_q19",
+                type: "choice",
+                question: "Il y a ___ gens (people).",
+                options: ["des", "de la", "du"],
+                correct: 0,
+                hint: "Gens is plural."
+            },
+            {
+                id: "a1_12_q20",
+                type: "choice",
+                question: "Je prends ___ céréales.",
+                options: ["des", "de la", "du"],
+                correct: 0,
+                hint: "Plural."
+            },
+
+            // --- The "Pas de" Rule (Negation) ---
+            {
+                id: "a1_12_q21",
+                type: "choice",
+                question: "Je n'ai pas ___ chien.",
+                options: ["de", "un", "du"],
+                correct: 0,
+                hint: "Negative sentence."
+            },
+            {
+                id: "a1_12_q22",
+                type: "choice",
+                question: "Il ne mange pas ___ viande.",
+                options: ["de", "de la", "la"],
+                correct: 0,
+                hint: "Negative + Partitive."
+            },
+            {
+                id: "a1_12_q23",
+                type: "choice",
+                question: "Nous ne buvons pas ___ café.",
+                options: ["de", "du", "le"],
+                correct: 0,
+                hint: "Negative."
+            },
+            {
+                id: "a1_12_q24",
+                type: "choice",
+                question: "Tu n'as pas ___ chance.",
+                options: ["de", "de la", "la"],
+                correct: 0,
+                hint: "Negative."
+            },
+            {
+                id: "a1_12_q25",
+                type: "choice",
+                question: "Ils ne veulent pas ___ frites.",
+                options: ["de", "des", "les"],
+                correct: 0,
+                hint: "Negative (even for plural nouns)."
+            },
+            {
+                id: "a1_12_q26",
+                type: "choice",
+                question: "Je ne veux pas ___ eau.",
+                options: ["d'", "de", "de l'"],
+                correct: 0,
+                hint: "De becomes d' before a vowel."
+            },
+
+            // --- Aimer vs Manger (The Trap) ---
+            {
+                id: "a1_12_q27",
+                type: "choice",
+                question: "J'aime ___ chocolat.",
+                options: ["le", "du", "de"],
+                correct: 0,
+                hint: "Aimer (Preference) -> Le."
+            },
+            {
+                id: "a1_12_q28",
+                type: "choice",
+                question: "Je mange ___ chocolat.",
+                options: ["du", "le", "de"],
+                correct: 0,
+                hint: "Manger (Consuming) -> Du."
+            },
+            {
+                id: "a1_12_q29",
+                type: "choice",
+                question: "Elle déteste ___ poisson.",
+                options: ["le", "du", "de"],
+                correct: 0,
+                hint: "Détester (Preference) -> Le."
+            },
+            {
+                id: "a1_12_q30",
+                type: "choice",
+                question: "Tu cuisines ___ poisson.",
+                options: ["du", "le", "de"],
+                correct: 0,
+                hint: "Cuisiner (Activity/Consuming) -> Du."
+            },
+            {
+                id: "a1_12_q31",
+                type: "choice",
+                question: "Il préfère ___ thé.",
+                options: ["le", "du", "de"],
+                correct: 0,
+                hint: "Préférer (Preference) -> Le."
+            },
+            {
+                id: "a1_12_q32",
+                type: "choice",
+                question: "Je prends ___ thé.",
+                options: ["du", "le", "de"],
+                correct: 0,
+                hint: "Prendre (Consuming) -> Du."
+            },
+
+            // --- Sentence Sorting with Distractors ---
+            {
+                id: "a1_12_q33",
+                type: "sort",
+                question: "Build: 'I drink water.'",
+                blocks: ["eau", "bois", "de", "l'", "Je", "du"], // Distractors: du
+                correct_order: ["Je", "bois", "de", "l'", "eau"],
+                hint: "Vowel start."
+            },
+            {
+                id: "a1_12_q34",
+                type: "sort",
+                question: "Build: 'I do not eat bread.'",
+                blocks: ["pain", "pas", "de", "mange", "ne", "Je", "du"], // Distractors: du
+                correct_order: ["Je", "ne", "mange", "pas", "de", "pain"],
+                hint: "Negative rule applies."
+            },
+            {
+                id: "a1_12_q35",
+                type: "sort",
+                question: "Build: 'She has courage.'",
+                blocks: ["du", "Elle", "courage", "a", "le", "de"], // Distractors: le, de
+                correct_order: ["Elle", "a", "du", "courage"],
+                hint: "Positive sentence."
+            },
+            {
+                id: "a1_12_q36",
+                type: "sort",
+                question: "Build: 'We like pizza.' (Preference)",
+                blocks: ["pizza", "la", "aimons", "Nous", "de"], // Distractors: de
+                correct_order: ["Nous", "aimons", "la", "pizza"],
+                hint: "Aimer = Definite Article (La)."
+            },
+
+            // --- Mixed Review ---
+            {
+                id: "a1_12_q37",
+                type: "choice",
+                question: "Je voudrais ___ bière (f).",
+                options: ["de la", "du", "le"],
+                correct: 0,
+                hint: "Feminine."
+            },
+            {
+                id: "a1_12_q38",
+                type: "choice",
+                question: "Il n'y a plus ___ bière.",
+                options: ["de", "de la", "une"],
+                correct: 0,
+                hint: "Expression of quantity (none left) -> De."
+            },
+            {
+                id: "a1_12_q39",
+                type: "choice",
+                question: "Donne-moi ___ beurre (m).",
+                options: ["du", "de la", "le"],
+                correct: 0,
+                hint: "Masculine."
+            },
+            {
+                id: "a1_12_q40",
+                type: "choice",
+                question: "C'est ___ bon vin.",
+                options: ["du", "de la", "le"],
+                correct: 0,
+                hint: "Undefined quantity of wine."
+            },
+            {
+                id: "a1_12_q41",
+                type: "choice",
+                question: "J'adore ___ vin rouge.",
+                options: ["le", "du", "de"],
+                correct: 0,
+                hint: "Adorer = Le."
+            },
+            {
+                id: "a1_12_q42",
+                type: "input",
+                question: "Il boit ___ (some) lait.",
+                answer: "du",
+                hint: "Lait is masculine."
+            },
+            {
+                id: "a1_12_q43",
+                type: "input",
+                question: "Elle mange ___ (some) viande.",
+                answer: "de la",
+                hint: "Viande is feminine."
+            },
+            {
+                id: "a1_12_q44",
+                type: "input",
+                question: "Je ne bois pas ___ (any) alcool.",
+                answer: "d'",
+                hint: "Negative + Vowel."
+            },
+            {
+                id: "a1_12_q45",
+                type: "choice",
+                question: "Tu as ___ chance.",
+                options: ["de la", "du"],
+                correct: 0,
+                hint: "Fem."
+            },
+            {
+                id: "a1_12_q46",
+                type: "choice",
+                question: "Il fait ___ bruit.",
+                options: ["du", "de la"],
+                correct: 0,
+                hint: "Masc."
+            },
+            {
+                id: "a1_12_q47",
+                type: "choice",
+                question: "On mange ___ légumes.",
+                options: ["des", "les"],
+                correct: 0,
+                hint: "Plural partitive."
+            },
+            {
+                id: "a1_12_q48",
+                type: "choice",
+                question: "Les enfants aiment ___ bonbons.",
+                options: ["les", "des"],
+                correct: 0,
+                hint: "General preference -> Les."
+            },
+            {
+                id: "a1_12_q49",
+                type: "sort",
+                question: "Build: 'Do you want some cake?'",
+                blocks: ["gâteau", "du", "Tu", "veux", "?"],
+                correct_order: ["Tu", "veux", "du", "gâteau", "?"],
+                hint: "Masculine."
+            },
+            {
+                id: "a1_12_q50",
+                type: "choice",
+                question: "Final Check: 'I don't have time (temps - m).'",
+                options: ["Je n'ai pas de temps", "Je n'ai pas du temps"],
+                correct: 0,
+                hint: "Negative always De."
             }
         ]
     },
-
     "a1_13": {
         meta: {
             title: "Demonstratives",
@@ -1907,29 +5439,85 @@ const GRAMMAR_DATA = {
         },
         learn: {
             cheat_sheet: {
-                summary: "Words for 'This', 'That', and 'These'. They point at specific objects.",
-                key_rule: "🔥 Ce (Male), Cette (Female), Ces (Plural). Watch out for 'Cet'!"
+                summary: "Demonstrative Adjectives are words used to point at specific things: 'This', 'That', 'These', or 'Those'. In French, you must choose the word based on the gender and number of the noun.",
+                key_rule: "🔥 **The Pointing Rule:**\n* Male: **Ce** (or **Cet** before vowel)\n* Female: **Cette**\n* Plural: **Ces**"
             },
             explanation: [
                 {
+                    type: "text",
+                    content: "Unlike English, French doesn't strictly distinguish between 'This' (close) and 'That' (far) with the adjective alone. *Ce livre* can mean 'This book' OR 'That book'."
+                },
+                {
                     type: "table",
-                    headers: ["Type", "Word", "Example"],
+                    headers: ["Gender/Number", "Word", "Example", "Pronunciation"],
                     rows: [
-                        ["Masc (Consonant)", "Ce", "Ce garçon (This boy)"],
-                        ["Masc (Vowel)", "Cet", "Cet homme (This man)"],
-                        ["Feminine", "Cette", "Cette femme (This woman)"],
-                        ["Plural (All)", "Ces", "Ces gens (These people)"]
+                        ["Masc (Consonant)", "Ce", "Ce garçon (This boy)", "Seuh"],
+                        ["Masc (Vowel / H)", "Cet", "Cet homme (This man)", "Set"],
+                        ["Feminine (All)", "Cette", "Cette fille (This girl)", "Set"],
+                        ["Plural (All)", "Ces", "Ces amis (These friends)", "Say"]
                     ]
                 },
                 {
+                    type: "warning",
+                    title: "⚠️ The 'Cet' Rule",
+                    content: "If a **masculine** noun starts with a vowel (a, e, i, o, u) or a silent 'h', you CANNOT use 'Ce'. You must use **Cet** to bridge the sound.\n* *Ce ami* ❌ -> *Cet ami* ✅\n* Note: Feminine nouns do NOT change for vowels (*Cette amie* is correct)."
+                },
+                {
+                    type: "warning",
+                    title: "⚠️ Ce vs. C'est",
+                    content: "**Ce** is an adjective (goes before a noun: *Ce chat*). **C'est** is a subject+verb (means 'It is': *C'est un chat*). Don't mix them up!"
+                },
+                {
                     type: "text",
-                    content: "Tip: 'Cet' is used to make the pronunciation flow (avoiding two vowel sounds clashing), but it is still masculine."
+                    content: "**Tip - This vs That:** If you really need to emphasize distance, you can add suffixes to the noun:\n* *Ce livre-**ci*** (This book here)\n* *Ce livre-**là*** (That book there)"
                 }
             ]
         },
         practice: [
+            // --- Masculine Consonant (Ce) ---
             {
                 id: "a1_13_q01",
+                type: "choice",
+                question: "___ garçon est gentil.",
+                options: ["Ce", "Cet", "Cette"],
+                correct: 0,
+                hint: "Garçon is masculine consonant."
+            },
+            {
+                id: "a1_13_q02",
+                type: "choice",
+                question: "Je veux ___ livre.",
+                options: ["ce", "cet", "cette"],
+                correct: 0,
+                hint: "Livre is masculine."
+            },
+            {
+                id: "a1_13_q03",
+                type: "choice",
+                question: "Regarde ___ chien !",
+                options: ["ce", "ces", "cette"],
+                correct: 0,
+                hint: "Chien is masculine singular."
+            },
+            {
+                id: "a1_13_q04",
+                type: "input",
+                question: "___ (This) matin, je travaille.",
+                answer: "ce",
+                hint: "Matin is masculine."
+            },
+            {
+                id: "a1_13_q05",
+                type: "choice",
+                question: "___ stylo est bleu.",
+                options: ["Ce", "Cet"],
+                correct: 0,
+                hint: "Stylo starts with a consonant."
+            },
+
+            // --- Feminine (Cette) ---
+            {
+                id: "a1_13_q06",
                 type: "choice",
                 question: "___ fille est sympa.",
                 options: ["Ce", "Cette", "Ces"],
@@ -1937,27 +5525,364 @@ const GRAMMAR_DATA = {
                 hint: "Fille is feminine."
             },
             {
-                id: "a1_13_q02",
+                id: "a1_13_q07",
                 type: "choice",
-                question: "J'aime ___ hôtel.",
-                options: ["ce", "cette", "cet"],
+                question: "J'aime ___ maison.",
+                options: ["ce", "cet", "cette"],
                 correct: 2,
-                hint: "Hôtel is masculine but starts with silent H (vowel sound)."
+                hint: "Maison is feminine."
             },
             {
-                id: "a1_13_q03",
+                id: "a1_13_q08",
+                type: "choice",
+                question: "___ pomme est rouge.",
+                options: ["Cette", "Ce", "Cet"],
+                correct: 0,
+                hint: "Pomme is feminine."
+            },
+            {
+                id: "a1_13_q09",
                 type: "input",
-                question: "Regarde ___ (this) chien.",
-                answer: "ce",
-                hint: "Chien is masculine consonant."
+                question: "___ (This) voiture est rapide.",
+                answer: "cette",
+                hint: "Voiture is feminine."
             },
             {
-                id: "a1_13_q04",
+                id: "a1_13_q10",
+                type: "choice",
+                question: "___ année (year).",
+                options: ["Cette", "Cet"],
+                correct: 0,
+                hint: "Année is feminine. Even though it starts with a vowel, feminine is always 'Cette'."
+            },
+
+            // --- Masculine Vowel / H (Cet) ---
+            {
+                id: "a1_13_q11",
+                type: "choice",
+                question: "___ hôtel est grand.",
+                options: ["Ce", "Cet", "Cette"],
+                correct: 1,
+                hint: "Hôtel is Masc, but starts with silent H."
+            },
+            {
+                id: "a1_13_q12",
+                type: "choice",
+                question: "___ homme (man) est fort.",
+                options: ["Ce", "Cet", "Cette"],
+                correct: 1,
+                hint: "Homme starts with H."
+            },
+            {
+                id: "a1_13_q13",
+                type: "choice",
+                question: "J'aime ___ ami (male).",
+                options: ["ce", "cet", "cette"],
+                correct: 1,
+                hint: "Ami starts with a vowel."
+            },
+            {
+                id: "a1_13_q14",
+                type: "choice",
+                question: "___ arbre (tree) est vieux.",
+                options: ["Ce", "Cet", "Cette"],
+                correct: 1,
+                hint: "Arbre is masculine vowel."
+            },
+            {
+                id: "a1_13_q15",
+                type: "input",
+                question: "___ (This) ordinateur.",
+                answer: "cet",
+                hint: "Computer (Masc) starts with O."
+            },
+            {
+                id: "a1_13_q16",
+                type: "choice",
+                question: "___ après-midi (afternoon).",
+                options: ["Ce", "Cet"],
+                correct: 1,
+                hint: "Starts with A."
+            },
+            {
+                id: "a1_13_q17",
+                type: "choice",
+                question: "___ hiver (winter).",
+                options: ["Ce", "Cet"],
+                correct: 1,
+                hint: "Starts with H."
+            },
+
+            // --- Plural (Ces) ---
+            {
+                id: "a1_13_q18",
                 type: "choice",
                 question: "___ livres sont chers.",
                 options: ["Ces", "Ce", "Cette"],
                 correct: 0,
                 hint: "Livres is plural."
+            },
+            {
+                id: "a1_13_q19",
+                type: "choice",
+                question: "Je veux ___ chaussures.",
+                options: ["ces", "ce", "cette"],
+                correct: 0,
+                hint: "Chaussures is plural."
+            },
+            {
+                id: "a1_13_q20",
+                type: "input",
+                question: "Regarde ___ (these) photos.",
+                answer: "ces",
+                hint: "Plural."
+            },
+            {
+                id: "a1_13_q21",
+                type: "choice",
+                question: "___ gens (people) sont bizarres.",
+                options: ["Ces", "Ce", "C'est"],
+                correct: 0,
+                hint: "Gens is plural."
+            },
+            {
+                id: "a1_13_q22",
+                type: "choice",
+                question: "___ enfants jouent.",
+                options: ["Ces", "Cet", "Ce"],
+                correct: 0,
+                hint: "Plural (starts with vowel, but Ces works for all plurals)."
+            },
+
+            // --- Mixed Discrimination & Traps ---
+            {
+                id: "a1_13_q23",
+                type: "choice",
+                question: "___ école (school - f).",
+                options: ["Cet", "Cette", "Ce"],
+                correct: 1,
+                hint: "École is feminine. Feminine always uses 'Cette', even with vowels."
+            },
+            {
+                id: "a1_13_q24",
+                type: "choice",
+                question: "___ étudiant (student - m).",
+                options: ["Cet", "Cette", "Ce"],
+                correct: 0,
+                hint: "Masculine vowel."
+            },
+            {
+                id: "a1_13_q25",
+                type: "choice",
+                question: "___ étudiante (student - f).",
+                options: ["Cet", "Cette", "Ce"],
+                correct: 1,
+                hint: "Feminine."
+            },
+            {
+                id: "a1_13_q26",
+                type: "choice",
+                question: "___ amie (friend - f).",
+                options: ["Cet", "Cette", "Ce"],
+                correct: 1,
+                hint: "Feminine. Don't be tricked by the vowel, it's NOT Cet for females."
+            },
+            {
+                id: "a1_13_q27",
+                type: "choice",
+                question: "___ hôpital (hospital - m).",
+                options: ["Ce", "Cet"],
+                correct: 1,
+                hint: "Masc H."
+            },
+            {
+                id: "a1_13_q28",
+                type: "choice",
+                question: "___ table.",
+                options: ["Ce", "Cette"],
+                correct: 1,
+                hint: "Fem."
+            },
+            {
+                id: "a1_13_q29",
+                type: "choice",
+                question: "___ avion (plane - m).",
+                options: ["Ce", "Cet"],
+                correct: 1,
+                hint: "Masc Vowel."
+            },
+            {
+                id: "a1_13_q30",
+                type: "choice",
+                question: "___ fleurs (flowers).",
+                options: ["Ces", "Cette"],
+                correct: 0,
+                hint: "Plural."
+            },
+
+            // --- Ce/Cet/Cette vs C'est (The Trap) ---
+            {
+                id: "a1_13_q31",
+                type: "choice",
+                question: "___ un bon film.",
+                options: ["C'est", "Ce", "Cet"],
+                correct: 0,
+                hint: "It is a good film."
+            },
+            {
+                id: "a1_13_q32",
+                type: "choice",
+                question: "___ film est bon.",
+                options: ["C'est", "Ce", "Cet"],
+                correct: 1,
+                hint: "This film (pointing)."
+            },
+            {
+                id: "a1_13_q33",
+                type: "choice",
+                question: "___ une belle maison.",
+                options: ["Cette", "C'est"],
+                correct: 1,
+                hint: "It is a beautiful house."
+            },
+            {
+                id: "a1_13_q34",
+                type: "choice",
+                question: "___ maison est belle.",
+                options: ["Cette", "C'est"],
+                correct: 0,
+                hint: "This house."
+            },
+            {
+                id: "a1_13_q35",
+                type: "choice",
+                question: "___ mon frère.",
+                options: ["Ce", "C'est", "Cet"],
+                correct: 1,
+                hint: "It is my brother."
+            },
+
+            // --- Sentence Sorting with Distractors ---
+            {
+                id: "a1_13_q36",
+                type: "sort",
+                question: "Build: 'I like this cake.'",
+                blocks: ["gâteau", "aime", "ce", "J'", "cet", "le"], // Distractors: cet, le
+                correct_order: ["J'", "aime", "ce", "gâteau"],
+                hint: "Gâteau is masculine consonant."
+            },
+            {
+                id: "a1_13_q37",
+                type: "sort",
+                question: "Build: 'Look at this star.' (étoile - f)",
+                blocks: ["cette", "étoile", "Regarde", "cet", "ce"], // Distractors: cet, ce
+                correct_order: ["Regarde", "cette", "étoile"],
+                hint: "Étoile is feminine."
+            },
+            {
+                id: "a1_13_q38",
+                type: "sort",
+                question: "Build: 'These shoes are new.'",
+                blocks: ["sont", "chaussures", "Ces", "neuves", "cette", "ce"], // Distractors: cette, ce
+                correct_order: ["Ces", "chaussures", "sont", "neuves"],
+                hint: "Plural."
+            },
+            {
+                id: "a1_13_q39",
+                type: "sort",
+                question: "Build: 'This hotel is expensive.'",
+                blocks: ["Cet", "hôtel", "cher", "est", "Ce", "Cette"], // Distractors: Ce, Cette
+                correct_order: ["Cet", "hôtel", "est", "cher"],
+                hint: "Masc H."
+            },
+            {
+                id: "a1_13_q40",
+                type: "sort",
+                question: "Build: 'I prefer that one.' (celui-là)",
+                blocks: ["celui-là", "préfère", "Je", "ce", "cette"], // Distractors: ce, cette
+                correct_order: ["Je", "préfère", "celui-là"],
+                hint: "Pointing at a specific one."
+            },
+
+            // --- Final Review ---
+            {
+                id: "a1_13_q41",
+                type: "choice",
+                question: "___ problème.",
+                options: ["Ce", "Cette"],
+                correct: 0,
+                hint: "Problème is masculine (Greek origin)."
+            },
+            {
+                id: "a1_13_q42",
+                type: "choice",
+                question: "___ idée (idea - f).",
+                options: ["Cet", "Cette"],
+                correct: 1,
+                hint: "Feminine."
+            },
+            {
+                id: "a1_13_q43",
+                type: "choice",
+                question: "___ animal.",
+                options: ["Ce", "Cet"],
+                correct: 1,
+                hint: "Masc Vowel."
+            },
+            {
+                id: "a1_13_q44",
+                type: "choice",
+                question: "___ histoire (story - f).",
+                options: ["Cet", "Cette"],
+                correct: 1,
+                hint: "Feminine."
+            },
+            {
+                id: "a1_13_q45",
+                type: "input",
+                question: "___ (This) garçon.",
+                answer: "ce",
+                hint: "Masc consonant."
+            },
+            {
+                id: "a1_13_q46",
+                type: "sort",
+                question: "Build: 'Who is this man?'",
+                blocks: ["homme", "est", "cet", "Qui", "?", "ce", "cette"], // Distractors: ce, cette
+                correct_order: ["Qui", "est", "cet", "homme", "?"],
+                hint: "Masc H."
+            },
+            {
+                id: "a1_13_q47",
+                type: "choice",
+                question: "___ oranges.",
+                options: ["Ces", "Cettes"],
+                correct: 0,
+                hint: "Cettes does not exist!"
+            },
+            {
+                id: "a1_13_q48",
+                type: "choice",
+                question: "___ jour.",
+                options: ["Ce", "Cet"],
+                correct: 0,
+                hint: "This day."
+            },
+            {
+                id: "a1_13_q49",
+                type: "choice",
+                question: "___ semaine (week - f).",
+                options: ["Ce", "Cette"],
+                correct: 1,
+                hint: "This week."
+            },
+            {
+                id: "a1_13_q50",
+                type: "sort",
+                question: "Build: 'I do not like this.'",
+                blocks: ["pas", "n'", "aime", "ça", "Je", "ce"], // Distractors: ce
+                correct_order: ["Je", "n'", "aime", "pas", "ça"],
+                hint: "'Ça' is used for general 'this/that'."
             }
         ]
     },
@@ -2216,51 +6141,451 @@ const GRAMMAR_DATA = {
         },
         learn: {
             cheat_sheet: {
-                summary: "The hardest concept in A2! Knowing when to use which past tense.",
-                key_rule: "🔥 P.C. = A specific event (BOOM). Imparfait = Background, Habit, or Description (WAVE)."
+                summary: "The battle of the past tenses! One sets the scene, the other advances the story.",
+                key_rule: "🔥 **The Movie Analogy:**\n* **Imparfait** = The Background / The Set / The Weather / What was happening (WAVE 〰️).\n* **Passé Composé** = The Action / The Event / What happened (BOOM 💥)."
             },
             explanation: [
                 {
+                    type: "text",
+                    content: "To choose the right tense, ask yourself: **Is the action finished or was it ongoing?**"
+                },
+                ,
+                {
                     type: "table",
-                    headers: ["Context", "Tense", "Example"],
+                    headers: ["Context", "Tense", "Signal Words"],
                     rows: [
-                        ["Specific Action", "Passé Composé", "Un jour, je suis tombé."],
-                        ["Description/Weather", "Imparfait", "Le ciel était bleu."],
-                        ["Habit (Used to)", "Imparfait", "Je jouais souvent."],
-                        ["Interruption", "Imp (Background) + PC (Action)", "Je dormais quand tu as téléphoné."]
+                        ["Specific Event (Once)", "Passé Composé", "Hier, Soudain, Un jour, Tout à coup, Ce matin"],
+                        ["Habit (Repeated)", "Imparfait", "Souvent, Toujours, D'habitude, Tous les jours, Chaque année"],
+                        ["Description / State", "Imparfait", "(No specific trigger, usually describing scene, age, time, feelings)"],
+                        ["Sequence of events", "Passé Composé", "D'abord... puis... ensuite..."]
                     ]
                 },
-                 // 
+                {
+                    type: "warning",
+                    title: "⚠️ The Interruption",
+                    content: "The classic structure: 'I **was sleeping** (Imparfait - Background) when the phone **rang** (P.C. - Interruption)' -> *Je dormais quand le téléphone a sonné.*"
+                },
                 {
                     type: "text",
-                    content: "Ask yourself: Did it happen ONCE (PC) or was it ONGOING (Imp)?"
+                    content: "**Tip:** If you can say 'Used to...' or 'Was ...ing' in English, it is 99% likely to be **Imparfait**."
                 }
             ]
         },
         practice: [
+            // --- SIGNAL WORDS (The easiest way to tell) ---
             {
                 id: "a2_05_q01",
                 type: "choice",
-                question: "Soudain (Suddenly), il ___ (arriver).",
-                options: ["arrivait", "est arrivé"],
-                correct: 1,
-                hint: "'Suddenly' signals a specific event -> PC."
+                question: "Hier (Yesterday), je ___ (aller) au cinéma.",
+                options: ["suis allé", "allais"],
+                correct: 0,
+                hint: "'Hier' marks a specific time -> PC."
             },
             {
                 id: "a2_05_q02",
                 type: "choice",
-                question: "Tous les jours (Every day), je ___ (manger) des pâtes.",
-                options: ["mangeais", "ai mangé"],
+                question: "Soudain (Suddenly), le chien ___ (aboyer).",
+                options: ["a aboyé", "aboyait"],
                 correct: 0,
-                hint: "'Every day' signals a habit -> Imparfait."
+                hint: "'Soudain' introduces a sudden event -> PC."
             },
             {
                 id: "a2_05_q03",
+                type: "choice",
+                question: "D'habitude (Usually), elle ___ (manger) à midi.",
+                options: ["mangeait", "a mangé"],
+                correct: 0,
+                hint: "Habit -> Imparfait."
+            },
+            {
+                id: "a2_05_q04",
+                type: "choice",
+                question: "Tous les étés, nous ___ (voyager).",
+                options: ["voyagions", "avons voyagé"],
+                correct: 0,
+                hint: "Repetition/Habit -> Imparfait."
+            },
+            {
+                id: "a2_05_q05",
+                type: "choice",
+                question: "Un jour (One day), il ___ (décider) de partir.",
+                options: ["a décidé", "décidait"],
+                correct: 0,
+                hint: "Specific moment in the story -> PC."
+            },
+            {
+                id: "a2_05_q06",
+                type: "choice",
+                question: "En 1990, je ___ (naître).",
+                options: ["suis né", "naissais"],
+                correct: 0,
+                hint: "Birth is a specific event -> PC."
+            },
+            {
+                id: "a2_05_q07",
+                type: "choice",
+                question: "Autrefois (In the past), il n'y ___ (avoir) pas de voitures.",
+                options: ["avait", "a eu"],
+                correct: 0,
+                hint: "Description of a past era -> Imparfait."
+            },
+            {
+                id: "a2_05_q08",
+                type: "choice",
+                question: "Ce matin, tu ___ (boire) un café.",
+                options: ["as bu", "buvais"],
+                correct: 0,
+                hint: "Completed action this morning -> PC."
+            },
+            {
+                id: "a2_05_q09",
+                type: "choice",
+                question: "Chaque mardi, il ___ (aller) à la piscine.",
+                options: ["allait", "est allé"],
+                correct: 0,
+                hint: "Repeated habit -> Imparfait."
+            },
+            {
+                id: "a2_05_q10",
+                type: "choice",
+                question: "Tout à coup (All of a sudden), la lumière ___ (s'éteindre).",
+                options: ["s'est éteinte", "s'éteignait"],
+                correct: 0,
+                hint: "Sudden event -> PC."
+            },
+
+            // --- HABIT VS. ONE TIME ---
+            {
+                id: "a2_05_q11",
+                type: "choice",
+                question: "Quand j'étais petit, je ___ (aimer) les bonbons.",
+                options: ["aimais", "ai aimé"],
+                correct: 0,
+                hint: "State of mind / habit over a long period -> Imparfait."
+            },
+            {
+                id: "a2_05_q12",
+                type: "choice",
+                question: "Mardi dernier, j'___ (jouer) au tennis.",
+                options: ["ai joué", "jouais"],
+                correct: 0,
+                hint: "Specific Tuesday -> PC."
+            },
+            {
+                id: "a2_05_q13",
+                type: "choice",
+                question: "Le mardi, je ___ (jouer) au tennis.",
+                options: ["jouais", "ai joué"],
+                correct: 0,
+                hint: "'Le mardi' implies 'Every Tuesday' -> Imparfait."
+            },
+            {
+                id: "a2_05_q14",
+                type: "choice",
+                question: "Elle ___ (être) souvent malade.",
+                options: ["était", "a été"],
+                correct: 0,
+                hint: "Souvent (often) -> Imparfait."
+            },
+            {
+                id: "a2_05_q15",
+                type: "choice",
+                question: "J'___ (visiter) Paris trois fois.",
+                options: ["ai visité", "visitais"],
+                correct: 0,
+                hint: "Specific number of times -> PC."
+            },
+
+            // --- DESCRIPTION (Weather, Age, Setting) ---
+            {
+                id: "a2_05_q16",
+                type: "input",
+                question: "Il ___ (faire - weather) beau.",
+                answer: "faisait",
+                hint: "Description of weather -> Imparfait."
+            },
+            {
+                id: "a2_05_q17",
+                type: "choice",
+                question: "Le ciel ___ (être) gris.",
+                options: ["était", "a été"],
+                correct: 0,
+                hint: "Description of the scene -> Imparfait."
+            },
+            {
+                id: "a2_05_q18",
+                type: "choice",
+                question: "Elle ___ (avoir) 18 ans quand elle a passé son bac.",
+                options: ["avait", "a eu"],
+                correct: 0,
+                hint: "Age is a description of a state -> Imparfait."
+            },
+            {
+                id: "a2_05_q19",
+                type: "choice",
+                question: "Les oiseaux ___ (chanter) dans les arbres.",
+                options: ["chantaient", "ont chanté"],
+                correct: 0,
+                hint: "Background atmosphere -> Imparfait."
+            },
+            {
+                id: "a2_05_q20",
+                type: "choice",
+                question: "La maison ___ (sembler) vide.",
+                options: ["semblait", "a semblé"],
+                correct: 0,
+                hint: "Description of state -> Imparfait."
+            },
+
+            // --- THE INTERRUPTION (Background ... WHEN ... Action) ---
+            {
+                id: "a2_05_q21",
+                type: "choice",
+                question: "Je ___ (dormir) quand le téléphone a sonné.",
+                options: ["dormais", "ai dormi"],
+                correct: 0,
+                hint: "Sleeping was the background action -> Imparfait."
+            },
+            {
+                id: "a2_05_q22",
+                type: "choice",
+                question: "Je dormais quand le téléphone ___ (sonner).",
+                options: ["a sonné", "sonnait"],
+                correct: 0,
+                hint: "The ringing interrupted the sleep -> PC."
+            },
+            {
+                id: "a2_05_q23",
+                type: "choice",
+                question: "Il ___ (marcher) quand il est tombé.",
+                options: ["marchait", "a marché"],
+                correct: 0,
+                hint: "He was walking (process) -> Imparfait."
+            },
+            {
+                id: "a2_05_q24",
+                type: "choice",
+                question: "Il marchait quand il ___ (tomber).",
+                options: ["est tombé", "tombait"],
+                correct: 0,
+                hint: "Falling is the sudden event -> PC."
+            },
+            {
+                id: "a2_05_q25",
+                type: "choice",
+                question: "Nous ___ (regarder) la télé quand l'électricité s'est coupée.",
+                options: ["regardions", "avons regardé"],
+                correct: 0,
+                hint: "We were watching (ongoing) -> Imparfait."
+            },
+             {
+                id: "a2_05_q26",
                 type: "sort",
-                question: "Build: 'I was sleeping when he entered.'",
-                blocks: ["entré", "Je", "quand", "est", "il", "dormais"],
-                correct_order: ["Je", "dormais", "quand", "il", "est", "entré"],
-                hint: "Sleeping is background (Imp), entering is action (PC)."
+                question: "Build: 'I was reading when he entered.'",
+                blocks: ["entré", "Je", "quand", "est", "il", "lisais"],
+                correct_order: ["Je", "lisais", "quand", "il", "est", "entré"],
+                hint: "Background (Imp) + Quand + Interruption (PC)."
+            },
+
+            // --- MENTAL STATES & CAUSE ---
+            {
+                id: "a2_05_q27",
+                type: "choice",
+                question: "Je n'ai pas mangé parce que je n'___ (avoir - negative) pas faim.",
+                options: ["avais", "ai eu"],
+                correct: 0,
+                hint: "Feeling/State -> Imparfait."
+            },
+            {
+                id: "a2_05_q28",
+                type: "choice",
+                question: "Il ___ (vouloir) devenir médecin.",
+                options: ["voulait", "a voulu"],
+                correct: 0,
+                hint: "Desire/State of mind -> Imparfait."
+            },
+            {
+                id: "a2_05_q29",
+                type: "choice",
+                question: "Je ne ___ (savoir) pas la réponse.",
+                options: ["savais", "ai su"],
+                correct: 0,
+                hint: "Mental state -> Imparfait."
+            },
+            {
+                id: "a2_05_q30",
+                type: "choice",
+                question: "Elle ___ (être) triste.",
+                options: ["était", "a été"],
+                correct: 0,
+                hint: "Emotion/State -> Imparfait."
+            },
+
+            // --- DURATION (Pendant vs Description) ---
+            {
+                id: "a2_05_q31",
+                type: "choice",
+                question: "Il a habité à Londres ___ 10 ans.",
+                options: ["pendant", "quand"],
+                correct: 0,
+                hint: "Defined duration -> Passé Composé + Pendant."
+            },
+            {
+                id: "a2_05_q32",
+                type: "choice",
+                question: "J'ai attendu ___ une heure.",
+                options: ["pendant", "depuis"],
+                correct: 0,
+                hint: "Finished duration -> Pendant (with PC)."
+            },
+            {
+                id: "a2_05_q33",
+                type: "choice",
+                question: "Le film ___ (durer - lasted) 2 heures.",
+                options: ["a duré", "durait"],
+                correct: 0,
+                hint: "The film is over, specific duration -> PC."
+            },
+
+            // --- MIXED DRILLS ---
+            {
+                id: "a2_05_q34",
+                type: "input",
+                question: "Il ___ (pleuvoir) hier soir.",
+                answer: "a plu",
+                hint: "Wait! 'Yesterday evening' is a specific completed time -> PC (A plu). (Tricky!)"
+            },
+             {
+                id: "a2_05_q35",
+                type: "choice",
+                question: "Il ___ (pleuvoir) quand je suis rentré.",
+                options: ["pleuvait", "a plu"],
+                correct: 0,
+                hint: "Here it's the background weather during an action -> Imparfait."
+            },
+            {
+                id: "a2_05_q36",
+                type: "choice",
+                question: "Qu'est-ce que tu ___ (faire) hier ?",
+                options: ["as fait", "faisais"],
+                correct: 0,
+                hint: "Asking about a completed event."
+            },
+            {
+                id: "a2_05_q37",
+                type: "choice",
+                question: "Qu'est-ce que tu ___ (faire) quand je suis arrivé ?",
+                options: ["faisais", "as fait"],
+                correct: 0,
+                hint: "Asking about an ongoing activity."
+            },
+            {
+                id: "a2_05_q38",
+                type: "sort",
+                question: "Build: 'She prepared dinner.' (Event)",
+                blocks: ["préparé", "dîner", "a", "le", "Elle"],
+                correct_order: ["Elle", "a", "préparé", "le", "dîner"],
+                hint: "PC Structure."
+            },
+            {
+                id: "a2_05_q39",
+                type: "sort",
+                question: "Build: 'She was preparing dinner.' (Description)",
+                blocks: ["dîner", "Elle", "le", "préparait"],
+                correct_order: ["Elle", "préparait", "le", "dîner"],
+                hint: "Imparfait Structure."
+            },
+            {
+                id: "a2_05_q40",
+                type: "choice",
+                question: "Ils ___ (partir) très tôt ce matin.",
+                options: ["sont partis", "partaient"],
+                correct: 0,
+                hint: "Specific event this morning -> PC."
+            },
+
+            // --- STORY SEQUENCING (Then... then...) ---
+            {
+                id: "a2_05_q41",
+                type: "choice",
+                question: "Il s'est levé, il a pris son café et il ___ (partir).",
+                options: ["est parti", "partait"],
+                correct: 0,
+                hint: "A sequence of completed actions uses PC for all of them."
+            },
+            {
+                id: "a2_05_q42",
+                type: "choice",
+                question: "Elle a ouvert la porte et elle ___ (entrer).",
+                options: ["est entrée", "entrait"],
+                correct: 0,
+                hint: "Sequence of events -> PC."
+            },
+
+            // --- HARDER NUANCES ---
+            {
+                id: "a2_05_q43",
+                type: "choice",
+                question: "Savoir: Je ___ (knew) la réponse (Imparfait).",
+                options: ["savais", "ai su"],
+                correct: 0,
+                hint: "I knew it (state of knowledge)."
+            },
+            {
+                id: "a2_05_q44",
+                type: "choice",
+                question: "Savoir: J'___ (found out) la réponse (PC).",
+                options: ["ai su", "savais"],
+                correct: 0,
+                hint: "Suddenly realizing something -> PC."
+            },
+            {
+                id: "a2_05_q45",
+                type: "choice",
+                question: "Avoir: J'___ (had) un chien (Imparfait).",
+                options: ["avais", "ai eu"],
+                correct: 0,
+                hint: "Possession over time."
+            },
+            {
+                id: "a2_05_q46",
+                type: "choice",
+                question: "Avoir: J'___ (got/received) un chien (PC).",
+                options: ["ai eu", "avais"],
+                correct: 0,
+                hint: "The moment of getting it -> PC."
+            },
+            {
+                id: "a2_05_q47",
+                type: "choice",
+                question: "Vouloir: Je ___ (wanted - felt like it) partir.",
+                options: ["voulais", "ai voulu"],
+                correct: 0,
+                hint: "Desire/Feeling -> Imparfait."
+            },
+            {
+                id: "a2_05_q48",
+                type: "choice",
+                question: "Vouloir: J'___ (tried/decided) de partir, mais je n'ai pas pu.",
+                options: ["ai voulu", "voulais"],
+                correct: 0,
+                hint: "Attempted action -> PC."
+            },
+            {
+                id: "a2_05_q49",
+                type: "choice",
+                question: "Pouvoir: Je ___ (was capable) de le faire.",
+                options: ["pouvais", "ai pu"],
+                correct: 0,
+                hint: "General capability -> Imparfait."
+            },
+            {
+                id: "a2_05_q50",
+                type: "choice",
+                question: "Pouvoir: J'___ (managed to) le faire.",
+                options: ["ai pu", "pouvais"],
+                correct: 0,
+                hint: "Success in a specific instance -> PC."
             }
         ]
     },
@@ -2273,52 +6598,450 @@ const GRAMMAR_DATA = {
         },
         learn: {
             cheat_sheet: {
-                summary: "The 'Going to' future. It's very easy and used for immediate plans.",
-                key_rule: "🔥 Conjugated ALLER + Infinitive (Je vais manger)."
+                summary: "The 'Going to' future. It is the easiest way to talk about the future and is used for immediate plans or things that are almost certain to happen.",
+                key_rule: "🔥 **The Formula:** Subject + **ALLER** (conjugated) + **Infinitive** (Main Verb)."
             },
             explanation: [
                 {
                     type: "text",
-                    content: "You just need to know the verb Aller (to go) in the present tense."
+                    content: "You only need to know the present tense of **Aller** (to go). The second verb stays in the infinitive (unchanged)."
                 },
                 {
                     type: "table",
-                    headers: ["Subject", "Aller", "Infinitive"],
+                    headers: ["Subject", "Helper (Aller)", "Action (Infinitive)"],
                     rows: [
-                        ["Je", "vais", "partir"],
-                        ["Tu", "vas", "partir"],
-                        ["Il", "va", "partir"],
-                        ["Nous", "allons", "partir"],
-                        ["Vous", "allez", "partir"],
-                        ["Ils", "vont", "partir"]
+                        ["Je", "vais", "manger"],
+                        ["Tu", "vas", "dormir"],
+                        ["Il / Elle", "va", "partir"],
+                        ["Nous", "allons", "finir"],
+                        ["Vous", "allez", "voir"],
+                        ["Ils / Elles", "vont", "faire"]
                     ]
+                },
+                {
+                    type: "warning",
+                    title: "⚠️ Negation Sandwich",
+                    content: "The negation (ne...pas) goes around the **conjugated verb** (Aller), NOT the infinitive.\n* Correct: *Je **ne** vais **pas** manger.*\n* Incorrect: *Je vais ne pas manger.*"
+                },
+                {
+                    type: "text",
+                    content: "**Pronouns:** Object pronouns go **before the infinitive**.\n* *Je vais **le** faire.* (I am going to do it)."
                 }
             ]
         },
         practice: [
+            // --- Basic Conjugation of Aller + Verb ---
             {
                 id: "a2_06_q01",
                 type: "choice",
-                question: "Je ___ (aller) jouer au tennis.",
-                options: ["vais", "vas", "va"],
+                question: "Je ___ (aller) regarder la télé.",
+                options: ["vais", "vas", "aller"],
                 correct: 0,
-                hint: "First person singular of Aller."
+                hint: "First person singular: Je vais."
             },
             {
                 id: "a2_06_q02",
-                type: "sort",
-                question: "Build: 'We are going to dance.'",
-                blocks: ["danser", "allons", "Nous"],
-                correct_order: ["Nous", "allons", "danser"],
-                hint: "Subject + Aller + Infinitive."
+                type: "choice",
+                question: "Tu ___ (aller) finir tes devoirs.",
+                options: ["va", "vas", "allez"],
+                correct: 1,
+                hint: "Second person singular: Tu vas."
             },
             {
                 id: "a2_06_q03",
+                type: "input",
+                question: "Il ___ (aller) pleuvoir.",
+                answer: "va",
+                hint: "Third person singular: Il va."
+            },
+            {
+                id: "a2_06_q04",
                 type: "choice",
-                question: "Negative: 'I am not going to eat.'",
-                options: ["Je ne vais pas manger", "Je vais ne pas manger", "Je ne manger pas vais"],
+                question: "Nous ___ (aller) partir en vacances.",
+                options: ["allons", "avons", "sommes"],
                 correct: 0,
-                hint: "The sandwich (ne...pas) goes around the conjugated verb (vais)."
+                hint: "Nous allons (don't confuse with Avoir 'avons')."
+            },
+            {
+                id: "a2_06_q05",
+                type: "choice",
+                question: "Vous ___ (aller) réussir.",
+                options: ["allez", "avez", "êtes"],
+                correct: 0,
+                hint: "Vous allez."
+            },
+            {
+                id: "a2_06_q06",
+                type: "choice",
+                question: "Elles ___ (aller) arriver bientôt.",
+                options: ["vont", "sont", "ont"],
+                correct: 0,
+                hint: "Ils/Elles vont (irregular stem)."
+            },
+
+            // --- Identifying the Infinitive ---
+            {
+                id: "a2_06_q07",
+                type: "choice",
+                question: "Je vais ___ (to eat) une pomme.",
+                options: ["manger", "mange", "mangé"],
+                correct: 0,
+                hint: "The second verb must be the Infinitive (ending in -er)."
+            },
+            {
+                id: "a2_06_q08",
+                type: "choice",
+                question: "Tu vas ___ (to drink) de l'eau.",
+                options: ["boire", "bois", "bu"],
+                correct: 0,
+                hint: "Infinitive form."
+            },
+            {
+                id: "a2_06_q09",
+                type: "input",
+                question: "Il va ___ (to take) le bus.",
+                answer: "prendre",
+                hint: "Infinitive of 'prends'."
+            },
+            
+            // --- Negation Drills (Ne...pas) ---
+            {
+                id: "a2_06_q10",
+                type: "choice",
+                question: "Negative: 'Je vais chanter.'",
+                options: ["Je ne vais pas chanter", "Je vais ne pas chanter", "Je ne chanter pas vais"],
+                correct: 0,
+                hint: "Sandwich the conjugated verb 'vais'."
+            },
+            {
+                id: "a2_06_q11",
+                type: "sort",
+                question: "Build: 'He is not going to come.'",
+                blocks: ["venir", "pas", "va", "Il", "ne"],
+                correct_order: ["Il", "ne", "va", "pas", "venir"],
+                hint: "Ne + Va + Pas + Infinitive."
+            },
+            {
+                id: "a2_06_q12",
+                type: "choice",
+                question: "Nous ___ (negative) allons pas partir.",
+                options: ["n'", "ne", "non"],
+                correct: 0,
+                hint: "Allons starts with a vowel -> n'."
+            },
+            {
+                id: "a2_06_q13",
+                type: "choice",
+                question: "Tu ne ___ (aller) pas comprendre.",
+                options: ["vas", "va", "vais"],
+                correct: 0,
+                hint: "The conjugated verb goes inside the negation."
+            },
+
+            // --- Reflexive Verbs in Futur Proche ---
+            {
+                id: "a2_06_q14",
+                type: "choice",
+                question: "Je vais ___ (me lever).",
+                options: ["me lever", "te lever", "se lever"],
+                correct: 0,
+                hint: "The reflexive pronoun must match the subject (Je -> me)."
+            },
+            {
+                id: "a2_06_q15",
+                type: "choice",
+                question: "Tu vas ___ (se coucher) tard.",
+                options: ["te coucher", "se coucher", "me coucher"],
+                correct: 0,
+                hint: "Subject Tu -> Pronoun Te."
+            },
+            {
+                id: "a2_06_q16",
+                type: "choice",
+                question: "Nous allons ___ (se promener).",
+                options: ["nous promener", "vous promener", "se promener"],
+                correct: 0,
+                hint: "Subject Nous -> Pronoun Nous."
+            },
+            {
+                id: "a2_06_q17",
+                type: "sort",
+                question: "Build: 'She is going to wash herself.'",
+                blocks: ["laver", "va", "Elle", "se"],
+                correct_order: ["Elle", "va", "se", "laver"],
+                hint: "Pronoun stays with the infinitive."
+            },
+
+            // --- Object Pronouns Position ---
+            {
+                id: "a2_06_q18",
+                type: "choice",
+                question: "Je vais manger la pomme -> Je vais ___ manger.",
+                options: ["la", "le", "les"],
+                correct: 0,
+                hint: "Pronoun goes BEFORE the infinitive."
+            },
+            {
+                id: "a2_06_q19",
+                type: "choice",
+                question: "Il va regarder le film -> Il va ___ regarder.",
+                options: ["le", "la", "l'"],
+                correct: 0,
+                hint: "Film is masculine."
+            },
+            {
+                id: "a2_06_q20",
+                type: "choice",
+                question: "Nous allons inviter Marc -> Nous allons ___ inviter.",
+                options: ["l'", "le", "lui"],
+                correct: 0,
+                hint: "Inviter starts with a vowel -> l'."
+            },
+            {
+                id: "a2_06_q21",
+                type: "sort",
+                question: "Build: 'I am going to do it.'",
+                blocks: ["faire", "vais", "le", "Je"],
+                correct_order: ["Je", "vais", "le", "faire"],
+                hint: "Helper + Pronoun + Infinitive."
+            },
+
+            // --- Questions (Inversion & Est-ce que) ---
+            {
+                id: "a2_06_q22",
+                type: "choice",
+                question: "___-tu aller au cinéma ?",
+                options: ["Vas", "Vais", "Va"],
+                correct: 0,
+                hint: "Inversion: Verb-Subject."
+            },
+            {
+                id: "a2_06_q23",
+                type: "sort",
+                question: "Build: 'Are you going to eat?' (Est-ce que)",
+                blocks: ["manger", "tu", "Est-ce", "vas", "que", "?"],
+                correct_order: ["Est-ce", "que", "tu", "vas", "manger", "?"],
+                hint: "Standard question structure."
+            },
+            {
+                id: "a2_06_q24",
+                type: "input",
+                question: "Où ___ (are you going) aller ?",
+                answer: "allez-vous",
+                hint: "Formal inversion (verb-subject)."
+            },
+
+            // --- Time Indicators (Demain, Bientôt) ---
+            {
+                id: "a2_06_q25",
+                type: "choice",
+                question: "___ (Tomorrow), je vais partir.",
+                options: ["Demain", "Hier", "Maintenant"],
+                correct: 0,
+                hint: "Future indicator."
+            },
+            {
+                id: "a2_06_q26",
+                type: "choice",
+                question: "Nous allons arriver ___ (soon).",
+                options: ["bientôt", "hier", "avant"],
+                correct: 0,
+                hint: "Future indicator."
+            },
+            {
+                id: "a2_06_q27",
+                type: "choice",
+                question: "Ce soir (Tonight), on ___ sortir.",
+                options: ["va", "est", "a"],
+                correct: 0,
+                hint: "On conjugates like Il -> va."
+            },
+
+            // --- Mixed Practice / Translation ---
+            {
+                id: "a2_06_q28",
+                type: "choice",
+                question: "Translate: 'It is going to be cold.'",
+                options: ["Il va faire froid", "Il est faire froid", "Il aller faire froid"],
+                correct: 0,
+                hint: "Il va + faire (weather expression)."
+            },
+            {
+                id: "a2_06_q29",
+                type: "choice",
+                question: "Translate: 'They are going to sell the house.'",
+                options: ["Ils vont vendre la maison", "Ils ont vendre la maison"],
+                correct: 0,
+                hint: "Vont (Aller) vs Ont (Avoir)."
+            },
+            {
+                id: "a2_06_q30",
+                type: "input",
+                question: "Je ___ (am going) t'aider.",
+                answer: "vais",
+                hint: "Je form of Aller."
+            },
+
+            // --- Speed Drills (Conjugation check) ---
+            {
+                id: "a2_06_q31",
+                type: "choice",
+                question: "Je ___",
+                options: ["vais", "va"],
+                correct: 0,
+                hint: "vais."
+            },
+            {
+                id: "a2_06_q32",
+                type: "choice",
+                question: "Tu ___",
+                options: ["vas", "va"],
+                correct: 0,
+                hint: "vas."
+            },
+            {
+                id: "a2_06_q33",
+                type: "choice",
+                question: "Il ___",
+                options: ["va", "vas"],
+                correct: 0,
+                hint: "va."
+            },
+            {
+                id: "a2_06_q34",
+                type: "choice",
+                question: "Nous ___",
+                options: ["allons", "avons"],
+                correct: 0,
+                hint: "allons."
+            },
+            {
+                id: "a2_06_q35",
+                type: "choice",
+                question: "Vous ___",
+                options: ["allez", "avez"],
+                correct: 0,
+                hint: "allez."
+            },
+            {
+                id: "a2_06_q36",
+                type: "choice",
+                question: "Ils ___",
+                options: ["vont", "sont"],
+                correct: 0,
+                hint: "vont."
+            },
+
+            // --- Advanced Scenarios ---
+            {
+                id: "a2_06_q37",
+                type: "choice",
+                question: "Context: 'Attention ! Tu ___ tomber !'",
+                options: ["vas", "es"],
+                correct: 0,
+                hint: "Immediate prediction: You are going to fall."
+            },
+            {
+                id: "a2_06_q38",
+                type: "choice",
+                question: "Qu'est-ce que tu ___ faire plus tard ?",
+                options: ["vas", "fais"],
+                correct: 0,
+                hint: "Asking about future plans."
+            },
+            {
+                id: "a2_06_q39",
+                type: "sort",
+                question: "Build: 'I am not going to say it.'",
+                blocks: ["dire", "le", "pas", "vais", "ne", "Je"],
+                correct_order: ["Je", "ne", "vais", "pas", "le", "dire"],
+                hint: "Order: Subject, ne, helper, pas, object, infinitive."
+            },
+            {
+                id: "a2_06_q40",
+                type: "choice",
+                question: "On ___ (aller) s'amuser.",
+                options: ["va", "vont", "allons"],
+                correct: 0,
+                hint: "On = 3rd person singular."
+            },
+            {
+                id: "a2_06_q41",
+                type: "choice",
+                question: "Qui ___ (aller) gagner ?",
+                options: ["va", "vont"],
+                correct: 0,
+                hint: "Qui (Who) acts as singular subject (Il)."
+            },
+            {
+                id: "a2_06_q42",
+                type: "input",
+                question: "Mes parents ___ (aller) venir.",
+                answer: "vont",
+                hint: "Plural 'Ils'."
+            },
+            {
+                id: "a2_06_q43",
+                type: "choice",
+                question: "Je vais ___ (être) en retard.",
+                options: ["être", "suis", "serai"],
+                correct: 0,
+                hint: "Must be Infinitive."
+            },
+            {
+                id: "a2_06_q44",
+                type: "choice",
+                question: "Tu vas ___ (avoir) une surprise.",
+                options: ["avoir", "as", "auras"],
+                correct: 0,
+                hint: "Must be Infinitive."
+            },
+            {
+                id: "a2_06_q45",
+                type: "choice",
+                question: "Le train ___ partir.",
+                options: ["va", "est", "a"],
+                correct: 0,
+                hint: "Going to depart."
+            },
+            {
+                id: "a2_06_q46",
+                type: "choice",
+                question: "Nous n'___ pas aller au parc.",
+                options: ["allons", "avons"],
+                correct: 0,
+                hint: "Going to go."
+            },
+            {
+                id: "a2_06_q47",
+                type: "input",
+                question: "Tu ___ (aller) te coucher.",
+                answer: "vas",
+                hint: "Tu form."
+            },
+            {
+                id: "a2_06_q48",
+                type: "sort",
+                question: "Build: 'Is he going to buy bread?'",
+                blocks: ["acheter", "du", "pain", "va", "t", "il", "?"],
+                correct_order: ["va", "t", "il", "acheter", "du", "pain", "?"],
+                hint: "Inversion with 't' for sound (Va-t-il)."
+            },
+            {
+                id: "a2_06_q49",
+                type: "choice",
+                question: "Je sens que je ___ être malade.",
+                options: ["vais", "suis"],
+                correct: 0,
+                hint: "Prediction: I am going to be."
+            },
+            {
+                id: "a2_06_q50",
+                type: "choice",
+                question: "Tout ___ bien se passer (Everything is going to be fine).",
+                options: ["va", "vont"],
+                correct: 0,
+                hint: "'Tout' is singular."
             }
         ]
     },
