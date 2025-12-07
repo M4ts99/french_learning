@@ -226,35 +226,51 @@ const GRAMMAR_MODULES = [
         sub: 'The Absolute Basics', 
         icon: <Box size={24}/>, 
         color: 'bg-blue-50 text-blue-600',
-        topics: // In script.js -> GRAMMAR_MODULES -> topics:
-
-            [
-                // 1. Die absoluten Grundlagen
-                { id: "a1_01", title: "Nouns & Articles", desc: "Le, la, les and un, une, des" },
-                { id: "a1_02", title: "Subject Pronouns", desc: "Je, tu, il, elle, on..." },
-                
-                // 2. Die wichtigsten Verben zuerst (Damit man Sätze bauen kann)
-                { id: "a1_03", title: "Auxiliary Verbs", desc: "Être (to be) & Avoir (to have)" },
-                { id: "a1_04", title: "Verbs ending in -er", desc: "Parler, manger (Present Tense)" },
-                
-                // 3. Struktur reinbringen (Bevor wir MEHR Verben lernen, lernen wir sie zu benutzen)
-                { id: "a1_05", title: "Negation", desc: "The sandwich: ne ... pas" },
-                { id: "a1_06", title: "Asking Questions", desc: "Est-ce que & Intonation" },
-                
-                // 4. Die wichtigen Unregelmäßigen (Vorgezogen!)
-                // Aller braucht man für "Wie geht's" und Zukunft. Faire für fast alles.
-                { id: "a1_07", title: "Irregular: Aller & Faire", desc: "To go & To make/do" },
-
-                // 5. Jetzt die restlichen Verbgruppen (Teile & Herrsche)
-                { id: "a1_08", title: "Verbs ending in -ir", desc: "Finir, Choisir (Group 2)" },
-                { id: "a1_09", title: "Verbs ending in -re", desc: "Vendre, Attendre (Group 3)" },
-
-                // 6. Die Sätze ausschmücken (Details)
-                { id: "a1_10", title: "Basic Adjectives", desc: "Agreement (Male/Female)" },
-                { id: "a1_11", title: "Prepositions (Place)", desc: "À, en, chez, dans" },
-                { id: "a1_12", title: "Partitive Articles", desc: "Du, de la (Some/Any)" },
-                { id: "a1_13", title: "Demonstratives", desc: "Ce, cet, cette, ces (This/That)" }
-            ]
+        topics: [
+            // BASICS (1-6)
+            { id: "a1_01", title: "Nouns & Gender", desc: "Masculine vs Feminine recognition", category: "Basics" },
+            { id: "a1_02", title: "Definite Articles", desc: "Le, la, l', les (The)" },
+            { id: "a1_03", title: "Indefinite Articles", desc: "Un, une, des (A/Some)" },
+            { id: "a1_04", title: "Subject Pronouns", desc: "Je, tu, il, elle, on, nous, vous, ils" },
+            { id: "a1_05", title: "Être (to be)", desc: "Present tense conjugation" },
+            { id: "a1_06", title: "Avoir (to have)", desc: "Present tense conjugation" },
+            
+            // NUMBERS & TIME (7-10)
+            { id: "a1_07", title: "Numbers 0-30", desc: "Counting basics", category: "Numbers & Time" },
+            { id: "a1_08", title: "Numbers 31-100", desc: "Higher numbers & patterns" },
+            { id: "a1_09", title: "Days & Months", desc: "Weekdays, months, seasons" },
+            { id: "a1_10", title: "Telling Time", desc: "Quelle heure est-il?" },
+            
+            // FIRST VERBS (11-17)
+            { id: "a1_11", title: "Regular -ER Verbs", desc: "Parler, manger, aimer", category: "First Verbs" },
+            { id: "a1_12", title: "Regular -IR Verbs", desc: "Finir, choisir (Group 2)" },
+            { id: "a1_13", title: "Regular -RE Verbs", desc: "Vendre, attendre (Group 3)" },
+            { id: "a1_14", title: "Aller (to go)", desc: "Irregular essential verb" },
+            { id: "a1_15", title: "Faire (to do/make)", desc: "Irregular essential verb" },
+            { id: "a1_16", title: "Venir & Prendre", desc: "Common irregular verbs" },
+            { id: "a1_17", title: "Pouvoir, Vouloir, Devoir", desc: "Modal verbs (can, want, must)" },
+            
+            // SENTENCE STRUCTURE (18-22)
+            { id: "a1_18", title: "Negation", desc: "The ne...pas sandwich", category: "Sentence Structure" },
+            { id: "a1_19", title: "Asking Questions", desc: "Est-ce que & Intonation" },
+            { id: "a1_20", title: "Question Words", desc: "Qui, quoi, où, quand, comment, pourquoi" },
+            { id: "a1_21", title: "Word Order", desc: "Basic French sentence structure" },
+            { id: "a1_22", title: "C'est vs Il est", desc: "The #1 beginner mistake" },
+            
+            // DESCRIPTIONS (23-27)
+            { id: "a1_23", title: "Basic Adjectives", desc: "Grand, petit, beau, nouveau...", category: "Descriptions" },
+            { id: "a1_24", title: "Adjective Agreement", desc: "Gender & plural matching" },
+            { id: "a1_25", title: "Adjective Placement", desc: "Before or after the noun?" },
+            { id: "a1_26", title: "Possessive Adjectives", desc: "Mon, ma, mes, ton, ta, tes..." },
+            { id: "a1_27", title: "Colors & Shapes", desc: "Basic descriptive vocabulary" },
+            
+            // MORE GRAMMAR (28-32)
+            { id: "a1_28", title: "Prepositions of Place", desc: "À, en, dans, chez, sur, sous", category: "More Grammar" },
+            { id: "a1_29", title: "Partitive Articles", desc: "Du, de la, de l', des (some/any)" },
+            { id: "a1_30", title: "Demonstratives", desc: "Ce, cet, cette, ces (this/that)" },
+            { id: "a1_31", title: "Basic Adverbs", desc: "Très, bien, mal, vite, souvent" },
+            { id: "a1_32", title: "Passé Composé Intro", desc: "Introduction to past tense (avoir)" }
+        ]
     },
     { 
         id: 'a2', 
@@ -263,17 +279,33 @@ const GRAMMAR_MODULES = [
         icon: <Compass size={24}/>, 
         color: 'bg-sky-50 text-sky-600',
         topics: [
-            { id: "a2_01", title: "Passé Composé (Avoir)", desc: "Past tense with 'have'" },
-            { id: "a2_02", title: "Passé Composé (Être)", desc: "Motion verbs & Agreement" },
+            // PAST TENSES (1-5)
+            { id: "a2_01", title: "Passé Composé (Avoir)", desc: "Past tense with 'have'", category: "Past Tenses" },
+            { id: "a2_02", title: "Passé Composé (Être)", desc: "DR MRS VANDERTRAMP verbs" },
             { id: "a2_03", title: "Reflexive Verbs", desc: "Se laver, se lever (Daily Routine)" },
             { id: "a2_04", title: "L'Imparfait", desc: "Describing the past / Habits" },
-            { id: "a2_05", title: "Imparfait vs. P.C.", desc: "Completed vs. Ongoing" },
-            { id: "a2_06", title: "Futur Proche", desc: "Going to... (Aller + Verb)" },
-            { id: "a2_07", title: "Futur Simple", desc: "Will... (Future plans)" },
-            { id: "a2_08", title: "Direct Objects (COD)", desc: "Replacing nouns (le, la, les)" },
-            { id: "a2_09", title: "Indirect Objects (COI)", desc: "To whom? (lui, leur)" },
-            { id: "a2_10", title: "Imperative", desc: "Giving commands" },
-            { id: "a2_11", title: "Comparisons", desc: "Plus ... que / Moins ... que" }
+            { id: "a2_05", title: "Imparfait vs Passé Composé", desc: "When to use which" },
+            
+            // FUTURE (6-7)
+            { id: "a2_06", title: "Futur Proche", desc: "Going to... (Aller + Infinitif)", category: "Future" },
+            { id: "a2_07", title: "Futur Simple", desc: "Will... (Future endings)" },
+            
+            // PRONOUNS (8-11)
+            { id: "a2_08", title: "Direct Object Pronouns", desc: "le, la, les (COD)", category: "Pronouns" },
+            { id: "a2_09", title: "Indirect Object Pronouns", desc: "lui, leur (COI)" },
+            { id: "a2_10", title: "Pronoun Y", desc: "Replacing places (J'y vais)" },
+            { id: "a2_11", title: "Pronoun EN", desc: "Replacing quantities (J'en veux)" },
+            
+            // SENTENCE STRUCTURE (12-15)
+            { id: "a2_12", title: "Double Pronouns", desc: "Order: me le, te la, lui en...", category: "Sentence Structure" },
+            { id: "a2_13", title: "Imperative Mood", desc: "Commands (Mange! Allons-y!)" },
+            { id: "a2_14", title: "Negative Expressions", desc: "Ne...jamais, rien, plus, personne" },
+            { id: "a2_15", title: "Relative Pronouns", desc: "Qui, que, où, dont" },
+            
+            // COMPARISONS & MORE (16-18)
+            { id: "a2_16", title: "Comparatives", desc: "Plus...que, moins...que, aussi...que", category: "Comparisons & More" },
+            { id: "a2_17", title: "Superlatives", desc: "Le plus, le moins, le meilleur" },
+            { id: "a2_18", title: "Since & For (Depuis)", desc: "Expressing duration" }
         ] 
     },
     { 
@@ -283,17 +315,30 @@ const GRAMMAR_MODULES = [
         icon: <Layers size={24}/>, 
         color: 'bg-emerald-50 text-emerald-600',
         topics: [
-            { id: "b1_01", title: "Pronouns 'y' and 'en'", desc: "Replacing places & quantities" },
-            { id: "b1_02", title: "Relative Pronouns I", desc: "Qui, que, où" },
-            { id: "b1_03", title: "Relative Pronouns II", desc: "Using 'Dont' correctly" },
-            { id: "b1_04", title: "Conditional Present", desc: "Politeness & Wishes" },
-            { id: "b1_05", title: "Hypothesis (Si clauses)", desc: "If I do X, Y happens" },
-            { id: "b1_06", title: "Subjonctif (Basics)", desc: "Necessity (Il faut que...)" },
-            { id: "b1_07", title: "Subjonctif (Emotions)", desc: "Fear, Joy, Doubt" },
-            { id: "b1_08", title: "Le Gérondif", desc: "While doing... (En parlant)" },
-            { id: "b1_09", title: "Plus-que-parfait", desc: "Had done (Past Perfect)" },
-            { id: "b1_10", title: "Passive Voice", desc: "Être + Past Participle" },
-            { id: "b1_11", title: "Reported Speech I", desc: "He says that..." }
+            // PRONOUNS & REFERENCE (1-3)
+            { id: "b1_01", title: "Pronouns Y & EN Combined", desc: "Advanced usage & combinations", category: "Pronouns & Reference" },
+            { id: "b1_02", title: "Relative Pronouns (Qui, Que, Où)", desc: "Connecting clauses" },
+            { id: "b1_03", title: "Relative Pronoun DONT", desc: "The tricky one (whose, of which)" },
+            
+            // SUBJUNCTIVE (4-6)
+            { id: "b1_04", title: "Subjonctif Formation", desc: "How to form it", category: "Subjunctive" },
+            { id: "b1_05", title: "Subjonctif with Necessity", desc: "Il faut que, Il est nécessaire que" },
+            { id: "b1_06", title: "Subjonctif with Emotions", desc: "Je suis content que, J'ai peur que" },
+            
+            // CONDITIONAL & HYPOTHESIS (7-9)
+            { id: "b1_07", title: "Conditional Present", desc: "Je voudrais, J'aimerais (Politeness)", category: "Conditional & Hypothesis" },
+            { id: "b1_08", title: "Si-Clauses (Type 1)", desc: "Si + Présent → Futur" },
+            { id: "b1_09", title: "Si-Clauses (Type 2)", desc: "Si + Imparfait → Conditionnel" },
+            
+            // ADVANCED PAST (10-12)
+            { id: "b1_10", title: "Plus-que-parfait", desc: "Had done (Past of the past)", category: "Advanced Past" },
+            { id: "b1_11", title: "Passive Voice", desc: "Être + Past Participle" },
+            { id: "b1_12", title: "Le Gérondif", desc: "While doing... (En + participe présent)" },
+            
+            // COMPLEX SENTENCES (13-15)
+            { id: "b1_13", title: "Reported Speech (Basics)", desc: "Il dit que... Elle demande si...", category: "Complex Sentences" },
+            { id: "b1_14", title: "Cause & Consequence", desc: "Parce que, puisque, donc, alors" },
+            { id: "b1_15", title: "Concession & Opposition", desc: "Bien que, malgré, pourtant" }
         ] 
     },
     { 
@@ -303,16 +348,25 @@ const GRAMMAR_MODULES = [
         icon: <Crown size={24}/>, 
         color: 'bg-purple-50 text-purple-600',
         topics: [
-            { id: "b2_01", title: "Hypothesis (Past)", desc: "If I had known..." },
-            { id: "b2_02", title: "Conditional Past", desc: "Regrets (I should have...)" },
-            { id: "b2_03", title: "Subjonctif Past", desc: "Completed subjective actions" },
-            { id: "b2_04", title: "Subjonctif vs Indicative", desc: "Nuances (Espérer, Penser)" },
-            { id: "b2_05", title: "Logical Connectors", desc: "However, Although, Despite" },
-            { id: "b2_06", title: "Emphasis (Mise en relief)", desc: "C'est moi qui..." },
-            { id: "b2_07", title: "Reported Speech II", desc: "Sequence of Tenses" },
-            { id: "b2_08", title: "Participe Présent", desc: "Used as adjective or verb" },
-            { id: "b2_09", title: "Future Perfect", desc: "Will have done" },
-            { id: "b2_10", title: "Passé Simple", desc: "Literary Past (Reading only)" }
+            // ADVANCED HYPOTHESIS (1-3)
+            { id: "b2_01", title: "Si-Clauses (Type 3)", desc: "Si + Plus-que-parfait → Cond. Passé", category: "Advanced Hypothesis" },
+            { id: "b2_02", title: "Conditional Past", desc: "J'aurais dû, J'aurais aimé (Regrets)" },
+            { id: "b2_03", title: "Mixed Conditionals", desc: "Combining different time frames" },
+            
+            // ADVANCED SUBJUNCTIVE (4-6)
+            { id: "b2_04", title: "Subjonctif Past", desc: "Que j'aie fait, qu'il soit parti", category: "Advanced Subjunctive" },
+            { id: "b2_05", title: "Subjonctif vs Indicatif", desc: "Nuances: Espérer, penser, croire" },
+            { id: "b2_06", title: "Subjonctif with Conjunctions", desc: "Avant que, pour que, bien que" },
+            
+            // STYLE & NUANCE (7-9)
+            { id: "b2_07", title: "Emphasis (Mise en relief)", desc: "C'est moi qui..., Ce que je veux...", category: "Style & Nuance" },
+            { id: "b2_08", title: "Reported Speech (Advanced)", desc: "Sequence of tenses (Concordance)" },
+            { id: "b2_09", title: "Participe Présent vs Gérondif", desc: "Subtle differences" },
+            
+            // LITERARY & FORMAL (10-12)
+            { id: "b2_10", title: "Passé Simple", desc: "Literary past (for reading)", category: "Literary & Formal" },
+            { id: "b2_11", title: "Future Perfect", desc: "J'aurai terminé (Will have done)" },
+            { id: "b2_12", title: "Advanced Connectors", desc: "Néanmoins, toutefois, d'ailleurs" }
         ] 
     }
 ];
@@ -357,50 +411,131 @@ const NEWS_SOURCES = [
 // --- NEW COMPONENTS ---
 // --- NEW COMPONENTS ---
 
+// Merge grammar data: A1, A2, B1, B2 from separate files
+const getMergedGrammarData = () => {
+    const merged = {};
+    // First add all from original GRAMMAR_DATA (fallback)
+    if (typeof GRAMMAR_DATA !== 'undefined') {
+        Object.assign(merged, GRAMMAR_DATA);
+    }
+    // Then override/add A1 topics from GRAMMAR_DATA_A1
+    if (typeof GRAMMAR_DATA_A1 !== 'undefined') {
+        Object.assign(merged, GRAMMAR_DATA_A1);
+    }
+    // Then override/add A2 topics from GRAMMAR_DATA_A2
+    if (typeof GRAMMAR_DATA_A2 !== 'undefined') {
+        Object.assign(merged, GRAMMAR_DATA_A2);
+    }
+    // Then override/add B1 topics from GRAMMAR_DATA_B1
+    if (typeof GRAMMAR_DATA_B1 !== 'undefined') {
+        Object.assign(merged, GRAMMAR_DATA_B1);
+    }
+    // Then override/add B2 topics from GRAMMAR_DATA_B2
+    if (typeof GRAMMAR_DATA_B2 !== 'undefined') {
+        Object.assign(merged, GRAMMAR_DATA_B2);
+    }
+    return merged;
+};
+
 // --- GRAMMAR DETAIL COMPONENT (Außerhalb von App, um Re-Render-Probleme zu vermeiden) ---
 const GrammarDetail = ({ topicId, onBack }) => {
-    // Zugriff auf die globale Variable aus grammar_data.js
-    const data = (typeof GRAMMAR_DATA !== 'undefined' && GRAMMAR_DATA[topicId]) 
-                ? GRAMMAR_DATA[topicId] 
-                : null;
+    // Zugriff auf die gemergten Daten aus beiden Dateien
+    const allGrammarData = getMergedGrammarData();
+    const data = allGrammarData[topicId] || null;
 
     const [activeTab, setActiveTab] = useState('learn'); // 'learn' oder 'practice'
     
-    // State für Übungen
+    // LESSON SYSTEM: 6 Lektionen mit je 10 Fragen
+    const [currentLesson, setCurrentLesson] = useState(null); // null = Übersicht, 1-6 = in Lektion
     const [currentExIndex, setCurrentExIndex] = useState(0);
     const [userAnswer, setUserAnswer] = useState('');
-    const [feedback, setFeedback] = useState(null); // 'correct', 'wrong', null
-    const [correctAnswer, setCorrectAnswer] = useState(''); // Speichert die richtige Antwort bei Fehler
-    const [isComplete, setIsComplete] = useState(false); // Lesson complete state
-    const [correctCount, setCorrectCount] = useState(0); // Anzahl richtiger Antworten
-    const [shuffleKey, setShuffleKey] = useState(0); // Trigger für Neu-Shuffle
-    const [hintsUsed, setHintsUsed] = useState(0); // Max 3 Hints pro Session
-    const [showHint, setShowHint] = useState(false); // Hint für aktuelle Frage anzeigen
+    const [feedback, setFeedback] = useState(null);
+    const [correctAnswer, setCorrectAnswer] = useState('');
+    const [isComplete, setIsComplete] = useState(false);
+    const [correctCount, setCorrectCount] = useState(0);
+    const [shuffleKey, setShuffleKey] = useState(0);
+    const [hintsUsed, setHintsUsed] = useState(0);
+    const [showHint, setShowHint] = useState(false);
+    
+    // Sentence Builder State
+    const [selectedBlocks, setSelectedBlocks] = useState([]);
+    const [availableBlocks, setAvailableBlocks] = useState([]);
+    
+    // Vocabulary Flashcard State
+    const [vocabIndex, setVocabIndex] = useState(0);
+    const [vocabFlipped, setVocabFlipped] = useState(false);
+    const [vocabKnown, setVocabKnown] = useState([]);
+    const [vocabUnknown, setVocabUnknown] = useState([]);
+    const [vocabSessionComplete, setVocabSessionComplete] = useState(false);
+    const [vocabList, setVocabList] = useState([]);
+    
+    // Initialize vocabulary list when data changes
+    React.useEffect(() => {
+        if (data?.learn?.vocabulary) {
+            const shuffled = [...data.learn.vocabulary].sort(() => Math.random() - 0.5);
+            setVocabList(shuffled);
+            setVocabIndex(0);
+            setVocabFlipped(false);
+            setVocabKnown([]);
+            setVocabUnknown([]);
+            setVocabSessionComplete(false);
+        }
+    }, [topicId]);
 
-    // Prüfen ob Lektion schon bestanden wurde (localStorage)
-    const storageKey = `grammar_passed_${topicId}`;
-    const isPassed = localStorage.getItem(storageKey) === 'true';
+    // Lektions-Fortschritt aus localStorage laden
+    const getLessonProgress = () => {
+        const progress = {};
+        for (let i = 1; i <= 6; i++) {
+            progress[i] = localStorage.getItem(`grammar_${topicId}_lesson_${i}`) === 'passed';
+        }
+        return progress;
+    };
+    const [lessonProgress, setLessonProgress] = useState(getLessonProgress());
 
-    // Übungen vorbereiten (IMMER shuffle, 10 Fragen)
+    // Fragen für aktuelle Lektion vorbereiten (aus practice Array, aufgeteilt in 6 Lektionen)
     const exerciseList = React.useMemo(() => {
-        if (!data) return [];
-        const exercises = [...data.practice];
-        // Immer shufflen
-        for (let i = exercises.length - 1; i > 0; i--) {
+        if (!data || !data.practice || !currentLesson) return [];
+        
+        const totalQuestions = data.practice.length;
+        const questionsPerLesson = Math.ceil(totalQuestions / 6); // Aufteilen auf 6 Lektionen
+        const startIdx = (currentLesson - 1) * questionsPerLesson;
+        const endIdx = Math.min(startIdx + questionsPerLesson, totalQuestions);
+        
+        // Hole die Fragen für diese Lektion
+        let lessonQuestions = data.practice.slice(startIdx, endIdx).map((q, idx) => ({...q, _originalIdx: startIdx + idx}));
+        
+        // Falls zu wenig Fragen: mit restlichen auffüllen (aber keine Duplikate)
+        if (lessonQuestions.length < 5 && totalQuestions > 0) {
+            const remaining = data.practice.filter((_, idx) => idx < startIdx || idx >= endIdx);
+            const needed = 5 - lessonQuestions.length;
+            lessonQuestions = [...lessonQuestions, ...remaining.slice(0, needed).map((q, idx) => ({...q, _originalIdx: idx}))];
+        }
+        
+        // Nur shufflen, KEINE Duplikate!
+        const shuffled = [...lessonQuestions];
+        for (let i = shuffled.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [exercises[i], exercises[j]] = [exercises[j], exercises[i]];
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
-        // Falls weniger als 10 Übungen: mit Duplikaten auffüllen
-        const result = [];
-        while (result.length < 10) {
-            for (const ex of exercises) {
-                if (result.length < 10) result.push({...ex, _uniqueId: result.length});
-            }
-        }
-        return result.slice(0, 10);
-    }, [topicId, activeTab, shuffleKey]); // Re-shuffle wenn Tab wechselt oder Neustart
+        
+        return shuffled.map((q, idx) => ({...q, _uniqueId: idx}));
+    }, [topicId, currentLesson, shuffleKey]);
 
-    // Falls ID nicht gefunden wurde (oder Datei fehlt)
+    // Sentence Builder: Blöcke initialisieren wenn Frage sich ändert
+    React.useEffect(() => {
+        if (exerciseList.length > 0 && exerciseList[currentExIndex]?.type === 'sentence_builder') {
+            const blocks = [...exerciseList[currentExIndex].blocks];
+            // Shuffle blocks
+            for (let i = blocks.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [blocks[i], blocks[j]] = [blocks[j], blocks[i]];
+            }
+            setAvailableBlocks(blocks);
+            setSelectedBlocks([]);
+        }
+    }, [currentExIndex, exerciseList]);
+
+    // Falls ID nicht gefunden wurde
     if (!data) return (
         <div className="pt-10 px-6 text-center">
             <h3 className="font-bold text-slate-800">Content not found</h3>
@@ -410,11 +545,15 @@ const GrammarDetail = ({ topicId, onBack }) => {
     );
 
     const { meta, learn } = data;
+    
+    // Debug: Check if vocabulary exists
+    console.log('Topic:', topicId, 'Vocabulary:', learn.vocabulary);
+    
     const practice = exerciseList;
-    const totalQuestions = 10;
+    const totalQuestions = practice.length; // Dynamisch basierend auf tatsächlicher Fragen-Anzahl
+    const passThreshold = 9; // 9 von 10 zum Bestehen
 
     const checkAnswer = (correctAns) => {
-        // Einfacher String-Vergleich (ignoriert Groß/Kleinschreibung und Leerzeichen)
         if (userAnswer.trim().toLowerCase() === correctAns.trim().toLowerCase()) {
             setFeedback('correct');
             setCorrectCount(prev => prev + 1);
@@ -428,61 +567,84 @@ const GrammarDetail = ({ topicId, onBack }) => {
         setFeedback(null);
         setUserAnswer('');
         setCorrectAnswer('');
-        setShowHint(false); // Reset hint für nächste Frage
+        setShowHint(false);
+        setSelectedBlocks([]);
+        setAvailableBlocks([]);
         if (currentExIndex < totalQuestions - 1) {
             setCurrentExIndex(prev => prev + 1);
         } else {
-            // Test complete - prüfen ob 10/10
-            const finalScore = correctCount + (feedback === 'correct' ? 0 : 0); // correctCount wurde schon erhöht
-            if (correctCount === totalQuestions) {
-                localStorage.setItem(storageKey, 'true');
+            // Lektion beendet - prüfen ob bestanden
+            if (correctCount >= passThreshold) {
+                localStorage.setItem(`grammar_${topicId}_lesson_${currentLesson}`, 'passed');
+                setLessonProgress(prev => ({...prev, [currentLesson]: true}));
             }
             setIsComplete(true);
         }
     };
 
-    const restartPractice = () => {
-        setIsComplete(false);
+    const startLesson = (lessonNum) => {
+        setCurrentLesson(lessonNum);
         setCurrentExIndex(0);
         setUserAnswer('');
         setFeedback(null);
         setCorrectCount(0);
         setCorrectAnswer('');
-        setShuffleKey(prev => prev + 1); // Trigger neues Shuffle
+        setIsComplete(false);
+        setShuffleKey(prev => prev + 1);
         setHintsUsed(0);
         setShowHint(false);
+        setSelectedBlocks([]);
+        setAvailableBlocks([]);
+    };
+
+    const backToOverview = () => {
+        setCurrentLesson(null);
+        setIsComplete(false);
+    };
+
+    // Render markdown helper
+    const renderMarkdown = (text) => {
+        if (!text) return '';
+        return text
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br/>');
     };
 
     // --- LESSON COMPLETE SCREEN ---
-    if (isComplete) {
-        const passed = correctCount === totalQuestions;
+    if (isComplete && currentLesson) {
+        const passed = correctCount >= passThreshold;
         return (
             <div className="w-full pt-6 pb-24 px-4 h-full flex flex-col items-center justify-center text-center">
                 <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl max-w-sm w-full">
-                    <h2 className="text-2xl font-bold text-slate-800 mb-4">
-                        {passed ? 'Perfect Score!' : 'Keep Practicing!'}
+                    <div className="text-6xl mb-4">{passed ? '🎉' : '💪'}</div>
+                    <h2 className="text-2xl font-bold text-slate-800 mb-2">
+                        {passed ? 'Lesson Passed!' : 'Keep Practicing!'}
                     </h2>
-                    <p className="text-slate-500 mb-2">
-                        You scored <span className={`font-bold ${passed ? 'text-green-600' : 'text-amber-600'}`}>{correctCount}/{totalQuestions}</span>
+                    <p className="text-slate-500 mb-2">Lesson {currentLesson} of 6</p>
+                    <p className="text-slate-600 mb-4">
+                        You scored <span className={`font-bold text-xl ${passed ? 'text-green-600' : 'text-amber-600'}`}>{correctCount}/{totalQuestions}</span>
                     </p>
                     {passed ? (
-                        <p className="text-green-600 font-medium mb-6">✓ Lesson passed!</p>
+                        <p className="text-green-600 font-medium mb-6">✓ {passThreshold}/{totalQuestions} required - Passed!</p>
                     ) : (
-                        <p className="text-amber-600 font-medium mb-6">Score 10/10 to pass this lesson</p>
+                        <p className="text-amber-600 font-medium mb-6">Need {passThreshold}/{totalQuestions} to pass</p>
                     )}
                     
                     <div className="space-y-3">
+                        {!passed && (
+                            <button 
+                                onClick={() => startLesson(currentLesson)} 
+                                className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold shadow-lg"
+                            >
+                                🔄 Try Again
+                            </button>
+                        )}
                         <button 
-                            onClick={restartPractice} 
-                            className="w-full bg-indigo-100 text-indigo-700 py-3 rounded-xl font-bold hover:bg-indigo-200 transition-colors"
+                            onClick={backToOverview} 
+                            className="w-full bg-slate-100 text-slate-600 py-3 rounded-xl font-bold"
                         >
-                            🔄 Try Again
-                        </button>
-                        <button 
-                            onClick={onBack} 
-                            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-colors"
-                        >
-                            ✓ Done
+                            ← Back to Lessons
                         </button>
                     </div>
                 </div>
@@ -490,6 +652,296 @@ const GrammarDetail = ({ topicId, onBack }) => {
         );
     }
 
+    // --- IN LESSON VIEW ---
+    if (currentLesson && practice.length > 0) {
+        const ex = practice[currentExIndex];
+        return (
+            <div className="w-full pt-6 pb-24 px-4 h-full flex flex-col">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-4">
+                    <button onClick={backToOverview} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500">
+                        <ArrowLeft size={24} />
+                    </button>
+                    <div className="flex-1">
+                        <h2 className="text-lg font-bold text-slate-800">Lesson {currentLesson}</h2>
+                        <p className="text-xs text-slate-400">{meta.title}</p>
+                    </div>
+                </div>
+
+                {/* Progress */}
+                <div className="mb-6">
+                    <div className="flex justify-between text-xs font-bold text-slate-400 uppercase mb-2">
+                        <span>Question {currentExIndex + 1}/{totalQuestions}</span>
+                        <span className="text-green-600">✓ {correctCount}</span>
+                    </div>
+                    <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                        <div className="bg-indigo-500 h-full transition-all" style={{width: `${((currentExIndex + 1) / totalQuestions) * 100}%`}}></div>
+                    </div>
+                    <p className="text-center text-sm text-slate-500 mt-2">Need <span className="font-bold text-indigo-600">{passThreshold}/{totalQuestions}</span> to pass</p>
+                </div>
+
+                {/* Hint Button (shared for all types) */}
+                {ex.hint && (
+                    <div className="text-center mb-4">
+                        {showHint ? (
+                            <p className="text-indigo-600 text-sm italic bg-indigo-50 inline-block px-3 py-1 rounded-lg">💡 {ex.hint}</p>
+                        ) : hintsUsed < 3 ? (
+                            <button 
+                                onClick={() => { setShowHint(true); setHintsUsed(prev => prev + 1); }}
+                                className="text-slate-400 text-sm bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-lg"
+                            >
+                                💡 Show Hint ({3 - hintsUsed} left)
+                            </button>
+                        ) : (
+                            <p className="text-slate-300 text-sm italic">No hints remaining</p>
+                        )}
+                    </div>
+                )}
+
+                {/* Question Card */}
+                <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg flex-1 flex flex-col justify-center items-center relative overflow-hidden">
+                    
+                    {/* === TYPE: CHOICE === */}
+                    {ex.type === 'choice' && (
+                        <div className="w-full space-y-6">
+                            <h3 className="text-xl font-bold text-slate-800 text-center mb-6">{ex.question}</h3>
+                            <div className="space-y-3">
+                                {ex.options.map((opt, idx) => {
+                                    const isCorrectOption = opt === ex.correct;
+                                    return (
+                                        <button 
+                                            key={idx}
+                                            disabled={feedback !== null}
+                                            onClick={() => {
+                                                setUserAnswer(opt);
+                                                if(isCorrectOption) {
+                                                    setFeedback('correct');
+                                                    setCorrectCount(prev => prev + 1);
+                                                } else {
+                                                    setFeedback('wrong');
+                                                    setCorrectAnswer(ex.correct);
+                                                }
+                                            }}
+                                            className={`w-full p-4 rounded-xl font-bold border transition-all text-left flex justify-between items-center ${
+                                                feedback && isCorrectOption ? 'bg-green-100 border-green-200 text-green-700' :
+                                                feedback === 'wrong' && userAnswer === opt ? 'bg-red-100 border-red-200 text-red-700' :
+                                                'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                                            }`}
+                                        >
+                                            {opt}
+                                            {feedback && isCorrectOption && <Check size={20}/>}
+                                            {feedback === 'wrong' && userAnswer === opt && <X size={20}/>}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* === TYPE: GAP_FILL === */}
+                    {ex.type === 'gap_fill' && (
+                        <div className="w-full space-y-6">
+                            <h3 className="text-xl font-bold text-slate-800 text-center mb-6">{ex.question}</h3>
+                            <div className="flex flex-col items-center gap-4">
+                                <input
+                                    type="text"
+                                    value={userAnswer}
+                                    onChange={(e) => setUserAnswer(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && userAnswer.trim() && !feedback) {
+                                            const isCorrect = userAnswer.trim().toLowerCase() === ex.answer.trim().toLowerCase();
+                                            if (isCorrect) {
+                                                setFeedback('correct');
+                                                setCorrectCount(prev => prev + 1);
+                                            } else {
+                                                setFeedback('wrong');
+                                                setCorrectAnswer(ex.answer);
+                                            }
+                                        }
+                                    }}
+                                    disabled={feedback !== null}
+                                    placeholder="Type your answer..."
+                                    className={`w-full p-4 text-center text-xl font-bold rounded-xl border-2 outline-none transition-all ${
+                                        feedback === 'correct' ? 'border-green-400 bg-green-50 text-green-700' :
+                                        feedback === 'wrong' ? 'border-red-400 bg-red-50 text-red-700' :
+                                        'border-slate-200 focus:border-indigo-400'
+                                    }`}
+                                />
+                                {!feedback && (
+                                    <button 
+                                        onClick={() => {
+                                            if (!userAnswer.trim()) return;
+                                            const isCorrect = userAnswer.trim().toLowerCase() === ex.answer.trim().toLowerCase();
+                                            if (isCorrect) {
+                                                setFeedback('correct');
+                                                setCorrectCount(prev => prev + 1);
+                                            } else {
+                                                setFeedback('wrong');
+                                                setCorrectAnswer(ex.answer);
+                                            }
+                                        }}
+                                        disabled={!userAnswer.trim()}
+                                        className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold disabled:opacity-50"
+                                    >
+                                        Check
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* === TYPE: INPUT === */}
+                    {ex.type === 'input' && (
+                        <div className="w-full space-y-6">
+                            <h3 className="text-xl font-bold text-slate-800 text-center mb-6">{ex.question}</h3>
+                            <div className="flex flex-col items-center gap-4">
+                                <input
+                                    type="text"
+                                    value={userAnswer}
+                                    onChange={(e) => setUserAnswer(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && userAnswer.trim() && !feedback) {
+                                            const isCorrect = userAnswer.trim().toLowerCase() === ex.answer.trim().toLowerCase();
+                                            if (isCorrect) {
+                                                setFeedback('correct');
+                                                setCorrectCount(prev => prev + 1);
+                                            } else {
+                                                setFeedback('wrong');
+                                                setCorrectAnswer(ex.answer);
+                                            }
+                                        }
+                                    }}
+                                    disabled={feedback !== null}
+                                    placeholder="Type your answer..."
+                                    className={`w-full p-4 text-center text-xl font-bold rounded-xl border-2 outline-none transition-all ${
+                                        feedback === 'correct' ? 'border-green-400 bg-green-50 text-green-700' :
+                                        feedback === 'wrong' ? 'border-red-400 bg-red-50 text-red-700' :
+                                        'border-slate-200 focus:border-indigo-400'
+                                    }`}
+                                />
+                                {!feedback && (
+                                    <button 
+                                        onClick={() => {
+                                            if (!userAnswer.trim()) return;
+                                            const isCorrect = userAnswer.trim().toLowerCase() === ex.answer.trim().toLowerCase();
+                                            if (isCorrect) {
+                                                setFeedback('correct');
+                                                setCorrectCount(prev => prev + 1);
+                                            } else {
+                                                setFeedback('wrong');
+                                                setCorrectAnswer(ex.answer);
+                                            }
+                                        }}
+                                        disabled={!userAnswer.trim()}
+                                        className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold disabled:opacity-50"
+                                    >
+                                        Check
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* === TYPE: SENTENCE_BUILDER === */}
+                    {ex.type === 'sentence_builder' && (
+                        <div className="w-full space-y-6">
+                            <h3 className="text-xl font-bold text-slate-800 text-center mb-4">{ex.question}</h3>
+                            
+                            {/* Selected blocks (answer area) */}
+                            <div className="min-h-[60px] bg-slate-100 rounded-xl p-3 flex flex-wrap gap-2 justify-center items-center border-2 border-dashed border-slate-300">
+                                {selectedBlocks.length === 0 ? (
+                                    <span className="text-slate-400 text-sm">Tap blocks to build your sentence</span>
+                                ) : (
+                                    selectedBlocks.map((block, idx) => (
+                                        <button
+                                            key={idx}
+                                            disabled={feedback !== null}
+                                            onClick={() => {
+                                                if (feedback) return;
+                                                setSelectedBlocks(prev => prev.filter((_, i) => i !== idx));
+                                                setAvailableBlocks(prev => [...prev, block]);
+                                            }}
+                                            className={`px-4 py-2 rounded-lg font-bold text-lg transition-all ${
+                                                feedback === 'correct' ? 'bg-green-500 text-white' :
+                                                feedback === 'wrong' ? 'bg-red-500 text-white' :
+                                                'bg-indigo-500 text-white hover:bg-indigo-600'
+                                            }`}
+                                        >
+                                            {block}
+                                        </button>
+                                    ))
+                                )}
+                            </div>
+
+                            {/* Available blocks */}
+                            <div className="flex flex-wrap gap-2 justify-center">
+                                {availableBlocks.map((block, idx) => (
+                                    <button
+                                        key={idx}
+                                        disabled={feedback !== null}
+                                        onClick={() => {
+                                            if (feedback) return;
+                                            setAvailableBlocks(prev => prev.filter((_, i) => i !== idx));
+                                            setSelectedBlocks(prev => [...prev, block]);
+                                        }}
+                                        className="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-bold text-lg hover:bg-slate-300 transition-all"
+                                    >
+                                        {block}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Check button */}
+                            {!feedback && (
+                                <div className="flex justify-center">
+                                    <button 
+                                        onClick={() => {
+                                            const userSolution = selectedBlocks.join(' ');
+                                            const correctSolution = ex.solution.join(' ');
+                                            if (userSolution === correctSolution) {
+                                                setFeedback('correct');
+                                                setCorrectCount(prev => prev + 1);
+                                            } else {
+                                                setFeedback('wrong');
+                                                setCorrectAnswer(correctSolution);
+                                            }
+                                        }}
+                                        disabled={selectedBlocks.length === 0}
+                                        className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold disabled:opacity-50"
+                                    >
+                                        Check
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Feedback Actions */}
+                    {feedback === 'correct' && (
+                        <div className="absolute bottom-0 left-0 w-full p-4 bg-green-50 border-t border-green-100">
+                            <button onClick={nextExercise} className="w-full bg-green-500 text-white py-3 rounded-xl font-bold">
+                                {currentExIndex < totalQuestions - 1 ? 'Next Question' : 'Finish Lesson'}
+                            </button>
+                        </div>
+                    )}
+                    
+                    {feedback === 'wrong' && (
+                        <div className="absolute bottom-0 left-0 w-full p-4 bg-red-50 border-t border-red-100">
+                            <div className="text-center mb-3">
+                                <span className="text-red-600 font-bold">Correct: </span>
+                                <span className="text-red-800 font-bold">{correctAnswer}</span>
+                            </div>
+                            <button onClick={nextExercise} className="w-full bg-red-500 text-white py-3 rounded-xl font-bold">
+                                {currentExIndex < totalQuestions - 1 ? 'Next Question' : 'Finish Lesson'}
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    // --- MAIN VIEW WITH TABS ---
     return (
         <div className="w-full pt-6 pb-24 px-1 h-full flex flex-col">
             {/* Header */}
@@ -499,50 +951,192 @@ const GrammarDetail = ({ topicId, onBack }) => {
                 </button>
                 <div className="flex-1">
                     <h2 className="text-xl font-bold text-slate-800 leading-tight">{meta.title}</h2>
-                    <p className="text-xs text-slate-400">{meta.tags.join(' • ')}</p>
+                    <p className="text-xs text-slate-400">{meta.tags?.join(' • ')}</p>
                 </div>
             </div>
 
             {/* Tabs */}
             <div className="bg-slate-200 p-1 rounded-2xl flex mb-6 mx-1 shrink-0">
-                <button onClick={() => { setActiveTab('learn'); restartPractice(); }} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'learn' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>
+                {learn.vocabulary && learn.vocabulary.length > 0 && (
+                    <button onClick={() => setActiveTab('vocab')} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'vocab' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>
+                        🎴 Vocab
+                    </button>
+                )}
+                <button onClick={() => setActiveTab('learn')} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'learn' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>
                     📖 Learn
                 </button>
-                <button onClick={() => { setActiveTab('practice'); restartPractice(); }} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'practice' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>
+                <button onClick={() => setActiveTab('practice')} className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'practice' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}>
                     🏋️ Practice
                 </button>
             </div>
+
+            {/* --- TAB: VOCAB (Flashcards) --- */}
+            {activeTab === 'vocab' && learn.vocabulary && (
+                <div className="flex-1 overflow-y-auto px-1 flex flex-col items-center justify-center">
+                    {vocabSessionComplete ? (
+                        // Session Complete
+                        <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl max-w-sm w-full text-center">
+                            <div className="text-6xl mb-4">🎉</div>
+                            <h2 className="text-2xl font-bold text-slate-800 mb-2">Vocabulary Complete!</h2>
+                            <p className="text-slate-500 mb-4">You reviewed all {learn.vocabulary.length} words</p>
+                            <div className="flex justify-center gap-4 mb-6">
+                                <div className="bg-green-50 px-4 py-2 rounded-xl">
+                                    <span className="text-green-600 font-bold text-xl">{vocabKnown.length}</span>
+                                    <p className="text-green-600 text-xs">Known</p>
+                                </div>
+                                <div className="bg-amber-50 px-4 py-2 rounded-xl">
+                                    <span className="text-amber-600 font-bold text-xl">{vocabUnknown.length}</span>
+                                    <p className="text-amber-600 text-xs">Review</p>
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => {
+                                    const shuffled = [...learn.vocabulary].sort(() => Math.random() - 0.5);
+                                    setVocabList(shuffled);
+                                    setVocabIndex(0);
+                                    setVocabFlipped(false);
+                                    setVocabKnown([]);
+                                    setVocabUnknown([]);
+                                    setVocabSessionComplete(false);
+                                }}
+                                className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold"
+                            >
+                                🔄 Start Again
+                            </button>
+                        </div>
+                    ) : vocabList.length > 0 ? (
+                        // Flashcard View
+                        <div className="w-full max-w-sm">
+                            {/* Progress */}
+                            <div className="mb-4">
+                                <div className="flex justify-between text-xs font-bold text-slate-400 uppercase mb-2">
+                                    <span>Card {vocabIndex + 1}/{vocabList.length}</span>
+                                    <span className="text-green-600">✓ {vocabKnown.length}</span>
+                                </div>
+                                <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                    <div className="bg-indigo-500 h-full transition-all" style={{width: `${((vocabIndex + 1) / vocabList.length) * 100}%`}}></div>
+                                </div>
+                            </div>
+
+                            {/* Flashcard */}
+                            <div 
+                                onClick={() => setVocabFlipped(!vocabFlipped)}
+                                className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl min-h-[250px] flex flex-col items-center justify-center cursor-pointer hover:shadow-2xl transition-all"
+                            >
+                                {!vocabFlipped ? (
+                                    <>
+                                        <p className="text-3xl font-bold text-slate-800 mb-2">{vocabList[vocabIndex]?.fr}</p>
+                                        {vocabList[vocabIndex]?.type && (
+                                            <span className={`text-xs px-2 py-1 rounded-full font-bold ${
+                                                vocabList[vocabIndex].type === 'masculine' ? 'bg-blue-100 text-blue-600' :
+                                                vocabList[vocabIndex].type === 'feminine' ? 'bg-pink-100 text-pink-600' :
+                                                vocabList[vocabIndex].type === 'vowel' ? 'bg-purple-100 text-purple-600' :
+                                                'bg-amber-100 text-amber-600'
+                                            }`}>{vocabList[vocabIndex].type}</span>
+                                        )}
+                                        <p className="text-slate-400 text-sm mt-4">Tap to reveal</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p className="text-2xl font-bold text-indigo-600 mb-2">{vocabList[vocabIndex]?.en}</p>
+                                        <p className="text-slate-500 text-lg">{vocabList[vocabIndex]?.fr}</p>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Buttons */}
+                            {vocabFlipped && (
+                                <div className="flex gap-3 mt-4">
+                                    <button 
+                                        onClick={() => {
+                                            setVocabUnknown(prev => [...prev, vocabList[vocabIndex]]);
+                                            if (vocabIndex < vocabList.length - 1) {
+                                                setVocabIndex(prev => prev + 1);
+                                                setVocabFlipped(false);
+                                            } else {
+                                                setVocabSessionComplete(true);
+                                            }
+                                        }}
+                                        className="flex-1 bg-amber-100 text-amber-700 py-4 rounded-xl font-bold text-lg"
+                                    >
+                                        ❌ Again
+                                    </button>
+                                    <button 
+                                        onClick={() => {
+                                            setVocabKnown(prev => [...prev, vocabList[vocabIndex]]);
+                                            if (vocabIndex < vocabList.length - 1) {
+                                                setVocabIndex(prev => prev + 1);
+                                                setVocabFlipped(false);
+                                            } else {
+                                                setVocabSessionComplete(true);
+                                            }
+                                        }}
+                                        className="flex-1 bg-green-100 text-green-700 py-4 rounded-xl font-bold text-lg"
+                                    >
+                                        ✓ Got it
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <p className="text-slate-400">No vocabulary available</p>
+                    )}
+                </div>
+            )}
 
             {/* --- TAB: LEARN --- */}
             {activeTab === 'learn' && (
                 <div className="flex-1 overflow-y-auto px-1 space-y-6">
                     {/* Cheat Sheet */}
                     {learn.cheat_sheet && (
-                        <div className="bg-blue-50 p-5 rounded-3xl border border-blue-100 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-3 opacity-10"><Zap size={40} className="text-blue-600"/></div>
-                            <h3 className="font-bold text-blue-800 text-sm uppercase tracking-wider mb-2">Cheat Sheet</h3>
-                            <p className="text-blue-900 font-medium mb-3 leading-relaxed" dangerouslySetInnerHTML={{__html: learn.cheat_sheet.summary.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>')}}></p>
-                            <div className="bg-white/60 p-3 rounded-xl text-sm text-blue-800 font-bold border border-blue-100/50" dangerouslySetInnerHTML={{__html: learn.cheat_sheet.key_rule.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>')}}>
-                            </div>
+                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-3xl border border-blue-100 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-3 opacity-10"><Zap size={50} className="text-blue-600"/></div>
+                            <h3 className="font-bold text-blue-800 text-sm uppercase tracking-wider mb-3 flex items-center gap-2">
+                                ⚡ Quick Reference
+                            </h3>
+                            <p className="text-blue-900 font-medium mb-4 leading-relaxed text-lg" dangerouslySetInnerHTML={{__html: renderMarkdown(learn.cheat_sheet.summary)}}></p>
+                            {learn.cheat_sheet.key_rule && (
+                                <div className="bg-white/70 p-4 rounded-xl text-sm text-blue-800 font-bold border border-blue-100/50" dangerouslySetInnerHTML={{__html: renderMarkdown(learn.cheat_sheet.key_rule)}}></div>
+                            )}
                         </div>
                     )}
 
                     {/* Explanation Content */}
                     <div className="space-y-4">
-                        {learn.explanation.map((block, idx) => {
-                            // Helper function to render markdown-style formatting
-                            const renderMarkdown = (text) => text
-                                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                                .replace(/\*(.+?)\*/g, '<em>$1</em>')
-                                .replace(/\n/g, '<br/>');
+                        {learn.explanation?.map((block, idx) => {
+                            if (block.type === 'heading') return (
+                                <h3 key={idx} className="text-lg font-bold text-slate-800 mt-6 mb-2">{block.content}</h3>
+                            );
                             
-                            if (block.type === 'text') return <p key={idx} className="text-slate-600 leading-relaxed text-lg" dangerouslySetInnerHTML={{__html: renderMarkdown(block.content)}}></p>;
+                            if (block.type === 'text') return (
+                                <p key={idx} className="text-slate-600 leading-relaxed text-base" dangerouslySetInnerHTML={{__html: renderMarkdown(block.content)}}></p>
+                            );
+                            
+                            if (block.type === 'example') return (
+                                <div key={idx} className="bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+                                    <div className="flex items-start gap-3">
+                                        <span className="text-2xl">💬</span>
+                                        <div>
+                                            <p className="font-bold text-emerald-800 text-lg">{block.fr}</p>
+                                            <p className="text-emerald-600">{block.en || block.de}</p>
+                                            {block.note && <p className="text-emerald-500 text-sm italic mt-1">{block.note}</p>}
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                            
+                            if (block.type === 'tip') return (
+                                <div key={idx} className="bg-amber-50 p-4 rounded-2xl border border-amber-100 flex gap-3">
+                                    <span className="text-2xl">💡</span>
+                                    <div className="text-amber-800" dangerouslySetInnerHTML={{__html: renderMarkdown(block.content)}}></div>
+                                </div>
+                            );
                             
                             if (block.type === 'warning') return (
                                 <div key={idx} className="bg-rose-50 p-4 rounded-2xl border border-rose-100 flex gap-3">
                                     <AlertCircle size={24} className="text-rose-500 shrink-0"/>
                                     <div>
-                                        {block.title && <div className="font-bold text-rose-700 text-sm mb-1" dangerouslySetInnerHTML={{__html: renderMarkdown(block.title)}}></div>}
+                                        {block.title && <div className="font-bold text-rose-700 text-sm mb-1">{block.title}</div>}
                                         <div className="text-rose-800 text-sm" dangerouslySetInnerHTML={{__html: renderMarkdown(block.content)}}></div>
                                     </div>
                                 </div>
@@ -558,7 +1152,7 @@ const GrammarDetail = ({ topicId, onBack }) => {
                                             {block.rows.map((row, rIdx) => (
                                                 <tr key={rIdx}>
                                                     {row.map((cell, cIdx) => (
-                                                        <td key={cIdx} className={`px-4 py-3 ${cIdx === 0 ? 'font-bold text-slate-400 bg-slate-50/50' : 'text-slate-700'}`}>{cell}</td>
+                                                        <td key={cIdx} className={`px-4 py-3 ${cIdx === 0 ? 'font-bold text-indigo-600 bg-slate-50/50' : 'text-slate-700'}`}>{cell}</td>
                                                     ))}
                                                 </tr>
                                             ))}
@@ -566,195 +1160,101 @@ const GrammarDetail = ({ topicId, onBack }) => {
                                     </table>
                                 </div>
                             );
+
+                            if (block.type === 'rule_box') return (
+                                <div key={idx} className="bg-indigo-50 p-4 rounded-2xl border-2 border-indigo-200">
+                                    <h4 className="font-bold text-indigo-800 mb-2">{block.title}</h4>
+                                    <div className="text-indigo-700" dangerouslySetInnerHTML={{__html: renderMarkdown(block.content)}}></div>
+                                </div>
+                            );
+
                             return null;
                         })}
                     </div>
+
+                    {/* Pro Tip at bottom */}
+                    {learn.cheat_sheet?.pro_tip && (
+                        <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-2xl border border-purple-100 mt-6">
+                            <p className="text-purple-800 font-medium" dangerouslySetInnerHTML={{__html: renderMarkdown(learn.cheat_sheet.pro_tip)}}></p>
+                        </div>
+                    )}
                 </div>
             )}
 
-            {/* --- TAB: PRACTICE --- */}
+            {/* --- TAB: PRACTICE (Lesson Overview) --- */}
             {activeTab === 'practice' && (
-                <div className="flex-1 flex flex-col px-1">
-                    {practice.length === 0 ? (
-                        <div className="text-center p-10 text-slate-400">Exercises coming soon.</div>
-                    ) : (
-                        <>
-                            {/* Progress Bar */}
-                            <div className="mb-6">
-                                <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                                    <span>Question {currentExIndex + 1}/{totalQuestions}</span>
-                                    <span className="text-green-600">✓ {correctCount}</span>
-                                </div>
-                                <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                                    <div className="bg-indigo-500 h-full transition-all duration-500" style={{width: `${((currentExIndex + 1) / totalQuestions) * 100}%`}}></div>
-                                </div>
-                                <p className="text-center text-sm text-slate-500 mt-2 font-medium">Score <span className="font-bold text-indigo-600">10/10</span> to pass this lesson</p>
+                <div className="flex-1 overflow-y-auto px-1">
+                    <div className="mb-4">
+                        <p className="text-slate-500 text-sm text-center">Complete all 6 lessons to master this topic</p>
+                        <p className="text-slate-400 text-xs text-center mt-1">Score 9/10 to pass each lesson</p>
+                    </div>
+
+                    {/* Progress Overview */}
+                    <div className="flex justify-center gap-2 mb-6">
+                        {[1,2,3,4,5,6].map(num => (
+                            <div 
+                                key={num}
+                                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                                    lessonProgress[num] ? 'bg-green-500 text-white' : 'bg-slate-200 text-slate-400'
+                                }`}
+                            >
+                                {lessonProgress[num] ? '✓' : num}
                             </div>
+                        ))}
+                    </div>
 
-                            {/* Card */}
-                            <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg flex-1 flex flex-col justify-center items-center relative overflow-hidden">
-                                {(() => {
-                                    const ex = practice[currentExIndex];
-                                    
-                                    // --- INPUT TYPE ---
-                                    if (ex.type === 'input' || ex.type === 'cloze') {
-                                        const parts = ex.question.split('___');
-                                        return (
-                                            <div className="w-full text-center space-y-6 mb-20">
-                                                <h3 className="text-2xl font-medium text-slate-700 leading-relaxed">
-                                                    {parts[0]}
-                                                    <span className={`inline-block border-b-2 font-bold px-2 mx-1 min-w-[80px] ${feedback === 'correct' ? 'text-green-600 border-green-500' : feedback === 'wrong' ? 'text-red-600 border-red-500' : 'text-indigo-600 border-indigo-300'}`}>
-                                                        {userAnswer || "?"}
-                                                    </span>
-                                                    {parts[1]}
-                                                </h3>
-                                                {ex.hint && (
-                                                    showHint ? (
-                                                        <p className="text-indigo-600 text-sm italic bg-indigo-50 inline-block px-3 py-1 rounded-lg">💡 {ex.hint}</p>
-                                                    ) : hintsUsed < 3 ? (
-                                                        <button 
-                                                            onClick={() => { setShowHint(true); setHintsUsed(prev => prev + 1); }}
-                                                            className="text-slate-400 text-sm bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-lg transition-colors"
-                                                        >
-                                                            💡 Show Hint ({3 - hintsUsed} left)
-                                                        </button>
-                                                    ) : (
-                                                        <p className="text-slate-300 text-sm italic">No hints remaining</p>
-                                                    )
-                                                )}
-                                                
-                                                {!feedback && (
-                                                    <input 
-                                                        type="text" 
-                                                        value={userAnswer}
-                                                        onChange={(e) => setUserAnswer(e.target.value)}
-                                                        onKeyDown={(e) => e.stopPropagation()}
-                                                        autoComplete="off"
-                                                        autoFocus
-                                                        placeholder="Type here..." 
-                                                        className="w-full p-4 bg-slate-50 rounded-xl text-center text-lg border-2 border-slate-200 focus:border-indigo-500 focus:outline-none"
-                                                    />
-                                                )}
-                                            </div>
-                                        );
-                                    } 
-                                    
-                                    // --- CHOICE TYPE ---
-                                    if (ex.type === 'choice') {
-                                        return (
-                                            <div className="w-full space-y-6">
-                                                <h3 className="text-xl font-bold text-slate-800 text-center mb-6">{ex.question}</h3>
-                                                {ex.hint && (
-                                                    <div className="text-center mb-4">
-                                                        {showHint ? (
-                                                            <p className="text-indigo-600 text-sm italic bg-indigo-50 inline-block px-3 py-1 rounded-lg">💡 {ex.hint}</p>
-                                                        ) : hintsUsed < 3 ? (
-                                                            <button 
-                                                                onClick={() => { setShowHint(true); setHintsUsed(prev => prev + 1); }}
-                                                                className="text-slate-400 text-sm bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-lg transition-colors"
-                                                            >
-                                                                💡 Show Hint ({3 - hintsUsed} left)
-                                                            </button>
-                                                        ) : (
-                                                            <p className="text-slate-300 text-sm italic">No hints remaining</p>
-                                                        )}
-                                                    </div>
-                                                )}
-                                                <div className="space-y-3">
-                                                    {ex.options.map((opt, idx) => (
-                                                        <button 
-                                                            key={idx}
-                                                            disabled={feedback !== null}
-                                                            onClick={() => {
-                                                                setUserAnswer(opt);
-                                                                if(idx === ex.correct) {
-                                                                    setFeedback('correct');
-                                                                    setCorrectCount(prev => prev + 1);
-                                                                } else {
-                                                                    setFeedback('wrong');
-                                                                    setCorrectAnswer(ex.options[ex.correct]);
-                                                                }
-                                                            }}
-                                                            className={`w-full p-4 rounded-xl font-bold border transition-all text-left flex justify-between items-center ${
-                                                                feedback && idx === ex.correct ? 'bg-green-100 border-green-200 text-green-700' :
-                                                                feedback === 'wrong' && userAnswer === opt ? 'bg-red-100 border-red-200 text-red-700' :
-                                                                'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
-                                                            }`}
-                                                        >
-                                                            {opt}
-                                                            {feedback && idx === ex.correct && <Check size={20}/>}
-                                                            {feedback === 'wrong' && userAnswer === opt && <X size={20}/>}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        );
-                                    }
-                                    
-                                    // --- SORT TYPE ---
-                                    if (ex.type === 'sort') {
-                                        return (
-                                            <div className="w-full text-center mb-20">
-                                                <h3 className="text-lg font-bold text-slate-400 uppercase tracking-wider mb-4">{ex.question}</h3>
-                                                <div className="flex flex-wrap gap-2 justify-center mb-8 min-h-[50px]">
-                                                    {/* User Input Area */}
-                                                    {userAnswer.split(' ').filter(Boolean).map((word, i) => (
-                                                        <button key={i} onClick={() => setUserAnswer(userAnswer.replace(word + ' ', ''))} className="bg-indigo-100 text-indigo-700 px-3 py-2 rounded-lg font-bold shadow-sm">{word}</button>
-                                                    ))}
-                                                </div>
-                                                <div className="flex flex-wrap gap-2 justify-center pb-4">
-                                                    {/* Source Blocks */}
-                                                    {ex.blocks.map((block, i) => (
-                                                        <button 
-                                                            key={i} 
-                                                            disabled={userAnswer.includes(block)}
-                                                            onClick={() => setUserAnswer(prev => prev + block + ' ')}
-                                                            className={`px-3 py-2 rounded-lg font-bold border shadow-sm transition-all ${userAnswer.includes(block) ? 'opacity-0' : 'bg-white border-slate-200 text-slate-700'}`}
-                                                        >
-                                                            {block}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )
-                                    }
-                                })()}
+                    {/* Lesson Cards */}
+                    <div className="space-y-3">
+                        {[
+                            { num: 1, title: "Getting Started", desc: "Basic recognition", icon: "🌱" },
+                            { num: 2, title: "Building Up", desc: "Pattern practice", icon: "📈" },
+                            { num: 3, title: "Core Practice", desc: "Essential exercises", icon: "💪" },
+                            { num: 4, title: "Going Deeper", desc: "More challenging", icon: "🎯" },
+                            { num: 5, title: "Almost There", desc: "Advanced practice", icon: "🚀" },
+                            { num: 6, title: "Final Challenge", desc: "Master level", icon: "👑" }
+                        ].map(lesson => (
+                            <button
+                                key={lesson.num}
+                                onClick={() => startLesson(lesson.num)}
+                                className={`w-full p-4 rounded-2xl border text-left flex items-center gap-4 transition-all ${
+                                    lessonProgress[lesson.num] 
+                                        ? 'bg-green-50 border-green-200' 
+                                        : 'bg-white border-slate-200 hover:border-indigo-300 hover:shadow-md'
+                                }`}
+                            >
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${
+                                    lessonProgress[lesson.num] ? 'bg-green-100' : 'bg-slate-100'
+                                }`}>
+                                    {lessonProgress[lesson.num] ? '✅' : lesson.icon}
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold text-slate-800">Lesson {lesson.num}</span>
+                                        {lessonProgress[lesson.num] && (
+                                            <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">PASSED</span>
+                                        )}
+                                    </div>
+                                    <p className="text-sm text-slate-500">{lesson.title} - {lesson.desc}</p>
+                                </div>
+                                <ChevronRight size={20} className="text-slate-400"/>
+                            </button>
+                        ))}
+                    </div>
 
-                                {/* FEEDBACK ACTIONS */}
-                                {feedback === 'correct' && (
-                                    <div className="absolute bottom-0 left-0 w-full p-4 bg-green-50 border-t border-green-100">
-                                        <button onClick={nextExercise} className="w-full bg-green-500 text-white py-3 rounded-xl font-bold shadow-lg shadow-green-200">Next Question</button>
-                                    </div>
-                                )}
-                                
-                                {feedback === 'wrong' && (
-                                    <div className="absolute bottom-0 left-0 w-full p-4 bg-red-50 border-t border-red-100">
-                                        <div className="text-center mb-3">
-                                            <span className="text-red-600 font-bold">Correct answer: </span>
-                                            <span className="text-red-800 font-bold">{correctAnswer || practice[currentExIndex]?.options?.[practice[currentExIndex]?.correct]}</span>
-                                        </div>
-                                        <button onClick={nextExercise} className="w-full bg-red-500 text-white py-3 rounded-xl font-bold shadow-lg shadow-red-200">Next Question</button>
-                                    </div>
-                                )}
-
-                                {/* CHECK BUTTON (Für Input/Sort) */}
-                                {!feedback && (practice[currentExIndex].type === 'input' || practice[currentExIndex].type === 'sort') && (
-                                    <div className="absolute bottom-0 left-0 w-full p-4 bg-white border-t border-slate-100">
-                                        <button 
-                                            onClick={() => {
-                                                const ex = practice[currentExIndex];
-                                                const correct = ex.type === 'sort' ? ex.correct_order.join(' ') : ex.answer;
-                                                checkAnswer(correct + (ex.type === 'sort' ? ' ' : '')); // Hack für Leerzeichen beim Sort
-                                            }} 
-                                            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold shadow-lg active:scale-95 transition-transform"
-                                        >
-                                            Check Answer
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        </>
-                    )}
+                    {/* Reset Progress Button */}
+                    <div className="mt-8 text-center">
+                        <button 
+                            onClick={() => {
+                                for (let i = 1; i <= 6; i++) {
+                                    localStorage.removeItem(`grammar_${topicId}_lesson_${i}`);
+                                }
+                                setLessonProgress({1: false, 2: false, 3: false, 4: false, 5: false, 6: false});
+                            }}
+                            className="text-xs text-slate-400 hover:text-red-500 transition-colors"
+                        >
+                            Reset Progress
+                        </button>
+                    </div>
                 </div>
             )}
         </div>
@@ -893,6 +1393,7 @@ function App() {
     const [dailyWriterLoading, setDailyWriterLoading] = useState(false);
     const [dailyWriterText, setDailyWriterText] = useState('');
     const [dailyWriterScore, setDailyWriterScore] = useState(null);
+    const [dailyWriterFeedback, setDailyWriterFeedback] = useState(null); // {explanation, corrected}
     const [completedMiniTasks, setCompletedMiniTasks] = useState([]);
     
     // Helper: Find next grammar topic to learn
@@ -907,18 +1408,47 @@ function App() {
         return null; // All completed
     };
     
+    // Helper: Calculate effective CEFR level based on vocab AND grammar
+    const getEffectiveCEFRLevel = () => {
+        // Vocabulary level based on learned words
+        const learnedCount = Object.values(userProgress).filter(p => p.box >= 2).length;
+        let vocabLevel = 'A1';
+        if (learnedCount >= 5000) vocabLevel = 'C1';
+        else if (learnedCount >= 3000) vocabLevel = 'B2';
+        else if (learnedCount >= 1500) vocabLevel = 'B1';
+        else if (learnedCount >= 500) vocabLevel = 'A2';
+        
+        // Grammar level based on completed lessons
+        let grammarLevel = 'A1';
+        const nextGrammar = getNextGrammarTopic();
+        if (nextGrammar) {
+            grammarLevel = nextGrammar.module?.id?.toUpperCase() || 'A1';
+        } else {
+            grammarLevel = 'C1'; // All grammar done
+        }
+        
+        // Use the LOWER of the two levels (bottleneck principle)
+        const levels = ['A1', 'A2', 'B1', 'B2', 'C1'];
+        const vocabIndex = levels.indexOf(vocabLevel);
+        const grammarIndex = levels.indexOf(grammarLevel);
+        
+        return levels[Math.min(vocabIndex, grammarIndex)];
+    };
+    
     // Load Daily Writer Mission from API
     const loadDailyWriterMission = async () => {
         setDailyWriterLoading(true);
         try {
             const nextGrammar = getNextGrammarTopic();
+            const effectiveLevel = getEffectiveCEFRLevel();
+            
             const res = await fetch('/api/daily-writer', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     grammarTopic: nextGrammar?.topic?.id || null,
                     grammarTitle: nextGrammar?.topic?.title || 'General French',
-                    level: nextGrammar?.module?.id?.toUpperCase() || 'A2'
+                    level: effectiveLevel
                 })
             });
             
@@ -929,6 +1459,7 @@ function App() {
             setCompletedMiniTasks([]);
             setDailyWriterText('');
             setDailyWriterScore(null);
+            setDailyWriterFeedback(null);
         } catch (err) {
             console.error('Error loading mission:', err);
             // Fallback mission
@@ -1037,6 +1568,7 @@ function App() {
                             }
                             setDailyWriterText(''); 
                             setDailyWriterScore(null); 
+                            setDailyWriterFeedback(null);
                             setCompletedMiniTasks([]);
                             setView('daily-writer'); 
                         }} 
@@ -3173,24 +3705,31 @@ function App() {
                                     {/* Sub-List (Accordion) */}
                                     {isOpen && (
                                         <div className="bg-slate-50 border-t border-slate-100 animate-in slide-in-from-top-2 fade-in duration-200">
-                                            {module.topics.map((t) => {
+                                            {module.topics.map((t, index) => {
                                                 const isPassed = localStorage.getItem(`grammar_passed_${t.id}`) === 'true';
                                                 return (
-                                                <button 
-                                                    key={t.id} 
-                                                    // HIER IST DIE NAVIGATIONS-LOGIK:
-                                                    onClick={() => { 
-                                                        setSelectedGrammarId(t.id); 
-                                                        setView('grammar-detail'); 
-                                                    }} 
-                                                    className={`w-full p-4 pl-[5rem] text-left transition-colors border-b border-slate-100 last:border-0 flex justify-between items-center group ${isPassed ? 'bg-green-50 hover:bg-green-100' : 'hover:bg-slate-100 hover:text-indigo-600'}`}
-                                                >
-                                                    <div>
-                                                        <div className={`text-sm font-bold ${isPassed ? 'text-green-700' : 'text-slate-700 group-hover:text-indigo-700'}`}>{t.title}</div>
-                                                        <div className={`text-xs font-medium ${isPassed ? 'text-green-600' : 'text-slate-400 group-hover:text-indigo-400/80'}`}>{t.desc}</div>
-                                                    </div>
-                                                    <BookOpen size={14} className="opacity-0 group-hover:opacity-100 text-indigo-400 transition-opacity"/>
-                                                </button>
+                                                <React.Fragment key={t.id}>
+                                                    {/* Category Header */}
+                                                    {t.category && (
+                                                        <div className="px-5 py-2 bg-slate-100 border-b border-slate-200">
+                                                            <span className="text-xs font-black text-slate-600 uppercase tracking-wider">{t.category}</span>
+                                                        </div>
+                                                    )}
+                                                    <button 
+                                                        // HIER IST DIE NAVIGATIONS-LOGIK:
+                                                        onClick={() => { 
+                                                            setSelectedGrammarId(t.id); 
+                                                            setView('grammar-detail'); 
+                                                        }} 
+                                                        className={`w-full p-4 pl-[5rem] text-left transition-colors border-b border-slate-100 last:border-0 flex justify-between items-center group ${isPassed ? 'bg-green-50 hover:bg-green-100' : 'hover:bg-slate-100 hover:text-indigo-600'}`}
+                                                    >
+                                                        <div>
+                                                            <div className={`text-sm font-bold ${isPassed ? 'text-green-700' : 'text-slate-700 group-hover:text-indigo-700'}`}>{t.title}</div>
+                                                            <div className={`text-xs font-medium ${isPassed ? 'text-green-600' : 'text-slate-400 group-hover:text-indigo-400/80'}`}>{t.desc}</div>
+                                                        </div>
+                                                        <BookOpen size={14} className="opacity-0 group-hover:opacity-100 text-indigo-400 transition-opacity"/>
+                                                    </button>
+                                                </React.Fragment>
                                                 );
                                             })}
                                         </div>
@@ -3298,6 +3837,7 @@ function App() {
         const submitDailyWriter = async () => {
             if (!dailyWriterText.trim()) return alert('Please write something first.');
             setLoadingContent(true);
+            setDailyWriterFeedback(null); // Reset previous feedback
             try {
                 const miniTasksText = dailyWriterMission?.miniTasks?.join(', ') || '';
                 const res = await fetch('/api/correct', {
@@ -3309,7 +3849,21 @@ function App() {
                         Check if the text fulfills these mini-tasks: ${miniTasksText}
                         Grammar focus: ${dailyWriterMission?.grammarFocus || 'General'}
                         Bonus word to use: "${dailyWriterMission?.bonusWord || ''}"
-                        Return JSON with {score: number, explanation: string, completedTasks: [array of task indices that were completed, 0-indexed]}.` 
+                        
+                        IMPORTANT: The student may have written some words or phrases in ENGLISH because they didn't know how to say it in French. 
+                        - Identify any English words/phrases in the text
+                        - In the explanation, tell them how to say those words in French
+                        - In the corrected version, replace the English words with the correct French translation
+                        - Don't penalize too harshly for using English - this is a learning tool!
+                        
+                        Return JSON with:
+                        {
+                            "score": number (1-10),
+                            "explanation": "Detailed feedback in English. If there were English words, explain: 'You wrote [English word] - in French you would say [French translation]'. Also mention what was good and what could be improved.",
+                            "corrected": "The fully corrected French version with all English words translated to French and grammar/spelling fixed",
+                            "completedTasks": [array of task indices that were completed, 0-indexed],
+                            "englishWords": ["list of English words found in the text, if any"]
+                        }` 
                     })
                 });
                 const data = await res.json();
@@ -3328,9 +3882,19 @@ function App() {
                 if (data.completedTasks && Array.isArray(data.completedTasks)) {
                     setCompletedMiniTasks(data.completedTasks);
                 }
-                alert(`Score: ${score}/10\n\n${data.explanation || ''}`);
+                // Save feedback to state instead of alert
+                setDailyWriterFeedback({
+                    explanation: data.explanation || 'Good effort! Keep practicing.',
+                    corrected: data.corrected || null,
+                    englishWords: data.englishWords || []
+                });
             } catch (e) {
-                alert('Scoring failed. Try again later.');
+                setDailyWriterFeedback({
+                    explanation: 'Scoring failed. Please try again later.',
+                    corrected: null,
+                    englishWords: [],
+                    error: true
+                });
                 console.error(e);
             } finally {
                 setLoadingContent(false);
@@ -3538,7 +4102,7 @@ function App() {
                             </div>
                             <div className="flex gap-2">
                                 <button 
-                                    onClick={() => { setDailyWriterText(''); setDailyWriterScore(null); setCompletedMiniTasks([]); }} 
+                                    onClick={() => { setDailyWriterText(''); setDailyWriterScore(null); setDailyWriterFeedback(null); setCompletedMiniTasks([]); }} 
                                     className="text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-100 transition-colors"
                                     title="Reset"
                                 >
@@ -3557,27 +4121,72 @@ function App() {
 
                     {/* Score Result */}
                     {dailyWriterScore !== null && (
-                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-[2rem] border border-green-100 shadow-sm">
-                            <div className="flex items-center gap-4">
-                                <div className="bg-green-100 text-green-600 p-4 rounded-2xl shadow-sm">
-                                    <Trophy size={28} />
+                        <div className="space-y-4">
+                            {/* Score Header */}
+                            <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-[2rem] border border-green-100 shadow-sm">
+                                <div className="flex items-center gap-4">
+                                    <div className="bg-green-100 text-green-600 p-4 rounded-2xl shadow-sm">
+                                        <Trophy size={28} />
+                                    </div>
+                                    <div>
+                                        <div className="font-bold text-3xl text-slate-800">{dailyWriterScore}<span className="text-lg text-slate-400">/10</span></div>
+                                        <div className="text-green-700 font-medium text-sm">Great work! Keep it up.</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div className="font-bold text-3xl text-slate-800">{dailyWriterScore}<span className="text-lg text-slate-400">/10</span></div>
-                                    <div className="text-green-700 font-medium text-sm">Great work! Keep it up.</div>
+                                <div className="mt-4 pt-4 border-t border-green-200/50">
+                                    <div className="text-xs text-green-700 font-medium mb-2">Completed tasks: {completedMiniTasks.length}/{dailyWriterMission.miniTasks?.length || 0}</div>
+                                    <div className="flex gap-1">
+                                        {dailyWriterMission.miniTasks?.map((_, idx) => (
+                                            <div 
+                                                key={idx} 
+                                                className={`h-2 flex-1 rounded-full ${completedMiniTasks.includes(idx) ? 'bg-green-500' : 'bg-slate-200'}`}
+                                            />
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-                            <div className="mt-4 pt-4 border-t border-green-200/50">
-                                <div className="text-xs text-green-700 font-medium mb-2">Completed tasks: {completedMiniTasks.length}/{dailyWriterMission.miniTasks?.length || 0}</div>
-                                <div className="flex gap-1">
-                                    {dailyWriterMission.miniTasks?.map((_, idx) => (
-                                        <div 
-                                            key={idx} 
-                                            className={`h-2 flex-1 rounded-full ${completedMiniTasks.includes(idx) ? 'bg-green-500' : 'bg-slate-200'}`}
-                                        />
-                                    ))}
+
+                            {/* Feedback Block */}
+                            {dailyWriterFeedback && (
+                                <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <div className={`p-2 rounded-xl ${dailyWriterFeedback.error ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
+                                            <MessageSquare size={20} />
+                                        </div>
+                                        <h4 className="font-bold text-slate-800">Feedback</h4>
+                                    </div>
+
+                                    {/* English Words Found - Special Hint */}
+                                    {dailyWriterFeedback.englishWords && dailyWriterFeedback.englishWords.length > 0 && (
+                                        <div className="bg-amber-50 p-4 rounded-xl border border-amber-200 mb-4">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <Info size={16} className="text-amber-600" />
+                                                <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">English words detected</span>
+                                            </div>
+                                            <p className="text-amber-800 text-sm">
+                                                You used these English words: <span className="font-semibold">{dailyWriterFeedback.englishWords.join(', ')}</span>
+                                            </p>
+                                            <p className="text-amber-700 text-xs mt-1">Check the explanation below to learn how to say them in French!</p>
+                                        </div>
+                                    )}
+                                    
+                                    {/* Explanation */}
+                                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-4">
+                                        <p className="text-slate-700 leading-relaxed text-sm whitespace-pre-wrap">{dailyWriterFeedback.explanation}</p>
+                                    </div>
+
+                                    {/* Corrected Version */}
+                                    {dailyWriterFeedback.corrected && (
+                                        <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <Check size={16} className="text-indigo-600" />
+                                                <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">Corrected Version</span>
+                                            </div>
+                                            <p className="text-indigo-900 leading-relaxed text-sm italic whitespace-pre-wrap">{dailyWriterFeedback.corrected}</p>
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
+                            )}
                         </div>
                     )}
                 </div>
@@ -4020,80 +4629,80 @@ function App() {
         };
 
         const handleWordClick = async (e, wordRaw) => {
-            e.stopPropagation();
-            
-            const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
-            const cleanWord = textWithoutFormat.replace(/[.,!?;:"«»()]/g, "").toLowerCase().trim();
-            
-            // 1. CHECK: Ist es eine Zahl/Römisch?
-            if (/^\d+$/.test(cleanWord) || /^m*(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/.test(cleanWord)) {
-                setClickedWord({ french: textWithoutFormat, english: "Number", rank: "#" });
-                return;
-            }
+        e.stopPropagation();
+        
+        const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
+        // Bereinigen von Satzzeichen am Anfang/Ende
+        const cleanWord = textWithoutFormat.replace(/^[.,!?;:"«»()]+|[.,!?;:"«»()]+$/g, "").toLowerCase().trim();
+        
+        // 1. CHECK: Ist es eine Zahl/Römisch?
+        if (/^\d+$/.test(cleanWord) || /^m*(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/.test(cleanWord)) {
+            setClickedWord({ french: textWithoutFormat, english: "Number", rank: "#" });
+            return;
+        }
 
-            // 2. VERSUCH A: Lokal
-            let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
+        // 2. VERSUCH A: Exakte Suche in lokaler Liste
+        let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
 
-            // 3. VERSUCH B: Irregular Map
-            if (!found && IRREGULAR_MAP[cleanWord]) {
-                const infinitive = IRREGULAR_MAP[cleanWord];
-                found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
-            }
+        // 3. VERSUCH B: Irregular Map (vorhandene Liste)
+        if (!found && IRREGULAR_MAP[cleanWord]) {
+            const infinitive = IRREGULAR_MAP[cleanWord];
+            found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
+        }
 
-            if (found) {
-                setClickedWord(found);
-            } else {
-                // 4. VERSUCH C: API FRAGEN
-                setLoadingTranslation(true);
-                setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "API" });
-                
-                try {
-                    // Backend (Proxy)
-                    const res = await fetch('/api/lookup', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ word: cleanWord })
-                    });
-                    const data = await res.json();
-                    
-                    // Hat Gemini eine Root gefunden?
-                    let rootFound = null;
-                    if (data.root) {
-                         rootFound = vocabulary.find(v => v.french.toLowerCase() === data.root.toLowerCase());
+        // 4. VERSUCH C: Einfaches "Stemming" (Endungen raten, um API zu sparen)
+        // Wir prüfen, ob das Wort wie ein konjugiertes Verb aussieht und suchen den Infinitiv in deiner Liste
+        if (!found) {
+            const commonEndings = [
+                { s: 'ez', r: 'er' }, { s: 'ons', r: 'er' }, { s: 'ait', r: 'er' }, { s: 'ais', r: 'er' }, { s: 'aient', r: 'er' }, { s: 'é', r: 'er' }, // -er Verben
+                { s: 'isse', r: 'ir' }, { s: 'it', r: 'ir' }, // -ir Verben
+                { s: 'aux', r: 'al' } // Plural Nomen
+            ];
+
+            for (let rule of commonEndings) {
+                if (cleanWord.endsWith(rule.s)) {
+                    // Versuch: Endung abschneiden und Suffix dranbappen
+                    const stem = cleanWord.slice(0, -rule.s.length) + rule.r;
+                    const match = vocabulary.find(v => v.french.toLowerCase() === stem);
+                    if (match) {
+                        found = match; // Gefunden! Wir nutzen das lokale Wort
+                        break; 
                     }
-
-                    if (rootFound) {
-                        setClickedWord({ 
-                            french: textWithoutFormat, 
-                            english: `${data.translation} (${data.type})`, 
-                            rank: rootFound.rank, 
-                            root: data.root 
-                        });
-                    } else {
-                        setClickedWord({ 
-                            french: textWithoutFormat, 
-                            english: data.translation || "No translation", 
-                            rank: "External",
-                            root: (data.root && data.root !== cleanWord) ? data.root : null
-                        });
-                    }
-
-                } catch (err) {
-                    // Fallback Direktaufruf bei Backend-Fehler
-                    try {
-                         const resFallback = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanWord)}&langpair=fr|en&mt=1`);
-                         const dataFallback = await resFallback.json();
-                         if(dataFallback.responseData?.translatedText) {
-                            setClickedWord({ french: textWithoutFormat, english: dataFallback.responseData.translatedText, rank: "External" });
-                         } else { throw new Error("No fallback"); }
-                    } catch(e2) {
-                        setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
-                    }
-                } finally {
-                    setLoadingTranslation(false);
                 }
             }
-        };
+        }
+
+        if (found) {
+            setClickedWord(found);
+        } else {
+            // 5. VERSUCH D: GRATIS WEB API (MyMemory) statt Gemini
+            setLoadingTranslation(true);
+            setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "..." });
+            
+            try {
+                // Wir nutzen direkt die MyMemory API (kostenlos für kleine Anfragen)
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanWord)}&langpair=fr|en`);
+                const data = await res.json();
+                
+                if (data.responseData?.translatedText) {
+                    setClickedWord({ 
+                        french: textWithoutFormat, 
+                        // Wir säubern die Antwort etwas, falls sie seltsam formatiert ist
+                        english: data.responseData.translatedText.toLowerCase(), 
+                        rank: "Web" // Zeigt an, dass es aus dem Web kommt
+                    });
+                } else {
+                    throw new Error("No translation found");
+                }
+
+            } catch (err) {
+                console.error(err);
+                setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
+            } finally {
+                setLoadingTranslation(false);
+            }
+        }
+    };
 
         // --- PHASE 1: AUSWAHL ---
         if (readerMode === 'select') {
@@ -4536,82 +5145,167 @@ function App() {
         // Profi-Wörter (Box 5 = Langzeitgedächtnis)
         const masterCount = safeVocab.filter(w => userProgress[w.rank]?.box === 5).length;
 
-        // Level Berechnung
-        let levelTitle = "Tourist";
-        let levelColor = "from-slate-400 to-slate-600";
-        let nextLevelAt = 100;
+        // --- CEFR VOCABULARY LEVEL ---
+        // Based on linguistic research (Cambridge, Goethe-Institut, Alliance Française)
+        const getVocabCEFR = (count) => {
+            if (count < 500) return { level: "A1", color: "bg-blue-500", next: 500, desc: "Beginner" };
+            if (count < 1500) return { level: "A2", color: "bg-sky-500", next: 1500, desc: "Elementary" };
+            if (count < 3000) return { level: "B1", color: "bg-emerald-500", next: 3000, desc: "Intermediate" };
+            if (count < 5000) return { level: "B2", color: "bg-purple-500", next: 5000, desc: "Upper Intermediate" };
+            return { level: "C1+", color: "bg-amber-500", next: 5000, desc: "Advanced" };
+        };
+        const vocabCEFR = getVocabCEFR(learnedCount);
 
-        if (learnedCount >= 100 && learnedCount < 500) {
-            levelTitle = "Explorer";
-            levelColor = "from-blue-400 to-blue-600";
-            nextLevelAt = 500;
-        } else if (learnedCount >= 500 && learnedCount < 1000) {
-            levelTitle = "Citizen";
-            levelColor = "from-indigo-400 to-indigo-600";
-            nextLevelAt = 1000;
-        } else if (learnedCount >= 1000 && learnedCount < 2000) {
-            levelTitle = "Diplomat";
-            levelColor = "from-purple-400 to-purple-600";
-            nextLevelAt = 2000;
-        } else if (learnedCount >= 2000) {
-            levelTitle = "Native Speaker";
-            levelColor = "from-amber-400 to-amber-600";
-            nextLevelAt = 5000;
-        }
+        // --- CEFR GRAMMAR LEVEL ---
+        // Find current grammar level based on completed lessons
+        const getGrammarCEFR = () => {
+            let a1Done = 0, a1Total = 0;
+            let a2Done = 0, a2Total = 0;
+            let b1Done = 0, b1Total = 0;
+            let b2Done = 0, b2Total = 0;
 
-        const levelProgress = Math.min(100, (learnedCount / nextLevelAt) * 100);
-
-        // --- 2. BADGES DEFINITION (Mit Erklärungen) ---
-        const BADGES = [
-            { 
-                id: 'start', 
-                icon: <Zap size={20}/>, 
-                label: "First Step", 
-                desc: "Learn your first word", 
-                unlocked: learnedCount >= 1, 
-                color: "text-yellow-600 bg-yellow-100" 
-            },
-            { 
-                id: 'streak3', 
-                icon: <Flame size={20}/>, 
-                label: "On Fire", 
-                desc: "Reach a 3 day streak", 
-                unlocked: streak >= 3, 
-                color: "text-orange-600 bg-orange-100" 
-            },
-            { 
-                id: 'base100', 
-                icon: <Shield size={20}/>, 
-                label: "Foundation", 
-                desc: "Learn 100 words", 
-                unlocked: learnedCount >= 100, 
-                color: "text-blue-600 bg-blue-100" 
-            },
-            { 
-                id: 'streak7', 
-                icon: <Flame size={20}/>, 
-                label: "Unstoppable", 
-                desc: "Reach a 7 day streak", 
-                unlocked: streak >= 7, 
-                color: "text-red-600 bg-red-100" 
-            },
-            { 
-                id: 'halfk', 
-                icon: <Medal size={20}/>, 
-                label: "Half K", 
-                desc: "Learn 500 words", 
-                unlocked: learnedCount >= 500, 
-                color: "text-indigo-600 bg-indigo-100" 
-            },
-            { 
-                id: 'master', 
-                icon: <Crown size={20}/>, 
-                label: "Mastermind", 
-                desc: "50 words in Box 5", 
-                unlocked: masterCount >= 50, 
-                color: "text-emerald-600 bg-emerald-100" 
+            for (const module of GRAMMAR_MODULES) {
+                for (const topic of module.topics) {
+                    const passed = localStorage.getItem(`grammar_passed_${topic.id}`) === 'true';
+                    if (module.id === 'a1') { a1Total++; if (passed) a1Done++; }
+                    if (module.id === 'a2') { a2Total++; if (passed) a2Done++; }
+                    if (module.id === 'b1') { b1Total++; if (passed) b1Done++; }
+                    if (module.id === 'b2') { b2Total++; if (passed) b2Done++; }
+                }
             }
-        ];
+
+            // Determine current level
+            if (a1Done < a1Total) return { level: "A1", color: "bg-blue-500", progress: a1Done, total: a1Total, desc: "Basics" };
+            if (a2Done < a2Total) return { level: "A2", color: "bg-sky-500", progress: a2Done, total: a2Total, desc: "Elementary" };
+            if (b1Done < b1Total) return { level: "B1", color: "bg-emerald-500", progress: b1Done, total: b1Total, desc: "Intermediate" };
+            if (b2Done < b2Total) return { level: "B2", color: "bg-purple-500", progress: b2Done, total: b2Total, desc: "Upper Intermediate" };
+            return { level: "C1+", color: "bg-amber-500", progress: b2Total, total: b2Total, desc: "Advanced" };
+        };
+        const grammarCEFR = getGrammarCEFR();
+
+        // --- CREATIVE TITLE SYSTEM based on Vocab/Grammar Balance ---
+        const vocabLevel = vocabCEFR.level; // A1, A2, B1, B2, C1+
+        const grammarLevel = grammarCEFR.level; // A1, A2, B1, B2, C1+
+        
+        // Convert to numeric for comparison
+        const levelToNum = (lvl) => ({ 'A1': 1, 'A2': 2, 'B1': 3, 'B2': 4, 'C1+': 5 }[lvl] || 0);
+        const vocabNum = levelToNum(vocabLevel);
+        const grammarNum = levelToNum(grammarLevel);
+        
+        // Determine balance type and assign creative title
+        const getCreativeTitle = () => {
+            const diff = vocabNum - grammarNum;
+            
+            // Beginner titles (both at A1)
+            if (vocabNum <= 1 && grammarNum <= 1) {
+                if (learnedCount === 0) return { 
+                    title: "Fresh Start", 
+                    emoji: "🌱", 
+                    desc: "Your French journey begins here. Every expert was once a beginner!",
+                    color: "from-slate-400 to-slate-600"
+                };
+                return { 
+                    title: "Curious Tourist", 
+                    emoji: "📷", 
+                    desc: "You're starting to collect your first French impressions. Keep snapping!",
+                    color: "from-slate-400 to-slate-600"
+                };
+            }
+            
+            // HIGH VOCAB, LOW GRAMMAR (Yoda-style: knows words, speaks weird)
+            if (diff >= 2) {
+                if (vocabNum >= 4) return {
+                    title: "Yoda",
+                    emoji: "🧙‍♂️",
+                    desc: "Many words you know, but grammar structure... work on it you must. Sound wise you do, but rules bend you!",
+                    color: "from-green-500 to-emerald-700"
+                };
+                if (vocabNum >= 3) return {
+                    title: "Word Hoarder",
+                    emoji: "📚",
+                    desc: "Your vocabulary is impressive, but your sentences might confuse natives. Time to learn the rules!",
+                    color: "from-amber-400 to-orange-600"
+                };
+                return {
+                    title: "Flashcard Warrior",
+                    emoji: "⚔️",
+                    desc: "You've memorized tons of words but grammar is your weak spot. Balance is key!",
+                    color: "from-red-400 to-rose-600"
+                };
+            }
+            
+            // LOW VOCAB, HIGH GRAMMAR (Professor: knows rules, lacks words)
+            if (diff <= -2) {
+                if (grammarNum >= 4) return {
+                    title: "The Professor",
+                    emoji: "🎓",
+                    desc: "Your grammar is impeccable, but you lack the vocabulary to express complex ideas. Hit the flashcards!",
+                    color: "from-indigo-500 to-purple-700"
+                };
+                if (grammarNum >= 3) return {
+                    title: "Grammar Nerd",
+                    emoji: "🤓",
+                    desc: "You understand the rules perfectly but need more words to put them to use. Expand your vocabulary!",
+                    color: "from-blue-400 to-indigo-600"
+                };
+                return {
+                    title: "Rulebook Reader",
+                    emoji: "📖",
+                    desc: "You love grammar theory but need to learn more words to practice with!",
+                    color: "from-cyan-400 to-blue-600"
+                };
+            }
+            
+            // BALANCED LEARNERS (vocab ≈ grammar)
+            if (vocabNum >= 5 && grammarNum >= 5) return {
+                title: "French Virtuoso",
+                emoji: "🎭",
+                desc: "You've mastered both vocabulary and grammar. You can handle any conversation with elegance!",
+                color: "from-amber-400 to-yellow-600"
+            };
+            if (vocabNum >= 4 && grammarNum >= 4) return {
+                title: "Parisian Native",
+                emoji: "🗼",
+                desc: "Your French is refined and natural. Parisians might mistake you for a local!",
+                color: "from-rose-400 to-pink-600"
+            };
+            if (vocabNum >= 3 && grammarNum >= 3) return {
+                title: "Cultural Ambassador",
+                emoji: "🌍",
+                desc: "You can discuss most topics with confidence. Your French opens doors everywhere!",
+                color: "from-purple-400 to-violet-600"
+            };
+            if (vocabNum >= 2 && grammarNum >= 2) return {
+                title: "Café Regular",
+                emoji: "☕",
+                desc: "You can hold conversations and handle daily situations. The waiter understands you!",
+                color: "from-blue-400 to-cyan-600"
+            };
+            
+            // Slight imbalance titles
+            if (diff === 1) return {
+                title: "Vocabulary Hunter",
+                emoji: "🎯",
+                desc: "You're slightly ahead on words. Good balance! Keep both skills growing together.",
+                color: "from-teal-400 to-emerald-600"
+            };
+            if (diff === -1) return {
+                title: "Structure Seeker",
+                emoji: "🏗️",
+                desc: "You're slightly ahead on grammar. Great foundation! Now add more vocabulary.",
+                color: "from-violet-400 to-purple-600"
+            };
+            
+            // Default fallback
+            return {
+                title: "Adventurer",
+                emoji: "🧭",
+                desc: "You're on your way! Keep learning both words and grammar for the best results.",
+                color: "from-blue-400 to-indigo-600"
+            };
+        };
+        
+        const creativeTitle = getCreativeTitle();
 
         const handleHardReset = () => {
             if (window.confirm("Delete ALL progress? This cannot be undone.")) {
@@ -4639,65 +5333,91 @@ function App() {
                     </div>
                 </div>
 
-                {/* 1. IDENTITY CARD */}
-                <div className={`w-full p-6 rounded-[2rem] shadow-xl text-white bg-gradient-to-br ${levelColor} relative overflow-hidden group`}>
+                {/* 1. IDENTITY CARD - Creative Title based on Balance */}
+                <div className={`w-full p-6 rounded-[2rem] shadow-xl text-white bg-gradient-to-br ${creativeTitle.color} relative overflow-hidden group`}>
                     <div className="relative z-10 flex items-center gap-5">
                         <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 text-3xl shadow-inner">
-                            {levelTitle === "Tourist" ? "📷" : levelTitle === "Explorer" ? "🧭" : levelTitle === "Citizen" ? "🏡" : "👑"}
+                            {creativeTitle.emoji}
                         </div>
                         <div>
-                            <div className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Current Title</div>
-                            <h3 className="text-2xl font-bold">{levelTitle}</h3>
-                            <p className="text-white/80 text-xs font-medium mt-1">{learnedCount} / {nextLevelAt} words to next rank</p>
+                            <div className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Your Title</div>
+                            <h3 className="text-2xl font-bold">{creativeTitle.title}</h3>
                         </div>
                     </div>
                     
-                    {/* Level Progress Bar */}
-                    <div className="mt-6 bg-black/20 h-2 rounded-full overflow-hidden backdrop-blur-sm">
-                        <div className="bg-white h-full rounded-full opacity-90" style={{ width: `${levelProgress}%` }}></div>
-                    </div>
+                    {/* Description explaining why this title */}
+                    <p className="mt-4 text-white/90 text-sm leading-relaxed bg-black/10 rounded-xl p-3 backdrop-blur-sm">
+                        {creativeTitle.desc}
+                    </p>
 
                     {/* Deko */}
                     <User size={120} className="absolute -right-6 -bottom-8 text-white opacity-10 rotate-12"/>
                 </div>
 
-                {/* 2. HALL OF FAME (Verbessert mit Beschreibung) */}
-                <div>
-                    <div className="flex items-center justify-between mb-3 px-1">
-                        <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider">Achievements</h3>
-                        <span className="text-xs font-bold text-indigo-500">
-                            {BADGES.filter(b => b.unlocked).length} / {BADGES.length} Unlocked
-                        </span>
+                {/* CURRENTLY LEARNING - CEFR LEVELS */}
+                <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                        <GraduationCap size={20} className="text-indigo-600" />
+                        <h3 className="font-bold text-slate-800">Currently Learning</h3>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-3">
-                        {BADGES.map(b => (
-                            <div 
-                                key={b.id} 
-                                className={`p-4 rounded-2xl border transition-all flex items-center gap-3 ${
-                                    b.unlocked 
-                                    ? "bg-white border-slate-100 shadow-sm opacity-100" 
-                                    : "bg-slate-50 border-slate-100 opacity-60 grayscale"
-                                }`}
-                            >
-                                {/* Icon */}
-                                <div className={`p-2.5 rounded-xl shrink-0 ${b.unlocked ? b.color : 'bg-slate-200 text-slate-400'}`}>
-                                    {b.icon}
-                                </div>
-                                
-                                {/* Text */}
-                                <div>
-                                    <div className="font-bold text-slate-700 text-sm leading-tight">{b.label}</div>
-                                    <div className="text-[10px] text-slate-400 font-medium mt-0.5">
-                                        {b.desc}
-                                    </div>
-                                </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Vocabulary Level */}
+                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                            <div className="flex items-center justify-between mb-2">
+                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Vocabulary</span>
+                                <span className={`text-xs font-bold text-white px-2 py-0.5 rounded-lg ${vocabCEFR.color}`}>
+                                    {vocabCEFR.level}
+                                </span>
                             </div>
-                        ))}
+                            <div className="text-lg font-bold text-slate-800 mb-1">{vocabCEFR.desc}</div>
+                            <div className="text-xs text-slate-500">
+                                {learnedCount} / {vocabCEFR.next} words
+                            </div>
+                            <div className="mt-2 bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                                <div className={`h-full rounded-full ${vocabCEFR.color}`} style={{ width: `${Math.min(100, (learnedCount / vocabCEFR.next) * 100)}%` }}></div>
+                            </div>
+                        </div>
+
+                        {/* Grammar Level */}
+                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                            <div className="flex items-center justify-between mb-2">
+                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Grammar</span>
+                                <span className={`text-xs font-bold text-white px-2 py-0.5 rounded-lg ${grammarCEFR.color}`}>
+                                    {grammarCEFR.level}
+                                </span>
+                            </div>
+                            <div className="text-lg font-bold text-slate-800 mb-1">{grammarCEFR.desc}</div>
+                            <div className="text-xs text-slate-500">
+                                {grammarCEFR.progress} / {grammarCEFR.total} lessons
+                            </div>
+                            <div className="mt-2 bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                                <div className={`h-full rounded-full ${grammarCEFR.color}`} style={{ width: `${Math.min(100, (grammarCEFR.progress / grammarCEFR.total) * 100)}%` }}></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* CEFR Scale Reference */}
+                    <div className="mt-4 pt-4 border-t border-slate-100">
+                        <div className="text-[10px] text-slate-400 font-medium mb-2">CEFR Scale</div>
+                        <div className="flex gap-1">
+                            <div className={`flex-1 h-1.5 rounded-l-full ${vocabCEFR.level === 'A1' ? 'bg-blue-500' : 'bg-blue-200'}`}></div>
+                            <div className={`flex-1 h-1.5 ${vocabCEFR.level === 'A2' ? 'bg-sky-500' : 'bg-sky-200'}`}></div>
+                            <div className={`flex-1 h-1.5 ${vocabCEFR.level === 'B1' ? 'bg-emerald-500' : 'bg-emerald-200'}`}></div>
+                            <div className={`flex-1 h-1.5 ${vocabCEFR.level === 'B2' ? 'bg-purple-500' : 'bg-purple-200'}`}></div>
+                            <div className={`flex-1 h-1.5 rounded-r-full ${vocabCEFR.level === 'C1+' ? 'bg-amber-500' : 'bg-amber-200'}`}></div>
+                        </div>
+                        <div className="flex justify-between text-[9px] text-slate-400 mt-1">
+                            <span>A1</span>
+                            <span>A2</span>
+                            <span>B1</span>
+                            <span>B2</span>
+                            <span>C1+</span>
+                        </div>
                     </div>
                 </div>
 
-                {/* 3. MENU & DATA */}
+                {/* MENU & DATA */}
                 <div>
                     <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Data & Settings</h3>
                     <div className="space-y-3">
