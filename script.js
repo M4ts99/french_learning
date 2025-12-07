@@ -4629,80 +4629,88 @@ function App() {
         };
 
         const handleWordClick = async (e, wordRaw) => {
-        e.stopPropagation();
-        
-        const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
-        // Bereinigen von Satzzeichen am Anfang/Ende
-        const cleanWord = textWithoutFormat.replace(/^[.,!?;:"«»()]+|[.,!?;:"«»()]+$/g, "").toLowerCase().trim();
-        
-        // 1. CHECK: Ist es eine Zahl/Römisch?
-        if (/^\d+$/.test(cleanWord) || /^m*(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/.test(cleanWord)) {
-            setClickedWord({ french: textWithoutFormat, english: "Number", rank: "#" });
-            return;
-        }
+            e.stopPropagation();
+            
+            const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
+            // Bereinigen von Satzzeichen am Anfang/Ende
+            const cleanWord = textWithoutFormat.replace(/^[.,!?;:"«»()]+|[.,!?;:"«»()]+$/g, "").toLowerCase().trim();
+            
+            // 1. CHECK: Ist es eine Zahl/Römisch?
+            if (/^\d+$/.test(cleanWord) || /^m*(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/.test(cleanWord)) {
+                setClickedWord({ french: textWithoutFormat, english: "Number", rank: "#" });
+                return;
+            }
 
-        // 2. VERSUCH A: Exakte Suche in lokaler Liste
-        let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
+            // 2. VERSUCH A: Exakte Suche in lokaler Liste
+            let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
 
-        // 3. VERSUCH B: Irregular Map (vorhandene Liste)
-        if (!found && IRREGULAR_MAP[cleanWord]) {
-            const infinitive = IRREGULAR_MAP[cleanWord];
-            found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
-        }
+            // 3. VERSUCH B: Irregular Map (vorhandene Liste)
+            if (!found && IRREGULAR_MAP[cleanWord]) {
+                const infinitive = IRREGULAR_MAP[cleanWord];
+                found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
+            }
 
-        // 4. VERSUCH C: Einfaches "Stemming" (Endungen raten, um API zu sparen)
-        // Wir prüfen, ob das Wort wie ein konjugiertes Verb aussieht und suchen den Infinitiv in deiner Liste
-        if (!found) {
-            const commonEndings = [
-                { s: 'ez', r: 'er' }, { s: 'ons', r: 'er' }, { s: 'ait', r: 'er' }, { s: 'ais', r: 'er' }, { s: 'aient', r: 'er' }, { s: 'é', r: 'er' }, // -er Verben
-                { s: 'isse', r: 'ir' }, { s: 'it', r: 'ir' }, // -ir Verben
-                { s: 'aux', r: 'al' } // Plural Nomen
-            ];
+            // 4. VERSUCH C: Einfaches "Stemming" (Endungen raten, um API zu sparen)
+            // Wir prüfen, ob das Wort wie ein konjugiertes Verb aussieht und suchen den Infinitiv in deiner Liste
+            if (!found) {
+                const commonEndings = [
+                    { s: 'ez', r: 'er' }, { s: 'ons', r: 'er' }, { s: 'ait', r: 'er' }, { s: 'ais', r: 'er' }, { s: 'aient', r: 'er' }, { s: 'é', r: 'er' }, // -er Verben
+                    { s: 'isse', r: 'ir' }, { s: 'it', r: 'ir' }, // -ir Verben
+                    { s: 'aux', r: 'al' } // Plural Nomen
+                ];
 
-            for (let rule of commonEndings) {
-                if (cleanWord.endsWith(rule.s)) {
-                    // Versuch: Endung abschneiden und Suffix dranbappen
-                    const stem = cleanWord.slice(0, -rule.s.length) + rule.r;
-                    const match = vocabulary.find(v => v.french.toLowerCase() === stem);
-                    if (match) {
-                        found = match; // Gefunden! Wir nutzen das lokale Wort
-                        break; 
+                for (let rule of commonEndings) {
+                    if (cleanWord.endsWith(rule.s)) {
+                        // Versuch: Endung abschneiden und Suffix dranbappen
+                        const stem = cleanWord.slice(0, -rule.s.length) + rule.r;
+                        const match = vocabulary.find(v => v.french.toLowerCase() === stem);
+                        if (match) {
+                            found = match; // Gefunden! Wir nutzen das lokale Wort
+                            break; 
+                        }
                     }
                 }
             }
-        }
 
-        if (found) {
-            setClickedWord(found);
-        } else {
-            // 5. VERSUCH D: GRATIS WEB API (MyMemory) statt Gemini
-            setLoadingTranslation(true);
-            setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "..." });
-            
-            try {
-                // Wir nutzen direkt die MyMemory API (kostenlos für kleine Anfragen)
-                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanWord)}&langpair=fr|en`);
-                const data = await res.json();
+            // ... (oberer Teil mit Stemming bleibt gleich)
+
+            if (found) {
+                setClickedWord(found);
+            } else {
+                // 5. VERSUCH D: CLOUDFLARE AI BACKEND
+                setLoadingTranslation(true);
+                setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "..." });
                 
-                if (data.responseData?.translatedText) {
-                    setClickedWord({ 
-                        french: textWithoutFormat, 
-                        // Wir säubern die Antwort etwas, falls sie seltsam formatiert ist
-                        english: data.responseData.translatedText.toLowerCase(), 
-                        rank: "Web" // Zeigt an, dass es aus dem Web kommt
+                try {
+                    // Wir rufen DEINE neue Funktion auf
+                    const res = await fetch('/api/translate2', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ word: cleanWord })
                     });
-                } else {
-                    throw new Error("No translation found");
-                }
 
-            } catch (err) {
-                console.error(err);
-                setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
-            } finally {
-                setLoadingTranslation(false);
+                    if (!res.ok) throw new Error("Server error");
+
+                    const data = await res.json();
+                    
+                    if (data.translation) {
+                        setClickedWord({ 
+                            french: textWithoutFormat, 
+                            english: data.translation.toLowerCase(), 
+                            rank: "AI" // Zeigt an, dass es von der Cloudflare AI kommt
+                        });
+                    } else {
+                        throw new Error("No translation");
+                    }
+
+                } catch (err) {
+                    console.error(err);
+                    setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
+                } finally {
+                    setLoadingTranslation(false);
+                }
             }
-        }
-    };
+        };
 
         // --- PHASE 1: AUSWAHL ---
         if (readerMode === 'select') {
