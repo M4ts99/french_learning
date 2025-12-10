@@ -1,0 +1,12 @@
+# Exclude large data files from deployment
+franzoesisch_alle_woerter_formatiert.json
+*.csv
+*.log
+.DS_Store
+node_modules/
+.vscode/
+.github/
+.git/
+*.tmp
+speicher/
+ToDo.docx
