@@ -844,10 +844,22 @@ Ce sont quelques-uns de ces actes, quelques-unes de ces aventures que j’essaie
             icon: "Coffee",
             chapters: [
                 {
-                    title: "La Pâte",
-                    simple: "Mélangez la farine et les œufs. Ajoutez le lait doucement. Mettez un peu de beurre. Laissez reposer une heure.",
-                    advanced: "Dans un grand bol, versez la farine. Faites un puits et cassez les œufs. Ajoutez le lait progressivement pour éviter les grumeaux.",
-                    original: "Mettre la farine dans une terrine et former un puits. Y déposer les oeufs entiers, le sucre, l'huile et le beurre. Mélanger délicatement avec un fouet."
+                    title: "1. Les Ingrédients (Ingredients)",
+                    simple: `Pour 4 personnes, il faut :\n- 250g de farine (flour)\n- 4 œufs (eggs)\n- 500ml de lait (milk)\n- 1 pincée de sel (salt)\n- 2 cuillères de sucre (sugar)\n- 50g de beurre (butter)\n\nC'est tout ! C'est très facile et pas cher.`,
+                    advanced: `Voici ce qu'il vous faut pour environ 15 crêpes :\n- 250g de farine de blé type 55\n- 4 œufs entiers de plein air\n- un demi-litre de lait demi-écrémé\n- 1 sachet de sucre vanillé pour le goût\n- une pincée de sel fin\n- 50g de beurre fondu pour la cuisson.\n\nVous pouvez aussi ajouter un peu de rhum ou de fleur d'oranger pour parfumer la pâte.`,
+                    original: `La composition de la pâte à crêpes classique requiert des produits de qualité :\n- 250g de farine tamisée\n- 4 gros œufs frais\n- 50 cl de lait entier\n- 1 pincée de sel\n- 2 cuillères à soupe de sucre semoule\n- 50g de beurre noisette\n- Optionnel : Un zeste de citron ou une cuillère de Rhum ambré.\n\nLe secret réside dans la température des ingrédients : ils doivent tous être à température ambiante.`
+                },
+                {
+                    title: "2. La Préparation (The Batter)",
+                    simple: "1. Mettez la farine dans un grand bol.\n2. Ajoutez les œufs et le sel.\n3. Mélangez doucement.\n4. Ajoutez le lait petit à petit.\n5. Mélangez bien pour ne pas avoir de morceaux.\n6. Ajoutez le sucre et le beurre fondu.\n7. Laissez reposer une heure au frigo.",
+                    advanced: "Dans un saladier, versez la farine et formez un puits (un trou) au milieu. Cassez les œufs dans ce puits. Commencez à mélanger doucement avec un fouet en partant du centre. Incorporez le lait progressivement pour éviter la formation de grumeaux (lumps). Une fois la pâte lisse, ajoutez le beurre fondu et le parfum de votre choix. Il est conseillé de laisser reposer la pâte pendant une heure.",
+                    original: "Disposer la farine en fontaine dans une terrine. Y verser les œufs, le sucre, le sel et le beurre fondu (ou noisette). Travailler énergiquement la pâte au fouet ou à la spatule en bois. Mouiller progressivement avec le lait jusqu'à l'obtention d'un ruban lisse et homogène. La pâte doit avoir la consistance d'une crème liquide. Couvrir d'un linge et laisser reposer la pâte (l'appareil) une à deux heures à température ambiante pour permettre au gluten de se détendre."
+                },
+                {
+                    title: "3. La Cuisson (Cooking)",
+                    simple: "Chauffez une poêle. Mettez un peu de beurre. Versez une louche de pâte. Tournez la poêle pour étaler la pâte. Attendez une minute. Retournez la crêpe. Attendez encore une minute. C'est prêt ! Mangez avec du sucre ou du chocolat.",
+                    advanced: "Faites chauffer une poêle antiadhésive à feu moyen. Graissez la poêle avec un papier absorbant imbibé d'huile ou de beurre. Versez une louche de pâte et faites un mouvement de rotation du poignet pour répartir la pâte uniformément. Lorsque les bords se décollent et dorent, retournez la crêpe avec une spatule. Laissez cuire l'autre face quelques secondes.",
+                    original: "Saisir la crêpe dans une poêle très chaude ou sur une billig (plaque bretonne) légèrement graissée au saindoux ou au beurre clarifié. Verser l'appareil et l'étaler rapidement à l'aide d'un rozell (râteau en bois) si vous en avez un. La crêpe doit être fine comme de la dentelle. Retourner dès qu'elle est dorée (« kraz » en breton). Servir immédiatement, saupoudrée de sucre."
                 }
             ]
         },
@@ -913,12 +925,10 @@ const getMergedGrammarData = () => {
     return merged;
 };
 // --- READER COMPONENT (Ausgelagert) ---
-const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setView, setReaderMode, speak, stopAudio }) => {
+const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setView, setReaderMode, speak, stopAudio, vocabulary, clickedWord, setClickedWord, loadingTranslation, setLoadingTranslation }) => {
     
     // Lokaler State für Audio
     const [isSpeaking, setIsSpeaking] = useState(false);
-    // Lokaler State für Wort-Klick (braucht keine App-weite Sichtbarkeit)
-    const [clickedWord, setClickedWord] = useState(null);
     const [aiExamples, setAiExamples] = useState(null);
 
     // Audio Helper
@@ -933,19 +943,164 @@ const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setVi
         }
     };
 
-    // Word Click Logic (Vereinfacht für Übersicht)
-    const handleWordClick = (e, wordRaw) => {
+    // Word Click Logic (Vollständige Logik wie im Haupt-Reader)
+    const handleWordClick = async (e, wordRaw) => {
         e.stopPropagation();
-        const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
-        const cleanWord = textWithoutFormat.replace(/^[.,!?;:"«»()]+|[.,!?;:"«»()]+$/g, "").toLowerCase().trim();
         
-        // Simpler Fallback, hier könntest du fetchAiExamples als Prop übergeben wenn nötig
-        setClickedWord({ french: textWithoutFormat, english: "Tap for details", rank: "?" });
+        const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
+        // Bereinigen von Satzzeichen am Anfang/Ende
+        let cleanWord = textWithoutFormat.replace(/^[.,!?;:"«»()]+|[.,!?;:"«»()]+$/g, "").toLowerCase().trim();
+        
+        // Französische Elisionen aufschlüsseln
+        // Mapping: Elision -> vollständiges Wort + Übersetzung
+        const ELISION_MAP = {
+            "n": { full: "ne", english: "not" },
+            "j": { full: "je", english: "I" },
+            "l": { full: "le/la", english: "the" },
+            "d": { full: "de", english: "of/from" },
+            "m": { full: "me", english: "me/myself" },
+            "t": { full: "te", english: "you/yourself" },
+            "s": { full: "se", english: "oneself" },
+            "c": { full: "ce", english: "this/it" },
+            "qu": { full: "que", english: "that/which" }
+        };
+        
+        let elisionInfo = null;
+        const elisionMatch = cleanWord.match(/^(d|l|n|j|m|t|s|c|qu)'(.+)$/);
+        if (elisionMatch) {
+            const elisionKey = elisionMatch[1];
+            const mainWord = elisionMatch[2];
+            elisionInfo = {
+                original: cleanWord,
+                elision: ELISION_MAP[elisionKey],
+                elisionKey: elisionKey + "'"
+            };
+            cleanWord = mainWord; // Suche nur den Hauptteil
+        }
+        
+        console.log('DEBUG handleWordClick:', { cleanWord, elisionInfo, verbLookupExists: typeof VERB_LOOKUP !== 'undefined', hasEntry: typeof VERB_LOOKUP !== 'undefined' && VERB_LOOKUP[cleanWord], vocabLength: vocabulary?.length });
+        
+        // 1. CHECK: Ist es eine Zahl/Römisch?
+        if (/^\d+$/.test(cleanWord) || /^m*(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/.test(cleanWord)) {
+            setClickedWord({ french: textWithoutFormat, english: "Number", rank: "#" });
+            return;
+        }
+
+        // 2. NEU: Check VERB_LOOKUP für konjugierte Formen
+        let verbInfo = null;
+        if (typeof VERB_LOOKUP !== 'undefined' && VERB_LOOKUP[cleanWord]) {
+            // Sortiere nach Rank (niedrigster = häufigstes Verb zuerst)
+            const matches = VERB_LOOKUP[cleanWord].sort((a, b) => a.rank - b.rank);
+            // Nimm das häufigste Verb (niedrigster Rank)
+            verbInfo = matches[0];
+        }
+
+        // 3. VERSUCH A: Exakte Suche in lokaler Liste
+        let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
+
+        // 4. VERSUCH B: Wenn nicht gefunden, aber verbInfo vorhanden, suche nach Infinitiv
+        if (!found && verbInfo) {
+            found = vocabulary.find(v => v.french.toLowerCase() === verbInfo.infinitive.toLowerCase());
+        }
+
+        // 5. VERSUCH C: Irregular Map (vorhandene Liste)
+        if (!found && IRREGULAR_MAP[cleanWord]) {
+            const infinitive = IRREGULAR_MAP[cleanWord];
+            found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
+        }
+
+        // 6. VERSUCH D: Einfaches "Stemming" (Endungen raten, um API zu sparen)
+        if (!found) {
+            const commonEndings = [
+                { s: 'ez', r: 'er' }, { s: 'ons', r: 'er' }, { s: 'ait', r: 'er' }, { s: 'ais', r: 'er' }, { s: 'aient', r: 'er' }, { s: 'é', r: 'er' },
+                { s: 'isse', r: 'ir' }, { s: 'it', r: 'ir' },
+                { s: 'aux', r: 'al' }
+            ];
+
+            for (let rule of commonEndings) {
+                if (cleanWord.endsWith(rule.s)) {
+                    const stem = cleanWord.slice(0, -rule.s.length) + rule.r;
+                    const match = vocabulary.find(v => v.french.toLowerCase() === stem);
+                    if (match) {
+                        found = match;
+                        break; 
+                    }
+                }
+            }
+        }
+
+        // 7. VERSUCH E: FALLBACK_DICTIONARY (Alle Wörter als Notlösung)
+        if (!found && typeof FALLBACK_DICTIONARY !== 'undefined') {
+            const fallbackTranslation = FALLBACK_DICTIONARY[cleanWord];
+            if (fallbackTranslation) {
+                // Erzeuge ein vocabulary-ähnliches Objekt mit Rank >10000
+                found = {
+                    french: cleanWord,
+                    english: fallbackTranslation,
+                    rank: ">10000"
+                };
+            }
+        }
+
+        if (found) {
+            // Wenn wir verbInfo haben, füge diese Infos hinzu
+            if (verbInfo && cleanWord !== verbInfo.infinitive.toLowerCase()) {
+                setClickedWord({
+                    ...found,
+                    french: textWithoutFormat,
+                    verbInfo: verbInfo, // Enthält: infinitive, rank, tense, person
+                    root: verbInfo.infinitive,
+                    elisionInfo: elisionInfo // Elision-Info hinzufügen
+                });
+            } else {
+                setClickedWord({
+                    ...found,
+                    french: elisionInfo ? textWithoutFormat : found.french,
+                    elisionInfo: elisionInfo // Elision-Info hinzufügen
+                });
+            }
+        } else {
+            // 8. VERSUCH F: CLOUDFLARE AI BACKEND
+            setLoadingTranslation(true);
+            setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "..." });
+            
+            try {
+                const res = await fetch('/api/translate2', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ word: cleanWord })
+                });
+
+                if (!res.ok) throw new Error("Server error");
+
+                const data = await res.json();
+                
+                if (data.translation) {
+                    // Auch hier verbInfo anhängen wenn vorhanden
+                    setClickedWord({ 
+                        french: textWithoutFormat, 
+                        english: data.translation.toLowerCase(), 
+                        rank: "AI",
+                        verbInfo: verbInfo,
+                        root: verbInfo ? verbInfo.infinitive : null,
+                        elisionInfo: elisionInfo // Elision-Info hinzufügen
+                    });
+                } else {
+                    throw new Error("No translation");
+                }
+
+            } catch (err) {
+                console.error(err);
+                setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
+            } finally {
+                setLoadingTranslation(false);
+            }
+        }
     };
 
     // Pagination Logic (Memoized)
     const pages = React.useMemo(() => {
-        if (!currentStory?.text) return [];
+        if (!currentStory?.text) return [''];
         const paragraphs = currentStory.text.split('\n');
         const pgs = [];
         let currentPage = "";
@@ -959,7 +1114,9 @@ const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setVi
             }
         });
         if (currentPage.trim()) pgs.push(currentPage);
-        return pgs;
+        
+        // Sicherstellen, dass mindestens eine Seite vorhanden ist
+        return pgs.length > 0 ? pgs : [''];
     }, [currentStory?.text]);
 
     const currentPageText = pages[pageIndex] || "";
@@ -993,7 +1150,7 @@ const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setVi
                     <X size={24} />
                 </button>
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                    Page {pageIndex + 1} / {pages.length}
+                    Page {pageIndex + 1} of {pages.length || 1}
                 </div>
                 <button onClick={() => toggleAudio(currentPageText)} className={`p-2 rounded-full ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'text-slate-400'}`}>
                     <Volume2 size={24}/>
@@ -1037,10 +1194,48 @@ const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setVi
 
              {/* POPUP */}
              {clickedWord && (
-                <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] bg-slate-900/95 backdrop-blur-md text-white p-6 rounded-2xl shadow-2xl z-50 text-center" onClick={() => setClickedWord(null)}>
-                    <h3 className="text-2xl font-bold mb-1">{clickedWord.french}</h3>
-                    <p className="text-lg text-slate-300 italic mb-4">{clickedWord.english}</p>
-                    <p className="text-xs text-slate-500 mt-4">(Tap to close)</p>
+                <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center justify-between">
+                    <div>
+                        <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                            <div className={`text-[10px] font-bold uppercase tracking-wider inline-block px-1.5 rounded ${
+                                clickedWord.rank === "API" ? "bg-yellow-500/20 text-yellow-300" : 
+                                clickedWord.rank === "External" ? "bg-blue-500/20 text-blue-300" :
+                                clickedWord.rank === ">10000" ? "bg-orange-500/20 text-orange-300" : 
+                                "text-slate-400"
+                            }`}>
+                                {clickedWord.rank === "API" ? <RotateCcw className="animate-spin w-3 h-3"/> : 
+                                 clickedWord.rank === "External" ? "Web Translation" :
+                                 clickedWord.rank === ">10000" ? "Rare Word" : 
+                                 `Rank #${clickedWord.rank}`}
+                            </div>
+                            {/* Verb Tense Badge */}
+                            {clickedWord.verbInfo && (
+                                <div className="text-[10px] font-bold uppercase tracking-wider inline-block px-1.5 rounded bg-indigo-500/30 text-indigo-300">
+                                    {clickedWord.verbInfo.tense} · {clickedWord.verbInfo.person}
+                                </div>
+                            )}
+                            {/* Elision Badge */}
+                            {clickedWord.elisionInfo && (
+                                <div className="text-[10px] font-bold uppercase tracking-wider inline-block px-1.5 rounded bg-emerald-500/30 text-emerald-300">
+                                    {clickedWord.elisionInfo.elisionKey} = {clickedWord.elisionInfo.elision.full} ({clickedWord.elisionInfo.elision.english})
+                                </div>
+                            )}
+                        </div>
+                        
+                        <div className="text-xl font-bold flex items-baseline gap-2">
+                            {clickedWord.french}
+                            {clickedWord.root && clickedWord.root.toLowerCase() !== clickedWord.french.toLowerCase() && (
+                                <span className="text-xs text-slate-500 font-normal">
+                                    → {clickedWord.root}
+                                </span>
+                            )}
+                        </div>
+                        <div className="text-slate-300 text-sm italic">{clickedWord.english || clickedWord.german}</div>
+                    </div>
+                    <div className="flex gap-3">
+                        <button onClick={() => speak(clickedWord.french)} className="p-3 bg-white/10 rounded-full hover:bg-white/20"><Volume2 size={20}/></button>
+                        <button onClick={() => setClickedWord(null)} className="p-3 text-slate-400 hover:text-white"><X size={20}/></button>
+                    </div>
                 </div>
             )}
         </div>
@@ -2484,8 +2679,8 @@ function App() {
             isArticle: false
         });
 
-        // Wenn wir "Resume" machen, laden wir die letzte Seite, sonst Seite 0
-        if (restorePage && bookProgress[book.id]) {
+        // Lade immer den gespeicherten Fortschritt, wenn vorhanden
+        if (bookProgress[book.id]) {
             setPageIndex(bookProgress[book.id].lastPage || 0);
         } else {
             setPageIndex(0);
@@ -5747,6 +5942,11 @@ function App() {
                             setReaderMode={setReaderMode}
                             speak={speak}
                             stopAudio={stopAudio}
+                            vocabulary={vocabulary}
+                            clickedWord={clickedWord}
+                            setClickedWord={setClickedWord}
+                            loadingTranslation={loadingTranslation}
+                            setLoadingTranslation={setLoadingTranslation}
                         />
                     );
                 }
