@@ -69,6 +69,24 @@ const WifiOff = (p) => <Icon {...p} path={<><line x1="1" x2="23" y1="1" y2="23"/
 const AlertCircle = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></>} />;
 const Copy = (p) => <Icon {...p} path={<><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>} />;
 
+/* script.js - Oben bei den Icon Definitionen hinzufügen */
+
+// Mapping von String-Namen zu echten Komponenten
+const ICON_MAP = {
+    "User": <User size={32} className="text-white"/>,
+    "Crown": <Crown size={32} className="text-white"/>,
+    "Coffee": <Coffee size={32} className="text-white"/>,
+    "Sword": <Sword size={32} className="text-white"/>,
+    "Sparkles": <Sparkles size={32} className="text-white"/>,
+    "BookOpen": <BookOpen size={32} className="text-white"/>
+};
+
+// Helper Funktion um das Icon sicher zu holen
+const getIcon = (iconName) => {
+    return ICON_MAP[iconName] || <BookOpen size={32} className="text-white"/>; // Fallback
+};
+
+
 const BottomNav = ({ activeTab, onTabChange }) => {
     const tabs = [
         { id: 'home', label: 'Home', icon: <HomeIcon size={24} /> },
@@ -371,46 +389,504 @@ const GRAMMAR_MODULES = [
     }
 ];
 // --- NEWS SOURCES ---
-const NEWS_SOURCES = [
-    { 
-        id: 'kids', 
-        name: '1jour1actu', 
-        level: 'A2', 
-        desc: 'For Kids (Easy)', 
-        // Wir nehmen den Haupt-Feed, der ist technischer sauberer
-        rss: 'https://www.1jour1actu.com/feed', 
-        color: 'bg-emerald-100 text-emerald-700 border-emerald-200' 
-    },
-    { 
-        id: '20min', 
-        name: '20 Minutes', 
-        level: 'B1', 
-        desc: 'Short & Punchy', 
-        rss: 'https://www.20minutes.fr/feeds/rss-une.xml', 
-        color: 'bg-blue-100 text-blue-700 border-blue-200' 
-    },
-    { 
-        id: 'f24', 
-        name: 'France 24', 
-        level: 'B2', 
-        desc: 'International', 
-        rss: 'https://www.france24.com/fr/france/rss', 
-        color: 'bg-rose-100 text-rose-700 border-rose-200' 
-    },
-    { 
-        id: 'slate', 
-        name: 'Slate.fr', 
-        level: 'C1', 
-        desc: 'Opinion & Culture', 
-        rss: 'https://www.slate.fr/rss.xml', 
-        color: 'bg-slate-100 text-slate-700 border-slate-200' 
-    }
-];
+
+
+/* script.js - Ersetzt LITERATURE_DATA */
+
 
 
 // --- NEW COMPONENTS ---
 // --- NEW COMPONENTS ---
+/* script.js - Einfügen nach JOKE_DB */
 
+const LIBRARY_CONTENT = {
+    books: [
+        {
+            id: 'lupin',
+            type: 'book',
+            title: "Arsène Lupin",
+            author: "Maurice Leblanc",
+            coverColor: "bg-indigo-900",
+            icon: "User", 
+            chapters: [
+            {
+                    title: "1. L'Arrestation d'Arsène Lupin",
+                    // Hier fügst du den Text ein, den wir schon hatten
+                    simple: `... (Text hier) ...`, 
+                    advanced: `... (Text hier) ...`,
+                    original: `L’étrange voyage ! Il avait si bien commencé cependant ! Pour ma part, je n’en fis jamais qui s’annonçât sous de plus heureux auspices. La Provence est un transatlantique rapide, confortable, commandé par le plus affable des hommes. La société la plus choisie s’y trouvait réunie. Des relations se formaient, des divertissements s’organisaient. Nous avions cette impression exquise d’être séparés du monde, réduits à nous-mêmes comme sur une île inconnue, obligés, par conséquent, de nous rapprocher les uns des autres.
+
+Et nous nous rapprochions…
+
+Avez-vous jamais songé à ce qu’il y a d’original et d’imprévu dans ce groupement d’êtres qui, la veille encore, ne se connaissaient pas, et qui, durant quelques jours, entre le ciel infini et la mer immense, vont vivre de la vie la plus intime, ensemble vont défier les colères de l’Océan, l’assaut terrifiant des vagues, la méchanceté des tempêtes et le calme sournois de l’eau endormie ?
+
+C’est, au fond, vécue en une sorte de raccourci tragique, la vie elle-même, avec ses orages et ses grandeurs, sa monotonie et sa diversité, et voilà pourquoi, peut-être, on goûte avec une hâte fiévreuse et une volupté d’autant plus intense ce court voyage dont on aperçoit la fin au moment même où il commence.
+
+Mais, depuis plusieurs années, quelque chose se passe qui ajoute singulièrement aux émotions de la traversée. La petite île flottante dépend encore de ce monde dont on se croyait affranchi. Un lien subsiste, qui ne se dénoue que peu à peu en plein Océan, et peu à peu, en plein Océan, se renoue. Le télégraphe sans fil ! appel d’un autre univers d’où l’on recevrait des nouvelles de la façon la plus mystérieuse qui soit ! L’imagination n’a plus la ressource d’évoquer des fils de fer au creux desquels glisse l’invisible message. Le mystère est plus insondable encore, plus poétique aussi, et c’est aux ailes du vent qu’il faut recourir pour expliquer ce nouveau miracle.
+
+Ainsi, les premières heures, nous sentîmes-nous suivis, escortés, précédés même par cette voix lointaine, qui, de temps en temps, chuchotait à l’un de nous quelques paroles de là-bas. Deux amis me parlèrent. Dix autres, vingt autres nous envoyèrent à tous, au travers de l’espace, leurs adieux attristés ou souriants.
+
+Or, le second jour, à cinq cents milles des côtes françaises, par une après-midi orageuse, le télégraphe sans fil nous transmettait une dépêche dont voici la teneur :
+
+« Arsène Lupin à votre bord, première classe, cheveux blonds, blessure avant-bras droit, voyage seul, sous le nom de R… »
+
+À ce moment précis, un coup de tonnerre violent éclata dans le ciel sombre. Les ondes électriques furent interrompues. Le reste de la dépêche ne nous parvint pas. Du nom sous lequel se cachait Arsène Lupin, on ne sut que l’initiale.
+
+Il se fût agi de toute autre nouvelle, je ne doute point que le secret en eût été scrupuleusement gardé par les employés du poste télégraphique, ainsi que par le commissaire du bord et par le commandant. Mais il est de ces événements qui semblent forcer la discrétion la plus rigoureuse. Le jour même, sans qu’on pût dire comment la chose avait été ébruitée, nous savions tous que le fameux Arsène Lupin se cachait parmi nous.
+
+Arsène Lupin parmi nous ! l’insaisissable cambrioleur dont on racontait les prouesses dans tous les journaux depuis des mois ! l’énigmatique personnage avec qui le vieux Ganimard, notre meilleur policier, avait engagé ce duel à mort dont les péripéties se déroulaient de façon si pittoresque ! Arsène Lupin, le fantaisiste gentleman qui n’opère que dans les châteaux et les salons, et qui, une nuit, où il avait pénétré chez le baron Schormann, en était parti les mains vides et avait laissé sa carte, ornée de cette formule : « Arsène Lupin, gentleman-cambrioleur, reviendra quand les meubles seront authentiques ». Arsène Lupin, l’homme aux mille déguisements : tour à tour chauffeur, ténor, bookmaker, fils de famille, adolescent, vieillard, commis-voyageur marseillais, médecin russe, torero espagnol !
+
+Qu’on se rende bien compte de ceci : Arsène Lupin allant et venant dans le cadre relativement restreint d’un transatlantique, que dis-je ! dans ce petit coin des premières où l’on se retrouvait à tout instant, dans cette salle à manger, dans ce salon, dans ce fumoir ! Arsène Lupin, c’était peut-être ce monsieur… ou celui-là… mon voisin de table… mon compagnon de cabine…
+
+— Et cela va durer encore cinq fois vingt-quatre heures ! s’écria le lendemain miss Nelly Underdown, mais c’est intolérable ! J’espère bien qu’on va l’arrêter.
+
+Et s’adressant à moi :
+
+— Voyons, vous, monsieur d’Andrézy, qui êtes déjà au mieux avec le commandant, vous ne savez rien ?
+
+J’aurais bien voulu savoir quelque chose pour plaire à miss Nelly ! C’était une de ces magnifiques créatures qui, partout où elles sont, occupent aussitôt la place la plus en vue. Leur beauté autant que leur fortune éblouit. Elles ont une cour, des fervents, des enthousiastes.
+
+Élevée à Paris par une mère française, elle rejoignait son père, le richissime Underdown, de Chicago. Une de ses amies, lady Jerland, l’accompagnait.
+
+Dès la première heure, j’avais posé ma candidature de flirt. Mais, dans l’intimité rapide du voyage, tout de suite son charme m’avait troublé, et je me sentais un peu trop ému pour un flirt quand ses grands yeux noirs rencontraient les miens. Cependant elle accueillait mes hommages avec une certaine faveur. Elle daignait rire de mes bons mots et s’intéresser à mes anecdotes. Une vague sympathie semblait répondre à l’empressement que je lui témoignais.
+
+Un seul rival peut-être m’eût inquiété, un assez beau garçon, élégant, réservé, dont elle paraissait quelquefois préférer l’humeur taciturne à mes façons plus « en dehors » de Parisien.
+
+Il faisait justement partie du groupe d’admirateurs qui entourait miss Nelly, lorsqu’elle m’interrogea. Nous étions sur le pont, agréablement installés dans des rocking-chairs. L’orage de la veille avait éclairci le ciel. L’heure était délicieuse.
+
+— Je ne sais rien de précis, mademoiselle, lui répondis-je, mais est-il impossible de conduire nous-mêmes notre enquête, tout aussi bien que le ferait le vieux Ganimard, l’ennemi personnel d’Arsène Lupin ?
+
+— Oh ! oh ! vous vous avancez beaucoup !
+
+— En quoi donc ? Le problème est-il si compliqué ?
+
+— Très compliqué.
+
+— C’est que vous oubliez les éléments que nous avons pour le résoudre.
+
+— Quels éléments ?
+
+— 1o Lupin se fait appeler monsieur R…
+
+— Signalement un peu vague.
+
+— 2o Il voyage seul.
+
+— Si cette particularité vous suffit !
+
+— 3o Il est blond.
+
+— Et alors ?
+
+— Alors nous n’avons plus qu’à consulter la liste des passagers et à procéder par élimination.
+
+J’avais cette liste dans ma poche. Je la pris et la parcourus.
+
+— Je note d’abord qu’il n’y a que treize personnes que leur initiale désigne à notre attention.
+
+— Treize seulement ?
+
+— En première classe, oui. Sur ces treize messieurs R…, comme vous pouvez vous en assurer, neuf sont accompagnés de femmes, d’enfants ou de domestiques. Restent quatre personnages isolés : le marquis de Raverdan…
+
+— Secrétaire d’ambassade, interrompit miss Nelly, je le connais.
+
+— Le major Rawson…
+
+— C’est mon oncle, dit quelqu’un.
+
+— M. Rivolta…
+
+— Présent, s’écria l’un de nous, un Italien dont la figure disparaissait sous une barbe du plus beau noir.
+
+Miss Nelly éclata de rire.
+
+— Monsieur n’est pas précisément blond.
+
+— Alors, repris-je, nous sommes obligés de conclure que le coupable est le dernier de la liste.
+
+— C’est-à-dire ?
+
+— C’est-à-dire, M. Rozaine. Quelqu’un connaît-il M. Rozaine ?
+
+On se tut. Mais miss Nelly, interpellant le jeune homme taciturne dont l’assiduité près d’elle me tourmentait, lui dit :
+
+— Eh bien, monsieur Rozaine, vous ne répondez pas ?
+
+On tourna les yeux vers lui. Il était blond.
+
+Avouons-le, je sentis comme un petit choc au fond de moi. Et le silence gêné qui pesa sur nous m’indiqua que les autres assistants éprouvaient aussi cette sorte de suffocation. C’était absurde d’ailleurs, car enfin rien dans les allures de ce monsieur ne permettait qu’on le suspectât.
+
+— Pourquoi je ne réponds pas ? dit-il, mais parce que, vu mon nom, ma qualité de voyageur isolé et la couleur de mes cheveux, j’ai déjà procédé à une enquête analogue, et que je suis arrivé au même résultat. Je suis donc d’avis qu’on m’arrête.
+
+Il avait un drôle d’air, en prononçant ces paroles. Ses lèvres minces comme deux traits inflexibles s’amincirent encore et pâlirent. Des filets de sang strièrent ses yeux.
+
+Certes, il plaisantait. Pourtant sa physionomie, son attitude nous impressionnèrent. Naïvement, miss Nelly demanda :
+
+— Mais vous n’avez pas de blessure ?
+
+— Il est vrai, dit-il, la blessure manque.
+
+D’un geste nerveux il releva sa manchette et découvrit son bras. Mais aussitôt une idée me frappa. Mes yeux croisèrent ceux de miss Nelly : il avait montré le bras gauche.
+
+Et ma foi, j’allais en faire nettement la remarque, quand un incident détourna notre attention. Lady Jerland, l’amie de miss Nelly, arrivait en courant.
+
+Elle était bouleversée. On s’empressa autour d’elle, et ce n’est qu’après bien des efforts qu’elle réussit à balbutier :
+
+— Mes bijoux, mes perles !… on a tout pris !…
+
+Non, on n’avait pas tout pris, comme nous le sûmes par la suite ; chose bien plus curieuse : on avait choisi !
+
+De l’étoile en diamants, du pendentif en cabochons de rubis, des colliers et des bracelets brisés, on avait enlevé, non point les pierres les plus grosses, mais les plus fines, les plus précieuses, celles, aurait-on dit, qui avaient le plus de valeur tout en tenant le moins de place. Les montures gisaient là, sur la table. Je les vis, tous nous les vîmes, dépouillées de leurs joyaux comme des fleurs dont on eût arraché les beaux pétales étincelants et colorés.
+
+Et pour exécuter ce travail, il avait fallu, pendant l’heure où lady Jerland prenait le thé, il avait fallu, en plein jour, et dans un couloir fréquenté, fracturer la porte de la cabine, trouver un petit sac dissimulé à dessein au fond d’un carton à chapeau, l’ouvrir et choisir !
+
+Il n’y eut qu’un cri parmi nous. Il n’y eut qu’une opinion parmi tous les passagers, lorsque le vol fut connu : c’est Arsène Lupin. Et de fait, c’était bien sa manière compliquée, mystérieuse, inconcevable… et logique cependant, car s’il était difficile de recéler la masse encombrante qu’eût formée l’ensemble des bijoux, combien moindre était l’embarras avec de petites choses indépendantes les unes des autres, perles, émeraudes et saphirs.
+
+Et au dîner, il se passa ceci : à droite et à gauche de Rozaine, les deux places restèrent vides. Et le soir on sut qu’il avait été convoqué par le commandant.
+
+Son arrestation, que personne ne mit en doute, causa un véritable soulagement. On respirait enfin. Ce soir-là on joua aux petits jeux. On dansa. Miss Nelly, surtout, montra une gaieté étourdissante qui me fit voir que, si les hommages de Rozaine avaient pu lui agréer au début, elle ne s’en souvenait guère. Sa grâce acheva de me conquérir. Vers minuit, à la clarté sereine de la lune, je lui affirmai mon dévouement avec une émotion qui ne parut pas lui déplaire.
+
+Mais le lendemain, à la stupeur générale, on apprit que, les charges relevées contre lui n’étant pas suffisantes, Rozaine était libre.
+
+Fils d’un négociant considérable de Bordeaux, il avait exhibé des papiers parfaitement en règle. En outre, ses bras n’offraient pas la moindre trace de blessure.
+
+— Des papiers ! des actes de naissance ! s’écrièrent les ennemis de Rozaine, mais Arsène Lupin vous en fournira tant que vous voudrez ! Quant à la blessure, c’est qu’il n’en a pas reçu… ou qu’il en a effacé la trace !
+
+On leur objectait qu’à l’heure du vol, Rozaine — c’était démontré — se promenait sur le pont. À quoi ils ripostaient :
+
+— Est-ce qu’un homme de la trempe d’Arsène Lupin a besoin d’assister au vol qu’il commet ?
+
+Et puis, en dehors de toute considération étrangère, il y avait un point sur lequel les plus sceptiques ne pouvaient épiloguer : Qui, sauf Rozaine, voyageait seul, était blond, et portait un nom commençant par R ? Qui le télégramme désignait-il, si ce n’était Rozaine ?
+
+Et quand Rozaine, quelques minutes avant le déjeuner, se dirigea audacieusement vers notre groupe, miss Nelly et lady Jerland se levèrent et s’éloignèrent.
+
+C’était bel et bien de la peur.
+
+Une heure plus tard, une circulaire manuscrite passait de main en main parmi les employés du bord, les matelots, les voyageurs de toutes classes : M. Louis Rozaine promettait une somme de dix mille francs à qui démasquerait Arsène Lupin, ou trouverait le possesseur des pierres dérobées.
+
+— Et si personne ne me vient en aide contre ce bandit, déclara Rozaine au commandant, moi, je lui ferai son affaire.
+
+Rozaine contre Arsène Lupin, ou plutôt, selon le mot qui courut, Arsène Lupin lui-même contre Arsène Lupin, la lutte ne manquait pas d’intérêt !
+
+Elle se prolongea durant deux journées. On vit Rozaine errer de droite et de gauche, se mêler au personnel, interroger, fureter. On aperçut son ombre, la nuit, qui rôdait.
+
+De son côté, le commandant déploya l’énergie la plus active. Du haut en bas, en tous les coins, la Provence fut fouillée. On perquisitionna dans toutes les cabines, sans exception, sous le prétexte fort juste que les objets étaient cachés dans n’importe quel endroit, sauf dans la cabine du coupable.
+
+— On finira bien par découvrir quelque chose, n’est-ce pas ? me demandait miss Nelly. Tout sorcier qu’il soit, il ne peut faire que des diamants et des perles deviennent invisibles.
+
+— Mais si, lui répondais-je, ou alors il faudrait explorer la coiffe de nos chapeaux, la doublure de nos vestes, et tout ce que nous portons sur nous.
+
+Et lui montrant mon kodak, un 9 × 12 avec lequel je ne me lassais pas de la photographier dans les attitudes les plus diverses :
+
+— Rien que dans un appareil pas plus grand que celui-ci, ne pensez-vous pas qu’il y aurait place pour toutes les pierres précieuses de lady Jerland ? On affecte de prendre des vues et le tour est joué.
+
+— Mais cependant j’ai entendu dire qu’il n’y a point de voleur qui ne laisse derrière lui un indice quelconque.
+
+— Il y en a un : Arsène Lupin.
+
+— Pourquoi ?
+
+— Pourquoi ? parce qu’il ne pense pas seulement au vol qu’il commet, mais à toutes les circonstances qui pourraient le dénoncer.
+
+— Au début, vous étiez plus confiant.
+
+— Mais, depuis, je l’ai vu à l’œuvre.
+
+— Et alors, selon vous ?
+
+— Selon moi, on perd son temps.
+
+Et de fait, les investigations ne donnaient aucun résultat, ou du moins, celui qu’elles donnèrent ne correspondait pas à l’effort général : la montre du commandant lui fut volée.
+
+Furieux, il redoubla d’ardeur et surveilla de plus près encore Rozaine avec qui il avait eu plusieurs entrevues. Le lendemain, ironie charmante, on retrouvait la montre parmi les faux-cols du commandant en second.
+
+Tout cela avait un air de prodige, et dénonçait bien la manière humoristique d’Arsène Lupin, cambrioleur, soit, mais dilettante aussi. Il travaillait par goût et par vocation, certes, mais par amusement aussi. Il donnait l’impression du monsieur qui se divertit à la pièce qu’il fait jouer, et qui, dans la coulisse, rit à gorge déployée de ses traits d’esprit et des situations qu’il imagina.
+
+Décidément, c’était un artiste en son genre, et quand j’observais Rozaine, sombre et opiniâtre, et que je songeais au double rôle que tenait sans doute ce curieux personnage, je ne pouvais en parler sans une certaine admiration.
+
+Or, l’avant-dernière nuit, l’officier de quart entendit des gémissements à l’endroit le plus obscur du pont. Il s’approcha. Un homme était étendu, la tête enveloppée dans une écharpe grise très épaisse, les poignets ficelés à l’aide d’une fine cordelette.
+
+On le délivra de ses liens. On le releva, des soins lui furent prodigués.
+
+Cet homme, c’était Rozaine.
+
+C’était Rozaine assailli au cours d’une de ses expéditions, terrassé et dépouillé. Une carte de visite fixée par une épingle à son vêtement portait ces mots : « Arsène Lupin accepte avec reconnaissance les dix mille francs de M. Rozaine. »
+
+En réalité, le portefeuille dérobé contenait vingt billets de mille.
+
+Naturellement, on accusa le malheureux d’avoir simulé cette attaque contre lui-même. Mais, outre qu’il lui eût été impossible de se lier de cette façon, il fut établi que l’écriture de la carte différait absolument de l’écriture de Rozaine, et ressemblait au contraire, à s’y méprendre, à celle d’Arsène Lupin, telle que la reproduisait un ancien journal trouvé à bord.
+
+Ainsi donc, Rozaine n’était plus Arsène Lupin. Rozaine était Rozaine, fils d’un négociant de Bordeaux ! Et la présence d’Arsène Lupin s’affirmait une fois de plus, et par quel acte redoutable !
+
+Ce fut la terreur. On n’osa plus rester seul dans sa cabine, et pas davantage s’aventurer seul aux endroits trop écartés. Prudemment on se groupait entre gens sûrs les uns des autres. Et encore, une défiance instinctive divisait les plus intimes. C’est que la menace ne provenait pas d’un individu isolé, surveillé, et par là même moins dangereux. Arsène Lupin, maintenant, c’était… c’était tout le monde. Notre imagination surexcitée lui attribuait un pouvoir miraculeux et illimité. On le supposait capable de prendre les déguisements les plus inattendus, d’être tour à tour le respectable major Rawson, ou le noble marquis de Raverdan, ou même, car on ne s’arrêtait plus à l’initiale accusatrice, ou même telle ou telle personne connue de tous, ayant femme, enfants, domestiques.
+
+Les premières dépêches sans fil n’apportèrent aucune nouvelle. Du moins le commandant ne nous en fit point part, et un tel silence n’était pas pour nous rassurer.
+
+Aussi, le dernier jour parut-il interminable. On vivait dans l’attente anxieuse d’un malheur. Cette fois, ce ne serait plus un vol, ce ne serait plus une simple agression, ce serait le crime, le meurtre. On n’admettait pas qu’Arsène Lupin s’en tînt à ces deux larcins insignifiants. Maître absolu du navire, les autorités réduites à l’impuissance, il n’avait qu’à vouloir, tout lui était permis, il disposait des biens et des existences.
+
+Heures délicieuses pour moi, je l’avoue, car elles me valurent la confiance de miss Nelly. Impressionnée par tant d’événements, de nature déjà inquiète, elle chercha spontanément à mes côtés une protection, une sécurité que j’étais heureux de lui offrir.
+
+Au fond, je bénissais Arsène Lupin. N’était-ce pas lui qui nous rapprochait ? N’était-ce pas grâce à lui que j’avais le droit de m’abandonner aux plus beaux rêves ? Rêves d’amour et rêves moins chimériques, pourquoi ne pas le confesser ? Les Andrézy sont de bonne souche poitevine, mais leur blason est quelque peu dédoré, et il ne me paraît pas indigne d’un gentilhomme de songer à rendre à son nom le lustre perdu.
+
+Et ces rêves, je le sentais, n’offusquaient point Nelly. Ses yeux souriants m’autorisaient à les faire. La douceur de sa voix me disait d’espérer.
+
+Et jusqu’au dernier moment, accoudés aux bastingages, nous restâmes l’un près de l’autre, tandis que la ligne des côtes américaines voguait au-devant de nous.
+
+On avait interrompu les perquisitions. On attendait. Depuis les premières jusqu’à l’entrepont où grouillaient les émigrants, on attendait la minute suprême où s’expliquerait enfin l’insoluble énigme. Qui était Arsène Lupin ? Sous quel nom, sous quel masque se cachait le fameux Arsène Lupin ?
+
+Et cette minute suprême arriva. Dussé-je vivre cent ans, je n’en oublierai pas le plus infime détail.
+
+— Comme vous êtes pâle, miss Nelly, dis-je à ma compagne qui s’appuyait à mon bras, toute défaillante.
+
+— Et vous ! me répondit-elle, ah ! vous êtes si changé !
+
+— Songez donc ! cette minute est passionnante, et je suis si heureux de la vivre auprès de vous, miss Nelly. Il me semble que votre souvenir s’attardera quelquefois…
+
+Elle n’écoutait pas, haletante et fiévreuse. La passerelle s’abattit. Mais avant que nous eûmes la liberté de la franchir, des gens montèrent à bord, des douaniers, des hommes en uniforme, des facteurs.
+
+Miss Nelly balbutia :
+
+— On s’apercevrait qu’Arsène Lupin s’est échappé pendant la traversée que je n’en serais pas surprise.
+
+— Il a peut-être préféré la mort au déshonneur, et plonger dans l’Atlantique plutôt que d’être arrêté.
+
+— Ne riez pas, fit-elle, agacée.
+
+Soudain je tressaillis, et comme elle me questionnait, je lui dis :
+
+— Vous voyez ce vieux petit homme debout à l’extrémité de la passerelle ?
+
+— Avec un parapluie et une redingote vert-olive ?
+
+— C’est Ganimard.
+
+— Ganimard ?
+
+— Oui, le célèbre policier, celui qui a juré qu’Arsène Lupin serait arrêté de sa propre main. Ah ! je comprends que l’on n’ait pas eu de renseignements de ce côté de l’Océan. Ganimard était là ! et il aime bien que personne ne s’occupe de ses petites affaires.
+
+— Alors Arsène Lupin est sûr d’être pris ?
+
+— Qui sait ? Ganimard ne l’a jamais vu, paraît-il, que grimé et déguisé. À moins qu’il ne connaisse son nom d’emprunt…
+
+— Ah ! dit-elle, avec cette curiosité un peu cruelle de la femme, si je pouvais assister à l’arrestation !
+
+— Patientons. Certainement Arsène Lupin a déjà remarqué la présence de son ennemi. Il préférera sortir parmi les derniers, quand l’œil du vieux sera fatigué.
+
+Le débarquement commença. Appuyé sur son parapluie, l’air indifférent, Ganimard ne semblait pas prêter attention à la foule qui se pressait entre les deux balustrades. Je notai qu’un officier du bord, posté derrière lui, le renseignait de temps à autre.
+
+Le marquis de Raverdan, le major Rawson, l’Italien Rivolta, défilèrent, et d’autres, et beaucoup d’autres… Et j’aperçus Rozaine qui s’approchait.
+
+Pauvre Rozaine ! il ne paraissait pas remis de ses mésaventures !
+
+— C’est peut-être lui tout de même, me dit miss Nelly… Qu’en pensez-vous ?
+
+— Je pense qu’il serait fort intéressant d’avoir sur une même photographie Ganimard et Rozaine. Prenez donc mon appareil, je suis si chargé.
+
+Je le lui donnai, mais trop tard pour qu’elle s’en servît. Rozaine passait. L’officier se pencha à l’oreille de Ganimard, celui-ci haussa légèrement les épaules, et Rozaine passa.
+
+Mais alors, mon Dieu, qui était Arsène Lupin ?
+
+— Oui, fit-elle à haute voix, qui est-ce ?
+
+Il n’y avait plus qu’une vingtaine de personnes. Elle les observait tour à tour, avec la crainte confuse qu’il ne fût pas, lui, au nombre de ces vingt personnes.
+
+Je lui dis :
+
+— Nous ne pouvons attendre plus longtemps.
+
+Elle s’avança. Je la suivis. Mais nous n’avions pas fait dix pas que Ganimard nous barra le passage.
+
+— Eh bien, quoi ? m’écriai-je.
+
+— Un instant, monsieur, qui vous presse ?
+
+— J’accompagne mademoiselle.
+
+— Un instant, répéta-t-il d’une voix plus impérieuse.
+
+Il me dévisagea profondément, puis il me dit, les yeux dans les yeux :
+
+— Arsène Lupin, n’est-ce pas ?
+
+Je me mis à rire.
+
+— Non, Bernard d’Andrézy, tout simplement.
+
+— Bernard d’Andrézy est mort il y a trois ans en Macédoine.
+
+— Si Bernard d’Andrézy était mort, je ne serais plus de ce monde. Et ce n’est pas le cas. Voici mes papiers.
+
+— Ce sont les siens. Comment les avez-vous, c’est ce que j’aurai le plaisir de vous expliquer.
+
+— Mais vous êtes fou ! Arsène Lupin s’est embarqué sous le nom de R.
+
+— Oui, encore un truc de vous, une fausse piste sur laquelle vous les avez lancés, là-bas. Ah ! vous êtes d’une jolie force, mon gaillard. Mais cette fois, la chance a tourné. Voyons, Lupin, montrez-vous beau joueur.
+
+J’hésitai une seconde. D’un coup sec, il me frappa sur l’avant-bras droit. Je poussai un cri de douleur. Il avait frappé sur la blessure encore mal fermée que signalait le télégramme.
+
+Allons, il fallait se résigner. Je me tournai vers miss Nelly. Elle écoutait, livide, chancelante.
+
+Son regard rencontra le mien, puis s’abaissa sur le kodak que je lui avais remis. Elle fit un geste brusque, et j’eus l’impression, j’eus la certitude qu’elle comprenait tout à coup. Oui, c’était là, entre les parois étroites de chagrin noir, au creux du petit objet que j’avais eu la précaution de déposer entre ses mains avant que Ganimard ne m’arrêtât, c’était bien là que se trouvaient les vingt mille francs de Rozaine, les perles et les diamants de lady Jerland.
+
+Ah ! je le jure, à ce moment solennel, alors que Ganimard et deux de ses acolytes m’entouraient, tout me fut indifférent, mon arrestation, l’hostilité des gens, tout, hors ceci : la résolution qu’allait prendre miss Nelly au sujet de ce que je lui avais confié.
+
+Que l’on eût contre moi cette preuve matérielle et décisive, je ne songeais même pas à le redouter, mais cette preuve, miss Nelly se déciderait-elle à la fournir ?
+
+Serais-je trahi par elle ? perdu par elle ? Agirait-elle en ennemie qui ne pardonne pas, ou bien en femme qui se souvient et dont le mépris s’adoucit d’un peu d’indulgence, d’un peu de sympathie involontaire ?
+
+Elle passa devant moi, je la saluai très bas, sans un mot. Mêlée aux autres voyageurs, elle se dirigea vers la passerelle, mon kodak à la main.
+
+Sans doute, pensai-je, elle n’ose pas, en public. C’est dans une heure, dans un instant, qu’elle le donnera.
+
+Mais, arrivée au milieu de la passerelle, par un mouvement de maladresse simulée, elle le laissa tomber dans l’eau, entre le mur du quai et le flanc du navire.
+
+Puis, je la vis s’éloigner.
+
+Sa jolie silhouette se perdit dans la foule, m’apparut de nouveau et disparut. C’était fini, fini pour jamais.
+
+Un instant, je restai immobile, triste à la fois et pénétré d’un doux attendrissement, puis je soupirai, au grand étonnement de Ganimard :
+
+— Dommage, tout de même, de ne pas être un honnête homme…
+
+C’est ainsi qu’un soir d’hiver, Arsène Lupin me raconta l’histoire de son arrestation. Le hasard d’incidents dont j’écrirai quelque jour le récit avait noué entre nous des liens… dirai-je d’amitié ? Oui, j’ose croire qu’Arsène Lupin m’honore de quelque amitié, et que c’est par amitié qu’il arrive parfois chez moi à l’improviste, apportant, dans le silence de mon cabinet de travail, sa gaieté juvénile, le rayonnement de sa vie ardente, sa belle humeur d’homme pour qui la destinée n’a que faveurs et sourires.
+
+Son portrait ? Comment pourrais-je le faire ? Vingt fois j’ai vu Arsène Lupin, et vingt fois c’est un être différent qui m’est apparu… ou plutôt le même être dont vingt miroirs m’auraient renvoyé autant d’images déformées, chacune ayant ses yeux particuliers, sa forme spéciale de figure, son geste propre, sa silhouette et son caractère.
+
+— Moi-même, me dit-il, je ne sais plus bien qui je suis. Dans une glace je ne me reconnais plus.
+
+Boutade, certes, et paradoxe, mais vérité à l’égard de ceux qui le rencontrent et qui ignorent ses ressources infinies, sa patience, son art du maquillage, sa prodigieuse faculté de transformer jusqu’aux proportions de son visage, et d’altérer le rapport même de ses traits entre eux.
+
+— Pourquoi, dit-il encore, aurais-je une apparence définie ? Pourquoi ne pas éviter ce danger d’une personnalité toujours identique ? Mes actes me désignent suffisamment.
+
+Et il précise avec une pointe d’orgueil :
+
+— Tant mieux si l’on ne peut jamais dire en toute certitude : Voici Arsène Lupin. L’essentiel est qu’on dise sans crainte d’erreur : Arsène Lupin a fait cela.
+
+
+
+Ce sont quelques-uns de ces actes, quelques-unes de ces aventures que j’essaie de reconstituer, d’après les confidences dont il eut la bonne grâce de me favoriser, certains soirs d’hiver, dans le silence de mon cabinet de travail…`
+                },
+                {
+                    title: "2. Arsène Lupin en prison",
+                    simple: "Coming soon...", 
+                    advanced: "Coming soon...",
+                    original: "Text folgt..." 
+                },
+                {
+                    title: "3. L'Évasion d'Arsène Lupin",
+                    simple: "Coming soon...", 
+                    advanced: "Coming soon...",
+                    original: "Text folgt..." 
+                },
+                {
+                    title: "4. Le Mystérieux Voyageur",
+                    simple: "Coming soon...", 
+                    advanced: "Coming soon...",
+                    original: "Text folgt..." 
+                },
+                {
+                    title: "5. Le Collier de la Reine",
+                    simple: "Coming soon...", 
+                    advanced: "Coming soon...",
+                    original: "Text folgt..." 
+                },
+                {
+                    title: "6. Le Sept de Cœur",
+                    simple: "Coming soon...", 
+                    advanced: "Coming soon...",
+                    original: "Text folgt..." 
+                },
+                {
+                    title: "7. Le Coffre-fort de Madame Imbert",
+                    simple: "Coming soon...", 
+                    advanced: "Coming soon...",
+                    original: "Text folgt..." 
+                },
+                {
+                    title: "8. La Perle Noire",
+                    simple: "Coming soon...", 
+                    advanced: "Coming soon...",
+                    original: "Text folgt..." 
+                },
+                {
+                    title: "9. Herlock Sholmès arrive trop tard",
+                    simple: "Coming soon...", 
+                    advanced: "Coming soon...",
+                    original: "Text folgt..." 
+                }
+
+            ]
+        },
+        {
+            id: 'prince',
+            type: 'book',
+            title: "Le Petit Prince",
+            author: "Antoine de Saint-Exupéry",
+            coverColor: "bg-sky-600",
+            icon: "Crown",
+            chapters: [
+                {
+                    title: "Le Dessin",
+                    simple: "Quand j'avais six ans, j'ai vu une image magnifique. C'était un serpent qui mangeait un animal. J'ai fait un dessin, mais les grands n'ont pas compris.",
+                    advanced: "À l'âge de six ans, j'ai vu une image extraordinaire dans un livre sur la forêt vierge. Elle représentait un serpent boa qui avalait un fauve.",
+                    original: "Lorsque j'avais six ans j'ai vu, une fois, une magnifique image, dans un livre sur la Forêt Vierge qui s'appelait 'Histoires Vécues'."
+                }
+            ]
+        }
+    ],
+    culture: [
+        {
+            id: 'crepes',
+            type: 'recipe',
+            title: "La Crêpe Française",
+            author: "Recette Traditionnelle",
+            coverColor: "bg-amber-500",
+            icon: "Coffee",
+            chapters: [
+                {
+                    title: "La Pâte",
+                    simple: "Mélangez la farine et les œufs. Ajoutez le lait doucement. Mettez un peu de beurre. Laissez reposer une heure.",
+                    advanced: "Dans un grand bol, versez la farine. Faites un puits et cassez les œufs. Ajoutez le lait progressivement pour éviter les grumeaux.",
+                    original: "Mettre la farine dans une terrine et former un puits. Y déposer les oeufs entiers, le sucre, l'huile et le beurre. Mélanger délicatement avec un fouet."
+                }
+            ]
+        },
+        {
+            id: 'napoleon',
+            type: 'bio',
+            title: "Napoléon Bonaparte",
+            author: "Figure Historique",
+            coverColor: "bg-red-700",
+            icon: "Sword",
+            chapters: [
+                {
+                    title: "L'Empereur",
+                    simple: "Napoléon est né en Corse. Il était très fort à l'école militaire. Il est devenu Empereur des Français et a changé l'Europe.",
+                    advanced: "Né à Ajaccio, Napoléon Bonaparte a gravi les échelons militaires rapidement durant la Révolution. Son génie stratégique est légendaire.",
+                    original: "Napoléon Ier, né le 15 août 1769 à Ajaccio et mort le 5 mai 1821 sur l'île Sainte-Hélène, est le premier empereur des Français."
+                }
+            ]
+        }
+    ],
+    phrases: [
+        {
+            id: 'restaurant',
+            type: 'phrase',
+            title: "Au Restaurant",
+            author: "Survival French",
+            coverColor: "bg-emerald-600",
+            icon: "Coffee",
+            chapters: [
+                {
+                    title: "Commander",
+                    simple: "Je voudrais de l'eau. / L'addition s'il vous plaît. / C'est délicieux.",
+                    advanced: "Pourrais-je avoir la carte ? / Je vais prendre le menu du jour. / Est-ce que le service est compris ?",
+                    original: "Garçon, nous sommes prêts à commander. Pour commencer, nous prendrons une douzaine d'huîtres et le vin blanc sec."
+                }
+            ]
+        }
+    ]
+};
 // Merge grammar data: A1, A2, B1, B2 from separate files
 const getMergedGrammarData = () => {
     const merged = {};
@@ -436,7 +912,140 @@ const getMergedGrammarData = () => {
     }
     return merged;
 };
+// --- READER COMPONENT (Ausgelagert) ---
+const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setView, setReaderMode, speak, stopAudio }) => {
+    
+    // Lokaler State für Audio
+    const [isSpeaking, setIsSpeaking] = useState(false);
+    // Lokaler State für Wort-Klick (braucht keine App-weite Sichtbarkeit)
+    const [clickedWord, setClickedWord] = useState(null);
+    const [aiExamples, setAiExamples] = useState(null);
 
+    // Audio Helper
+    const toggleAudio = (text) => {
+        if (isSpeaking) {
+            stopAudio();
+            setIsSpeaking(false);
+        } else {
+            setIsSpeaking(true);
+            const cleanText = text.replace(/[*_#]/g, ""); 
+            speak(cleanText);
+        }
+    };
+
+    // Word Click Logic (Vereinfacht für Übersicht)
+    const handleWordClick = (e, wordRaw) => {
+        e.stopPropagation();
+        const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
+        const cleanWord = textWithoutFormat.replace(/^[.,!?;:"«»()]+|[.,!?;:"«»()]+$/g, "").toLowerCase().trim();
+        
+        // Simpler Fallback, hier könntest du fetchAiExamples als Prop übergeben wenn nötig
+        setClickedWord({ french: textWithoutFormat, english: "Tap for details", rank: "?" });
+    };
+
+    // Pagination Logic (Memoized)
+    const pages = React.useMemo(() => {
+        if (!currentStory?.text) return [];
+        const paragraphs = currentStory.text.split('\n');
+        const pgs = [];
+        let currentPage = "";
+
+        paragraphs.forEach(para => {
+            if ((currentPage + para).length > 450 && currentPage.length > 0) {
+                pgs.push(currentPage);
+                currentPage = para + "\n";
+            } else {
+                currentPage += para + "\n";
+            }
+        });
+        if (currentPage.trim()) pgs.push(currentPage);
+        return pgs;
+    }, [currentStory?.text]);
+
+    const currentPageText = pages[pageIndex] || "";
+    const progressPct = Math.round(((pageIndex + 1) / pages.length) * 100);
+
+    const nextPage = () => {
+        if (pageIndex < pages.length - 1) {
+            const newPage = pageIndex + 1;
+            setPageIndex(newPage);
+            saveProgress(currentStory.id, currentStory.chapterIndex, newPage);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            saveProgress(currentStory.id, currentStory.chapterIndex, pageIndex, true);
+            setReaderMode('finish');
+        }
+    };
+
+    const prevPage = () => {
+        if (pageIndex > 0) {
+            const newPage = pageIndex - 1;
+            setPageIndex(newPage);
+            saveProgress(currentStory.id, currentStory.chapterIndex, newPage);
+        }
+    };
+
+    return (
+        <div className="pt-6 pb-6 px-1 h-screen flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4 px-2 shrink-0">
+                <button onClick={() => setView('explore')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500">
+                    <X size={24} />
+                </button>
+                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                    Page {pageIndex + 1} / {pages.length}
+                </div>
+                <button onClick={() => toggleAudio(currentPageText)} className={`p-2 rounded-full ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'text-slate-400'}`}>
+                    <Volume2 size={24}/>
+                </button>
+            </div>
+
+            {/* PAGE */}
+            <div className="flex-1 bg-[#fffdf5] border-x border-slate-200 shadow-xl mx-1 mb-4 p-6 md:p-8 rounded-lg overflow-y-auto relative">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-black/5 to-transparent opacity-50"></div>
+                
+                <h2 className="text-sm font-bold text-slate-400 mb-6 uppercase tracking-wider border-b border-slate-100 pb-2">
+                    {currentStory.title}
+                </h2>
+                
+                <div className="text-xl md:text-2xl text-slate-800 leading-loose font-serif text-justify">
+                    {currentPageText.split(/(\s+)/).map((segment, i) => {
+                        if (segment.match(/\s+/)) return segment; 
+                        const clean = segment.replace(/[\*_]/g, "");
+                        return (
+                            <span key={i} onClick={(e) => handleWordClick(e, segment)} className="cursor-pointer hover:bg-yellow-200 hover:text-slate-900 rounded px-0.5 transition-colors">
+                                {clean}
+                            </span>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* CONTROLS */}
+            <div className="shrink-0 px-2 pb-safe">
+                <div className="w-full bg-slate-200 h-1.5 rounded-full mb-4 overflow-hidden">
+                    <div className="bg-indigo-600 h-full transition-all duration-300" style={{width: `${progressPct}%`}}></div>
+                </div>
+
+                <div className="flex gap-4">
+                    <button onClick={prevPage} disabled={pageIndex === 0} className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-xl font-bold disabled:opacity-30 active:scale-95 transition-all">← Prev</button>
+                    <button onClick={nextPage} className="flex-[2] py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all">
+                        {pageIndex < pages.length - 1 ? "Next Page →" : "Finish Chapter 🎉"}
+                    </button>
+                </div>
+            </div>
+
+             {/* POPUP */}
+             {clickedWord && (
+                <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] bg-slate-900/95 backdrop-blur-md text-white p-6 rounded-2xl shadow-2xl z-50 text-center" onClick={() => setClickedWord(null)}>
+                    <h3 className="text-2xl font-bold mb-1">{clickedWord.french}</h3>
+                    <p className="text-lg text-slate-300 italic mb-4">{clickedWord.english}</p>
+                    <p className="text-xs text-slate-500 mt-4">(Tap to close)</p>
+                </div>
+            )}
+        </div>
+    );
+};
 // --- GRAMMAR DETAIL COMPONENT (Außerhalb von App, um Re-Render-Probleme zu vermeiden) ---
 const GrammarDetail = ({ topicId, onBack }) => {
     // Zugriff auf die gemergten Daten aus beiden Dateien
@@ -460,6 +1069,7 @@ const GrammarDetail = ({ topicId, onBack }) => {
     // Sentence Builder State
     const [selectedBlocks, setSelectedBlocks] = useState([]);
     const [availableBlocks, setAvailableBlocks] = useState([]);
+  
     
     // Vocabulary Flashcard State
     const [vocabIndex, setVocabIndex] = useState(0);
@@ -1324,9 +1934,52 @@ function App() {
     
     const [currentJoke, setCurrentJoke] = useState(null);
     const [loadingContent, setLoadingContent] = useState(false);
-
-    const [currentNewsSource, setCurrentNewsSource] = useState(NEWS_SOURCES[2]);
     
+    // --- READER & PROGRESS STATE (NEU) ---
+    const [pageIndex, setPageIndex] = useState(0); // Aktuelle Seite im Buch
+    const [bookProgress, setBookProgress] = useState(() => {
+        const saved = localStorage.getItem('vocabApp_bookProgress');
+        return saved ? JSON.parse(saved) : {}; 
+    });
+
+    // Helper: Text in Buchseiten aufteilen (ca. 450 Zeichen pro Seite, aber am Satzende/Absatz)
+    const paginateText = (text) => {
+        if (!text) return [];
+        // Wir splitten erst in Absätze
+        const paragraphs = text.split('\n');
+        const pages = [];
+        let currentPage = "";
+
+        paragraphs.forEach(para => {
+            // Wenn die Seite voll ist (über 450 Zeichen) -> neue Seite
+            if ((currentPage + para).length > 450 && currentPage.length > 0) {
+                pages.push(currentPage);
+                currentPage = para + "\n";
+            } else {
+                currentPage += para + "\n";
+            }
+        });
+        if (currentPage.trim()) pages.push(currentPage);
+        return pages;
+    };
+
+    // Helper: Fortschritt speichern
+    const saveProgress = (bookId, chapterIdx, pageIdx, isComplete = false) => {
+        const newProgress = { ...bookProgress };
+        
+        if (!newProgress[bookId]) newProgress[bookId] = { completedChapters: [] };
+        
+        newProgress[bookId].lastChapter = chapterIdx;
+        newProgress[bookId].lastPage = pageIdx;
+        newProgress[bookId].lastActive = Date.now(); // Damit wir wissen, was zuletzt gelesen wurde
+        
+        if (isComplete && !newProgress[bookId].completedChapters.includes(chapterIdx)) {
+            newProgress[bookId].completedChapters.push(chapterIdx);
+        }
+
+        setBookProgress(newProgress);
+        localStorage.setItem('vocabApp_bookProgress', JSON.stringify(newProgress));
+    };
     
     // Ist der Witz aufgelöst?
     const [jokeRevealed, setJokeRevealed] = useState(false);
@@ -1355,10 +2008,10 @@ function App() {
     
     
     // --- MEME STATE & LOGIC (In App einfügen) ---
-    const [memesData, setMemesData] = useState([]);
-    const [memeIndex, setMemeIndex] = useState(0);
-    const [loadingMemes, setLoadingMemes] = useState(false);
-
+/* Innerhalb von function App(), bei den anderen States */
+    const [readingLevel, setReadingLevel] = useState('original'); // 'simple', 'advanced', 'original'
+    const [selectedBook, setSelectedBook] = useState(null); // Welches Buch ist offen?
+    const [libraryTab, setLibraryTab] = useState('books'); // <--- DAS FEHLT DIR
 
     // --- CHAT STATES ---
     const [chatScenario, setChatScenario] = useState(null); // Das gewählte Objekt
@@ -1380,10 +2033,7 @@ function App() {
         const saved = localStorage.getItem('vocabApp_savedJokes');
         return saved ? JSON.parse(saved) : [];
     });
-    const [savedMemes, setSavedMemes] = useState(() => {
-        const saved = localStorage.getItem('vocabApp_savedMemes');
-        return saved ? JSON.parse(saved) : [];
-    });
+
     const [viewingJoke, setViewingJoke] = useState(null); // Aktuell angeschauter Joke
     const [showJokeModal, setShowJokeModal] = useState(false); // Popup für Joke
     const [collectionsTab, setCollectionsTab] = useState('jokes'); // 'jokes' oder 'memes'
@@ -1618,99 +2268,11 @@ function App() {
 
 
     // Die sichere Fetch-Funktion (Mix aus All-Time und Week)
-    const fetchMixedMemes = async () => {
-        if (loadingMemes || memesData.length > 0) return; // Schutz vor Doppel-Ladung
-        
-        setLoadingMemes(true);
-        try {
-            const proxy = "https://corsproxy.io/?";
-            
-            // 1. Wir laden BEIDE Listen gleichzeitig
-            const [resAllTime, resWeek] = await Promise.all([
-                fetch(proxy + encodeURIComponent("https://www.reddit.com/r/FrenchMemes/top.json?t=all&limit=30")),
-                fetch(proxy + encodeURIComponent("https://www.reddit.com/r/FrenchMemes/top.json?t=week&limit=30"))
-            ]);
-
-            const jsonAll = await resAllTime.json();
-            const jsonWeek = await resWeek.json();
-
-            // Helper zum Extrahieren der Bild-Daten
-            const extractData = (json) => json.data.children
-                .map(c => c.data)
-                .filter(post => post.url && (post.url.match(/\.(jpeg|jpg|gif|png)$/) != null) && !post.over_18)
-                .map(post => ({ title: post.title, url: post.url, ups: post.ups, id: post.id }));
-
-            const listAll = extractData(jsonAll);
-            const listWeek = extractData(jsonWeek);
-
-            // 2. Der "Reißverschluss": Abwechselnd A und B
-            const mixed = [];
-            const maxLen = Math.max(listAll.length, listWeek.length);
-            const usedIds = new Set();
-
-            for (let i = 0; i < maxLen; i++) {
-                // Nimm einen Klassiker
-                if (listAll[i] && !usedIds.has(listAll[i].id)) {
-                    mixed.push(listAll[i]);
-                    usedIds.add(listAll[i].id);
-                }
-                // Nimm einen aktuellen
-                if (listWeek[i] && !usedIds.has(listWeek[i].id)) {
-                    mixed.push(listWeek[i]);
-                    usedIds.add(listWeek[i].id);
-                }
-            }
-
-            if (mixed.length === 0) throw new Error("No memes found");
-            
-            setMemesData(mixed);
-            setMemeIndex(0); // Reset auf Start
-
-        } catch (e) {
-            console.error("Meme Load Error", e);
-            // Fallback Notfall-Memes
-            setMemesData([
-                { title: "Le pain", url: "https://i.kym-cdn.com/photos/images/newsfeed/001/535/068/29d.jpg", ups: 999 },
-                { title: "Quand tu ne comprends rien", url: "https://i.imgflip.com/1ur9b0.jpg", ups: 850 }
-            ]);
-        } finally {
-            setLoadingMemes(false);
-        }
-    };
+    
 
     // MEME HANDLER FUNKTIONEN
-    const handleNextMeme = () => {
-        if (memesData.length <= 1) return;
-        
-        // Markiere das aktuelle Meme als "gesehen"
-        const currentMeme = memesData[0];
-        if (currentMeme && !seenMemeIds.includes(currentMeme.id)) {
-            setSeenMemeIds(prev => [...prev, currentMeme.id]);
-        }
-        
-        // Zähle den täglichen Counter hoch
-        const newCount = dailyMemeCount + 1;
-        setDailyMemeCount(newCount);
-        localStorage.setItem('vocabApp_dailyMemeCount', String(newCount));
-        
-        // Entferne das erste Meme aus der Liste (shift)
-        setMemesData(prev => prev.slice(1));
-    };
+    
 
-    const handleSaveMeme = (meme) => {
-        const alreadySaved = savedMemes.find(m => m.id === meme.id);
-        if (alreadySaved) {
-            // Entfernen wenn schon gespeichert
-            const updated = savedMemes.filter(m => m.id !== meme.id);
-            setSavedMemes(updated);
-            localStorage.setItem('vocabApp_savedMemes', JSON.stringify(updated));
-        } else {
-            // Hinzufügen
-            const updated = [...savedMemes, meme];
-            setSavedMemes(updated);
-            localStorage.setItem('vocabApp_savedMemes', JSON.stringify(updated));
-        }
-    };
 
     // AUTOMATISCHER START (Der Trigger)
     // Feuert nur, wenn wir im Meme-Modus sind UND die Liste noch leer ist
@@ -1860,26 +2422,6 @@ function App() {
     // --- IN FUNCTION APP (Verschoben aus renderExplore) ---
 
     // 1. NEWS FETCHER
-    const fetchNews = async (sourceOverride = null) => {
-        const source = sourceOverride || currentNewsSource;
-        setLoadingContent(true);
-        try {
-            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.rss)}`;
-            const res = await fetch(apiUrl);
-            const data = await res.json();
-            
-            if (data.status === 'ok' && data.items) {
-                setNewsData(data.items.slice(0, 15));
-            } else {
-                throw new Error("Feed error");
-            }
-        } catch (e) { 
-            console.error(e);
-            setNewsData([]); 
-        } finally {
-            setLoadingContent(false);
-        }
-    };
 
     // 2. JOKE HELPERS
     const loadNextJoke = () => {
@@ -1927,141 +2469,30 @@ function App() {
         }
     }, [view, exploreMode]); // Feuert nur, wenn man den Tab wechselt
     
-    const openArticle = async (url) => {
-        setView('reader');
-        setReaderMode('select');
-        setLoadingStory(true);
-        setLoadingTip("Cleaning up the mess...");
+    /* Innerhalb von App(), ersetzt openArticle */
+    /* Innerhalb von App() */
+    const openBookChapter = (book, chapterIndex, restorePage = false) => {
+        const chapter = book.chapters[chapterIndex];
+        const textContent = chapter[readingLevel] || chapter.original; 
+        
+        setCurrentStory({
+            id: book.id, // Wichtig für den Speicherstand
+            chapterIndex: chapterIndex, // Wichtig für den Speicherstand
+            title: `${book.title} - ${chapter.title}`,
+            text: textContent,
+            quiz: null, 
+            isArticle: false
+        });
 
-        try {
-            // 1. Jina AI via Proxy
-            // Wir nutzen hier 'r.jina.ai' im Markdown Modus
-            const jinaUrl = `https://r.jina.ai/${url}`;
-            const proxy = "https://corsproxy.io/?"; 
-            
-            const res = await fetch(proxy + encodeURIComponent(jinaUrl));
-            if (!res.ok) throw new Error("Article fetch failed");
-            
-            const rawMarkdown = await res.text();
-
-            // --- STEP A: GROBE VORREINIGUNG ---
-            let text = rawMarkdown
-                // Entferne Jina Header (URLSource etc.) bis zum ersten echten Inhalt
-                .replace(/^[\s\S]*?MarkdownContent:/i, '') 
-                // Entferne Bilder & Links
-                .replace(/!\[.*?\]\(.*?\)/g, '') 
-                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') 
-                .replace(/https?:\/\/\S+/g, '')
-                // Entferne Markdown Fett/Kursiv
-                .replace(/[*_#`]/g, '')
-                // Entferne Mehrfach-Leerzeichen
-                .replace(/[ \t]+/g, ' '); 
-
-            // --- STEP B: ZEILEN-ANALYSE (Der Filter) ---
-            const lines = text.split('\n');
-            let cleanLines = [];
-            let titleFound = false;
-            let finalTitle = "News Article";
-            
-            // Wörter, die das Ende des Artikels markieren (Footer-Start)
-            // Sobald wir eines davon sehen, hören wir auf zu lesen.
-            const stopWords = [
-                "Lire aussi", "Sur le même sujet", "Services", "Mentions légales", 
-                "Nous contacter", "Publicité", "Sponsorisé", "Jeux", "Bons plans",
-                "Votre avis", "Commentaires", "À la une", "En continu", "Par thématique"
-            ];
-
-            // Wörter, die Zeilen sofort disqualifizieren (Cookie Banner etc.)
-            const junkMarkers = [
-                "Menu", "Search", "Recherche", "Connexion", "S'abonner", "Newsletter",
-                "Facebook", "Twitter", "Instagram", "YouTube", "Pinterest",
-                "cookie", "accepter", "refuser", "paramétrer", "consentement",
-                "Copyright", "Tous droits réservés", "Temps de lecture", "Publié le",
-                "Divertissement", "Sport", "Planète", "High-Tech", "Conso", // Menü-Kategorien
-                "========", "--------"
-            ];
-
-            for (let line of lines) {
-                let l = line.trim();
-                
-                if (l.length < 3) continue; // Zu kurz
-
-                // 1. Titel finden (Erste lange Zeile)
-                if (!titleFound) {
-                    if (l.length > 20 && !junkMarkers.some(m => l.includes(m))) {
-                        finalTitle = l.replace('Title:', '').trim();
-                        titleFound = true;
-                    }
-                    continue; // Titel nicht in den Body packen
-                }
-
-                // 2. NOTBREMSE: Sind wir im Footer?
-                // Wenn die Zeile exakt eines der Stop-Wörter ist, brechen wir ab.
-                if (stopWords.some(s => l.toLowerCase() === s.toLowerCase() || l.toLowerCase().startsWith(s.toLowerCase() + ":"))) {
-                    break; // STOPP! Der Rest ist Müll.
-                }
-
-                // 3. JUNK FILTER
-                const isJunk = junkMarkers.some(marker => l.toLowerCase().includes(marker.toLowerCase()));
-                if (isJunk) continue;
-
-                // 4. QUALITÄTS-CHECK
-                // Ein echter Satz endet meist mit . ! ? oder »
-                const hasPunctuation = /[.!?»]$/.test(l);
-                // Ein echter Absatz ist meist länger als 80 Zeichen
-                const isLong = l.length > 80;
-                // Ist es eine Zeitangabe (z.B. "12:30")? Weg damit.
-                const isTime = /^\d{1,2}:\d{2}$/.test(l);
-
-                // WIR NEHMEN DIE ZEILE NUR WENN:
-                // Sie lang ist ODER Satzzeichen hat UND keine Zeitangabe ist.
-                if ((isLong || hasPunctuation) && !isTime) {
-                    cleanLines.push(l);
-                }
-            }
-
-            const bodyText = cleanLines.join('\n\n');
-
-            // --- STEP C: FALLBACK FÜR 1JOUR1ACTU ---
-            // Wenn nach dem Reinigen fast nichts übrig ist (oft bei 1jour1actu, weil die Struktur anders ist),
-            // versuchen wir es weniger streng.
-            if (bodyText.length < 200) {
-                 // Notfall-Plan: Einfach die längsten 5 Absätze nehmen
-                 const sortedByLength = lines.sort((a, b) => b.length - a.length);
-                 const fallbackText = sortedByLength.slice(0, 6).join('\n\n');
-                 
-                 if (fallbackText.length > 200) {
-                     setCurrentStory({ title: finalTitle, text: fallbackText, quiz: null, isArticle: true });
-                     setReaderMode('reading');
-                     setLoadingStory(false);
-                     return;
-                 }
-            }
-
-            if (bodyText.length < 100) {
-                throw new Error("Text too short after cleaning");
-            }
-
-            // 4. ERGEBNIS SETZEN
-            setCurrentStory({
-                title: finalTitle,
-                text: bodyText,
-                quiz: null, 
-                isArticle: true
-            });
-            
-            setReaderMode('reading');
-
-        } catch (e) {
-            console.error(e);
-            // Smart Fallback: Wenn es nicht klappt, Link im Browser öffnen
-            if(confirm("This article format is hard to read in-app. Open in Browser instead?")) {
-                window.open(url, '_blank');
-            }
-            setView('explore'); 
-        } finally {
-            setLoadingStory(false);
+        // Wenn wir "Resume" machen, laden wir die letzte Seite, sonst Seite 0
+        if (restorePage && bookProgress[book.id]) {
+            setPageIndex(bookProgress[book.id].lastPage || 0);
+        } else {
+            setPageIndex(0);
         }
+
+        setReaderMode('reading');
+        setView('reader');
     };
     const calculateAnkiStats = (currentStats, quality) => {
         // quality: 0=Again, 1=Hard, 2=Good, 3=Easy
@@ -3315,338 +3746,171 @@ function App() {
         );
     };
     const renderExplore = () => {
-        // --- HELPER (Reine Berechnung, daher hier ok) ---
-        const getCategoryProgress = (ids) => {
-            if (!ids || ids.length === 0) return 0;
-            const safeVocab = vocabulary || [];
-            const learnedCount = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
-            return Math.round((learnedCount / ids.length) * 100);
-        };
-        
-        const getCategoryStats = (ids) => {
-            if (!ids || ids.length === 0) return "0/0";
-            const safeVocab = vocabulary || [];
-            const learnedCount = safeVocab.filter(w => ids.includes(w.rank) && userProgress[w.rank]?.box > 0).length;
-            return `${learnedCount}/${ids.length}`;
-        };
-
-        // =========================================
-        // 1. ARTICLES VIEW (News Kiosk)
-        // =========================================
-        if (exploreMode === 'articles') {
-            // HINWEIS: Automatisches fetchNews() wurde hier entfernt (jetzt im useEffect in App)
-
-            return (
-                <div className="w-full pt-6 pb-24 px-1 h-full">
-                    <div className="flex items-center gap-3 mb-4 px-1">
-                        <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
-                        <h2 className="text-2xl font-bold text-slate-800">News Kiosk</h2>
-                    </div>
-
-                    {/* QUELLEN AUSWAHL */}
-                    <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide mb-2">
-                        {NEWS_SOURCES.map(source => {
-                            const isActive = currentNewsSource.id === source.id;
-                            return (
-                                <button 
-                                    key={source.id}
-                                    onClick={() => {
-                                        setCurrentNewsSource(source);
-                                        setNewsData([]); 
-                                        fetchNews(source); // Manueller Aufruf beim Klick ist OK!
-                                    }}
-                                    className={`flex flex-col items-start px-4 py-2 rounded-xl border transition-all min-w-[120px] ${
-                                        isActive 
-                                        ? `${source.color} border-transparent shadow-sm scale-[1.02]` 
-                                        : 'bg-white border-slate-100 text-slate-400 hover:border-slate-300'
-                                    }`}
-                                >
-                                    <div className="font-bold text-sm">{source.name}</div>
-                                    <div className="text-[10px] opacity-80 font-bold mt-1">Level {source.level}</div>
-                                </button>
-                            );
-                        })}
-                    </div>
-
-                    {/* ARTIKEL LISTE */}
-                    {loadingContent ? (
-                        <div className="text-center py-20 text-slate-400 animate-pulse flex flex-col items-center">
-                             <RotateCcw className="animate-spin mb-2"/>
-                             Fetching latest news...
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            {newsData.map((item, idx) => (
-                                <button 
-                                    key={idx} 
-                                    onClick={() => openArticle(item.link)} 
-                                    className="w-full text-left block bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:scale-[0.98] transition-all group"
-                                >
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className={`text-[10px] font-bold px-2 py-1 rounded ${currentNewsSource.color.replace('text-', 'bg-').replace('100', '50')} ${currentNewsSource.color.split(' ')[1]}`}>
-                                            {currentNewsSource.name}
-                                        </span>
-                                        <span className="text-[10px] text-slate-300">{new Date(item.pubDate).toLocaleDateString()}</span>
-                                    </div>
-                                    <h3 className="font-bold text-slate-800 leading-snug mb-2 group-hover:text-indigo-600 transition-colors">{item.title}</h3>
-                                    {item.enclosure?.link && <img src={item.enclosure.link} alt="News" className="w-full h-32 object-cover rounded-xl opacity-90" />}
-                                </button>
-                            ))}
-                            {newsData.length === 0 && !loadingContent && (
-                                <div className="text-center p-8 text-slate-400">No articles found. Try another source.</div>
-                            )}
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        // =========================================
-        // 2. MEMES VIEW
-        // =========================================
-        if (exploreMode === 'memes') {
-            // HINWEIS: fetchMemes() Logik wurde entfernt (jetzt im useEffect in App)
-
-            const currentMeme = memesData[0]; 
-            const dailyLimitReached = dailyMemeCount >= 20;
-            const allMemesSeenToday = memesData.length === 0 && dailyLimitReached;
-            const isSaved = currentMeme && savedMemes.find(m => m.id === currentMeme.id);
-
-            return (
-                <div className="w-full pt-6 pb-24 px-1 h-full flex flex-col">
-                    <div className="flex items-center gap-3 mb-4 px-1">
-                        <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
-                        <div className="flex-1">
-                            <h2 className="text-2xl font-bold text-slate-800">Meme Gallery</h2>
-                            <p className="text-xs text-slate-400">{dailyMemeCount}/20 today</p>
-                        </div>
-                    </div>
-                    
-                    <div className="flex-1 flex flex-col items-center justify-center">
-                        {allMemesSeenToday ? (
-                            <div className="text-center p-12 bg-white rounded-3xl border border-dashed border-slate-200">
-                                <Image size={48} className="mx-auto text-slate-300 mb-4"/>
-                                <h3 className="font-bold text-slate-600 mb-2">Daily Limit Reached!</h3>
-                                <p className="text-slate-400 text-sm mb-1">You've seen your 20 memes for today.</p>
-                                <p className="text-slate-400 text-sm">Come back tomorrow for fresh content! 🎉</p>
-                            </div>
-                        ) : loadingContent && !currentMeme ? (
-                             <div className="text-center text-purple-400 animate-pulse"><Image size={32} className="animate-bounce mx-auto mb-2"/> Mixing best memes...</div>
-                        ) : currentMeme ? (
-                            <div className="w-full bg-white p-4 rounded-[2rem] shadow-lg border border-slate-100 relative overflow-hidden">
-                                <h3 className="font-bold text-slate-800 text-lg mb-3 text-center leading-snug px-2">{currentMeme.title}</h3>
-                                <div className="rounded-xl overflow-hidden bg-slate-100 border border-slate-100 flex items-center justify-center relative min-h-[250px]">
-                                    <img src={currentMeme.url} alt="Meme" className="w-full h-full object-contain max-h-[50vh]" />
-                                </div>
-                                <div className="mt-4 flex justify-between items-center px-2">
-                                    <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-full">⬆️ {currentMeme.ups}</span>
-                                    <div className="flex gap-2">
-                                        <button 
-                                            onClick={() => handleSaveMeme(currentMeme)} 
-                                            className={`p-3 rounded-full transition-all ${
-                                                isSaved 
-                                                ? 'bg-purple-600 text-white' 
-                                                : 'bg-purple-50 text-purple-600 hover:bg-purple-100'
-                                            }`}
-                                        >
-                                            <Bookmark size={20} fill={isSaved ? 'currentColor' : 'none'}/>
-                                        </button>
-                                        <button onClick={() => speak(currentMeme.title)} className="p-3 bg-purple-50 text-purple-600 rounded-full hover:bg-purple-100"><Volume2 size={20}/></button>
-                                    </div>
-                                </div>
-                            </div>
-                        ) : <div className="text-slate-400">No memes found.</div>}
-                    </div>
-
-                    {!loadingContent && currentMeme && !dailyLimitReached && (
-                        <button 
-                            onClick={handleNextMeme} 
-                            className="mt-6 w-full bg-purple-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all flex items-center justify-center gap-2"
-                        >
-                            Next Meme <ArrowLeft size={20} className="rotate-180"/>
-                        </button>
-                    )}
-                </div>
-            );
-        }
-
-        // =========================================
-        // 3. JOKES VIEW
-        // =========================================
-        if (exploreMode === 'jokes') {
-            // HINWEIS: loadNextJoke() und translateQuestion() sind jetzt in App definiert.
-            // Automatischer Aufruf beim Rendern wurde entfernt.
-
-            return (
-                <div className="w-full pt-6 pb-24 px-1 h-full flex flex-col">
-                    <div className="flex items-center gap-3 mb-4 px-1">
-                        <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
-                        <h2 className="text-2xl font-bold text-slate-800">Joke Box</h2>
-                    </div>
-
-                    <div className="flex-1 flex flex-col items-center justify-center py-4">
-                        {loadingContent ? (
-                             <div className="text-center text-amber-500 animate-pulse"><RotateCcw className="animate-spin mx-auto mb-2"/> Picking a good one...</div>
-                        ) : currentJoke ? (
-                            <div className="w-full bg-white p-8 rounded-[2.5rem] shadow-lg border border-slate-100 text-center relative overflow-hidden">
-                                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 to-orange-400"></div>
-                                
-                                <div className="mb-6">
-                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Question</span>
-                                    <h3 className="text-xl font-bold text-slate-800 mt-2 mb-2 leading-snug font-serif italic">
-                                        "{currentJoke.q}"
-                                    </h3>
-
-                                    {questionTranslation ? (
-                                        <p className="text-xs text-indigo-500 font-medium bg-indigo-50 py-1 px-2 rounded-lg inline-block">
-                                            🇬🇧 {questionTranslation}
-                                        </p>
-                                    ) : (
-                                        <button onClick={translateQuestion} className="text-[10px] font-bold text-slate-400 underline decoration-dotted hover:text-indigo-500">
-                                            Translate Question
-                                        </button>
-                                    )}
-
-                                    <div className="mt-3">
-                                        <button onClick={() => speak(currentJoke.q)} className="p-2 bg-slate-50 rounded-full text-slate-400 hover:text-amber-600 hover:bg-amber-50"><Volume2 size={20}/></button>
-                                    </div>
-                                </div>
-
-                                {showPunchline ? (
-                                    <div className="border-t border-slate-100 pt-6">
-                                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Punchline</span>
-                                        <h3 className="text-2xl font-bold text-indigo-600 mt-2 mb-4 leading-snug italic">
-                                            "{currentJoke.a}"
-                                        </h3>
-                                        
-                                        <div className="flex justify-center gap-3 mb-4">
-                                             <button onClick={() => speak(currentJoke.a)} className="p-3 bg-indigo-50 rounded-full text-indigo-600 hover:bg-indigo-100"><Volume2 size={24}/></button>
-                                        </div>
-
-                                        {showTranslation ? (
-                                             <p className="text-slate-400 text-sm bg-slate-50 p-3 rounded-xl">
-                                                🇬🇧 {currentJoke.en}
-                                             </p>
-                                        ) : (
-                                            <button onClick={() => setShowTranslation(true)} className="text-xs font-bold text-slate-400 underline decoration-dotted">
-                                                Explain Joke
-                                            </button>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <button 
-                                        onClick={() => setShowPunchline(true)}
-                                        className="w-full py-4 bg-slate-50 text-slate-500 font-bold rounded-2xl border-2 border-dashed border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-all mt-2"
-                                    >
-                                        Tap for Answer
-                                    </button>
-                                )}
-                            </div>
-                        ) : null}
-                    </div>
-
-                    <button onClick={loadNextJoke} className="w-full bg-amber-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-amber-200 hover:bg-amber-600 transition-all flex items-center justify-center gap-2 mt-4">
-                        < ArrowLeft size={20}/> Next Joke
-                    </button>
-                </div>
-            );
-        }
-
-        // =========================================
-        // 4. TOPICS & GRAMMAR (Lists)
-        // =========================================
-        if (exploreMode === 'grammar' || exploreMode === 'topics') {
-            const activeCollection = exploreMode === 'grammar' ? COLLECTIONS.grammar : COLLECTIONS.topics;
-            const pageTitle = exploreMode === 'grammar' ? "Vocab Sets" : "Real Life Topics";
-            
+        // A. EINZELANSICHT (Wenn ein Buch/Rezept offen ist)
+        if (selectedBook) {
             return (
                 <div className="w-full pt-6 pb-24 px-1">
-                    <div className="flex items-center gap-3 mb-4 px-1">
-                        <button onClick={() => setExploreMode('main')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500"><ArrowLeft size={20}/></button>
-                        <h2 className="text-2xl font-bold text-slate-800">{pageTitle}</h2>
+                    <div className="flex items-center gap-3 mb-6 px-1">
+                        <button onClick={() => setSelectedBook(null)} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500">
+                            <ArrowLeft size={24}/>
+                        </button>
+                        <div className="flex-1 min-w-0">
+                            <h2 className="text-xl font-bold text-slate-800 truncate">{selectedBook.title}</h2>
+                            <p className="text-xs text-slate-400">{selectedBook.author}</p>
+                        </div>
                     </div>
-                    <div className="grid gap-3">
-                        {activeCollection.map(item => {
-                             const stats = getCategoryStats(item.ids);
-                             const progress = getCategoryProgress(item.ids);
-                             return (
-                                <button key={item.id} 
-                                    onClick={() => {
-                                        if(exploreMode === 'grammar') startCollectionSession(item.ids);
-                                        else { setSelectedTopicId(item.id); setView('topic-hub'); }
-                                    }}
-                                    className="w-full bg-white p-4 rounded-3xl border border-slate-100 shadow-sm active:scale-[0.98] flex items-center gap-4"
-                                >
-                                    <div className={`w-14 h-14 flex items-center justify-center rounded-2xl ${exploreMode==='grammar'?'bg-indigo-50 text-indigo-600':'bg-emerald-50 text-emerald-600'}`}>{item.icon}</div>
-                                    <div className="flex-1 text-left">
-                                        <div className="flex justify-between items-center mb-1">
-                                            <h3 className="font-bold text-slate-800">{item.label}</h3>
-                                            <span className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">{stats}</span>
-                                        </div>
-                                        <div className="text-xs text-slate-400 mb-2">{item.sub}</div>
-                                        <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                                            <div className={`h-full ${exploreMode==='grammar'?'bg-indigo-500':'bg-emerald-500'}`} style={{width: `${progress}%`}}></div>
-                                        </div>
+
+                    {/* Level Selector */}
+                    <div className="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm mb-6 sticky top-2 z-20 flex gap-1">
+                        {['simple', 'advanced', 'original'].map(lvl => (
+                            <button 
+                                key={lvl}
+                                onClick={() => setReadingLevel(lvl)}
+                                className={`flex-1 py-2 rounded-xl text-xs font-bold capitalize transition-all ${
+                                    readingLevel === lvl 
+                                    ? 'bg-indigo-600 text-white shadow-sm' 
+                                    : 'text-slate-500 hover:bg-slate-50'
+                                }`}
+                            >
+                                {lvl}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Chapters List */}
+                    <div className="space-y-3">
+                        {selectedBook.chapters.map((chap, idx) => (
+                            <button 
+                                key={idx}
+                                onClick={() => openBookChapter(selectedBook, idx)}
+                                className="w-full bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all group"
+                            >
+                                <div className="flex justify-between items-center mb-2">
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="font-bold text-slate-700">{chap.title}</h3>
+                                        {/* Checkmark wenn gelesen */}
+                                        {bookProgress[selectedBook.id]?.completedChapters?.includes(idx) && (
+                                            <div className="bg-green-100 text-green-600 p-0.5 rounded-full"><Check size={12}/></div>
+                                        )}
                                     </div>
-                                    <ChevronRight size={20} className="text-slate-300"/>
-                                </button>
-                             );
-                        })}
+                                    <div className="bg-slate-50 p-1.5 rounded-full text-slate-300 group-hover:text-indigo-600 group-hover:bg-indigo-50 transition-colors">
+                                        <Play size={16} fill="currentColor"/>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed opacity-80">
+                                    {/* Preview based on level */}
+                                    {chap[readingLevel] || chap.original}
+                                </p>
+                            </button>
+                        ))}
                     </div>
                 </div>
             );
         }
 
-        // =========================================
-        // 5. MAIN MENU (Explore Start)
-        // =========================================
-        if (exploreMode === 'main') {
-            return (
-                <div className="space-y-4 pt-6 pb-24 px-1">
-                    <div className="flex items-center gap-3 mb-4 px-1">
-                        <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><Compass size={24} /></div>
-                        <h2 className="text-2xl font-bold text-slate-800">Explore</h2>
-                    </div>
+        // B. HAUPTANSICHT (Regal Übersicht)
+        const activeCollection = LIBRARY_CONTENT[libraryTab] || [];
 
-                    {/* 1. READING ROOM */}
-                    <button onClick={() => setView('reader')} className="w-full bg-amber-50 border border-amber-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
-                        <div className="flex items-center gap-4 z-10">
-                            <div className="bg-white p-3 rounded-2xl text-amber-500 shadow-sm"><BookCheck size={24} /></div>
-                            <div><h3 className="font-bold text-amber-900 text-lg">Reading Room</h3><p className="text-amber-700/70 text-xs font-medium">Interactive Stories</p></div>
-                        </div>
-                        <ChevronRight size={24} className="text-amber-300 z-10"/>
-                        <BookOpen size={80} className="absolute -right-4 -bottom-6 text-amber-100/50 rotate-12"/>
-                    </button>
-
-                    {/* 2. CULTURE FEED */}
-                    <button onClick={() => setExploreMode('articles')} className="w-full bg-rose-50 border border-rose-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
-                         <div className="flex items-center gap-4 z-10">
-                            <div className="bg-white p-3 rounded-2xl text-rose-500 shadow-sm"><Newspaper size={24} /></div>
-                            <div><h3 className="font-bold text-rose-900 text-lg">Culture Feed</h3><p className="text-rose-700/70 text-xs font-medium">News & Articles</p></div>
-                        </div>
-                        <ChevronRight size={24} className="text-rose-300 z-10"/>
-                    </button>
-                    
-                    {/* 3. MEME GALLERY */}
-                    <button onClick={() => setExploreMode('memes')} className="w-full bg-purple-50 border border-purple-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between">
-                        <div className="flex items-center gap-4 z-10">
-                            <div className="bg-white p-3 rounded-2xl text-purple-500 shadow-sm"><Image size={24} /></div>
-                            <div><h3 className="font-bold text-purple-900 text-lg">Meme Gallery</h3><p className="text-purple-700/70 text-xs font-medium">Fun way to learn</p></div>
-                        </div>
-                        <ChevronRight size={24} className="text-purple-300 z-10"/>
-                    </button>
-
-                    {/* 4. GAMES (Coming Soon) */}
-                    <button className="w-full bg-blue-50 border border-blue-100 p-5 rounded-[2rem] text-left active:scale-[0.98] transition-all relative overflow-hidden group shadow-sm flex items-center justify-between opacity-75">
-                        <div className="flex items-center gap-4 z-10">
-                            <div className="bg-white p-3 rounded-2xl text-blue-500 shadow-sm"><Gamepad2 size={24} /></div>
-                            <div><h3 className="font-bold text-blue-900 text-lg">Games</h3><p className="text-blue-700/70 text-xs font-medium">Interactive Learning</p></div>
-                        </div>
-                        <div className="bg-blue-200 text-blue-700 text-[10px] font-bold px-3 py-1 rounded-full z-10">COMING SOON</div>
-                    </button>
+        return (
+            <div className="w-full pt-6 pb-24 px-1">
+                <div className="flex items-center gap-3 mb-6 px-1">
+                    <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><BookOpen size={24} /></div>
+                    <h2 className="text-2xl font-bold text-slate-800">Library</h2>
                 </div>
-             );
-        }
+
+                {/* RESUME BANNER (Nur wenn ein Buch angefangen wurde & wir im Books Tab sind) */}
+                {(() => {
+                    // Finde das zuletzt gelesene Buch (sortiert nach Zeitstempel)
+                    const lastReadBookId = Object.keys(bookProgress).sort((a,b) => bookProgress[b].lastActive - bookProgress[a].lastActive)[0];
+                    
+                    if (lastReadBookId && libraryTab === 'books') {
+                        const prog = bookProgress[lastReadBookId];
+                        // Finde Buch-Daten in LIBRARY_CONTENT
+                        let bookData = null;
+                        // Wir suchen in allen Kategorien sicherheitshalber
+                        ['books', 'culture', 'phrases'].forEach(cat => {
+                            if (LIBRARY_CONTENT[cat]) {
+                                const found = LIBRARY_CONTENT[cat].find(b => b.id === lastReadBookId);
+                                if(found) bookData = found;
+                            }
+                        });
+
+                        if (bookData) {
+                            // Sicherstellen dass Kapitel existiert (Fallback auf 0)
+                            const chapterIdx = prog.lastChapter || 0;
+                            const chapterTitle = bookData.chapters[chapterIdx]?.title || "Chapter " + (chapterIdx + 1);
+                            
+                            return (
+                                <div className="mb-6 px-1">
+                                    <button 
+                                        onClick={() => { setSelectedBook(bookData); openBookChapter(bookData, chapterIdx, true); }}
+                                        className="w-full bg-slate-800 text-white p-4 rounded-3xl shadow-xl shadow-slate-200 flex items-center justify-between group active:scale-[0.98] transition-all"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="bg-white/10 p-3 rounded-2xl">
+                                                <RotateCcw size={20} className="text-white"/>
+                                            </div>
+                                            <div className="text-left">
+                                                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Continue Reading</div>
+                                                <div className="font-bold text-lg leading-tight truncate max-w-[150px]">{bookData.title}</div>
+                                                <div className="text-xs text-slate-400">Page {(prog.lastPage || 0) + 1} • {chapterTitle}</div>
+                                            </div>
+                                        </div>
+                                        <div className="bg-indigo-500 p-2 rounded-full group-hover:bg-indigo-400 transition-colors">
+                                            <Play size={16} fill="currentColor"/>
+                                        </div>
+                                    </button>
+                                </div>
+                            );
+                        }
+                    }
+                    return null;
+                })()}
+
+                {/* Library Tabs */}
+                <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide px-1">
+                    <button onClick={() => setLibraryTab('books')} className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${libraryTab === 'books' ? 'bg-slate-800 text-white shadow-lg' : 'bg-white text-slate-500 border border-slate-200'}`}>📚 Books</button>
+                    <button onClick={() => setLibraryTab('culture')} className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${libraryTab === 'culture' ? 'bg-amber-600 text-white shadow-lg' : 'bg-white text-slate-500 border border-slate-200'}`}>🥐 Culture & Bios</button>
+                    <button onClick={() => setLibraryTab('phrases')} className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${libraryTab === 'phrases' ? 'bg-emerald-600 text-white shadow-lg' : 'bg-white text-slate-500 border border-slate-200'}`}>💬 Phrasebook</button>
+                </div>
+
+                {/* Content Grid */}
+                <div className="grid gap-5">
+                    {activeCollection.map(item => (
+                        <button 
+                            key={item.id}
+                            onClick={() => setSelectedBook(item)}
+                            className={`w-full ${item.coverColor} text-white p-5 rounded-[2rem] shadow-xl text-left relative overflow-hidden group active:scale-[0.98] transition-all`}
+                        >
+                            {/* Deko Icon Background */}
+                            <div className="absolute -right-4 -bottom-4 p-8 opacity-20 rotate-12 scale-150">
+                                {getIcon(item.icon)}
+                            </div>
+                            
+                            <div className="relative z-10 flex gap-4 items-start">
+                                <div className="bg-white/20 backdrop-blur-md w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border border-white/10">
+                                    {getIcon(item.icon)}
+                                </div>
+                                <div>
+                                    <div className="flex items-center gap-2 mb-1 opacity-80">
+                                        <span className="text-[10px] font-bold uppercase tracking-wider border border-white/30 px-2 py-0.5 rounded-full">{item.type}</span>
+                                        <span className="text-[10px] font-bold">{item.chapters.length} Parts</span>
+                                    </div>
+                                    <h3 className="text-xl font-serif font-bold leading-tight mb-1">{item.title}</h3>
+                                    <p className="text-white/70 text-xs font-medium">{item.author}</p>
+                                </div>
+                            </div>
+                        </button>
+                    ))}
+                    
+                    {activeCollection.length === 0 && (
+                        <div className="p-10 text-center text-slate-400 border-2 border-dashed border-slate-200 rounded-[2rem]">
+                            Nothing here yet. Coming soon!
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
     };
     const renderSkills = () => {
         // Lokaler State für das Akkordeon
@@ -4608,324 +4872,7 @@ function App() {
             </div>
         );
     };
-    const renderReader = () => {
-        // HIER KEINE STATES! (Die sind oben in App)
-
-        // --- HELPER ---
-        const handleGenerate = (genre) => {
-            // Wir übergeben jetzt die exakte Zahl (z.B. 320) an das Backend
-            generateStory(genre, storyConfig.length, storyConfig.level); 
-        };
-
-        const toggleAudio = (text) => {
-            if (isSpeaking) {
-                stopAudio();
-                setIsSpeaking(false);
-            } else {
-                setIsSpeaking(true);
-                const cleanText = text.replace(/[*_#]/g, ""); 
-                speak(cleanText);
-            }
-        };
-
-        const handleWordClick = async (e, wordRaw) => {
-            e.stopPropagation();
-            
-            const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
-            // Bereinigen von Satzzeichen am Anfang/Ende
-            const cleanWord = textWithoutFormat.replace(/^[.,!?;:"«»()]+|[.,!?;:"«»()]+$/g, "").toLowerCase().trim();
-            
-            // 1. CHECK: Ist es eine Zahl/Römisch?
-            if (/^\d+$/.test(cleanWord) || /^m*(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})$/.test(cleanWord)) {
-                setClickedWord({ french: textWithoutFormat, english: "Number", rank: "#" });
-                return;
-            }
-
-            // 2. VERSUCH A: Exakte Suche in lokaler Liste
-            let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
-
-            // 3. VERSUCH B: Irregular Map (vorhandene Liste)
-            if (!found && IRREGULAR_MAP[cleanWord]) {
-                const infinitive = IRREGULAR_MAP[cleanWord];
-                found = vocabulary.find(v => v.french.toLowerCase() === infinitive);
-            }
-
-            // 4. VERSUCH C: Einfaches "Stemming" (Endungen raten, um API zu sparen)
-            // Wir prüfen, ob das Wort wie ein konjugiertes Verb aussieht und suchen den Infinitiv in deiner Liste
-            if (!found) {
-                const commonEndings = [
-                    { s: 'ez', r: 'er' }, { s: 'ons', r: 'er' }, { s: 'ait', r: 'er' }, { s: 'ais', r: 'er' }, { s: 'aient', r: 'er' }, { s: 'é', r: 'er' }, // -er Verben
-                    { s: 'isse', r: 'ir' }, { s: 'it', r: 'ir' }, // -ir Verben
-                    { s: 'aux', r: 'al' } // Plural Nomen
-                ];
-
-                for (let rule of commonEndings) {
-                    if (cleanWord.endsWith(rule.s)) {
-                        // Versuch: Endung abschneiden und Suffix dranbappen
-                        const stem = cleanWord.slice(0, -rule.s.length) + rule.r;
-                        const match = vocabulary.find(v => v.french.toLowerCase() === stem);
-                        if (match) {
-                            found = match; // Gefunden! Wir nutzen das lokale Wort
-                            break; 
-                        }
-                    }
-                }
-            }
-
-            // ... (oberer Teil mit Stemming bleibt gleich)
-
-            if (found) {
-                setClickedWord(found);
-            } else {
-                // 5. VERSUCH D: CLOUDFLARE AI BACKEND
-                setLoadingTranslation(true);
-                setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "..." });
-                
-                try {
-                    // Wir rufen DEINE neue Funktion auf
-                    const res = await fetch('/api/translate2', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ word: cleanWord })
-                    });
-
-                    if (!res.ok) throw new Error("Server error");
-
-                    const data = await res.json();
-                    
-                    if (data.translation) {
-                        setClickedWord({ 
-                            french: textWithoutFormat, 
-                            english: data.translation.toLowerCase(), 
-                            rank: "AI" // Zeigt an, dass es von der Cloudflare AI kommt
-                        });
-                    } else {
-                        throw new Error("No translation");
-                    }
-
-                } catch (err) {
-                    console.error(err);
-                    setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
-                } finally {
-                    setLoadingTranslation(false);
-                }
-            }
-        };
-
-        // --- PHASE 1: AUSWAHL ---
-        if (readerMode === 'select') {
-            return (
-                <div className="space-y-6 pt-6 pb-24 px-1">
-                    <div className="flex items-center gap-3 mb-2 px-1">
-                        <button onClick={() => setView('explore')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
-                            <ArrowLeft size={20} />
-                        </button>
-                        <h2 className="text-2xl font-bold text-slate-800">Reading Room</h2>
-                    </div>
-                    
-                    {loadingStory ? (
-                        <div className="h-72 flex flex-col items-center justify-center text-center px-6 space-y-6">
-                            <div className="relative">
-                                <div className="absolute inset-0 bg-indigo-100 rounded-full animate-ping opacity-75"></div>
-                                <div className="relative bg-white p-4 rounded-full shadow-sm text-indigo-600">
-                                    <Loader2 size={40} className="animate-spin" />
-                                </div>
-                            </div>
-                            <div>
-                                <h3 className="text-indigo-900 font-bold text-lg mb-2">Writing your story...</h3>
-                                <p className="text-slate-500 text-sm italic max-w-xs mx-auto leading-relaxed">💡 {loadingTip}</p>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="space-y-6">
-                            {/* SETTINGS CARD */}
-                            <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
-                                {/* LEVEL SELECTOR */}
-                                <div>
-                                    <div className="flex justify-between items-center mb-3">
-                                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Difficulty Level</span>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        <button onClick={() => setStoryConfig({...storyConfig, level: 'auto'})} className={`px-3 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-1 ${storyConfig.level === 'auto' ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-slate-50 text-slate-500 border-slate-200'}`}>
-                                            <Sparkles size={12} /> My Level
-                                        </button>
-                                        {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(lvl => (
-                                            <button key={lvl} onClick={() => setStoryConfig({...storyConfig, level: lvl})} className={`px-3 py-2 rounded-xl text-xs font-bold border transition-all ${storyConfig.level === lvl ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-white text-slate-500 border-slate-200'}`}>
-                                                {lvl}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                                {/* LENGTH SLIDER */}
-                                <div>
-                                    <div className="flex justify-between items-center mb-4">
-                                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Story Length</span>
-                                        <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg uppercase border border-indigo-100">
-                                            ~ {storyConfig.length} Words
-                                        </span>
-                                    </div>
-                                    <input type="range" min="50" max="500" step="10" value={storyConfig.length} onChange={(e) => setStoryConfig({ ...storyConfig, length: parseInt(e.target.value) })} className="w-full accent-indigo-600 h-2 bg-slate-100 rounded-lg cursor-pointer" />
-                                    <div className="flex justify-between mt-2 text-[10px] text-slate-400 font-bold uppercase">
-                                        <span>Short (50)</span>
-                                        <span>Long (500)</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* GENRE GRID */}
-                            <div>
-                                <p className="text-slate-500 px-2 text-sm font-medium mb-3">Choose a Genre</p>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <button onClick={() => handleGenerate('Mystery')} className="bg-purple-50 border border-purple-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group"><div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-purple-600 shadow-sm"><Ghost size={20}/></div><div><h3 className="font-bold text-purple-900">Mystery</h3></div></button>
-                                    <button onClick={() => handleGenerate('Sci-Fi')} className="bg-blue-50 border border-blue-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group"><div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-blue-600 shadow-sm"><Rocket size={20}/></div><div><h3 className="font-bold text-blue-900">Sci-Fi</h3></div></button>
-                                    <button onClick={() => handleGenerate('Daily Life')} className="bg-amber-50 border border-amber-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group"><div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-amber-600 shadow-sm"><Coffee size={20}/></div><div><h3 className="font-bold text-amber-900">Daily Life</h3></div></button>
-                                    <button onClick={() => handleGenerate('Fantasy')} className="bg-emerald-50 border border-emerald-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group"><div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-emerald-600 shadow-sm"><Sword size={20}/></div><div><h3 className="font-bold text-emerald-900">Fantasy</h3></div></button>
-                                    <button onClick={() => handleGenerate('Romance')} className="bg-pink-50 border border-pink-100 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group"><div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-pink-500 shadow-sm"><Heart size={20}/></div><div><h3 className="font-bold text-pink-900">Romance</h3></div></button>
-                                    <button onClick={() => handleGenerate('History')} className="bg-stone-100 border border-stone-200 p-4 rounded-3xl text-left hover:scale-[1.02] transition-transform h-32 flex flex-col justify-between group"><div className="bg-white w-10 h-10 flex items-center justify-center rounded-xl text-stone-600 shadow-sm"><Crown size={20}/></div><div><h3 className="font-bold text-stone-800">History</h3></div></button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        // --- PHASE 2: LESEN ---
-        if (readerMode === 'reading' && currentStory) {
-            return (
-                <div className="space-y-6 pt-6 pb-40 px-1 relative min-h-screen">
-                     <div className="flex items-center justify-between mb-4 px-1">
-                        <button onClick={() => setReaderMode('select')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
-                            <ArrowLeft size={20} />
-                        </button>
-                        <div className="flex gap-2">
-                            <button onClick={() => toggleAudio(currentStory.text)} className={`p-2 px-4 rounded-full font-bold text-xs flex items-center gap-2 transition-all ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>
-                                {isSpeaking ? <><X size={16}/> Stop</> : <><Volume2 size={16}/> Listen</>}
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-100">
-                        <h2 className="text-2xl font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">{currentStory.title}</h2>
-                        <div className="text-lg text-slate-700 leading-loose font-serif text-justify">
-                            {currentStory.text.split(' ').map((wordRaw, i) => {
-                                const displayText = wordRaw.replace(/[\*_]/g, "");
-                                return (
-                                    <span 
-                                        key={i} 
-                                        onClick={(e) => handleWordClick(e, wordRaw)}
-                                        className={`inline-block mr-1.5 cursor-pointer rounded px-0.5 transition-colors hover:bg-slate-100 hover:text-indigo-600 ${
-                                            clickedWord?.french === displayText.replace(/[.,!?;:"«»()]/g, "").toLowerCase() ? 'bg-yellow-200 text-slate-900' : ''
-                                        }`}
-                                    >
-                                        {displayText}
-                                    </span>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    {/* INFO POPUP */}
-                    {clickedWord && (
-                        <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center justify-between">
-                            <div>
-                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 inline-block px-1.5 rounded ${
-                                    clickedWord.rank === "API" ? "bg-yellow-500/20 text-yellow-300" : 
-                                    clickedWord.rank === "External" ? "bg-blue-500/20 text-blue-300" : 
-                                    "text-slate-400"
-                                }`}>
-                                    {clickedWord.rank === "API" ? <RotateCcw className="animate-spin w-3 h-3"/> : 
-                                     clickedWord.rank === "External" ? "Web Translation" : 
-                                     `Rank #${clickedWord.rank}`}
-                                </div>
-                                
-                                <div className="text-xl font-bold flex items-baseline gap-2">
-                                    {clickedWord.french}
-                                    {clickedWord.root && clickedWord.root.toLowerCase() !== clickedWord.french.toLowerCase() && (
-                                        <span className="text-xs text-slate-500 font-normal">
-                                            → {clickedWord.root}
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="text-slate-300 text-sm italic">{clickedWord.english || clickedWord.german}</div>
-                            </div>
-                            <div className="flex gap-3">
-                                <button onClick={() => speak(clickedWord.french)} className="p-3 bg-white/10 rounded-full hover:bg-white/20"><Volume2 size={20}/></button>
-                                <button onClick={() => setClickedWord(null)} className="p-3 text-slate-400 hover:text-white"><X size={20}/></button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Nur Quiz anzeigen, wenn es eine Story ist (kein Artikel) */}
-                    {!currentStory.isArticle ? (
-                        <button 
-                            onClick={() => { 
-                                stopAudio();
-                                setIsSpeaking(false);
-                                setReaderMode('quiz'); 
-                                setQuizAnswers({}); 
-                                window.scrollTo({ top: 0, behavior: 'smooth' }); 
-                            }}
-                            className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg flex justify-center items-center gap-2 hover:bg-indigo-700 transition-all"
-                        >
-                            Take Quiz <ArrowLeft size={20} className="rotate-180"/>
-                        </button>
-                    ) : (
-                        // Bei Artikeln: Button zum Beenden
-                        <button 
-                            onClick={() => {
-                                stopAudio();
-                                setIsSpeaking(false);
-                                setView('explore'); // Zurück zu den News
-                                setReaderMode('select');
-                            }}
-                            className="w-full bg-slate-100 text-slate-500 py-4 rounded-2xl font-bold flex justify-center items-center gap-2 hover:bg-slate-200 transition-all"
-                        >
-                            Done Reading
-                        </button>
-                    )}
-                </div>
-            );
-        }
-
-        // --- PHASE 3: QUIZ ---
-        if (readerMode === 'quiz' && currentStory) {
-            return (
-                <div className="space-y-6 pt-6 pb-24 px-1">
-                    <div className="flex items-center gap-3 mb-2 px-1">
-                        <button onClick={() => setReaderMode('reading')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"><ArrowLeft size={20} /></button>
-                        <h2 className="text-xl font-bold text-slate-800">Comprehension Check</h2>
-                    </div>
-                    <div className="space-y-6">
-                        {currentStory.quiz && currentStory.quiz.map((q, qIdx) => (
-                            <div key={qIdx} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
-                                <h3 className="font-bold text-slate-800 mb-4">{q.question}</h3>
-                                <div className="space-y-2">
-                                    {q.options.map((opt, oIdx) => {
-                                        const isSelected = quizAnswers[qIdx] === oIdx;
-                                        const isCorrect = q.correctIndex === oIdx;
-                                        let btnClass = "bg-slate-50 text-slate-600 border-slate-100";
-                                        if (isSelected) {
-                                            if (isCorrect) btnClass = "bg-green-100 text-green-700 border-green-200 ring-2 ring-green-500";
-                                            else btnClass = "bg-red-100 text-red-700 border-red-200";
-                                        }
-                                        return (
-                                            <button key={oIdx} onClick={() => setQuizAnswers({...quizAnswers, [qIdx]: oIdx})} className={`w-full p-3 rounded-xl text-left text-sm font-medium border transition-all ${btnClass}`}>
-                                                {opt}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    <button onClick={() => setReaderMode('select')} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg">Finish Story</button>
-                </div>
-            );
-        }
-
-        return null;
-    };
+    
     const renderResults = () => (
         <div className="text-center max-w-md mx-auto py-10">
             <div className="inline-block p-6 bg-green-100 rounded-full mb-6"><BarChart3 size={48} className="text-green-600" /></div>
@@ -5784,8 +5731,36 @@ function App() {
             case 'home': case 'smart-config': case 'test-config': return renderHome();
             case 'explore': 
                 return renderExplore();
-            case 'reader': 
-                return renderReader();
+            case 'reader':
+                if (readerMode === 'select') {
+                    // Falls du im Auswahl-Modus bist, zeig die Library
+                    return renderExplore(); 
+                }
+                if (readerMode === 'reading' && currentStory) {
+                    return (
+                        <BookReader 
+                            currentStory={currentStory}
+                            pageIndex={pageIndex}
+                            setPageIndex={setPageIndex}
+                            saveProgress={saveProgress}
+                            setView={setView}
+                            setReaderMode={setReaderMode}
+                            speak={speak}
+                            stopAudio={stopAudio}
+                        />
+                    );
+                }
+                if (readerMode === 'finish') {
+                     return (
+                        <div className="h-screen flex flex-col items-center justify-center text-center px-6 pb-20">
+                            <div className="text-6xl mb-6">🏆</div>
+                            <h2 className="text-3xl font-bold text-slate-800 mb-2">Chapter Complete!</h2>
+                            <p className="text-slate-500 mb-8">You finished "{currentStory?.title}".</p>
+                            <button onClick={() => { setView('explore'); setSelectedBook(null); }} className="bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold shadow-lg w-full max-w-sm">Back to Library</button>
+                        </div>
+                    );
+                }
+                return null;
             case 'culture': 
                 return renderExplore();
             // TAB 3: SKILLS
@@ -5826,7 +5801,7 @@ function App() {
                 return renderChat();    
             case 'grammar-detail': // <--- NEU
                 return <GrammarDetail topicId={selectedGrammarId} onBack={() => setView('skills')} />;    
-
+            
             default: return renderHome();
         }
     };
