@@ -2738,8 +2738,33 @@ function App() {
         alert("Logged out. You are now in Guest Mode.");
     };
     // --- SYNC & MERGE LOGIC ---
-    const syncWithCloud = async (localData) => {
-        if (!session) return; // Nur wenn eingeloggt
+    // --- AUTO-SYNC ON FOCUS ---
+    useEffect(() => {
+        const handleFocus = () => {
+            // Wenn wir eingeloggt sind und das Fenster wieder in den Vordergrund kommt
+            if (session && document.visibilityState === 'visible') {
+                console.log("👀 App in focus - triggering silent sync...");
+                
+                // Wir nehmen den aktuellsten Stand aus dem LocalStorage (der ist am sichersten)
+                const currentLocal = JSON.parse(localStorage.getItem('vocabApp_progress') || '{}');
+                
+                // Silent Sync starten
+                syncWithCloud(currentLocal, true);
+            }
+        };
+
+        // Event Listener hinzufügen
+        window.addEventListener('visibilitychange', handleFocus);
+        window.addEventListener('focus', handleFocus);
+
+        return () => {
+            window.removeEventListener('visibilitychange', handleFocus);
+            window.removeEventListener('focus', handleFocus);
+        };
+    }, [session]); // Feuert neu, wenn sich der Login-Status ändert
+    // --- SYNC & MERGE LOGIC ---
+    const syncWithCloud = async (localData, silent = false) => {
+        if (!session) return; // Nur ausführen, wenn eingeloggt
         const userId = session.user.id;
 
         try {
@@ -2756,23 +2781,25 @@ function App() {
             const updatesForCloud = [];
 
             // A: Cloud Daten in Lokal integrieren
-            cloudData.forEach(row => {
-                const localEntry = mergedProgress[row.word_rank];
-                
-                // Wenn Cloud besser ist als Lokal (oder Lokal gar nicht existiert)
-                if (!localEntry || row.box > localEntry.box) {
-                    mergedProgress[row.word_rank] = {
-                        box: row.box,
-                        nextReview: parseInt(row.next_review),
-                        interval: row.interval,
-                        ease: row.ease_factor
-                    };
-                }
-            });
+            // Wenn die Cloud "schlauer" ist (höhere Box) oder das Wort lokal fehlt -> Nimm Cloud
+            if (cloudData) {
+                cloudData.forEach(row => {
+                    const localEntry = mergedProgress[row.word_rank];
+                    
+                    if (!localEntry || row.box > localEntry.box) {
+                        mergedProgress[row.word_rank] = {
+                            box: row.box,
+                            nextReview: parseInt(row.next_review),
+                            interval: row.interval,
+                            ease: row.ease_factor
+                        };
+                    }
+                });
+            }
 
-            // B: Lokale Daten für Cloud vorbereiten (Upsert)
+            // B: Lokale (gemergte) Daten für Cloud vorbereiten
+            // Wir schicken den finalen Stand zurück in die Cloud, damit beide synchron sind
             Object.entries(mergedProgress).forEach(([rank, prog]) => {
-                // Wir schicken alles hoch, Supabase 'upsert' kümmert sich um Updates
                 updatesForCloud.push({
                     user_id: userId,
                     word_rank: parseInt(rank),
@@ -2783,7 +2810,7 @@ function App() {
                 });
             });
 
-            // 3. Batch Upload in die Cloud
+            // 3. Batch Upload in die Cloud (Upsert)
             if (updatesForCloud.length > 0) {
                 const { error: upsertError } = await supabase
                     .from('user_progress')
@@ -2794,10 +2821,17 @@ function App() {
 
             // 4. Lokalen State aktualisieren
             setUserProgress(mergedProgress);
-            alert("Sync complete! Cloud and device are in sync.");
+            
+            // Feedback geben (nur wenn nicht stummgeschaltet)
+            if (!silent) {
+                alert("Sync complete! Cloud and device are in sync.");
+            } else {
+                console.log("Background sync finished successfully.");
+            }
 
         } catch (err) {
             console.error("Sync failed:", err);
+            if (!silent) alert("Sync error: " + err.message);
         }
     };
     // Helper: Text in Buchseiten aufteilen (ca. 450 Zeichen pro Seite, aber am Satzende/Absatz)
