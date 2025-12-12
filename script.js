@@ -1,5 +1,13 @@
 /* script.js */
 const { useState, useEffect } = React;
+/* script.js - Ganz oben */
+
+// --- SUPABASE CONFIG ---
+const SUPABASE_URL = 'https://cqokyipxnkohxzswvjrs.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxb2t5aXB4bmtvaHh6c3d2anJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1MzQyMjYsImV4cCI6MjA4MTExMDIyNn0.BW3Lvdi5Hy4LwJ-IN4b1DcZL4NN3HxUTxA9Jl-1WULQ';
+
+// Client erstellen (global verfügbar machen)
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // --- ICONS (Inline SVGs) ---
 const Icon = ({ path, size = 24, className = "" }) => (
@@ -187,6 +195,107 @@ const TOPIC_CONTENT = {
         }
     }
 };
+// --- AUTH COMPONENT ---
+const AuthScreen = ({ onLoginSuccess }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [isSignUp, setIsSignUp] = useState(false); // Toggle zwischen Login & Registrieren
+    const [msg, setMsg] = useState(null); // Für Fehlermeldungen oder Erfolg
+
+    const handleAuth = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setMsg(null);
+
+        try {
+            if (isSignUp) {
+                // REGISTRIEREN
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                });
+                if (error) throw error;
+                setMsg({ type: 'success', text: 'Account created! Logging you in...' });
+                // Bei deaktivierter Email-Confirm loggt Supabase oft direkt ein
+            } else {
+                // LOGIN
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password,
+                });
+                if (error) throw error;
+                // Kein msg nötig, App reagiert automatisch auf Session-Change
+            }
+        } catch (error) {
+            setMsg({ type: 'error', text: error.message });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="w-full pt-10 pb-24 px-4 flex flex-col items-center justify-center min-h-[60vh]">
+            <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100 w-full max-w-sm text-center">
+                <div className="bg-indigo-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-indigo-600">
+                    <User size={32} />
+                </div>
+                <h2 className="text-2xl font-bold text-slate-800 mb-1">
+                    {isSignUp ? 'Create Account' : 'Welcome Back'}
+                </h2>
+                <p className="text-slate-400 text-sm mb-6">
+                    {isSignUp ? 'Start your journey today' : 'Sync your progress across devices'}
+                </p>
+
+                {msg && (
+                    <div className={`p-3 rounded-xl text-sm mb-4 ${msg.type === 'error' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
+                        {msg.text}
+                    </div>
+                )}
+
+                <form onSubmit={handleAuth} className="space-y-4">
+                    <input 
+                        type="email" 
+                        placeholder="Email address" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors"
+                        required
+                    />
+                    <input 
+                        type="password" 
+                        placeholder="Password" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors"
+                        required
+                    />
+                    
+                    <button 
+                        type="submit" 
+                        disabled={loading}
+                        className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all disabled:opacity-50"
+                    >
+                        {loading ? <Loader2 size={24} className="animate-spin mx-auto"/> : (isSignUp ? 'Sign Up' : 'Login')}
+                    </button>
+                </form>
+
+                <div className="mt-6 pt-6 border-t border-slate-100">
+                    <p className="text-slate-400 text-sm">
+                        {isSignUp ? "Already have an account?" : "Don't have an account?"}
+                    </p>
+                    <button 
+                        onClick={() => { setIsSignUp(!isSignUp); setMsg(null); }}
+                        className="text-indigo-600 font-bold hover:underline mt-1"
+                    >
+                        {isSignUp ? 'Login instead' : 'Create one now'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --- JOKE DATABASE (Local & Offline) ---
 // --- LOCAL JOKES DATABASE ---
 const JOKE_DB = [
@@ -2136,7 +2245,31 @@ function App() {
         const saved = localStorage.getItem('vocabApp_bookProgress');
         return saved ? JSON.parse(saved) : {}; 
     });
+    /* Innerhalb von function App(), oben bei den States */
+    const [session, setSession] = useState(null); // Speichert die User-Daten
+    /* Innerhalb von function App() */
+    useEffect(() => {
+        // 1. Prüfen ob schon eingeloggt
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+        });
 
+        // 2. Auf Änderungen hören (Login/Logout)
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    // Logout Funktion
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        setSession(null);
+        alert("Logged out successfully.");
+    };
     // Helper: Text in Buchseiten aufteilen (ca. 450 Zeichen pro Seite, aber am Satzende/Absatz)
     const paginateText = (text) => {
         if (!text) return [];
@@ -5287,6 +5420,9 @@ function App() {
     
     const renderProfile = () => {
         // --- 1. DATEN BERECHNEN ---
+        if (!session) {
+            return <AuthScreen onLoginSuccess={() => {}} />;
+        }
         const safeVocab = vocabulary || [];
         
         // Gelernte Wörter (Box > 0)
@@ -5644,6 +5780,13 @@ function App() {
                         )}
 
                         {/* Settings / Reset */}
+                        {/* Logout Button (Füge das ganz unten in der renderProfile Liste ein) */}
+                        <button 
+                            onClick={handleLogout} 
+                            className="w-full mt-6 py-4 bg-red-50 text-red-600 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
+                        >
+                            Log Out ({session.user.email})
+                        </button>
                         <button 
                             onClick={() => setView('data-mgmt')} 
                             className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
