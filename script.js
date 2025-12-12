@@ -198,7 +198,7 @@ const TOPIC_CONTENT = {
 // --- AUTH COMPONENT ---
 /* script.js - Ersetze die alte AuthScreen Komponente hiermit */
 
-const AuthScreen = ({ onLoginSuccess }) => {
+const AuthScreen = ({ onLoginSuccess, isEmbedded = false }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -250,8 +250,8 @@ const AuthScreen = ({ onLoginSuccess }) => {
     };
 
     return (
-        <div className="w-full pt-10 pb-24 px-4 flex flex-col items-center justify-center min-h-[60vh]">
-            <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100 w-full max-w-sm text-center">
+        <div className={`w-full px-4 flex flex-col items-center justify-center ${isEmbedded ? 'py-4 min-h-0' : 'pt-10 pb-24 min-h-[60vh]'}`}>
+            <div className={`bg-white w-full max-w-sm text-center ${isEmbedded ? '' : 'p-8 rounded-[2.5rem] shadow-xl border border-slate-100'}`}>
                 <div className="bg-indigo-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-indigo-600">
                     <User size={32} />
                 </div>
@@ -2211,81 +2211,207 @@ const GrammarDetail = ({ topicId, onBack }) => {
         </div>
     );
 };
-const WelcomeScreen = ({ onComplete }) => {
-    const [name, setName] = useState('');
-    const [level, setLevel] = useState('A1');
-    const [submitting, setSubmitting] = useState(false);
+// --- ONBOARDING COMPONENTS ---
 
-    const handleSubmit = async () => {
-        if (!name.trim()) return;
-        setSubmitting(true);
-        
-        // 1. Profil in Supabase updaten
-        const { error } = await supabase
-            .from('profiles')
-            .update({ 
-                nickname: name,
-                target_level: level
-            })
-            .eq('id', (await supabase.auth.getUser()).data.user.id);
+const OnboardingWizard = ({ onComplete }) => {
+    const [step, setStep] = useState(0); // 0=Intro, 1=Auth, 2=Name, 3=Level
+    const [nickname, setNickname] = useState("");
+    const [showGuestWarning, setShowGuestWarning] = useState(false);
 
-        if (error) {
-            alert("Error saving profile: " + error.message);
-            setSubmitting(false);
-        } else {
-            // 2. Callback an App, damit der Screen verschwindet
-            onComplete(name);
+    // --- STEP 0: INTRO ---
+    const RenderIntro = () => (
+        <div className="text-center space-y-6">
+            <div className="bg-indigo-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto text-indigo-600 text-5xl mb-4">
+                🚀
+            </div>
+            <h2 className="text-3xl font-extrabold text-slate-800">Master French<br/>Frequency</h2>
+            <p className="text-slate-500 text-lg leading-relaxed">
+                Learn the 5,000 most used words in French. Stop wasting time on words you'll never use.
+            </p>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="bg-slate-50 p-4 rounded-2xl">
+                    <span className="text-2xl block mb-2">🧠</span>
+                    <span className="text-xs font-bold text-slate-400 uppercase">Smart AI</span>
+                </div>
+                <div className="bg-slate-50 p-4 rounded-2xl">
+                    <span className="text-2xl block mb-2">📊</span>
+                    <span className="text-xs font-bold text-slate-400 uppercase">Tracking</span>
+                </div>
+            </div>
+            <button onClick={() => setStep(1)} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all mt-8">
+                Get Started
+            </button>
+        </div>
+    );
+
+    // --- STEP 1: AUTH DECISION ---
+    const RenderAuthStep = () => {
+        const handleGuestClick = () => {
+            setShowGuestWarning(true);
+        };
+
+        const confirmGuest = () => {
+            setShowGuestWarning(false);
+            setStep(2); // Weiter zum Namen
+        };
+
+        if (showGuestWarning) {
+            return (
+                <div className="text-center space-y-4 animate-in fade-in zoom-in duration-300">
+                    <div className="bg-amber-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto text-amber-600 text-4xl mb-4">
+                        ⚠️
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-800">Warning</h3>
+                    <p className="text-slate-500">
+                        If you continue as a guest, your progress is only saved on this device. If you clear your cache, <b>data will be lost</b>.
+                    </p>
+                    <p className="text-xs text-slate-400">You can link an email later in settings.</p>
+                    
+                    <div className="flex flex-col gap-3 mt-6">
+                        <button onClick={confirmGuest} className="w-full bg-amber-500 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-amber-600">
+                            I understand, continue
+                        </button>
+                        <button onClick={() => setShowGuestWarning(false)} className="text-slate-400 font-bold text-sm py-2">
+                            Go back
+                        </button>
+                    </div>
+                </div>
+            );
         }
+
+        return (
+            <div className="space-y-6">
+                <div className="text-center mb-6">
+                    <h2 className="text-2xl font-bold text-slate-800">Save your progress</h2>
+                    <p className="text-slate-500 text-sm">Create an account to sync across devices.</p>
+                </div>
+
+                {/* Wir nutzen hier den existierenden AuthScreen, aber passen ihn leicht an */}
+                <div className="border border-slate-100 rounded-[2rem] overflow-hidden">
+                   <AuthScreen onLoginSuccess={() => setStep(2)} isEmbedded={true} />
+                </div>
+
+                <div className="relative py-2">
+                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200"></div></div>
+                    <div className="relative flex justify-center text-sm"><span className="px-2 bg-white text-slate-400">or</span></div>
+                </div>
+
+                <button onClick={handleGuestClick} className="w-full py-4 text-slate-500 font-bold text-sm bg-slate-50 rounded-2xl hover:bg-slate-100 transition-colors">
+                    Continue as Guest
+                </button>
+            </div>
+        );
+    };
+
+    // --- STEP 2: PROFILE (Name) ---
+    const RenderNameStep = () => (
+        <div className="text-center space-y-6">
+            <div className="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-purple-600 text-4xl">
+                👋
+            </div>
+            <h2 className="text-2xl font-bold text-slate-800">What should we call you?</h2>
+            
+            <input 
+                type="text" 
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                placeholder="Your Nickname"
+                className="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-2xl font-bold text-xl text-center text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                autoFocus
+            />
+
+            <button 
+                onClick={async () => {
+                    if(!nickname.trim()) return;
+                    
+                    // Speichern (Lokal & Cloud falls eingeloggt)
+                    const { data: { session } } = await supabase.auth.getSession();
+                    
+                    // 1. Lokal immer speichern
+                    localStorage.setItem('vocabApp_nickname', nickname);
+
+                    // 2. Cloud speichern wenn User da
+                    if (session) {
+                        await supabase.from('profiles').update({ nickname: nickname }).eq('id', session.user.id);
+                    }
+                    
+                    setStep(3);
+                }}
+                disabled={!nickname.trim()}
+                className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-xl hover:bg-indigo-700 disabled:opacity-50 disabled:shadow-none transition-all"
+            >
+                Next Step
+            </button>
+        </div>
+    );
+
+    // --- STEP 3: LEVEL SELECTION ---
+    const RenderLevelStep = () => {
+        const levels = [
+            { id: 'Scratch', label: 'Absolute Beginner', icon: '🐣', desc: 'Start from word #1' },
+            { id: 'A2', label: 'Elementary', icon: '🚲', desc: 'I know basics' },
+            { id: 'B1', label: 'Intermediate', icon: '🚀', desc: 'I can converse' },
+            { id: 'B2', label: 'Advanced', icon: '🎩', desc: 'Fluent reader' },
+        ];
+
+        const handleFinish = async (levelId) => {
+            // Speichern
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            // 1. Lokal
+            localStorage.setItem('vocabApp_targetLevel', levelId);
+            localStorage.setItem('vocabApp_hasOnboarded', 'true'); // WICHTIG: Flag setzen!
+
+            // 2. Cloud
+            if (session) {
+                await supabase.from('profiles').update({ target_level: levelId }).eq('id', session.user.id);
+            }
+
+            // Callback um Wizard zu schließen
+            onComplete(nickname, levelId);
+        };
+
+        return (
+            <div className="text-center space-y-4">
+                <h2 className="text-2xl font-bold text-slate-800 mb-2">Where do you start?</h2>
+                <p className="text-slate-400 text-sm mb-4">This helps us adjust your content.</p>
+
+                <div className="grid gap-3">
+                    {levels.map(l => (
+                        <button 
+                            key={l.id}
+                            onClick={() => handleFinish(l.id)}
+                            className="bg-white border-2 border-slate-100 p-4 rounded-2xl flex items-center gap-4 hover:border-indigo-500 hover:bg-indigo-50 transition-all group text-left"
+                        >
+                            <div className="text-3xl">{l.icon}</div>
+                            <div>
+                                <div className="font-bold text-slate-800 group-hover:text-indigo-700">{l.label}</div>
+                                <div className="text-xs text-slate-400">{l.desc}</div>
+                            </div>
+                            <div className="ml-auto opacity-0 group-hover:opacity-100 text-indigo-600">
+                                <Check size={20} />
+                            </div>
+                        </button>
+                    ))}
+                </div>
+            </div>
+        );
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-indigo-600 flex items-center justify-center p-6 animate-in fade-in duration-500">
-            <div className="bg-white w-full max-w-sm rounded-[2.5rem] p-8 shadow-2xl text-center">
-                <div className="bg-indigo-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-indigo-600 text-4xl">
-                    👋
-                </div>
-                <h2 className="text-3xl font-bold text-slate-800 mb-2">Bienvenue!</h2>
-                <p className="text-slate-500 mb-8">Let's set up your profile to personalize your learning journey.</p>
-
-                <div className="space-y-4 text-left">
-                    <div>
-                        <label className="block text-xs font-bold text-slate-400 uppercase ml-4 mb-2">What should we call you?</label>
-                        <input 
-                            type="text" 
-                            value={name}
-                            onChange={e => setName(e.target.value)}
-                            placeholder="Your Nickname"
-                            className="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl font-bold text-lg text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20 transition-all"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-xs font-bold text-slate-400 uppercase ml-4 mb-2">Current French Level?</label>
-                        <div className="grid grid-cols-3 gap-2">
-                            {['A1', 'A2', 'B1', 'B2', 'C1'].map(l => (
-                                <button 
-                                    key={l}
-                                    onClick={() => setLevel(l)}
-                                    className={`py-3 rounded-xl font-bold text-sm transition-all border-2 ${
-                                        level === l 
-                                        ? 'border-indigo-600 bg-indigo-600 text-white shadow-md transform scale-105' 
-                                        : 'border-slate-100 bg-white text-slate-400 hover:border-indigo-200'
-                                    }`}
-                                >
-                                    {l}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+        <div className="fixed inset-0 z-[100] bg-white flex items-center justify-center p-6 animate-in fade-in duration-300">
+            <div className="w-full max-w-md">
+                {/* Progress Bar */}
+                <div className="flex gap-2 mb-8">
+                    {[0, 1, 2, 3].map(i => (
+                        <div key={i} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${i <= step ? 'bg-indigo-600' : 'bg-slate-200'}`}></div>
+                    ))}
                 </div>
 
-                <button 
-                    onClick={handleSubmit}
-                    disabled={!name.trim() || submitting}
-                    className="w-full mt-8 bg-slate-900 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-slate-300 hover:bg-black active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
-                >
-                    {submitting ? <Loader2 className="animate-spin mx-auto"/> : "Let's Go! 🚀"}
-                </button>
+                {step === 0 && <RenderIntro />}
+                {step === 1 && <RenderAuthStep />}
+                {step === 2 && <RenderNameStep />}
+                {step === 3 && <RenderLevelStep />}
             </div>
         </div>
     );
@@ -2303,7 +2429,11 @@ function App() {
     const [deleteInput, setDeleteInput] = useState(""); // Für die "DELETE" Eingabe
     // 1. STATES (Hier geht dein normaler Code weiter)
     const [session, setSession] = useState(null);
-    const [showOnboarding, setShowOnboarding] = useState(false); // Steuert das Welcome Fenster
+    // --- ONBOARDING STATE ---
+    // Wir prüfen localStorage. Wenn 'true', dann false (kein Wizard). Sonst true.
+    const [showWizard, setShowWizard] = useState(() => {
+        return !localStorage.getItem('vocabApp_hasOnboarded');
+    });
 
     const [view, setView] = useState('home'); 
     const [vocabulary, setVocabulary] = useState([]); // Startet leer, useEffect füllt es sofort
@@ -2320,7 +2450,7 @@ function App() {
     const [currentStory, setCurrentStory] = useState(null);
     const [loadingStory, setLoadingStory] = useState(false);
     const [quizAnswers, setQuizAnswers] = useState({});
-    
+    const [showAuthModal, setShowAuthModal] = useState(false);
     //Generated Story
     const [storyConfig, setStoryConfig] = useState({ length: 'medium', level: 'auto' }); 
     const [clickedWord, setClickedWord] = useState(null);
@@ -2439,7 +2569,7 @@ function App() {
     const handleLogout = async () => {
         await supabase.auth.signOut();
         setSession(null);
-        alert("Logged out successfully.");
+        alert("Logged out. You are now in Guest Mode.");
     };
     // Helper: Text in Buchseiten aufteilen (ca. 450 Zeichen pro Seite, aber am Satzende/Absatz)
     const paginateText = (text) => {
@@ -2888,6 +3018,8 @@ function App() {
         } else {
             console.error("WICHTIG: vocab_List wurde nicht gefunden. Prüfe den Dateinamen.");
         }
+        const localNick = localStorage.getItem('vocabApp_nickname');
+        if (localNick) setNickname(localNick);
     }, []);
 
     useEffect(() => {
@@ -5598,15 +5730,8 @@ function App() {
     };
     
     const renderProfile = () => {
-        // --- 1. AUTH CHECK ---
-        if (!session) {
-            return <AuthScreen onLoginSuccess={() => {}} />;
-        }
-
-        // --- 2. DATEN BERECHNEN ---
+        // --- 1. DATEN BERECHNEN ---
         const safeVocab = vocabulary || [];
-        
-        // Gelernte Wörter (Box > 0)
         const learnedCount = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
 
         // --- CEFR VOCABULARY LEVEL ---
@@ -5658,14 +5783,13 @@ function App() {
                 if (learnedCount === 0) return { title: "Fresh Start", emoji: "🌱", desc: "Your French journey begins here.", color: "from-slate-400 to-slate-600" };
                 return { title: "Curious Tourist", emoji: "📷", desc: "Collecting first impressions.", color: "from-slate-400 to-slate-600" };
             }
-            if (diff >= 2) { // High Vocab, Low Grammar
+            if (diff >= 2) { 
                 if (vocabNum >= 4) return { title: "Yoda", emoji: "🧙‍♂️", desc: "Words you have, but grammar you must learn!", color: "from-green-500 to-emerald-700" };
                 return { title: "Word Hoarder", emoji: "📚", desc: "Great vocabulary! Now focus on grammar.", color: "from-amber-400 to-orange-600" };
             }
-            if (diff <= -2) { // High Grammar, Low Vocab
+            if (diff <= -2) { 
                 return { title: "The Professor", emoji: "🎓", desc: "Great rules knowledge, but you need more words!", color: "from-indigo-500 to-purple-700" };
             }
-            // Balanced
             return { title: "Adventurer", emoji: "🧭", desc: "You're on your way! Keep going.", color: "from-blue-400 to-indigo-600" };
         };
         const creativeTitle = getCreativeTitle();
@@ -5674,11 +5798,19 @@ function App() {
         return (
             <div className="max-w-2xl mx-auto space-y-8 pt-2 pb-24">
                 
-                {/* HEADER MIT NICKNAME */}
+                {/* HEADER MIT NICKNAME & LEVEL */}
                 <div className="flex items-center justify-between px-1">
                     <div>
                         <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Identity</div>
-                        <h2 className="text-3xl font-bold text-slate-800">{nickname}</h2>
+                        <div className="flex items-center gap-2">
+                            <h2 className="text-3xl font-bold text-slate-800">{nickname}</h2>
+                            {/* Zeige "GUEST" Badge wenn nicht eingeloggt */}
+                            {!session && (
+                                <span className="bg-slate-200 text-slate-500 text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wide">
+                                    Guest
+                                </span>
+                            )}
+                        </div>
                     </div>
                     <div className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">
                         Level {Math.floor(learnedCount / 50) + 1}
@@ -5701,6 +5833,29 @@ function App() {
                     </p>
                     <User size={120} className="absolute -right-6 -bottom-8 text-white opacity-10 rotate-12"/>
                 </div>
+
+                {/* --- GAST WARNUNG / SIGN UP CALL-TO-ACTION (Nur für Gäste) --- */}
+                {!session && (
+                    <div className="bg-amber-50 border border-amber-200 p-5 rounded-[2rem] relative overflow-hidden">
+                        <div className="flex items-start gap-4 relative z-10">
+                            <div className="bg-amber-100 text-amber-600 p-3 rounded-2xl shrink-0">
+                                <Shield size={24} />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-amber-900 text-lg">Unsaved Progress</h3>
+                                <p className="text-amber-700/80 text-sm mb-4 leading-relaxed">
+                                    You are playing as a Guest. Create an account to backup your data.
+                                </p>
+                                <button 
+                                    onClick={() => setShowAuthModal(true)} 
+                                    className="bg-amber-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-amber-200 hover:bg-amber-700 transition-all active:scale-95"
+                                >
+                                    Create Account / Login
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* 2. CURRENTLY LEARNING (STATS) */}
                 <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm">
@@ -5787,8 +5942,6 @@ function App() {
                         </button>
                     </div>
                 </div>
-
-                {/* KEIN Logout Button mehr hier (ist jetzt in Settings) */}
             </div>
         );
     };
@@ -6176,11 +6329,14 @@ function App() {
                     }} 
                 />
             )}
-            {showOnboarding && (
-                <WelcomeScreen onComplete={(name) => {
-                    setShowOnboarding(false);
-                    // Optional: Kurzes Feedback
-                    alert(`Merci, ${name}! Your profile is ready.`);
+            {/* --- ONBOARDING WIZARD --- */}
+            {showWizard && (
+                <OnboardingWizard onComplete={(name, level) => {
+                    setNickname(name);
+                    setShowWizard(false);
+                    // Hier könntest du basierend auf 'level' Logik ausführen
+                    // z.B. wenn "A2" gewählt wurde, userProgress anpassen (später)
+                    console.log("Onboarding finished:", name, level);
                 }} />
             )}
             {/* --- DELETE ACCOUNT MODAL --- */}
@@ -6233,6 +6389,32 @@ function App() {
                             >
                                 Delete
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* --- AUTH MODAL FOR GUESTS --- */}
+            {showAuthModal && (
+                <div className="fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+                    <div className="bg-white w-full max-w-sm rounded-[2.5rem] overflow-hidden shadow-2xl relative">
+                        {/* Close Button */}
+                        <button 
+                            onClick={() => setShowAuthModal(false)}
+                            className="absolute top-4 right-4 p-2 bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 z-10"
+                        >
+                            <X size={20}/>
+                        </button>
+
+                        {/* Wir nutzen wieder AuthScreen, aber sagen ihm, dass er "embedded" ist */}
+                        <div className="py-6">
+                            <AuthScreen 
+                                isEmbedded={true} 
+                                onLoginSuccess={() => {
+                                    setShowAuthModal(false);
+                                    // HIER SPÄTER: Sync Logic aufrufen!
+                                    alert("Account linked successfully!");
+                                }} 
+                            />
                         </div>
                     </div>
                 </div>
