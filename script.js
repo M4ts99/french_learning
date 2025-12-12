@@ -2212,8 +2212,17 @@ const GrammarDetail = ({ topicId, onBack }) => {
     );
 };
 
+
 function App() {
     // --- STATE MANAGEMENT ---
+    // --- HACK: Doppelten Hash fixen (Google Login Bug) ---
+    if (window.location.hash && window.location.hash.startsWith('##')) {
+        window.location.hash = window.location.hash.substring(1);
+    }
+    
+    // 1. STATES (Hier geht dein normaler Code weiter)
+    const [session, setSession] = useState(null);
+
     const [view, setView] = useState('home'); 
     const [vocabulary, setVocabulary] = useState([]); // Startet leer, useEffect füllt es sofort
     const [userProgress, setUserProgress] = useState({}); 
@@ -2282,20 +2291,50 @@ function App() {
         const saved = localStorage.getItem('vocabApp_bookProgress');
         return saved ? JSON.parse(saved) : {}; 
     });
+    // Du solltest diese Zeile haben:
+    const [authLoading, setAuthLoading] = useState(true);
     /* Innerhalb von function App(), oben bei den States */
-    const [session, setSession] = useState(null); // Speichert die User-Daten
+    
     /* Innerhalb von function App() */
+    // --- AUTH CHECK EFFECT (Bugfix für Google Redirect) ---
+    // --- AUTH CHECK EFFECT (Korrigiert) ---
+    // --- AUTH CHECK & DEBUGGING ---
+    // --- AUTH CHECK & LISTENER (Final & Stabil) ---
     useEffect(() => {
-        // 1. Prüfen ob schon eingeloggt
+        // 1. Initialer Check
         supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
+            if (session) {
+                setSession(session);
+                setAuthLoading(false);
+            } else {
+                // Prüfen auf Hash (einfach oder doppelt)
+                const hash = window.location.hash;
+                const isRedirect = hash && (hash.includes('access_token') || hash.includes('error_description'));
+                
+                if (isRedirect) {
+                    console.log("🔄 Redirect erkannt, warte auf Event...");
+                    // Wir bleiben im Loading-State!
+                } else {
+                    setAuthLoading(false);
+                }
+            }
         });
 
-        // 2. Auf Änderungen hören (Login/Logout)
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
+        // 2. Event Listener
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            console.log("🔔 Auth Event:", event);
+            
+            if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+                setSession(session);
+                setAuthLoading(false);
+                // Hash bereinigen, damit die URL sauber ist
+                if (window.location.hash) {
+                    window.history.replaceState(null, null, window.location.pathname);
+                }
+            } else if (event === 'SIGNED_OUT') {
+                setSession(null);
+                setAuthLoading(false);
+            }
         });
 
         return () => subscription.unsubscribe();
