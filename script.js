@@ -6340,13 +6340,14 @@ function App() {
                 }} />
             )}
             {/* --- DELETE ACCOUNT MODAL --- */}
+            {/* --- DELETE ACCOUNT MODAL --- */}
             {showDeleteModal && (
                 <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
                     <div className="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl scale-100">
                         <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4 mx-auto">
                             <AlertCircle size={24} />
                         </div>
-                        <h3 className="text-xl font-bold text-slate-900 text-center mb-2">Delete Account?</h3>
+                        <h3 className="text-xl font-bold text-slate-900 text-center mb-2">Delete Everything?</h3>
                         <p className="text-slate-500 text-center text-sm mb-6">
                             This action cannot be undone. All your progress, vocabulary, and stats will be lost forever.
                         </p>
@@ -6366,7 +6367,10 @@ function App() {
 
                         <div className="flex gap-3">
                             <button 
-                                onClick={() => setShowDeleteModal(false)}
+                                onClick={() => {
+                                    setShowDeleteModal(false);
+                                    setDeleteInput(""); // Input zurücksetzen beim Schließen
+                                }}
                                 className="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors"
                             >
                                 Cancel
@@ -6374,16 +6378,27 @@ function App() {
                             <button 
                                 disabled={deleteInput !== "DELETE"}
                                 onClick={async () => {
-                                    // ECHTE LÖSCH-LOGIK
-                                    const { error } = await supabase.rpc('delete_user');
-                                    if (error) {
-                                        alert(error.message); // Fallback für echte DB Fehler
-                                    } else {
+                                    // 1. Prüfen ob User eingeloggt ist
+                                    if (session) {
+                                        // LOGIK FÜR EINGELOGGTE USER (Cloud)
+                                        const { error } = await supabase.rpc('delete_user');
+                                        if (error) {
+                                            alert("Cloud deletion failed: " + error.message);
+                                            return; // Abbrechen, nichts lokal löschen
+                                        }
                                         await supabase.auth.signOut();
-                                        setSession(null);
-                                        localStorage.clear(); // Alles weg
-                                        window.location.reload(); // App neu laden
                                     }
+
+                                    // 2. LOGIK FÜR ALLE (Lokal aufräumen)
+                                    // Hier wird alles platt gemacht: Fortschritt, Nickname, Onboarding-Status
+                                    localStorage.clear(); 
+                                    
+                                    // State Reset (für sauberen Übergang)
+                                    setSession(null);
+                                    setShowDeleteModal(false);
+                                    
+                                    // App neu laden -> Da localStorage leer ist, startet der OnboardingWizard
+                                    window.location.reload(); 
                                 }}
                                 className="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-red-200"
                             >
