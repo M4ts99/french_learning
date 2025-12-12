@@ -198,35 +198,62 @@ const TOPIC_CONTENT = {
 // --- AUTH COMPONENT ---
 /* script.js - Ersetze die alte AuthScreen Komponente hiermit */
 
+/* script.js - AuthScreen Update */
+/* script.js - AuthScreen Update mit Reset-Funktion */
 const AuthScreen = ({ onLoginSuccess, isEmbedded = false }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [isSignUp, setIsSignUp] = useState(false); // Toggle zwischen Login & Registrieren
-    const [msg, setMsg] = useState(null); // Für Fehlermeldungen oder Erfolg
+    const [isSignUp, setIsSignUp] = useState(false);
+    
+    // NEU: Toggle für Reset-Modus
+    const [isResetMode, setIsResetMode] = useState(false); 
+    
+    const [msg, setMsg] = useState(null);
 
+    // 1. PASSWORT RESET ANFORDERN
+    const handlePasswordReset = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setMsg(null);
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.href, // Wichtig: Zurück zu deiner App
+        });
+
+        if (error) {
+            setMsg({ type: 'error', text: error.message });
+        } else {
+            setMsg({ type: 'success', text: 'Check your emails for the reset link!' });
+            // Optional: Nach 3 Sekunden zurück zum Login wechseln
+            setTimeout(() => setIsResetMode(false), 5000);
+        }
+        setLoading(false);
+    };
+
+    // 2. NORMALER LOGIN / SIGNUP (Bleibt fast gleich)
     const handleAuth = async (e) => {
         e.preventDefault();
         setLoading(true);
         setMsg(null);
 
+        if (isSignUp && password !== confirmPassword) {
+            setMsg({ type: 'error', text: "Passwords do not match!" });
+            setLoading(false);
+            return;
+        }
+
         try {
             if (isSignUp) {
-                // REGISTRIEREN
-                const { data, error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                });
+                const { error } = await supabase.auth.signUp({ email, password });
                 if (error) throw error;
-                setMsg({ type: 'success', text: 'Account created! Logging you in...' });
+                setMsg({ type: 'success', text: 'Account created! Logging in...' });
             } else {
-                // LOGIN
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password,
-                });
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
             }
+            if (onLoginSuccess) onLoginSuccess();
         } catch (error) {
             setMsg({ type: 'error', text: error.message });
         } finally {
@@ -234,37 +261,30 @@ const AuthScreen = ({ onLoginSuccess, isEmbedded = false }) => {
         }
     };
 
-    // Google Login Handler
-    // Google Login Handler
     const handleGoogleLogin = async () => {
+        // ... (Dein Google Code hier lassen) ...
         setLoading(true);
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: {
-                // ÄNDERUNG: Statt .origin nehmen wir .href
-                // Das sorgt dafür, dass er exakt auf die aktuelle Seite zurückkehrt
-                redirectTo: window.location.href 
-            }
+            options: { redirectTo: window.location.href }
         });
         if (error) setMsg({ type: 'error', text: error.message });
     };
 
     return (
-        // ÄNDERUNG: Wenn isEmbedded, dann KEIN min-h und KEIN padding oben/unten
         <div className={`w-full px-4 flex flex-col items-center justify-center ${isEmbedded ? 'py-0' : 'pt-10 pb-24 min-h-[60vh]'}`}>
             <div className={`bg-white w-full max-w-sm text-center ${isEmbedded ? '' : 'p-8 rounded-[2.5rem] shadow-xl border border-slate-100'}`}>
                 
-                {/* ÄNDERUNG: Icon und Überschrift nur anzeigen, wenn NICHT embedded (spart Platz im Wizard) */}
                 {!isEmbedded && (
                     <>
                         <div className="bg-indigo-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-indigo-600">
-                            <User size={32} />
+                            {isResetMode ? <RotateCcw size={32}/> : <User size={32} />}
                         </div>
                         <h2 className="text-2xl font-bold text-slate-800 mb-1">
-                            {isSignUp ? 'Create Account' : 'Welcome Back'}
+                            {isResetMode ? 'Reset Password' : (isSignUp ? 'Create Account' : 'Welcome Back')}
                         </h2>
                         <p className="text-slate-400 text-sm mb-6">
-                            {isSignUp ? 'Start your journey today' : 'Sync your progress across devices'}
+                            {isResetMode ? 'Enter email to receive a link' : (isSignUp ? 'Start your journey today' : 'Sync your progress across devices')}
                         </p>
                     </>
                 )}
@@ -275,66 +295,157 @@ const AuthScreen = ({ onLoginSuccess, isEmbedded = false }) => {
                     </div>
                 )}
 
-                {/* --- GOOGLE BUTTON START --- */}
-                <button 
-                    onClick={handleGoogleLogin}
-                    disabled={loading}
-                    className="w-full py-3 mb-6 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold shadow-sm hover:bg-slate-50 transition-all flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50"
-                >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                        <path d="M5.84 14.12c-.22-.66-.35-1.36-.35-2.12s.13-1.46.35-2.12V7.04H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.96l3.66-2.84z" fill="#FBBC05"/>
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.04l3.66 2.84c.87-2.6 3.3-4.5 6.16-4.5z" fill="#EA4335"/>
-                    </svg>
-                    Continue with Google
-                </button>
-                
-                <div className="flex items-center gap-4 mb-6">
-                    <div className="h-px bg-slate-200 flex-1"></div>
-                    <span className="text-xs text-slate-400 font-bold uppercase">Or with Email</span>
-                    <div className="h-px bg-slate-200 flex-1"></div>
-                </div>
-                {/* --- GOOGLE BUTTON END --- */}
+                {/* --- ANSICHT A: RESET FORMULAR --- */}
+                {isResetMode ? (
+                    <form onSubmit={handlePasswordReset} className="space-y-4">
+                        <input 
+                            type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)}
+                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors"
+                            required
+                        />
+                        <button type="submit" disabled={loading} className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all disabled:opacity-50">
+                            {loading ? <Loader2 size={24} className="animate-spin mx-auto"/> : 'Send Magic Link'}
+                        </button>
+                        <button type="button" onClick={() => { setIsResetMode(false); setMsg(null); }} className="text-indigo-600 font-bold hover:underline text-sm">
+                            Back to Login
+                        </button>
+                    </form>
+                ) : (
+                    /* --- ANSICHT B: NORMALER LOGIN/SIGNUP --- */
+                    <>
+                        <button onClick={handleGoogleLogin} disabled={loading} className="w-full py-3 mb-6 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold shadow-sm hover:bg-slate-50 transition-all flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50">
+                            {/* Google SVG hier lassen... */}
+                            <span>Continue with Google</span>
+                        </button>
+                        
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="h-px bg-slate-200 flex-1"></div>
+                            <span className="text-xs text-slate-400 font-bold uppercase">Or with Email</span>
+                            <div className="h-px bg-slate-200 flex-1"></div>
+                        </div>
 
-                <form onSubmit={handleAuth} className="space-y-4">
-                    <input 
-                        type="email" 
-                        placeholder="Email address" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors"
-                        required
-                    />
+                        <form onSubmit={handleAuth} className="space-y-3">
+                            <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors" required />
+                            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors" required />
+                            
+                            {isSignUp && (
+                                <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors animate-in fade-in slide-in-from-top-2" required />
+                            )}
+                            
+                            <button type="submit" disabled={loading} className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all disabled:opacity-50">
+                                {loading ? <Loader2 size={24} className="animate-spin mx-auto"/> : (isSignUp ? 'Sign Up' : 'Login')}
+                            </button>
+                        </form>
+
+                        <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
+                            {/* Toggle Login/Signup */}
+                            <p className="text-slate-400 text-sm">
+                                {isSignUp ? "Already have an account?" : "Don't have an account?"} 
+                                <button onClick={() => { setIsSignUp(!isSignUp); setMsg(null); }} className="text-indigo-600 font-bold hover:underline ml-1">
+                                    {isSignUp ? 'Login' : 'Sign Up'}
+                                </button>
+                            </p>
+                            
+                            {/* Toggle Forgot Password */}
+                            {!isSignUp && (
+                                <button onClick={() => { setIsResetMode(true); setMsg(null); }} className="text-slate-400 text-xs hover:text-slate-600 hover:underline">
+                                    Forgot Password?
+                                </button>
+                            )}
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+};
+/* script.js - UpdatePasswordScreen mit Bestätigung */
+const UpdatePasswordScreen = ({ onComplete }) => {
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState(''); // NEU
+    const [loading, setLoading] = useState(false);
+    const [msg, setMsg] = useState(null); // Für Fehler/Erfolg
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setMsg(null);
+
+        // 1. Validierung: Übereinstimmung
+        if (password !== confirmPassword) {
+            setMsg({ type: 'error', text: "Passwords do not match!" });
+            setLoading(false);
+            return;
+        }
+
+        // 2. Validierung: Länge (Supabase verlangt meist min 6)
+        if (password.length < 6) {
+            setMsg({ type: 'error', text: "Password must be at least 6 characters." });
+            setLoading(false);
+            return;
+        }
+        
+        // 3. Update an Supabase senden
+        const { error } = await supabase.auth.updateUser({ password: password });
+
+        if (error) {
+            setMsg({ type: 'error', text: error.message });
+            setLoading(false);
+        } else {
+            setMsg({ type: 'success', text: "Password updated successfully!" });
+            // Kurze Verzögerung, damit der User die Erfolgsmeldung sieht
+            setTimeout(() => {
+                onComplete(); // Zurück zur App
+            }, 1500);
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+            <div className="bg-white w-full max-w-sm p-8 rounded-[2.5rem] shadow-xl text-center">
+                <div className="bg-indigo-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-indigo-600">
+                    <Shield size={32} />
+                </div>
+                <h2 className="text-2xl font-bold text-slate-800 mb-2">Set New Password</h2>
+                <p className="text-slate-400 text-sm mb-6">Please enter your new secure password.</p>
+
+                {/* Feedback Meldung */}
+                {msg && (
+                    <div className={`p-3 rounded-xl text-sm mb-4 ${msg.type === 'error' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
+                        {msg.text}
+                    </div>
+                )}
+
+                <form onSubmit={handleUpdate} className="space-y-4">
                     <input 
                         type="password" 
-                        placeholder="Password" 
+                        placeholder="New Password" 
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors"
                         required
+                        minLength={6}
                     />
                     
+                    {/* NEU: Confirm Password Feld */}
+                    <input 
+                        type="password" 
+                        placeholder="Confirm Password" 
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors animate-in fade-in slide-in-from-top-2"
+                        required
+                        minLength={6}
+                    />
+
                     <button 
                         type="submit" 
                         disabled={loading}
-                        className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all disabled:opacity-50"
+                        className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-all disabled:opacity-50"
                     >
-                        {loading ? <Loader2 size={24} className="animate-spin mx-auto"/> : (isSignUp ? 'Sign Up' : 'Login')}
+                        {loading ? <Loader2 size={24} className="animate-spin mx-auto"/> : 'Update Password'}
                     </button>
                 </form>
-
-                <div className="mt-6 pt-6 border-t border-slate-100">
-                    <p className="text-slate-400 text-sm">
-                        {isSignUp ? "Already have an account?" : "Don't have an account?"}
-                    </p>
-                    <button 
-                        onClick={() => { setIsSignUp(!isSignUp); setMsg(null); }}
-                        className="text-indigo-600 font-bold hover:underline mt-1"
-                    >
-                        {isSignUp ? 'Login instead' : 'Create one now'}
-                    </button>
-                </div>
             </div>
         </div>
     );
@@ -2222,73 +2333,86 @@ const GrammarDetail = ({ topicId, onBack }) => {
 
 // --- ONBOARDING COMPONENTS ---
 
-const OnboardingWizard = ({ onComplete }) => {
-    const [step, setStep] = useState(0); // 0=Intro, 1=Auth, 2=Name, 3=Level
+// --- ONBOARDING WIZARD (FIXED & ENHANCED) ---
+const OnboardingWizard = ({ onComplete, session }) => { // Nimmt session als Prop!
+    const [step, setStep] = useState(0); // 0=Intro, 1=Auth, 2=Name, 3=Level, 4=ExistingUser
     const [nickname, setNickname] = useState("");
     const [showGuestWarning, setShowGuestWarning] = useState(false);
+    
+    // State für gefundenes Profil
+    const [existingProfile, setExistingProfile] = useState(null);
+    const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
-    // --- STEP 0: INTRO (Kompakter) ---
-    const RenderIntro = () => (
+    // --- EFFECT: PRÜFE AUF LOGIN BEIM START ODER NACH REDIRECT ---
+    useEffect(() => {
+        const checkExistingUser = async () => {
+            if (session?.user) {
+                setIsLoadingProfile(true);
+                // 1. Profil laden
+                const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+                
+                // 2. Fortschritt zählen (um zu sehen, ob es ein "echter" Account ist)
+                const { count } = await supabase.from('user_progress').select('*', { count: 'exact', head: true }).eq('user_id', session.user.id);
+                
+                setIsLoadingProfile(false);
+
+                if (profile && (profile.nickname || count > 0)) {
+                    // AHA! Das ist ein alter Bekannter.
+                    setExistingProfile({
+                        name: profile.nickname || "User",
+                        level: profile.target_level || "Unknown",
+                        wordCount: count || 0
+                    });
+                    setStep(4); // Zeige "Welcome Back" Screen
+                } else {
+                    // Neu, aber eingeloggt -> Weiter zum Namen
+                    setStep(2); 
+                }
+            }
+        };
+
+        // Nur ausführen, wenn wir ganz am Anfang sind oder gerade beim Login
+        if (session && (step === 0 || step === 1)) {
+            checkExistingUser();
+        }
+    }, [session]); // Feuert, wenn Session reinkommt (z.B. nach Google Redirect)
+
+
+    // --- STEP CONTENT RENDERERS ---
+
+    const renderIntro = () => (
         <div className="text-center flex flex-col items-center justify-center h-full w-full max-w-sm mx-auto">
             <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 w-full">
-                <div className="bg-indigo-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto text-indigo-600 text-3xl mb-4">
-                    🚀
-                </div>
+                <div className="bg-indigo-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto text-indigo-600 text-3xl mb-4">🚀</div>
                 <h2 className="text-2xl font-extrabold text-slate-800 mb-2">Master French<br/>Frequency</h2>
                 <p className="text-slate-500 text-sm leading-relaxed mb-6">
                     Focus on the 5,000 most used words. Stop wasting time on vocabulary you'll never use.
                 </p>
-                
                 <div className="grid grid-cols-2 gap-3 mb-6">
-                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <span className="text-xl block mb-1">🧠</span>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase">Smart AI</span>
-                    </div>
-                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <span className="text-xl block mb-1">📊</span>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase">Tracking</span>
-                    </div>
+                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100"><span className="text-xl block mb-1">🧠</span><span className="text-[10px] font-bold text-slate-400 uppercase">Smart AI</span></div>
+                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100"><span className="text-xl block mb-1">📊</span><span className="text-[10px] font-bold text-slate-400 uppercase">Tracking</span></div>
                 </div>
-
-                <button onClick={() => setStep(1)} className="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all">
-                    Get Started
-                </button>
+                <button onClick={() => setStep(1)} className="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all">Get Started</button>
             </div>
         </div>
     );
 
-    // --- STEP 1: AUTH DECISION (Scrollbar & Kompakt) ---
-    const RenderAuthStep = () => {
-        const confirmGuest = () => {
-            setShowGuestWarning(false);
-            setStep(2); 
-        };
-
+    const renderAuthStep = () => {
         if (showGuestWarning) {
             return (
                 <div className="text-center w-full max-w-sm mx-auto animate-in fade-in zoom-in duration-300">
                     <div className="bg-white p-6 rounded-3xl shadow-xl border border-amber-100">
-                        <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-amber-600 text-3xl mb-4">
-                            ⚠️
-                        </div>
+                        <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-amber-600 text-3xl mb-4">⚠️</div>
                         <h3 className="text-xl font-bold text-slate-800 mb-2">Guest Mode</h3>
-                        <p className="text-slate-500 text-sm mb-6">
-                            If you continue as a guest, your progress is saved on this device only. Clearing cache will <b>delete your data</b>.
-                        </p>
-                        
+                        <p className="text-slate-500 text-sm mb-6">If you continue as a guest, data is saved on this device only. Clearing cache <b>deletes your progress</b>.</p>
                         <div className="flex flex-col gap-3">
-                            <button onClick={confirmGuest} className="w-full bg-amber-500 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-amber-600">
-                                I understand
-                            </button>
-                            <button onClick={() => setShowGuestWarning(false)} className="text-slate-400 font-bold text-sm py-2">
-                                Go back
-                            </button>
+                            <button onClick={() => { setShowGuestWarning(false); setStep(2); }} className="w-full bg-amber-500 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-amber-600">I understand</button>
+                            <button onClick={() => setShowGuestWarning(false)} className="text-slate-400 font-bold text-sm py-2">Go back</button>
                         </div>
                     </div>
                 </div>
             );
         }
-
         return (
             <div className="w-full max-w-sm mx-auto">
                 <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
@@ -2296,48 +2420,65 @@ const OnboardingWizard = ({ onComplete }) => {
                         <h2 className="text-xl font-bold text-slate-800">Create Profile</h2>
                         <p className="text-slate-400 text-xs">Save your progress securely in the cloud.</p>
                     </div>
-
-                    {/* AuthScreen embedded */}
-                    <div className="mb-4">
-                       <AuthScreen onLoginSuccess={() => setStep(2)} isEmbedded={true} />
-                    </div>
-
-                    {/* Guest Option - Jetzt gut sichtbar */}
+                    {/* AuthScreen feuert onLoginSuccess -> unser Effect oben fängt das ab und leitet weiter */}
+                    <div className="mb-4"><AuthScreen onLoginSuccess={() => {}} isEmbedded={true} /></div>
                     <div className="relative py-4">
                         <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100"></div></div>
                         <div className="relative flex justify-center text-xs"><span className="px-2 bg-white text-slate-400 uppercase font-bold tracking-wider">or</span></div>
                     </div>
-
-                    <button onClick={() => setShowGuestWarning(true)} className="w-full py-3 text-slate-500 font-bold text-sm bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors border border-slate-200">
-                        Continue as Guest
-                    </button>
+                    <button onClick={() => setShowGuestWarning(true)} className="w-full py-3 text-slate-500 font-bold text-sm bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors border border-slate-200">Continue as Guest</button>
                 </div>
             </div>
         );
     };
 
-    // --- STEP 2: PROFILE (Name) ---
-    const RenderNameStep = () => (
+    // --- STEP 4: EXISTING USER FOUND ---
+    const renderExistingUserStep = () => (
+        <div className="text-center w-full max-w-sm mx-auto animate-in fade-in slide-in-from-bottom-4">
+            <div className="bg-white p-8 rounded-3xl shadow-xl border border-indigo-100">
+                <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600 text-4xl">🎉</div>
+                <h2 className="text-2xl font-bold text-slate-800 mb-2">Welcome Back!</h2>
+                <p className="text-slate-500 text-sm mb-6">We found an existing profile linked to this account.</p>
+                
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-8">
+                    <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Found Data</div>
+                    <div className="text-lg font-bold text-slate-800">{existingProfile?.name}</div>
+                    <div className="flex justify-center gap-4 mt-2 text-sm text-slate-600">
+                        <span>📚 {existingProfile?.wordCount} Words</span>
+                        <span>🎓 Level {existingProfile?.level}</span>
+                    </div>
+                </div>
+
+                <button 
+                    onClick={() => {
+                        // Wir übernehmen die Daten aus dem Profil
+                        localStorage.setItem('vocabApp_nickname', existingProfile.name);
+                        localStorage.setItem('vocabApp_hasOnboarded', 'true');
+                        onComplete(existingProfile.name, existingProfile.level);
+                    }}
+                    className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-xl hover:bg-indigo-700 transition-all"
+                >
+                    Continue with this Profile
+                </button>
+                <button 
+                    onClick={() => setStep(2)} // Doch neu anlegen (Name ändern etc)
+                    className="mt-4 text-slate-400 text-xs font-bold hover:text-indigo-600"
+                >
+                    Start fresh / Change setup
+                </button>
+            </div>
+        </div>
+    );
+
+    const renderNameStep = () => (
         <div className="text-center w-full max-w-sm mx-auto">
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                <div className="bg-purple-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-purple-600 text-3xl">
-                    👋
-                </div>
+                <div className="bg-purple-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-purple-600 text-3xl">👋</div>
                 <h2 className="text-xl font-bold text-slate-800 mb-6">What should we call you?</h2>
-                
-                <input 
-                    type="text" 
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
-                    placeholder="Your Nickname"
-                    className="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl font-bold text-xl text-center text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all mb-6"
-                    autoFocus
-                />
-
+                <input type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="Your Nickname" className="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl font-bold text-xl text-center text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all mb-6" autoFocus />
                 <button 
                     onClick={async () => {
                         if(!nickname.trim()) return;
-                        const { data: { session } } = await supabase.auth.getSession();
                         localStorage.setItem('vocabApp_nickname', nickname);
                         if (session) {
                             await supabase.from('profiles').update({ nickname: nickname }).eq('id', session.user.id);
@@ -2345,7 +2486,7 @@ const OnboardingWizard = ({ onComplete }) => {
                         setStep(3);
                     }}
                     disabled={!nickname.trim()}
-                    className="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-bold text-lg shadow-xl hover:bg-indigo-700 disabled:opacity-50 disabled:shadow-none transition-all"
+                    className="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-bold text-lg shadow-xl hover:bg-indigo-700 disabled:opacity-50 transition-all"
                 >
                     Next Step
                 </button>
@@ -2353,46 +2494,29 @@ const OnboardingWizard = ({ onComplete }) => {
         </div>
     );
 
-    // --- STEP 3: LEVEL SELECTION ---
-    const RenderLevelStep = () => {
+    const renderLevelStep = () => {
         const levels = [
             { id: 'Scratch', label: 'Absolute Beginner', icon: '🐣', desc: 'Start from word #1' },
             { id: 'A2', label: 'Elementary', icon: '🚲', desc: 'I know basics' },
             { id: 'B1', label: 'Intermediate', icon: '🚀', desc: 'I can converse' },
             { id: 'B2', label: 'Advanced', icon: '🎩', desc: 'Fluent reader' },
         ];
-
-        const handleFinish = async (levelId) => {
-            const { data: { session } } = await supabase.auth.getSession();
-            localStorage.setItem('vocabApp_targetLevel', levelId);
-            localStorage.setItem('vocabApp_hasOnboarded', 'true'); 
-            if (session) {
-                await supabase.from('profiles').update({ target_level: levelId }).eq('id', session.user.id);
-            }
-            onComplete(nickname, levelId);
-        };
-
         return (
             <div className="text-center w-full max-w-sm mx-auto">
                 <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
                     <h2 className="text-xl font-bold text-slate-800 mb-1">Where do you start?</h2>
                     <p className="text-slate-400 text-xs mb-6">This helps us adjust your content.</p>
-
                     <div className="grid gap-3">
                         {levels.map(l => (
-                            <button 
-                                key={l.id}
-                                onClick={() => handleFinish(l.id)}
-                                className="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center gap-4 hover:border-indigo-500 hover:bg-indigo-50 transition-all group text-left"
-                            >
+                            <button key={l.id} onClick={async () => {
+                                localStorage.setItem('vocabApp_targetLevel', l.id);
+                                localStorage.setItem('vocabApp_hasOnboarded', 'true'); 
+                                if (session) await supabase.from('profiles').update({ target_level: l.id }).eq('id', session.user.id);
+                                onComplete(nickname, l.id);
+                            }} className="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center gap-4 hover:border-indigo-500 hover:bg-indigo-50 transition-all group text-left">
                                 <div className="text-2xl">{l.icon}</div>
-                                <div>
-                                    <div className="font-bold text-slate-700 group-hover:text-indigo-700 text-sm">{l.label}</div>
-                                    <div className="text-[10px] text-slate-400">{l.desc}</div>
-                                </div>
-                                <div className="ml-auto opacity-0 group-hover:opacity-100 text-indigo-600">
-                                    <Check size={18} />
-                                </div>
+                                <div><div className="font-bold text-slate-700 group-hover:text-indigo-700 text-sm">{l.label}</div><div className="text-[10px] text-slate-400">{l.desc}</div></div>
+                                <div className="ml-auto opacity-0 group-hover:opacity-100 text-indigo-600"><Check size={18} /></div>
                             </button>
                         ))}
                     </div>
@@ -2401,28 +2525,21 @@ const OnboardingWizard = ({ onComplete }) => {
         );
     };
 
-    // --- MAIN WIZARD CONTAINER (FIX FÜR SCROLLING & BACKGROUND) ---
+    if (isLoadingProfile) {
+        return <div className="fixed inset-0 z-[200] bg-slate-50 flex items-center justify-center"><Loader2 size={48} className="animate-spin text-indigo-600"/></div>;
+    }
+
     return (
-        // z-[200]: Liegt über allem. 
-        // bg-slate-50: Solider Hintergrund, kein Durchschimmern.
-        // h-[100dvh]: Volle Höhe des Viewports.
-        // overflow-y-auto: Ermöglicht Scrollen, wenn Inhalt zu groß.
         <div className="fixed inset-0 z-[200] bg-slate-50 h-[100dvh] w-full overflow-y-auto">
             <div className="min-h-full flex flex-col items-center justify-center p-6">
-                
-                {/* Progress Dots */}
                 <div className="flex gap-2 mb-8 w-full max-w-[100px]">
-                    {[0, 1, 2, 3].map(i => (
-                        <div key={i} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${i <= step ? 'bg-indigo-600' : 'bg-slate-200'}`}></div>
-                    ))}
+                    {[0, 1, 2, 3].map(i => (<div key={i} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${i <= (step === 4 ? 1 : step) ? 'bg-indigo-600' : 'bg-slate-200'}`}></div>))}
                 </div>
-
-                {step === 0 && <RenderIntro />}
-                {step === 1 && <RenderAuthStep />}
-                {step === 2 && <RenderNameStep />}
-                {step === 3 && <RenderLevelStep />}
-                
-                {/* Spacer unten fürs Scrollen auf kleinen Handys */}
+                {step === 0 && renderIntro()}
+                {step === 1 && renderAuthStep()}
+                {step === 2 && renderNameStep()}
+                {step === 3 && renderLevelStep()}
+                {step === 4 && renderExistingUserStep()}
                 <div className="h-8 shrink-0"></div>
             </div>
         </div>
@@ -2443,7 +2560,17 @@ function App() {
     const [session, setSession] = useState(null);
     // --- ONBOARDING STATE ---
     // Wir prüfen localStorage. Wenn 'true', dann false (kein Wizard). Sonst true.
+    // --- ONBOARDING STATE (Mit Fix für Password Reset) ---
     const [showWizard, setShowWizard] = useState(() => {
+        // 1. Prüfen: Kommen wir gerade von einem Passwort-Reset-Link?
+        const hash = window.location.hash;
+        const isRecovery = hash && hash.includes('type=recovery');
+        
+        if (isRecovery) {
+            return false; // KEIN Wizard anzeigen, wir müssen zum Passwort-Reset!
+        }
+
+        // 2. Normaler Check: War der User schon mal hier?
         return !localStorage.getItem('vocabApp_hasOnboarded');
     });
 
@@ -2527,7 +2654,9 @@ function App() {
     // --- AUTH & PROFILE CHECK ---
     // --- AUTH & PROFILE CHECK ---
     // --- AUTH & PROFILE CHECK ---
+    // --- AUTH & PROFILE CHECK & SYNC ---
     useEffect(() => {
+        // Hilfsfunktion: Profil prüfen
         const checkProfile = async (userId) => {
             const { data, error } = await supabase
                 .from('profiles')
@@ -2536,43 +2665,66 @@ function App() {
                 .single();
             
             if (data) {
-                // 1. Wenn Nickname existiert -> Setzen für die UI
                 if (data.nickname) {
                     setNickname(data.nickname);
-                } 
-                // 2. Wenn KEIN Nickname da ist -> Onboarding zeigen
-                else {
+                } else {
                     setShowOnboarding(true);
                 }
             }
         };
 
-        // ... (Der Rest des Effects bleibt gleich wie vorher) ...
-        // Hier zur Sicherheit nochmal der Context:
+        // 1. Initialer Check beim Laden der Seite
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (session) {
                 setSession(session);
-                checkProfile(session.user.id); 
+                checkProfile(session.user.id);
+                
+                // WICHTIG: Auch beim Neuladen (F5) synchronisieren!
+                const currentLocal = JSON.parse(localStorage.getItem('vocabApp_progress') || '{}');
+                syncWithCloud(currentLocal);
+                
                 setAuthLoading(false);
             } else {
-                const isRedirect = window.location.hash && window.location.hash.includes('access_token');
+                // Check auf Hash für Redirects (damit Loading nicht zu früh aufhört)
+                const hash = window.location.hash;
+                const isRedirect = hash && (hash.includes('access_token') || hash.includes('error_description'));
+                
                 if (!isRedirect) setAuthLoading(false);
             }
         });
 
+        // 2. Event Listener (Reagiert auf Login, Logout, Reset)
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+            console.log("Auth Event:", event);
+
+            // A: Passwort Reset Link geklickt
+            // A: User kommt über Passwort-Reset-Link
+            if (event === 'PASSWORD_RECOVERY') {
+                setView('update-password'); // Zwinge ihn auf den neuen Screen
+                setShowWizard(false);       // Zur Sicherheit Wizard ausblenden
+            }
+            // B: Erfolgreich eingeloggt
+            else if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
                 setSession(session);
-                if (session) checkProfile(session.user.id);
-                const currentLocal = JSON.parse(localStorage.getItem('vocabApp_progress') || '{}');
+                if (session) {
+                    checkProfile(session.user.id);
+                    // Daten mergen
+                    const currentLocal = JSON.parse(localStorage.getItem('vocabApp_progress') || '{}');
                     syncWithCloud(currentLocal);
+                }
                 setAuthLoading(false);
-                if (window.location.hash) window.history.replaceState(null, null, window.location.pathname);
-            } else if (event === 'SIGNED_OUT') {
+
+                // URL aufräumen (außer bei Password Recovery, da wird der Token noch gebraucht)
+                if (window.location.hash && event !== 'PASSWORD_RECOVERY') {
+                    window.history.replaceState(null, null, window.location.pathname);
+                }
+            } 
+            // C: Ausgeloggt
+            else if (event === 'SIGNED_OUT') {
                 setSession(null);
                 setAuthLoading(false);
                 setShowOnboarding(false);
-                setNickname("Learner"); // Reset
+                setNickname("Learner"); // Reset auf Default
             }
         });
 
@@ -6390,6 +6542,8 @@ function App() {
             
             case 'grammar':      
                 return renderSkills();
+            case 'update-password':
+                return <UpdatePasswordScreen onComplete={() => setView('home')} />;    
 
             // --- PROFILE AREA ---
             case 'profile':
@@ -6464,15 +6618,16 @@ function App() {
             )}
             {/* --- ONBOARDING WIZARD --- */}
             {showWizard && (
-                <OnboardingWizard onComplete={(name, level) => {
-                    setNickname(name);
-                    setShowWizard(false);
-                    // Hier könntest du basierend auf 'level' Logik ausführen
-                    // z.B. wenn "A2" gewählt wurde, userProgress anpassen (später)
-                    console.log("Onboarding finished:", name, level);
-                }} />
+                <OnboardingWizard 
+                    session={session} // <--- WICHTIG: Session übergeben!
+                    onComplete={(name, level) => {
+                        setNickname(name);
+                        setShowWizard(false);
+                        // Optional: Wenn ein Level gewählt wurde, könnte man hier den userProgress anpassen
+                        // Aber das passiert schon durch den Sync beim Login
+                    }} 
+                />
             )}
-            {/* --- DELETE ACCOUNT MODAL --- */}
             {/* --- DELETE ACCOUNT MODAL --- */}
             {showDeleteModal && (
                 <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
