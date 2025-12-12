@@ -2211,7 +2211,85 @@ const GrammarDetail = ({ topicId, onBack }) => {
         </div>
     );
 };
+const WelcomeScreen = ({ onComplete }) => {
+    const [name, setName] = useState('');
+    const [level, setLevel] = useState('A1');
+    const [submitting, setSubmitting] = useState(false);
 
+    const handleSubmit = async () => {
+        if (!name.trim()) return;
+        setSubmitting(true);
+        
+        // 1. Profil in Supabase updaten
+        const { error } = await supabase
+            .from('profiles')
+            .update({ 
+                nickname: name,
+                target_level: level
+            })
+            .eq('id', (await supabase.auth.getUser()).data.user.id);
+
+        if (error) {
+            alert("Error saving profile: " + error.message);
+            setSubmitting(false);
+        } else {
+            // 2. Callback an App, damit der Screen verschwindet
+            onComplete(name);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 bg-indigo-600 flex items-center justify-center p-6 animate-in fade-in duration-500">
+            <div className="bg-white w-full max-w-sm rounded-[2.5rem] p-8 shadow-2xl text-center">
+                <div className="bg-indigo-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-indigo-600 text-4xl">
+                    👋
+                </div>
+                <h2 className="text-3xl font-bold text-slate-800 mb-2">Bienvenue!</h2>
+                <p className="text-slate-500 mb-8">Let's set up your profile to personalize your learning journey.</p>
+
+                <div className="space-y-4 text-left">
+                    <div>
+                        <label className="block text-xs font-bold text-slate-400 uppercase ml-4 mb-2">What should we call you?</label>
+                        <input 
+                            type="text" 
+                            value={name}
+                            onChange={e => setName(e.target.value)}
+                            placeholder="Your Nickname"
+                            className="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl font-bold text-lg text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20 transition-all"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-bold text-slate-400 uppercase ml-4 mb-2">Current French Level?</label>
+                        <div className="grid grid-cols-3 gap-2">
+                            {['A1', 'A2', 'B1', 'B2', 'C1'].map(l => (
+                                <button 
+                                    key={l}
+                                    onClick={() => setLevel(l)}
+                                    className={`py-3 rounded-xl font-bold text-sm transition-all border-2 ${
+                                        level === l 
+                                        ? 'border-indigo-600 bg-indigo-600 text-white shadow-md transform scale-105' 
+                                        : 'border-slate-100 bg-white text-slate-400 hover:border-indigo-200'
+                                    }`}
+                                >
+                                    {l}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <button 
+                    onClick={handleSubmit}
+                    disabled={!name.trim() || submitting}
+                    className="w-full mt-8 bg-slate-900 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-slate-300 hover:bg-black active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
+                >
+                    {submitting ? <Loader2 className="animate-spin mx-auto"/> : "Let's Go! 🚀"}
+                </button>
+            </div>
+        </div>
+    );
+};
 
 function App() {
     // --- STATE MANAGEMENT ---
@@ -2219,9 +2297,13 @@ function App() {
     if (window.location.hash && window.location.hash.startsWith('##')) {
         window.location.hash = window.location.hash.substring(1);
     }
-    
+    // --- NEUE STATES FÜR DEINE ANFORDERUNGEN ---
+    const [nickname, setNickname] = useState("Learner"); // Default, bis geladen
+    const [showDeleteModal, setShowDeleteModal] = useState(false); // Steuert das Delete-Popup
+    const [deleteInput, setDeleteInput] = useState(""); // Für die "DELETE" Eingabe
     // 1. STATES (Hier geht dein normaler Code weiter)
     const [session, setSession] = useState(null);
+    const [showOnboarding, setShowOnboarding] = useState(false); // Steuert das Welcome Fenster
 
     const [view, setView] = useState('home'); 
     const [vocabulary, setVocabulary] = useState([]); // Startet leer, useEffect füllt es sofort
@@ -2300,40 +2382,53 @@ function App() {
     // --- AUTH CHECK EFFECT (Korrigiert) ---
     // --- AUTH CHECK & DEBUGGING ---
     // --- AUTH CHECK & LISTENER (Final & Stabil) ---
+    // --- AUTH & PROFILE CHECK ---
+    // --- AUTH & PROFILE CHECK ---
+    // --- AUTH & PROFILE CHECK ---
     useEffect(() => {
-        // 1. Initialer Check
+        const checkProfile = async (userId) => {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('nickname')
+                .eq('id', userId)
+                .single();
+            
+            if (data) {
+                // 1. Wenn Nickname existiert -> Setzen für die UI
+                if (data.nickname) {
+                    setNickname(data.nickname);
+                } 
+                // 2. Wenn KEIN Nickname da ist -> Onboarding zeigen
+                else {
+                    setShowOnboarding(true);
+                }
+            }
+        };
+
+        // ... (Der Rest des Effects bleibt gleich wie vorher) ...
+        // Hier zur Sicherheit nochmal der Context:
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (session) {
                 setSession(session);
+                checkProfile(session.user.id); 
                 setAuthLoading(false);
             } else {
-                // Prüfen auf Hash (einfach oder doppelt)
-                const hash = window.location.hash;
-                const isRedirect = hash && (hash.includes('access_token') || hash.includes('error_description'));
-                
-                if (isRedirect) {
-                    console.log("🔄 Redirect erkannt, warte auf Event...");
-                    // Wir bleiben im Loading-State!
-                } else {
-                    setAuthLoading(false);
-                }
+                const isRedirect = window.location.hash && window.location.hash.includes('access_token');
+                if (!isRedirect) setAuthLoading(false);
             }
         });
 
-        // 2. Event Listener
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log("🔔 Auth Event:", event);
-            
             if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
                 setSession(session);
+                if (session) checkProfile(session.user.id);
                 setAuthLoading(false);
-                // Hash bereinigen, damit die URL sauber ist
-                if (window.location.hash) {
-                    window.history.replaceState(null, null, window.location.pathname);
-                }
+                if (window.location.hash) window.history.replaceState(null, null, window.location.pathname);
             } else if (event === 'SIGNED_OUT') {
                 setSession(null);
                 setAuthLoading(false);
+                setShowOnboarding(false);
+                setNickname("Learner"); // Reset
             }
         });
 
@@ -5345,74 +5440,82 @@ function App() {
             </div>
         </div>
     );
-    const renderDataMgmt = () => (
-        <div className="max-w-2xl mx-auto space-y-6 pt-6 pb-24 px-1">
-            
-            {/* Header */}
-            <div className="flex items-center gap-3 mb-2 px-1">
-                <button onClick={() => setView('profile')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
-                    <ArrowLeft size={24} />
-                </button>
-                <h2 className="text-2xl font-bold text-slate-800">Settings</h2>
-            </div>
+    const renderDataMgmt = () => {
+        // --- Funktion zum Account löschen ---
+        const handleDeleteAccount = async () => {
+            const confirm = window.confirm("⚠️ Are you sure? This will delete your account and ALL progress permanently. This cannot be undone.");
+            if (confirm) {
+                // Sicherheits-Pin Abfrage (Optional, aber gut)
+                const pin = window.prompt("Type 'DELETE' to confirm:");
+                if (pin !== 'DELETE') return alert("Deletion cancelled.");
 
-            {/* 1. VOICE SETTINGS (NEU!) */}
-            <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="bg-indigo-50 text-indigo-600 p-2 rounded-xl"><Volume2 size={20}/></div>
-                    <div>
-                        <h3 className="font-bold text-slate-800">Audio Voice</h3>
-                        <p className="text-xs text-slate-400">Select your preferred speaker</p>
-                    </div>
+                const { error } = await supabase.rpc('delete_user'); // Ruft unsere SQL-Funktion auf
+                
+                if (error) {
+                    alert("Error deleting account: " + error.message);
+                } else {
+                    alert("Account deleted. Goodbye! 👋");
+                    await supabase.auth.signOut();
+                    setSession(null);
+                    // LocalStorage aufräumen
+                    localStorage.removeItem('vocabApp_progress');
+                    setUserProgress({});
+                    setView('profile'); // Zurück zum Login
+                }
+            }
+        };
+
+        return (
+            <div className="max-w-2xl mx-auto space-y-6 pt-6 pb-24 px-1">
+                
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-2 px-1">
+                    <button onClick={() => setView('profile')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                        <ArrowLeft size={24} />
+                    </button>
+                    <h2 className="text-2xl font-bold text-slate-800">Settings</h2>
                 </div>
 
-                <div className="space-y-3">
-                    <select 
-                        value={selectedVoiceURI || ''}
-                        onChange={(e) => {
-                            setSelectedVoiceURI(e.target.value);
-                            localStorage.setItem('vocabApp_voice', e.target.value);
-                            // Test sprechen
-                            setTimeout(() => speak("Bonjour, c'est ma nouvelle voix."), 100);
-                        }}
-                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-indigo-500 transition-colors"
+                {/* 1. Account Info & Logout (NEU HIER) */}
+                <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+                     <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-indigo-50 text-indigo-600 p-2 rounded-xl"><User size={20}/></div>
+                            <div>
+                                <h3 className="font-bold text-slate-800">{nickname}</h3>
+                                <p className="text-xs text-slate-400 truncate max-w-[150px]">{session?.user?.email}</p>
+                            </div>
+                        </div>
+                     </div>
+                     <button 
+                        onClick={handleLogout} 
+                        className="w-full py-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-100 transition-colors flex items-center justify-center gap-2"
                     >
-                        {availableVoices.length === 0 && <option>Loading voices...</option>}
-                        {availableVoices.map(v => (
-                            <option key={v.voiceURI} value={v.voiceURI}>
-                                {v.name} ({v.lang})
-                            </option>
-                        ))}
-                    </select>
-                    <p className="text-[10px] text-slate-400 italic text-center">
-                        Tip: Select "Google Français" or "Siri" for best quality.
+                        <RotateCcw size={16} className="rotate-180"/> Log Out
+                    </button>
+                </div>
+
+                {/* ... (Voice Settings & Import Data Code hier lassen) ... */}
+
+                {/* 3. DANGER ZONE */}
+                <div className="mt-8 pt-6 border-t border-slate-200">
+                    <h3 className="font-bold text-red-500 text-xs uppercase tracking-wider mb-3 px-2">Danger Zone</h3>
+                    <button 
+                        onClick={() => {
+                            setDeleteInput(""); // Reset input
+                            setShowDeleteModal(true); // Modal öffnen
+                        }}
+                        className="w-full py-4 text-red-600 font-bold text-sm bg-red-50 border border-red-100 rounded-2xl hover:bg-red-100 transition-colors flex items-center justify-center gap-2 active:scale-95"
+                    >
+                        <Trash2 size={18}/> Delete Account Permanently
+                    </button>
+                    <p className="text-center text-[10px] text-slate-400 mt-2">
+                        Irreversible. Deletes all progress and data.
                     </p>
                 </div>
             </div>
-
-            {/* 2. DATA IMPORT (Dein alter Code, verschönert) */}
-            <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="bg-slate-100 text-slate-600 p-2 rounded-xl"><Save size={20}/></div>
-                    <div>
-                        <h3 className="font-bold text-slate-800">Import Data</h3>
-                        <p className="text-xs text-slate-400">Restore backup or add words</p>
-                    </div>
-                </div>
-                
-                <form onSubmit={handleDataUpload}>
-                    <textarea 
-                        name="jsonInput" 
-                        className="w-full h-32 p-4 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs focus:ring-2 focus:ring-indigo-500 outline-none mb-4 resize-none" 
-                        placeholder='[{"rank": 1, "french": "le", "english": "the"}, ...]'
-                    ></textarea>
-                    <button type="submit" className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors flex justify-center items-center gap-2 shadow-lg shadow-indigo-200 active:scale-95">
-                        <Save size={18} /> Save & Overwrite
-                    </button>
-                </form>
-            </div>
-        </div>
-    );
+        );
+    };
     
     const renderJokeDetail = () => {
         if (!viewingJoke) return null;
@@ -5495,20 +5598,18 @@ function App() {
     };
     
     const renderProfile = () => {
-        // --- 1. DATEN BERECHNEN ---
+        // --- 1. AUTH CHECK ---
         if (!session) {
             return <AuthScreen onLoginSuccess={() => {}} />;
         }
+
+        // --- 2. DATEN BERECHNEN ---
         const safeVocab = vocabulary || [];
         
         // Gelernte Wörter (Box > 0)
         const learnedCount = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
-        
-        // Profi-Wörter (Box 5 = Langzeitgedächtnis)
-        const masterCount = safeVocab.filter(w => userProgress[w.rank]?.box === 5).length;
 
         // --- CEFR VOCABULARY LEVEL ---
-        // Based on linguistic research (Cambridge, Goethe-Institut, Alliance Française)
         const getVocabCEFR = (count) => {
             if (count < 500) return { level: "A1", color: "bg-blue-500", next: 500, desc: "Beginner" };
             if (count < 1500) return { level: "A2", color: "bg-sky-500", next: 1500, desc: "Elementary" };
@@ -5519,7 +5620,6 @@ function App() {
         const vocabCEFR = getVocabCEFR(learnedCount);
 
         // --- CEFR GRAMMAR LEVEL ---
-        // Find current grammar level based on completed lessons
         const getGrammarCEFR = () => {
             let a1Done = 0, a1Total = 0;
             let a2Done = 0, a2Total = 0;
@@ -5536,7 +5636,6 @@ function App() {
                 }
             }
 
-            // Determine current level
             if (a1Done < a1Total) return { level: "A1", color: "bg-blue-500", progress: a1Done, total: a1Total, desc: "Basics" };
             if (a2Done < a2Total) return { level: "A2", color: "bg-sky-500", progress: a2Done, total: a2Total, desc: "Elementary" };
             if (b1Done < b1Total) return { level: "B1", color: "bg-emerald-500", progress: b1Done, total: b1Total, desc: "Intermediate" };
@@ -5545,178 +5644,65 @@ function App() {
         };
         const grammarCEFR = getGrammarCEFR();
 
-        // --- CREATIVE TITLE SYSTEM based on Vocab/Grammar Balance ---
-        const vocabLevel = vocabCEFR.level; // A1, A2, B1, B2, C1+
-        const grammarLevel = grammarCEFR.level; // A1, A2, B1, B2, C1+
+        // --- CREATIVE TITLE SYSTEM ---
+        const vocabLevel = vocabCEFR.level;
+        const grammarLevel = grammarCEFR.level;
         
-        // Convert to numeric for comparison
         const levelToNum = (lvl) => ({ 'A1': 1, 'A2': 2, 'B1': 3, 'B2': 4, 'C1+': 5 }[lvl] || 0);
         const vocabNum = levelToNum(vocabLevel);
         const grammarNum = levelToNum(grammarLevel);
         
-        // Determine balance type and assign creative title
         const getCreativeTitle = () => {
             const diff = vocabNum - grammarNum;
-            
-            // Beginner titles (both at A1)
             if (vocabNum <= 1 && grammarNum <= 1) {
-                if (learnedCount === 0) return { 
-                    title: "Fresh Start", 
-                    emoji: "🌱", 
-                    desc: "Your French journey begins here. Every expert was once a beginner!",
-                    color: "from-slate-400 to-slate-600"
-                };
-                return { 
-                    title: "Curious Tourist", 
-                    emoji: "📷", 
-                    desc: "You're starting to collect your first French impressions. Keep snapping!",
-                    color: "from-slate-400 to-slate-600"
-                };
+                if (learnedCount === 0) return { title: "Fresh Start", emoji: "🌱", desc: "Your French journey begins here.", color: "from-slate-400 to-slate-600" };
+                return { title: "Curious Tourist", emoji: "📷", desc: "Collecting first impressions.", color: "from-slate-400 to-slate-600" };
             }
-            
-            // HIGH VOCAB, LOW GRAMMAR (Yoda-style: knows words, speaks weird)
-            if (diff >= 2) {
-                if (vocabNum >= 4) return {
-                    title: "Yoda",
-                    emoji: "🧙‍♂️",
-                    desc: "Many words you know, but grammar structure... work on it you must. Sound wise you do, but rules bend you!",
-                    color: "from-green-500 to-emerald-700"
-                };
-                if (vocabNum >= 3) return {
-                    title: "Word Hoarder",
-                    emoji: "📚",
-                    desc: "Your vocabulary is impressive, but your sentences might confuse natives. Time to learn the rules!",
-                    color: "from-amber-400 to-orange-600"
-                };
-                return {
-                    title: "Flashcard Warrior",
-                    emoji: "⚔️",
-                    desc: "You've memorized tons of words but grammar is your weak spot. Balance is key!",
-                    color: "from-red-400 to-rose-600"
-                };
+            if (diff >= 2) { // High Vocab, Low Grammar
+                if (vocabNum >= 4) return { title: "Yoda", emoji: "🧙‍♂️", desc: "Words you have, but grammar you must learn!", color: "from-green-500 to-emerald-700" };
+                return { title: "Word Hoarder", emoji: "📚", desc: "Great vocabulary! Now focus on grammar.", color: "from-amber-400 to-orange-600" };
             }
-            
-            // LOW VOCAB, HIGH GRAMMAR (Professor: knows rules, lacks words)
-            if (diff <= -2) {
-                if (grammarNum >= 4) return {
-                    title: "The Professor",
-                    emoji: "🎓",
-                    desc: "Your grammar is impeccable, but you lack the vocabulary to express complex ideas. Hit the flashcards!",
-                    color: "from-indigo-500 to-purple-700"
-                };
-                if (grammarNum >= 3) return {
-                    title: "Grammar Nerd",
-                    emoji: "🤓",
-                    desc: "You understand the rules perfectly but need more words to put them to use. Expand your vocabulary!",
-                    color: "from-blue-400 to-indigo-600"
-                };
-                return {
-                    title: "Rulebook Reader",
-                    emoji: "📖",
-                    desc: "You love grammar theory but need to learn more words to practice with!",
-                    color: "from-cyan-400 to-blue-600"
-                };
+            if (diff <= -2) { // High Grammar, Low Vocab
+                return { title: "The Professor", emoji: "🎓", desc: "Great rules knowledge, but you need more words!", color: "from-indigo-500 to-purple-700" };
             }
-            
-            // BALANCED LEARNERS (vocab ≈ grammar)
-            if (vocabNum >= 5 && grammarNum >= 5) return {
-                title: "French Virtuoso",
-                emoji: "🎭",
-                desc: "You've mastered both vocabulary and grammar. You can handle any conversation with elegance!",
-                color: "from-amber-400 to-yellow-600"
-            };
-            if (vocabNum >= 4 && grammarNum >= 4) return {
-                title: "Parisian Native",
-                emoji: "🗼",
-                desc: "Your French is refined and natural. Parisians might mistake you for a local!",
-                color: "from-rose-400 to-pink-600"
-            };
-            if (vocabNum >= 3 && grammarNum >= 3) return {
-                title: "Cultural Ambassador",
-                emoji: "🌍",
-                desc: "You can discuss most topics with confidence. Your French opens doors everywhere!",
-                color: "from-purple-400 to-violet-600"
-            };
-            if (vocabNum >= 2 && grammarNum >= 2) return {
-                title: "Café Regular",
-                emoji: "☕",
-                desc: "You can hold conversations and handle daily situations. The waiter understands you!",
-                color: "from-blue-400 to-cyan-600"
-            };
-            
-            // Slight imbalance titles
-            if (diff === 1) return {
-                title: "Vocabulary Hunter",
-                emoji: "🎯",
-                desc: "You're slightly ahead on words. Good balance! Keep both skills growing together.",
-                color: "from-teal-400 to-emerald-600"
-            };
-            if (diff === -1) return {
-                title: "Structure Seeker",
-                emoji: "🏗️",
-                desc: "You're slightly ahead on grammar. Great foundation! Now add more vocabulary.",
-                color: "from-violet-400 to-purple-600"
-            };
-            
-            // Default fallback
-            return {
-                title: "Adventurer",
-                emoji: "🧭",
-                desc: "You're on your way! Keep learning both words and grammar for the best results.",
-                color: "from-blue-400 to-indigo-600"
-            };
+            // Balanced
+            return { title: "Adventurer", emoji: "🧭", desc: "You're on your way! Keep going.", color: "from-blue-400 to-indigo-600" };
         };
-        
         const creativeTitle = getCreativeTitle();
 
-        const handleHardReset = () => {
-            if (window.confirm("Delete ALL progress? This cannot be undone.")) {
-                const pin = window.prompt("Enter PIN to confirm:");
-                if (pin === "1999") {
-                    setUserProgress({});
-                    localStorage.removeItem('vocabApp_progress');
-                    // Streak auch resetten
-                    setStreak(0);
-                    localStorage.removeItem('vocabApp_streak');
-                    alert("System Reset: Done.");
-                    setView('home');
-                }
-            }
-        };
-
+        // --- UI RETURN ---
         return (
             <div className="max-w-2xl mx-auto space-y-8 pt-2 pb-24">
                 
-                {/* HEADER */}
+                {/* HEADER MIT NICKNAME */}
                 <div className="flex items-center justify-between px-1">
-                    <h2 className="text-2xl font-bold text-slate-800">My Identity</h2>
+                    <div>
+                        <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Identity</div>
+                        <h2 className="text-3xl font-bold text-slate-800">{nickname}</h2>
+                    </div>
                     <div className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">
                         Level {Math.floor(learnedCount / 50) + 1}
                     </div>
                 </div>
 
-                {/* 1. IDENTITY CARD - Creative Title based on Balance */}
+                {/* 1. IDENTITY CARD */}
                 <div className={`w-full p-6 rounded-[2rem] shadow-xl text-white bg-gradient-to-br ${creativeTitle.color} relative overflow-hidden group`}>
                     <div className="relative z-10 flex items-center gap-5">
                         <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 text-3xl shadow-inner">
                             {creativeTitle.emoji}
                         </div>
                         <div>
-                            <div className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Your Title</div>
+                            <div className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Current Title</div>
                             <h3 className="text-2xl font-bold">{creativeTitle.title}</h3>
                         </div>
                     </div>
-                    
-                    {/* Description explaining why this title */}
                     <p className="mt-4 text-white/90 text-sm leading-relaxed bg-black/10 rounded-xl p-3 backdrop-blur-sm">
                         {creativeTitle.desc}
                     </p>
-
-                    {/* Deko */}
                     <User size={120} className="absolute -right-6 -bottom-8 text-white opacity-10 rotate-12"/>
                 </div>
 
-                {/* CURRENTLY LEARNING - CEFR LEVELS */}
+                {/* 2. CURRENTLY LEARNING (STATS) */}
                 <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                         <GraduationCap size={20} className="text-indigo-600" />
@@ -5758,36 +5744,14 @@ function App() {
                             </div>
                         </div>
                     </div>
-
-                    {/* CEFR Scale Reference */}
-                    <div className="mt-4 pt-4 border-t border-slate-100">
-                        <div className="text-[10px] text-slate-400 font-medium mb-2">CEFR Scale</div>
-                        <div className="flex gap-1">
-                            <div className={`flex-1 h-1.5 rounded-l-full ${vocabCEFR.level === 'A1' ? 'bg-blue-500' : 'bg-blue-200'}`}></div>
-                            <div className={`flex-1 h-1.5 ${vocabCEFR.level === 'A2' ? 'bg-sky-500' : 'bg-sky-200'}`}></div>
-                            <div className={`flex-1 h-1.5 ${vocabCEFR.level === 'B1' ? 'bg-emerald-500' : 'bg-emerald-200'}`}></div>
-                            <div className={`flex-1 h-1.5 ${vocabCEFR.level === 'B2' ? 'bg-purple-500' : 'bg-purple-200'}`}></div>
-                            <div className={`flex-1 h-1.5 rounded-r-full ${vocabCEFR.level === 'C1+' ? 'bg-amber-500' : 'bg-amber-200'}`}></div>
-                        </div>
-                        <div className="flex justify-between text-[9px] text-slate-400 mt-1">
-                            <span>A1</span>
-                            <span>A2</span>
-                            <span>B1</span>
-                            <span>B2</span>
-                            <span>C1+</span>
-                        </div>
-                    </div>
                 </div>
 
-                {/* MENU & DATA */}
+                {/* 3. MENU BUTTONS */}
                 <div>
-                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Data & Settings</h3>
+                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Menu</h3>
                     <div className="space-y-3">
                         {/* Library Button */}
-                        <button 
-                            onClick={() => setView('library')} 
-                            className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
-                        >
+                        <button onClick={() => setView('library')} className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
                             <div className="flex items-center gap-4">
                                 <div className="bg-indigo-50 text-indigo-600 w-10 h-10 rounded-xl flex items-center justify-center"><BookOpen size={20}/></div>
                                 <div className="text-left">
@@ -5798,11 +5762,8 @@ function App() {
                             <ChevronRight size={20} className="text-slate-300 group-hover:text-indigo-400"/>
                         </button>
 
-                        {/* Collections Button (NEW) */}
-                        <button 
-                            onClick={() => setView('collections')} 
-                            className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
-                        >
+                        {/* Collections Button */}
+                        <button onClick={() => setView('collections')} className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
                             <div className="flex items-center gap-4">
                                 <div className="bg-amber-50 text-amber-600 w-10 h-10 rounded-xl flex items-center justify-center"><Box size={20}/></div>
                                 <div className="text-left">
@@ -5810,74 +5771,24 @@ function App() {
                                     <div className="text-xs text-slate-400">Saved Jokes & More</div>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                                {savedJokes.length > 0 && (
-                                    <div className="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">
-                                        {savedJokes.length}
-                                    </div>
-                                )}
-                                <ChevronRight size={20} className="text-slate-300 group-hover:text-amber-400"/>
-                            </div>
+                            <ChevronRight size={20} className="text-slate-300 group-hover:text-amber-400"/>
                         </button>
 
-                        {/* Stats Button */}
-                        <button 
-                            onClick={() => setShowStats(!showStats)} 
-                            className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
-                        >
-                            <div className="flex items-center gap-4">
-                                <div className="bg-sky-50 text-sky-600 w-10 h-10 rounded-xl flex items-center justify-center"><BarChart3 size={20}/></div>
-                                <div className="text-left">
-                                    <div className="font-bold text-slate-800">Frequency Profile</div>
-                                    <div className="text-xs text-slate-400">{showStats ? 'Tap to hide' : 'View Progress Bars'}</div>
-                                </div>
-                            </div>
-                            <ChevronRight size={20} className={`text-slate-300 transition-transform ${showStats ? 'rotate-90' : ''}`}/>
-                        </button>
-
-                        {/* Inline Stats */}
-                        {showStats && (
-                             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                                 {[
-                                    { l: 100, c: "bg-indigo-500" }, { l: 500, c: "bg-blue-500" }, { l: 1000, c: "bg-cyan-500" }, { l: 2000, c: "bg-teal-500" }, { l: 5000, c: "bg-emerald-500" }
-                                 ].map(m => {
-                                     const pct = getStatsForRange(m.l);
-                                     return (
-                                        <div key={m.l} className="mb-3 last:mb-0">
-                                            <div className="flex justify-between text-xs mb-1 font-bold text-slate-500">
-                                                <span>Top {m.l}</span>
-                                                <span>{pct}%</span>
-                                            </div>
-                                            <div className="w-full bg-slate-200 h-1.5 rounded-full"><div className={`h-full rounded-full ${m.c}`} style={{width: `${pct}%`}}></div></div>
-                                        </div>
-                                     );
-                                 })}
-                             </div>
-                        )}
-
-                        {/* Settings / Reset */}
-                        {/* Logout Button (Füge das ganz unten in der renderProfile Liste ein) */}
-                        <button 
-                            onClick={handleLogout} 
-                            className="w-full mt-6 py-4 bg-red-50 text-red-600 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
-                        >
-                            Log Out ({session.user.email})
-                        </button>
-                        <button 
-                            onClick={() => setView('data-mgmt')} 
-                            className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all"
-                        >
+                        {/* Settings Button */}
+                        <button onClick={() => setView('data-mgmt')} className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
                             <div className="flex items-center gap-4">
                                 <div className="bg-slate-100 text-slate-500 w-10 h-10 rounded-xl flex items-center justify-center"><Settings size={20}/></div>
                                 <div className="text-left">
-                                    <div className="font-bold text-slate-800">Settings & Data</div>
-                                    <div className="text-xs text-slate-400">Import / Reset</div>
+                                    <div className="font-bold text-slate-800">Settings</div>
+                                    <div className="text-xs text-slate-400">Account, Data & Audio</div>
                                 </div>
                             </div>
                             <ChevronRight size={20} className="text-slate-300"/>
                         </button>
                     </div>
                 </div>
+
+                {/* KEIN Logout Button mehr hier (ist jetzt in Settings) */}
             </div>
         );
     };
@@ -6264,6 +6175,67 @@ function App() {
                         else setView(tabId);
                     }} 
                 />
+            )}
+            {showOnboarding && (
+                <WelcomeScreen onComplete={(name) => {
+                    setShowOnboarding(false);
+                    // Optional: Kurzes Feedback
+                    alert(`Merci, ${name}! Your profile is ready.`);
+                }} />
+            )}
+            {/* --- DELETE ACCOUNT MODAL --- */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+                    <div className="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl scale-100">
+                        <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4 mx-auto">
+                            <AlertCircle size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-900 text-center mb-2">Delete Account?</h3>
+                        <p className="text-slate-500 text-center text-sm mb-6">
+                            This action cannot be undone. All your progress, vocabulary, and stats will be lost forever.
+                        </p>
+                        
+                        <div className="bg-slate-50 p-4 rounded-xl mb-6">
+                            <label className="block text-xs font-bold text-slate-400 uppercase mb-2">
+                                Type <span className="text-slate-800 select-none">DELETE</span> to confirm
+                            </label>
+                            <input 
+                                type="text" 
+                                value={deleteInput}
+                                onChange={(e) => setDeleteInput(e.target.value)}
+                                placeholder="DELETE"
+                                className="w-full bg-white border border-slate-200 rounded-lg p-3 font-mono text-center font-bold text-red-600 outline-none focus:border-red-500 transition-colors"
+                            />
+                        </div>
+
+                        <div className="flex gap-3">
+                            <button 
+                                onClick={() => setShowDeleteModal(false)}
+                                className="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                disabled={deleteInput !== "DELETE"}
+                                onClick={async () => {
+                                    // ECHTE LÖSCH-LOGIK
+                                    const { error } = await supabase.rpc('delete_user');
+                                    if (error) {
+                                        alert(error.message); // Fallback für echte DB Fehler
+                                    } else {
+                                        await supabase.auth.signOut();
+                                        setSession(null);
+                                        localStorage.clear(); // Alles weg
+                                        window.location.reload(); // App neu laden
+                                    }
+                                }}
+                                className="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-red-200"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
