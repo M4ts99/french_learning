@@ -2703,7 +2703,63 @@ function App() {
 
         return () => subscription.unsubscribe();
     }, []);
+// --- REALTIME & FOCUS SYNC ---
+    useEffect(() => {
+        if (!session) return; // Nur wenn eingeloggt
 
+        // 1. REALTIME LISTENER (Die Magie)
+        // Lauscht auf Änderungen in der DB und updated die App SOFORT
+        const channel = supabase
+            .channel('progress_updates')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*', // Lausche auf INSERT und UPDATE
+                    schema: 'public',
+                    table: 'user_progress',
+                    filter: `user_id=eq.${session.user.id}` // WICHTIG: Nur MEINE Daten
+                },
+                (payload) => {
+                    // payload.new enthält die neue Zeile aus der Datenbank
+                    const newData = payload.new;
+                    
+                    console.log("⚡ Realtime Update received:", newData.word_rank);
+
+                    // Wir updaten nur dieses EINE Wort im State, ohne alles neu zu laden
+                    setUserProgress(prev => ({
+                        ...prev,
+                        [newData.word_rank]: {
+                            box: newData.box,
+                            nextReview: parseInt(newData.next_review),
+                            interval: newData.interval,
+                            ease: newData.ease_factor
+                        }
+                    }));
+                }
+            )
+            .subscribe();
+
+        // 2. FOCUS LISTENER (Die Sicherheitsleine)
+        // Wenn du die App minimiert hast und wieder öffnest
+        const handleFocus = () => {
+            if (document.visibilityState === 'visible') {
+                console.log("👀 App in focus - syncing...");
+                // Wir holen den aktuellsten Stand aus dem LocalStorage für den Merge
+                const currentLocal = JSON.parse(localStorage.getItem('vocabApp_progress') || '{}');
+                syncWithCloud(currentLocal, true); // true = silent mode (kein Popup)
+            }
+        };
+
+        window.addEventListener('visibilitychange', handleFocus);
+        window.addEventListener('focus', handleFocus);
+
+        // Cleanup beim Ausloggen
+        return () => {
+            supabase.removeChannel(channel);
+            window.removeEventListener('visibilitychange', handleFocus);
+            window.removeEventListener('focus', handleFocus);
+        };
+    }, [session]); // Feuert neu, wenn Login sich ändert    
     // Logout Funktion
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -2737,64 +2793,70 @@ function App() {
     }, [session]); // Feuert neu, wenn sich der Login-Status ändert
     // --- SYNC & MERGE LOGIC ---
     // --- NEUE SYNC LOGIK (Konflikt-basiert) ---
+    // --- SYNC LOGIC (Optimiert für Realtime) ---
     const syncWithCloud = async (localData, silent = false) => {
         if (!session) return;
         const userId = session.user.id;
 
         try {
             // 1. Cloud Daten holen
-            const { data: cloudDataRows, error } = await supabase
+            const { data: cloudData, error } = await supabase
                 .from('user_progress')
                 .select('*')
                 .eq('user_id', userId);
 
             if (error) throw error;
 
-            // Umwandeln in unser Format { rank: { box: 1, ... } }
-            const cloudDataMap = {};
-            cloudDataRows.forEach(row => {
-                cloudDataMap[row.word_rank] = {
-                    box: row.box,
-                    nextReview: parseInt(row.next_review),
-                    interval: row.interval,
-                    ease: row.ease_factor
-                };
+            // 2. Mergen
+            const mergedProgress = { ...localData };
+            const updatesForCloud = [];
+
+            cloudData.forEach(row => {
+                const localEntry = mergedProgress[row.word_rank];
+                
+                // Logik: Nimm immer den "höheren" Fortschritt oder das neuste Datum
+                // Hier vereinfacht: Wenn Cloud-Box höher ist -> Nimm Cloud
+                if (!localEntry || row.box > localEntry.box) {
+                    mergedProgress[row.word_rank] = {
+                        box: row.box,
+                        nextReview: parseInt(row.next_review),
+                        interval: row.interval,
+                        ease: row.ease_factor
+                    };
+                }
             });
 
-            const hasCloudData = Object.keys(cloudDataMap).length > 0;
-            const hasLocalData = Object.keys(localData).length > 0;
-
-            // FALL A: Cloud ist leer -> Einfach Lokal hochladen (Auto-Save)
-            if (!hasCloudData && hasLocalData) {
-                if (!silent) console.log("Cloud empty, uploading local...");
-                await overwriteCloud(localData);
-                return;
-            }
-
-            // FALL B: Lokal ist leer -> Einfach Cloud runterladen
-            if (hasCloudData && !hasLocalData) {
-                if (!silent) console.log("Local empty, downloading cloud...");
-                setUserProgress(cloudDataMap);
-                return;
-            }
-
-            // FALL C: Beides hat Daten -> KONFLIKT!
-            // Wir prüfen, ob sie identisch sind, um unnötige Popups zu vermeiden
-            const localStr = JSON.stringify(localData);
-            const cloudStr = JSON.stringify(cloudDataMap);
-
-            if (hasCloudData && hasLocalData && localStr !== cloudStr) {
-                // Wenn wir "silent" sind (z.B. beim Tab-Wechsel), wollen wir den User nicht nerven,
-                // ABER wir dürfen nicht überschreiben. Wir tun nichts und warten auf manuellen Sync oder Neustart.
-                if (!silent) {
-                    setSyncConflict({ local: localData, cloud: cloudDataMap });
+            // Prüfen was wir hochladen müssen (Lokal > Cloud)
+            Object.entries(mergedProgress).forEach(([rank, prog]) => {
+                const cloudEntry = cloudData.find(c => c.word_rank === parseInt(rank));
+                
+                // Wenn lokal existiert, aber Cloud nicht ODER lokal Box höher ist
+                if (!cloudEntry || prog.box > cloudEntry.box) {
+                    updatesForCloud.push({
+                        user_id: userId,
+                        word_rank: parseInt(rank),
+                        box: prog.box,
+                        next_review: prog.nextReview,
+                        interval: prog.interval,
+                        ease_factor: prog.ease || 2.5
+                    });
                 }
-            } else {
-                if (!silent) console.log("Data is already in sync.");
+            });
+
+            // 3. Hochladen
+            if (updatesForCloud.length > 0) {
+                if (!silent) console.log(`Uploading ${updatesForCloud.length} updates...`);
+                await supabase.from('user_progress').upsert(updatesForCloud, { onConflict: 'user_id, word_rank' });
             }
+
+            // 4. Lokal anwenden
+            setUserProgress(mergedProgress);
+            // Speichern in LocalStorage passiert automatisch durch deinen anderen useEffect
+
+            if (!silent) console.log("Sync complete.");
 
         } catch (err) {
-            console.error("Sync check failed:", err);
+            console.error("Sync failed:", err);
         }
     };
 
