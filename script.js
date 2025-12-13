@@ -200,39 +200,37 @@ const TOPIC_CONTENT = {
 
 /* script.js - AuthScreen Update */
 /* script.js - AuthScreen Update mit Reset-Funktion */
-const AuthScreen = ({ onLoginSuccess, isEmbedded = false }) => {
+/* script.js - Complete AuthScreen */
+/* script.js - AuthScreen (Final Fix) */
+const AuthScreen = ({ onLoginSuccess, isEmbedded = false, initialMode = 'login' }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [isSignUp, setIsSignUp] = useState(false);
     
-    // NEU: Toggle für Reset-Modus
-    const [isResetMode, setIsResetMode] = useState(false); 
-    
+    // Initialer State basierend auf Prop, aber danach unabhängig
+    const [isSignUp, setIsSignUp] = useState(initialMode === 'signup');
+    const [isResetMode, setIsResetMode] = useState(false);
     const [msg, setMsg] = useState(null);
 
-    // 1. PASSWORT RESET ANFORDERN
+    // Wenn sich der initialMode von außen ändert (z.B. durch Wizard-Buttons), State updaten
+    useEffect(() => {
+        setIsSignUp(initialMode === 'signup');
+    }, [initialMode]);
+
     const handlePasswordReset = async (e) => {
         e.preventDefault();
         setLoading(true);
         setMsg(null);
-
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.href, // Wichtig: Zurück zu deiner App
-        });
-
-        if (error) {
-            setMsg({ type: 'error', text: error.message });
-        } else {
-            setMsg({ type: 'success', text: 'Check your emails for the reset link!' });
-            // Optional: Nach 3 Sekunden zurück zum Login wechseln
+        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+        if (error) setMsg({ type: 'error', text: error.message });
+        else {
+            setMsg({ type: 'success', text: 'Check your emails!' });
             setTimeout(() => setIsResetMode(false), 5000);
         }
         setLoading(false);
     };
 
-    // 2. NORMALER LOGIN / SIGNUP (Bleibt fast gleich)
     const handleAuth = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -262,7 +260,6 @@ const AuthScreen = ({ onLoginSuccess, isEmbedded = false }) => {
     };
 
     const handleGoogleLogin = async () => {
-        // ... (Dein Google Code hier lassen) ...
         setLoading(true);
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
@@ -284,74 +281,50 @@ const AuthScreen = ({ onLoginSuccess, isEmbedded = false }) => {
                             {isResetMode ? 'Reset Password' : (isSignUp ? 'Create Account' : 'Welcome Back')}
                         </h2>
                         <p className="text-slate-400 text-sm mb-6">
-                            {isResetMode ? 'Enter email to receive a link' : (isSignUp ? 'Start your journey today' : 'Sync your progress across devices')}
+                            {isResetMode ? 'Enter email to receive link' : (isSignUp ? 'Start your journey today' : 'Sync your progress')}
                         </p>
                     </>
                 )}
 
-                {msg && (
-                    <div className={`p-3 rounded-xl text-sm mb-4 ${msg.type === 'error' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
-                        {msg.text}
-                    </div>
-                )}
+                {msg && <div className={`p-3 rounded-xl text-sm mb-4 ${msg.type === 'error' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>{msg.text}</div>}
 
-                {/* --- ANSICHT A: RESET FORMULAR --- */}
                 {isResetMode ? (
                     <form onSubmit={handlePasswordReset} className="space-y-4">
-                        <input 
-                            type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)}
-                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors"
-                            required
-                        />
-                        <button type="submit" disabled={loading} className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all disabled:opacity-50">
+                        <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors" required />
+                        <button type="submit" disabled={loading} className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-all disabled:opacity-50">
                             {loading ? <Loader2 size={24} className="animate-spin mx-auto"/> : 'Send Magic Link'}
                         </button>
-                        <button type="button" onClick={() => { setIsResetMode(false); setMsg(null); }} className="text-indigo-600 font-bold hover:underline text-sm">
-                            Back to Login
-                        </button>
+                        <button type="button" onClick={() => { setIsResetMode(false); setMsg(null); }} className="text-indigo-600 font-bold hover:underline text-sm block mx-auto mt-4">Back to Login</button>
                     </form>
                 ) : (
-                    /* --- ANSICHT B: NORMALER LOGIN/SIGNUP --- */
                     <>
                         <button onClick={handleGoogleLogin} disabled={loading} className="w-full py-3 mb-6 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold shadow-sm hover:bg-slate-50 transition-all flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50">
-                            {/* Google SVG hier lassen... */}
-                            <span>Continue with Google</span>
+                            {/* HIER IST DAS GOOGLE ICON WIEDER: */}
+                            <svg className="w-5 h-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.12c-.22-.66-.35-1.36-.35-2.12s.13-1.46.35-2.12V7.04H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.96l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.04l3.66 2.84c.87-2.6 3.3-4.5 6.16-4.5z" fill="#EA4335"/></svg>
+                            Continue with Google
                         </button>
                         
                         <div className="flex items-center gap-4 mb-6">
-                            <div className="h-px bg-slate-200 flex-1"></div>
-                            <span className="text-xs text-slate-400 font-bold uppercase">Or with Email</span>
-                            <div className="h-px bg-slate-200 flex-1"></div>
+                            <div className="h-px bg-slate-200 flex-1"></div><span className="text-xs text-slate-400 font-bold uppercase">Or with Email</span><div className="h-px bg-slate-200 flex-1"></div>
                         </div>
 
                         <form onSubmit={handleAuth} className="space-y-3">
                             <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors" required />
                             <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors" required />
-                            
-                            {isSignUp && (
-                                <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors animate-in fade-in slide-in-from-top-2" required />
-                            )}
-                            
+                            {isSignUp && <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 transition-colors animate-in fade-in slide-in-from-top-2" required />}
                             <button type="submit" disabled={loading} className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all disabled:opacity-50">
                                 {loading ? <Loader2 size={24} className="animate-spin mx-auto"/> : (isSignUp ? 'Sign Up' : 'Login')}
                             </button>
                         </form>
 
                         <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
-                            {/* Toggle Login/Signup */}
                             <p className="text-slate-400 text-sm">
                                 {isSignUp ? "Already have an account?" : "Don't have an account?"} 
                                 <button onClick={() => { setIsSignUp(!isSignUp); setMsg(null); }} className="text-indigo-600 font-bold hover:underline ml-1">
                                     {isSignUp ? 'Login' : 'Sign Up'}
                                 </button>
                             </p>
-                            
-                            {/* Toggle Forgot Password */}
-                            {!isSignUp && (
-                                <button onClick={() => { setIsResetMode(true); setMsg(null); }} className="text-slate-400 text-xs hover:text-slate-600 hover:underline">
-                                    Forgot Password?
-                                </button>
-                            )}
+                            {!isSignUp && <button onClick={() => { setIsResetMode(true); setMsg(null); }} className="text-slate-400 text-xs hover:text-slate-600 hover:underline block mx-auto">Forgot Password?</button>}
                         </div>
                     </>
                 )}
@@ -2334,212 +2307,208 @@ const GrammarDetail = ({ topicId, onBack }) => {
 // --- ONBOARDING COMPONENTS ---
 
 // --- ONBOARDING WIZARD (FIXED & ENHANCED) ---
-const OnboardingWizard = ({ onComplete, session }) => { // Nimmt session als Prop!
-    const [step, setStep] = useState(0); // 0=Intro, 1=Auth, 2=Name, 3=Level, 4=ExistingUser
+// --- ONBOARDING WIZARD (New Flow) ---
+// --- ONBOARDING WIZARD (Fixed Logic) ---
+// --- ONBOARDING WIZARD (Fixed Logic) ---
+const OnboardingWizard = ({ onComplete, session }) => {
+    const [step, setStep] = useState(0); 
+    const [authMode, setAuthMode] = useState('signup'); 
     const [nickname, setNickname] = useState("");
     const [showGuestWarning, setShowGuestWarning] = useState(false);
+    const [checkingAccount, setCheckingAccount] = useState(false);
     
-    // State für gefundenes Profil
     const [existingProfile, setExistingProfile] = useState(null);
-    const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
-    // --- EFFECT: PRÜFE AUF LOGIN BEIM START ODER NACH REDIRECT ---
+    // --- CHECK ACCOUNT LOGIC ---
     useEffect(() => {
         const checkExistingUser = async () => {
             if (session?.user) {
-                setIsLoadingProfile(true);
-                // 1. Profil laden
-                const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+                setCheckingAccount(true);
                 
-                // 2. Fortschritt zählen (um zu sehen, ob es ein "echter" Account ist)
-                const { count } = await supabase.from('user_progress').select('*', { count: 'exact', head: true }).eq('user_id', session.user.id);
-                
-                setIsLoadingProfile(false);
+                // 1. Profil abrufen
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .maybeSingle(); // 'maybeSingle' verhindert Fehler, wenn noch keins da ist
 
-                if (profile && (profile.nickname || count > 0)) {
-                    // AHA! Das ist ein alter Bekannter.
+                // 2. Progress prüfen (Gibt es schon gelernte Wörter?)
+                const { count } = await supabase
+                    .from('user_progress')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('user_id', session.user.id);
+                
+                setCheckingAccount(false);
+
+                // Entscheidung: Ist das ein "echter" genutzter Account?
+                // Ja, wenn ein Nickname gesetzt ist ODER wenn Wörter gelernt wurden.
+                if (profile && (profile.nickname || (count && count > 0))) {
                     setExistingProfile({
-                        name: profile.nickname || "User",
-                        level: profile.target_level || "Unknown",
+                        name: profile.nickname || "Learner",
+                        level: profile.target_level || "A1",
                         wordCount: count || 0
                     });
-                    setStep(4); // Zeige "Welcome Back" Screen
+                    setStep(4); // -> Welcome Back Screen
                 } else {
-                    // Neu, aber eingeloggt -> Weiter zum Namen
+                    // Neu -> Weiter zu Name
                     setStep(2); 
                 }
             }
         };
 
-        // Nur ausführen, wenn wir ganz am Anfang sind oder gerade beim Login
-        if (session && (step === 0 || step === 1)) {
+        // Check läuft, wenn Session da ist UND wir noch am Anfang sind (Step 0 oder 1)
+        if (session && step < 2) {
             checkExistingUser();
         }
-    }, [session]); // Feuert, wenn Session reinkommt (z.B. nach Google Redirect)
+    }, [session]); 
 
+    // --- SUB-COMPONENTS ---
 
-    // --- STEP CONTENT RENDERERS ---
-
-    const renderIntro = () => (
-        <div className="text-center flex flex-col items-center justify-center h-full w-full max-w-sm mx-auto">
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 w-full">
-                <div className="bg-indigo-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto text-indigo-600 text-3xl mb-4">🚀</div>
-                <h2 className="text-2xl font-extrabold text-slate-800 mb-2">Master French<br/>Frequency</h2>
-                <p className="text-slate-500 text-sm leading-relaxed mb-6">
-                    Focus on the 5,000 most used words. Stop wasting time on vocabulary you'll never use.
+    const GuestWarningModal = () => (
+        <div className="fixed inset-0 z-[250] bg-black/50 backdrop-blur-sm flex items-center justify-center p-6 animate-in fade-in duration-200">
+            <div className="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-sm">
+                <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-amber-600 text-3xl mb-4">⚠️</div>
+                <h3 className="text-xl font-bold text-slate-800 text-center mb-2">Guest Mode</h3>
+                <p className="text-slate-500 text-sm text-center mb-6">
+                    Data is saved on this device <b>only</b>. Clearing cache or switching devices will lose your progress.
                 </p>
-                <div className="grid grid-cols-2 gap-3 mb-6">
-                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100"><span className="text-xl block mb-1">🧠</span><span className="text-[10px] font-bold text-slate-400 uppercase">Smart AI</span></div>
-                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100"><span className="text-xl block mb-1">📊</span><span className="text-[10px] font-bold text-slate-400 uppercase">Tracking</span></div>
+                <div className="flex flex-col gap-3">
+                    <button 
+                        onClick={() => { setShowGuestWarning(false); setStep(2); }} 
+                        className="w-full bg-amber-500 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-amber-600 active:scale-95 transition-all"
+                    >
+                        I understand, continue
+                    </button>
+                    <button 
+                        onClick={() => setShowGuestWarning(false)} 
+                        className="text-slate-400 font-bold text-sm py-2"
+                    >
+                        Go back
+                    </button>
                 </div>
-                <button onClick={() => setStep(1)} className="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all">Get Started</button>
             </div>
         </div>
     );
 
-    const renderAuthStep = () => {
-        if (showGuestWarning) {
-            return (
-                <div className="text-center w-full max-w-sm mx-auto animate-in fade-in zoom-in duration-300">
-                    <div className="bg-white p-6 rounded-3xl shadow-xl border border-amber-100">
-                        <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-amber-600 text-3xl mb-4">⚠️</div>
-                        <h3 className="text-xl font-bold text-slate-800 mb-2">Guest Mode</h3>
-                        <p className="text-slate-500 text-sm mb-6">If you continue as a guest, data is saved on this device only. Clearing cache <b>deletes your progress</b>.</p>
-                        <div className="flex flex-col gap-3">
-                            <button onClick={() => { setShowGuestWarning(false); setStep(2); }} className="w-full bg-amber-500 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-amber-600">I understand</button>
-                            <button onClick={() => setShowGuestWarning(false)} className="text-slate-400 font-bold text-sm py-2">Go back</button>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-        return (
-            <div className="w-full max-w-sm mx-auto">
-                <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <div className="text-center mb-6">
-                        <h2 className="text-xl font-bold text-slate-800">Create Profile</h2>
-                        <p className="text-slate-400 text-xs">Save your progress securely in the cloud.</p>
-                    </div>
-                    {/* AuthScreen feuert onLoginSuccess -> unser Effect oben fängt das ab und leitet weiter */}
-                    <div className="mb-4"><AuthScreen onLoginSuccess={() => {}} isEmbedded={true} /></div>
-                    <div className="relative py-4">
-                        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100"></div></div>
-                        <div className="relative flex justify-center text-xs"><span className="px-2 bg-white text-slate-400 uppercase font-bold tracking-wider">or</span></div>
-                    </div>
-                    <button onClick={() => setShowGuestWarning(true)} className="w-full py-3 text-slate-500 font-bold text-sm bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors border border-slate-200">Continue as Guest</button>
-                </div>
-            </div>
-        );
-    };
+    const levels = [
+        { id: 'Scratch', label: 'Absolute Beginner', icon: '🐣', desc: 'Start from word #1' },
+        { id: 'A2', label: 'Elementary', icon: '🚲', desc: 'I know basics' },
+        { id: 'B1', label: 'Intermediate', icon: '🚀', desc: 'I can converse' },
+        { id: 'B2', label: 'Advanced', icon: '🎩', desc: 'Fluent reader' },
+    ];
 
-    // --- STEP 4: EXISTING USER FOUND ---
-    const renderExistingUserStep = () => (
-        <div className="text-center w-full max-w-sm mx-auto animate-in fade-in slide-in-from-bottom-4">
-            <div className="bg-white p-8 rounded-3xl shadow-xl border border-indigo-100">
-                <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600 text-4xl">🎉</div>
-                <h2 className="text-2xl font-bold text-slate-800 mb-2">Welcome Back!</h2>
-                <p className="text-slate-500 text-sm mb-6">We found an existing profile linked to this account.</p>
-                
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-8">
-                    <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Found Data</div>
-                    <div className="text-lg font-bold text-slate-800">{existingProfile?.name}</div>
-                    <div className="flex justify-center gap-4 mt-2 text-sm text-slate-600">
-                        <span>📚 {existingProfile?.wordCount} Words</span>
-                        <span>🎓 Level {existingProfile?.level}</span>
-                    </div>
-                </div>
-
-                <button 
-                    onClick={() => {
-                        // Wir übernehmen die Daten aus dem Profil
-                        localStorage.setItem('vocabApp_nickname', existingProfile.name);
-                        localStorage.setItem('vocabApp_hasOnboarded', 'true');
-                        onComplete(existingProfile.name, existingProfile.level);
-                    }}
-                    className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-xl hover:bg-indigo-700 transition-all"
-                >
-                    Continue with this Profile
-                </button>
-                <button 
-                    onClick={() => setStep(2)} // Doch neu anlegen (Name ändern etc)
-                    className="mt-4 text-slate-400 text-xs font-bold hover:text-indigo-600"
-                >
-                    Start fresh / Change setup
-                </button>
-            </div>
-        </div>
-    );
-
-    const renderNameStep = () => (
-        <div className="text-center w-full max-w-sm mx-auto">
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                <div className="bg-purple-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-purple-600 text-3xl">👋</div>
-                <h2 className="text-xl font-bold text-slate-800 mb-6">What should we call you?</h2>
-                <input type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="Your Nickname" className="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl font-bold text-xl text-center text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all mb-6" autoFocus />
-                <button 
-                    onClick={async () => {
-                        if(!nickname.trim()) return;
-                        localStorage.setItem('vocabApp_nickname', nickname);
-                        if (session) {
-                            await supabase.from('profiles').update({ nickname: nickname }).eq('id', session.user.id);
-                        }
-                        setStep(3);
-                    }}
-                    disabled={!nickname.trim()}
-                    className="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-bold text-lg shadow-xl hover:bg-indigo-700 disabled:opacity-50 transition-all"
-                >
-                    Next Step
-                </button>
-            </div>
-        </div>
-    );
-
-    const renderLevelStep = () => {
-        const levels = [
-            { id: 'Scratch', label: 'Absolute Beginner', icon: '🐣', desc: 'Start from word #1' },
-            { id: 'A2', label: 'Elementary', icon: '🚲', desc: 'I know basics' },
-            { id: 'B1', label: 'Intermediate', icon: '🚀', desc: 'I can converse' },
-            { id: 'B2', label: 'Advanced', icon: '🎩', desc: 'Fluent reader' },
-        ];
-        return (
-            <div className="text-center w-full max-w-sm mx-auto">
-                <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-800 mb-1">Where do you start?</h2>
-                    <p className="text-slate-400 text-xs mb-6">This helps us adjust your content.</p>
-                    <div className="grid gap-3">
-                        {levels.map(l => (
-                            <button key={l.id} onClick={async () => {
-                                localStorage.setItem('vocabApp_targetLevel', l.id);
-                                localStorage.setItem('vocabApp_hasOnboarded', 'true'); 
-                                if (session) await supabase.from('profiles').update({ target_level: l.id }).eq('id', session.user.id);
-                                onComplete(nickname, l.id);
-                            }} className="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center gap-4 hover:border-indigo-500 hover:bg-indigo-50 transition-all group text-left">
-                                <div className="text-2xl">{l.icon}</div>
-                                <div><div className="font-bold text-slate-700 group-hover:text-indigo-700 text-sm">{l.label}</div><div className="text-[10px] text-slate-400">{l.desc}</div></div>
-                                <div className="ml-auto opacity-0 group-hover:opacity-100 text-indigo-600"><Check size={18} /></div>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        );
-    };
-
-    if (isLoadingProfile) {
-        return <div className="fixed inset-0 z-[200] bg-slate-50 flex items-center justify-center"><Loader2 size={48} className="animate-spin text-indigo-600"/></div>;
-    }
+    if (checkingAccount) return <div className="fixed inset-0 z-[200] bg-slate-50 flex items-center justify-center"><Loader2 className="animate-spin text-indigo-600" size={48}/></div>;
 
     return (
         <div className="fixed inset-0 z-[200] bg-slate-50 h-[100dvh] w-full overflow-y-auto">
+            
+            {/* GUEST WARNING OVERLAY (Jetzt global über allem) */}
+            {showGuestWarning && <GuestWarningModal />}
+
             <div className="min-h-full flex flex-col items-center justify-center p-6">
+                
+                {/* Progress Dots */}
                 <div className="flex gap-2 mb-8 w-full max-w-[100px]">
                     {[0, 1, 2, 3].map(i => (<div key={i} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${i <= (step === 4 ? 1 : step) ? 'bg-indigo-600' : 'bg-slate-200'}`}></div>))}
                 </div>
-                {step === 0 && renderIntro()}
-                {step === 1 && renderAuthStep()}
-                {step === 2 && renderNameStep()}
-                {step === 3 && renderLevelStep()}
-                {step === 4 && renderExistingUserStep()}
+
+                {/* STEP 0: START */}
+                {step === 0 && (
+                    <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 w-full max-w-sm">
+                        <div className="bg-indigo-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto text-indigo-600 text-3xl mb-4">🚀</div>
+                        <h2 className="text-2xl font-extrabold text-slate-800 mb-2 text-center">French Frequency</h2>
+                        <p className="text-slate-500 text-sm leading-relaxed mb-8 text-center">Learn the 5,000 most used words efficiently.</p>
+                        <div className="space-y-3">
+                            <button onClick={() => { setAuthMode('signup'); setStep(1); }} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all">Get Started</button>
+                            <button onClick={() => { setAuthMode('login'); setStep(1); }} className="w-full bg-white text-slate-600 border border-slate-200 py-4 rounded-2xl font-bold text-lg hover:bg-slate-50 active:scale-95 transition-all">I have an account</button>
+                        </div>
+                        <button onClick={() => setShowGuestWarning(true)} className="mt-6 text-slate-400 text-xs font-bold uppercase tracking-wider hover:text-slate-600 w-full text-center">Continue as Guest</button>
+                    </div>
+                )}
+
+                {/* STEP 1: AUTH */}
+                {step === 1 && (
+                    <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 w-full max-w-sm">
+                        <div className="text-center mb-6">
+                            <h2 className="text-xl font-bold text-slate-800">{authMode === 'signup' ? 'Create Account' : 'Welcome Back'}</h2>
+                            <p className="text-slate-400 text-xs">{authMode === 'signup' ? 'Start securely.' : 'Sync your progress.'}</p>
+                        </div>
+                        {/* WICHTIG: initialMode wird übergeben */}
+                        <AuthScreen 
+                            onLoginSuccess={() => { /* Effect oben übernimmt */ }} 
+                            isEmbedded={true} 
+                            initialMode={authMode} 
+                        />
+                        <button onClick={() => setStep(0)} className="w-full mt-4 text-slate-400 text-xs hover:text-slate-600">← Back to Start</button>
+                        
+                        {/* Guest auch hier verfügbar machen */}
+                        <button onClick={() => setShowGuestWarning(true)} className="w-full mt-6 py-3 text-slate-500 font-bold text-sm bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors border border-slate-200">
+                            Skip & Continue as Guest
+                        </button>
+                    </div>
+                )}
+
+                {/* STEP 2: NAME */}
+                {step === 2 && (
+                    <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 w-full max-w-sm text-center">
+                        <div className="bg-purple-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-purple-600 text-3xl">👋</div>
+                        <h2 className="text-xl font-bold text-slate-800 mb-6">What should we call you?</h2>
+                        <input type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="Your Nickname" className="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl font-bold text-xl text-center text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all mb-6" autoFocus />
+                        <button onClick={async () => {
+                            if(!nickname.trim()) return;
+                            localStorage.setItem('vocabApp_nickname', nickname);
+                            // Versuche Update (ignoriere Fehler wenn nicht eingeloggt)
+                            if (session) await supabase.from('profiles').update({ nickname: nickname }).eq('id', session.user.id);
+                            setStep(3);
+                        }} disabled={!nickname.trim()} className="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-bold text-lg shadow-xl">Next Step</button>
+                    </div>
+                )}
+
+                {/* STEP 3: LEVEL */}
+                {step === 3 && (
+                    <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 w-full max-w-sm">
+                        <h2 className="text-xl font-bold text-slate-800 mb-1 text-center">Where do you start?</h2>
+                        <p className="text-slate-400 text-xs mb-6 text-center">This helps us adjust your content.</p>
+                        <div className="grid gap-3">
+                            {levels.map(l => (
+                                <button key={l.id} onClick={async () => {
+                                    localStorage.setItem('vocabApp_targetLevel', l.id);
+                                    localStorage.setItem('vocabApp_hasOnboarded', 'true'); 
+                                    if (session) await supabase.from('profiles').update({ target_level: l.id }).eq('id', session.user.id);
+                                    onComplete(nickname, l.id);
+                                }} className="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center gap-4 hover:border-indigo-500 hover:bg-indigo-50 transition-all text-left group">
+                                    <span className="text-2xl">{l.icon}</span>
+                                    <div><div className="font-bold text-slate-700 group-hover:text-indigo-700 text-sm">{l.label}</div></div>
+                                    <div className="ml-auto opacity-0 group-hover:opacity-100 text-indigo-600"><Check size={18} /></div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* STEP 4: EXISTING USER FOUND */}
+                {step === 4 && (
+                    <div className="bg-white p-8 rounded-3xl shadow-xl border border-indigo-100 w-full max-w-sm text-center animate-in fade-in slide-in-from-bottom-4">
+                        <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600 text-4xl">🎉</div>
+                        <h2 className="text-2xl font-bold text-slate-800 mb-2">Welcome Back!</h2>
+                        <p className="text-slate-500 text-sm mb-6">We found an existing profile.</p>
+                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-8">
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Found Data</div>
+                            <div className="text-lg font-bold text-slate-800">{existingProfile?.name}</div>
+                            <div className="flex justify-center gap-4 mt-2 text-sm text-slate-600">
+                                <span>📚 {existingProfile?.wordCount} Words</span>
+                                <span>🎓 {existingProfile?.level}</span>
+                            </div>
+                        </div>
+                        <button onClick={() => {
+                            localStorage.setItem('vocabApp_nickname', existingProfile.name);
+                            localStorage.setItem('vocabApp_hasOnboarded', 'true');
+                            onComplete(existingProfile.name, existingProfile.level);
+                        }} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-xl hover:bg-indigo-700 transition-all">Continue with this Profile</button>
+                        <button onClick={() => setStep(2)} className="mt-4 text-slate-400 text-xs font-bold hover:text-indigo-600">Start fresh / Change setup</button>
+                    </div>
+                )}
+
                 <div className="h-8 shrink-0"></div>
             </div>
         </div>
@@ -2560,6 +2529,9 @@ function App() {
     const [session, setSession] = useState(null);
     // --- ONBOARDING STATE ---
     // Wir prüfen localStorage. Wenn 'true', dann false (kein Wizard). Sonst true.
+    
+    // --- SYNC CONFLICT STATE ---
+    const [syncConflict, setSyncConflict] = useState(null); // Wenn Daten da sind: { local, cloud }
     // --- ONBOARDING STATE (Mit Fix für Password Reset) ---
     const [showWizard, setShowWizard] = useState(() => {
         // 1. Prüfen: Kommen wir gerade von einem Passwort-Reset-Link?
@@ -2597,6 +2569,7 @@ function App() {
     // NEU: State für den Lade-Text
     const [loadingTip, setLoadingTip] = useState("Preparing your story...");
     
+
     // Session State
     const [activeSession, setActiveSession] = useState([]);
     const [sessionQueue, setSessionQueue] = useState([]); 
@@ -2763,75 +2736,85 @@ function App() {
         };
     }, [session]); // Feuert neu, wenn sich der Login-Status ändert
     // --- SYNC & MERGE LOGIC ---
+    // --- NEUE SYNC LOGIK (Konflikt-basiert) ---
     const syncWithCloud = async (localData, silent = false) => {
-        if (!session) return; // Nur ausführen, wenn eingeloggt
+        if (!session) return;
         const userId = session.user.id;
 
         try {
             // 1. Cloud Daten holen
-            const { data: cloudData, error } = await supabase
+            const { data: cloudDataRows, error } = await supabase
                 .from('user_progress')
                 .select('*')
                 .eq('user_id', userId);
 
             if (error) throw error;
 
-            // 2. Mergen (Lokal + Cloud)
-            const mergedProgress = { ...localData };
-            const updatesForCloud = [];
-
-            // A: Cloud Daten in Lokal integrieren
-            // Wenn die Cloud "schlauer" ist (höhere Box) oder das Wort lokal fehlt -> Nimm Cloud
-            if (cloudData) {
-                cloudData.forEach(row => {
-                    const localEntry = mergedProgress[row.word_rank];
-                    
-                    if (!localEntry || row.box > localEntry.box) {
-                        mergedProgress[row.word_rank] = {
-                            box: row.box,
-                            nextReview: parseInt(row.next_review),
-                            interval: row.interval,
-                            ease: row.ease_factor
-                        };
-                    }
-                });
-            }
-
-            // B: Lokale (gemergte) Daten für Cloud vorbereiten
-            // Wir schicken den finalen Stand zurück in die Cloud, damit beide synchron sind
-            Object.entries(mergedProgress).forEach(([rank, prog]) => {
-                updatesForCloud.push({
-                    user_id: userId,
-                    word_rank: parseInt(rank),
-                    box: prog.box,
-                    next_review: prog.nextReview,
-                    interval: prog.interval,
-                    ease_factor: prog.ease || 2.5
-                });
+            // Umwandeln in unser Format { rank: { box: 1, ... } }
+            const cloudDataMap = {};
+            cloudDataRows.forEach(row => {
+                cloudDataMap[row.word_rank] = {
+                    box: row.box,
+                    nextReview: parseInt(row.next_review),
+                    interval: row.interval,
+                    ease: row.ease_factor
+                };
             });
 
-            // 3. Batch Upload in die Cloud (Upsert)
-            if (updatesForCloud.length > 0) {
-                const { error: upsertError } = await supabase
-                    .from('user_progress')
-                    .upsert(updatesForCloud, { onConflict: 'user_id, word_rank' });
-                
-                if (upsertError) throw upsertError;
+            const hasCloudData = Object.keys(cloudDataMap).length > 0;
+            const hasLocalData = Object.keys(localData).length > 0;
+
+            // FALL A: Cloud ist leer -> Einfach Lokal hochladen (Auto-Save)
+            if (!hasCloudData && hasLocalData) {
+                if (!silent) console.log("Cloud empty, uploading local...");
+                await overwriteCloud(localData);
+                return;
             }
 
-            // 4. Lokalen State aktualisieren
-            setUserProgress(mergedProgress);
-            
-            // Feedback geben (nur wenn nicht stummgeschaltet)
-            if (!silent) {
-                alert("Sync complete! Cloud and device are in sync.");
+            // FALL B: Lokal ist leer -> Einfach Cloud runterladen
+            if (hasCloudData && !hasLocalData) {
+                if (!silent) console.log("Local empty, downloading cloud...");
+                setUserProgress(cloudDataMap);
+                return;
+            }
+
+            // FALL C: Beides hat Daten -> KONFLIKT!
+            // Wir prüfen, ob sie identisch sind, um unnötige Popups zu vermeiden
+            const localStr = JSON.stringify(localData);
+            const cloudStr = JSON.stringify(cloudDataMap);
+
+            if (hasCloudData && hasLocalData && localStr !== cloudStr) {
+                // Wenn wir "silent" sind (z.B. beim Tab-Wechsel), wollen wir den User nicht nerven,
+                // ABER wir dürfen nicht überschreiben. Wir tun nichts und warten auf manuellen Sync oder Neustart.
+                if (!silent) {
+                    setSyncConflict({ local: localData, cloud: cloudDataMap });
+                }
             } else {
-                console.log("Background sync finished successfully.");
+                if (!silent) console.log("Data is already in sync.");
             }
 
         } catch (err) {
-            console.error("Sync failed:", err);
-            if (!silent) alert("Sync error: " + err.message);
+            console.error("Sync check failed:", err);
+        }
+    };
+
+    // Hilfsfunktion: Cloud mit Lokal überschreiben
+    const overwriteCloud = async (data) => {
+        const userId = session.user.id;
+        const updates = Object.entries(data).map(([rank, prog]) => ({
+            user_id: userId,
+            word_rank: parseInt(rank),
+            box: prog.box,
+            next_review: prog.nextReview,
+            interval: prog.interval,
+            ease_factor: prog.ease || 2.5
+        }));
+
+        // Erst alles löschen (damit "tote" Wörter weg sind), dann neu einfügen
+        // Oder Upsert nutzen. Upsert ist sicherer.
+        if (updates.length > 0) {
+            const { error } = await supabase.from('user_progress').upsert(updates, { onConflict: 'user_id, word_rank' });
+            if (error) throw error;
         }
     };
     // Helper: Text in Buchseiten aufteilen (ca. 450 Zeichen pro Seite, aber am Satzende/Absatz)
@@ -6752,6 +6735,59 @@ function App() {
                                     alert("Account linked successfully!");
                                 }} 
                             />
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* --- SYNC CONFLICT MODAL --- */}
+            {syncConflict && (
+                <div className="fixed inset-0 z-[80] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in zoom-in duration-200">
+                    <div className="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl">
+                        <div className="text-center mb-6">
+                            <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-amber-600 text-3xl mb-4">⇄</div>
+                            <h3 className="text-xl font-bold text-slate-800">Sync Conflict</h3>
+                            <p className="text-slate-500 text-sm mt-2">
+                                We found different data on this device and in your account. Which one should we keep?
+                            </p>
+                        </div>
+
+                        <div className="space-y-3">
+                            {/* Option 1: Keep Cloud (Download) */}
+                            <button 
+                                onClick={() => {
+                                    setUserProgress(syncConflict.cloud); // Lokal überschreiben
+                                    localStorage.setItem('vocabApp_progress', JSON.stringify(syncConflict.cloud));
+                                    setSyncConflict(null);
+                                    window.location.reload(); // Reload für sauberen Start
+                                }}
+                                className="w-full bg-indigo-50 border-2 border-indigo-100 p-4 rounded-2xl flex items-center justify-between hover:bg-indigo-100 transition-all group text-left"
+                            >
+                                <div>
+                                    <div className="font-bold text-indigo-900">Keep Cloud Save</div>
+                                    <div className="text-xs text-indigo-500">Overwrite this device</div>
+                                </div>
+                                <div className="bg-white p-2 rounded-full text-indigo-600 font-bold text-xs shadow-sm">
+                                    {Object.keys(syncConflict.cloud).length} words
+                                </div>
+                            </button>
+
+                            {/* Option 2: Keep Local (Upload) */}
+                            <button 
+                                onClick={async () => {
+                                    await overwriteCloud(syncConflict.local); // Cloud überschreiben
+                                    setSyncConflict(null);
+                                    alert("Cloud updated with local data.");
+                                }}
+                                className="w-full bg-white border-2 border-slate-100 p-4 rounded-2xl flex items-center justify-between hover:border-slate-300 transition-all group text-left"
+                            >
+                                <div>
+                                    <div className="font-bold text-slate-700">Keep Device Save</div>
+                                    <div className="text-xs text-slate-400">Overwrite cloud data</div>
+                                </div>
+                                <div className="bg-slate-100 p-2 rounded-full text-slate-600 font-bold text-xs">
+                                    {Object.keys(syncConflict.local).length} words
+                                </div>
+                            </button>
                         </div>
                     </div>
                 </div>
