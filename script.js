@@ -2704,62 +2704,69 @@ function App() {
         return () => subscription.unsubscribe();
     }, []);
 // --- REALTIME & FOCUS SYNC ---
+// --- REALTIME & FOCUS SYNC (Korrigiert) ---
     useEffect(() => {
-        if (!session) return; // Nur wenn eingeloggt
+        if (!session) return;
 
-        // 1. REALTIME LISTENER (Die Magie)
-        // Lauscht auf Änderungen in der DB und updated die App SOFORT
+        // A) REALTIME LISTENER
         const channel = supabase
-            .channel('progress_updates')
+            .channel('db_sync')
             .on(
                 'postgres_changes',
                 {
                     event: '*', // Lausche auf INSERT und UPDATE
                     schema: 'public',
                     table: 'user_progress',
-                    filter: `user_id=eq.${session.user.id}` // WICHTIG: Nur MEINE Daten
+                    filter: `user_id=eq.${session.user.id}`
                 },
                 (payload) => {
-                    // payload.new enthält die neue Zeile aus der Datenbank
                     const newData = payload.new;
-                    
-                    console.log("⚡ Realtime Update received:", newData.word_rank);
+                    console.log("⚡ Realtime Update empfangen:", newData);
 
-                    // Wir updaten nur dieses EINE Wort im State, ohne alles neu zu laden
-                    setUserProgress(prev => ({
-                        ...prev,
-                        [newData.word_rank]: {
-                            box: newData.box,
-                            nextReview: parseInt(newData.next_review),
-                            interval: newData.interval,
-                            ease: newData.ease_factor
-                        }
-                    }));
+                    setUserProgress(prev => {
+                        // 1. Neuen State berechnen
+                        const updatedProgress = {
+                            ...prev,
+                            [newData.word_rank]: {
+                                box: newData.box,
+                                // WICHTIG: Korrektes Mapping der Namen!
+                                nextReview: parseInt(newData.next_review || 0), 
+                                interval: newData.interval,
+                                ease: newData.ease_factor || 2.5
+                            }
+                        };
+                        
+                        // 2. SOFORT in LocalStorage sichern (damit es beim Refresh bleibt)
+                        localStorage.setItem('vocabApp_progress', JSON.stringify(updatedProgress));
+                        
+                        return updatedProgress;
+                    });
                 }
             )
-            .subscribe();
+            .subscribe((status) => {
+                // Debugging: Sehen ob die Verbindung steht
+                console.log("Supabase Status:", status);
+            });
 
-        // 2. FOCUS LISTENER (Die Sicherheitsleine)
-        // Wenn du die App minimiert hast und wieder öffnest
+        // B) FOCUS LISTENER (Für Mobile "App Switch")
         const handleFocus = () => {
+            // Auf Mobile feuert 'focus' oft erst, wenn man richtig in die App zurückkehrt
             if (document.visibilityState === 'visible') {
-                console.log("👀 App in focus - syncing...");
-                // Wir holen den aktuellsten Stand aus dem LocalStorage für den Merge
+                console.log("👀 App aktiv - starte Sync...");
                 const currentLocal = JSON.parse(localStorage.getItem('vocabApp_progress') || '{}');
-                syncWithCloud(currentLocal, true); // true = silent mode (kein Popup)
+                syncWithCloud(currentLocal, true);
             }
         };
 
         window.addEventListener('visibilitychange', handleFocus);
-        window.addEventListener('focus', handleFocus);
+        window.addEventListener('focus', handleFocus); // Fallback für Desktop
 
-        // Cleanup beim Ausloggen
         return () => {
             supabase.removeChannel(channel);
             window.removeEventListener('visibilitychange', handleFocus);
             window.removeEventListener('focus', handleFocus);
         };
-    }, [session]); // Feuert neu, wenn Login sich ändert    
+    }, [session]);  
     // Logout Funktion
     const handleLogout = async () => {
         await supabase.auth.signOut();
