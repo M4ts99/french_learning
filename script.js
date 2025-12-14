@@ -5858,7 +5858,7 @@ function App() {
         let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
         let progressPercent = !isSmartMode ? (currentIndex / activeSession.length) * 100 : 0;
 
-        // Check Cache oder Live-Daten
+        // Check Cache oder Live-Daten (aiExamples kommt jetzt vom Realtime Listener)
         const currentExamples = exampleCache[word.rank] || aiExamples;
 
         return (
@@ -5925,20 +5925,21 @@ function App() {
                                 {word.example_en && <p className="text-indigo-400 italic text-sm mt-2 px-4 text-center">"{word.example_en}"</p>}
                             </div>
 
-                            {/* --- AI SECTION --- */}
+                            {/* --- AI SECTION (UPDATED) --- */}
                             <div className="w-full mb-6 px-2 flex-1 overflow-y-auto max-h-[200px]">
-                                {loadingExamples ? (
+                                {generating ? (
                                     <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2">
-                                        <RotateCcw className="animate-spin" size={16}/> Generiere Kontext...
+                                        <Loader2 className="animate-spin" size={16}/> Writing sentence...
                                     </div>
                                 ) : (
                                     (!currentExamples || !Array.isArray(currentExamples)) ? (
+                                        // HIER IST DER NEUE BUTTON:
                                         <button 
-                                            // HIER IST DER FIX: Wir übergeben das Wort-Objekt!
-                                            onClick={() => fetchAiExamples(word)} 
-                                            className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2"
+                                            onClick={() => handleGenerateExample(word)} 
+                                            disabled={generating}
+                                            className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2 active:scale-95"
                                         >
-                                            <Sparkles size={16} /> Generate AI Examples
+                                            <Sparkles size={16} /> Generate with AI
                                         </button>
                                     ) : (
                                         <div className="space-y-3 text-left">
@@ -5947,7 +5948,7 @@ function App() {
                                                  <button onClick={() => { setAiExamples(null); setExamplesVisible(false); }} className="text-[10px] text-indigo-400 font-bold hover:underline">Clear</button>
                                             </div>
                                             {currentExamples.map((ex, idx) => (
-                                                <div key={idx} className="bg-slate-50 border border-slate-100 p-3 rounded-xl shadow-sm relative group">
+                                                <div key={idx} className="bg-slate-50 border border-slate-100 p-3 rounded-xl shadow-sm relative group animate-in fade-in slide-in-from-bottom-2 duration-300">
                                                     <div className="flex justify-between items-start gap-2">
                                                         <p className="text-slate-700 font-medium text-sm leading-snug pr-6">{ex.fr}</p>
                                                         <button onClick={() => speak(ex.fr)} className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors"><Volume2 size={16} /></button>
