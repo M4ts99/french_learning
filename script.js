@@ -2705,68 +2705,100 @@ function App() {
     }, []);
 // --- REALTIME & FOCUS SYNC ---
 // --- REALTIME & FOCUS SYNC (Korrigiert) ---
+    // --- STATE ---
+    // Speichert IDs der bestandenen Themen: { 'a1_articles': true, 'b2_subjunctive': true }
+    const [grammarProgress, setGrammarProgress] = useState(() => {
+        // Initial aus LocalStorage laden
+        const local = {};
+        // Wir iterieren kurz über alle LocalStorage Keys um die Grammar-Sachen zu finden
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('grammar_passed_')) {
+                const topicId = key.replace('grammar_passed_', '');
+                local[topicId] = true;
+            }
+        }
+        return local;
+    });
+    // --- REALTIME LISTENER & SYNC ---
     useEffect(() => {
         if (!session) return;
 
-        // A) REALTIME LISTENER
-        const channel = supabase
-            .channel('db_sync')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*', // Lausche auf INSERT und UPDATE
-                    schema: 'public',
-                    table: 'user_progress',
-                    filter: `user_id=eq.${session.user.id}`
-                },
+        // Channel abonnieren
+        const channel = supabase.channel('global_sync')
+            
+            // 1. VOKABELN (User Progress)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'user_progress', filter: `user_id=eq.${session.user.id}` }, 
                 (payload) => {
                     const newData = payload.new;
-                    console.log("⚡ Realtime Update empfangen:", newData);
-
                     setUserProgress(prev => {
-                        // 1. Neuen State berechnen
-                        const updatedProgress = {
-                            ...prev,
-                            [newData.word_rank]: {
-                                box: newData.box,
-                                // WICHTIG: Korrektes Mapping der Namen!
-                                nextReview: parseInt(newData.next_review || 0), 
-                                interval: newData.interval,
-                                ease: newData.ease_factor || 2.5
-                            }
-                        };
-                        
-                        // 2. SOFORT in LocalStorage sichern (damit es beim Refresh bleibt)
-                        localStorage.setItem('vocabApp_progress', JSON.stringify(updatedProgress));
-                        
-                        return updatedProgress;
+                        const updated = { ...prev, [newData.word_rank]: { box: newData.box, nextReview: parseInt(newData.next_review||0), interval: newData.interval, ease: newData.ease_factor||2.5 } };
+                        localStorage.setItem('vocabApp_progress', JSON.stringify(updated));
+                        return updated;
                     });
                 }
             )
-            .subscribe((status) => {
-                // Debugging: Sehen ob die Verbindung steht
-                console.log("Supabase Status:", status);
-            });
 
-        // B) FOCUS LISTENER (Für Mobile "App Switch")
+            // 2. GRAMMATIK (User Grammar)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'user_grammar', filter: `user_id=eq.${session.user.id}` },
+                (payload) => {
+                    const newTopic = payload.new.topic_id;
+                    console.log("📘 Grammar Realtime Update:", newTopic);
+                    setGrammarProgress(prev => {
+                        const updated = { ...prev, [newTopic]: true };
+                        localStorage.setItem(`grammar_passed_${newTopic}`, 'true');
+                        return updated;
+                    });
+                }
+            )
+
+            // 3. BEISPIELSÄTZE (NEU: Empfängt KI-Sätze)
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'examples' }, 
+                (payload) => {
+                    console.log("✨ Neuer KI-Satz empfangen:", payload.new);
+                    
+                    // Wir formatieren den Satz so, wie die UI ihn braucht
+                    const newExample = { fr: payload.new.sentence_fr, en: payload.new.sentence_en };
+                    
+                    // State updaten: Fügt den neuen Satz oben an die Liste an
+                    setAiExamples(prev => {
+                        const list = Array.isArray(prev) ? prev : [];
+                        return [newExample, ...list];
+                    });
+                    
+                    // Lade-Animation beenden
+                    setGenerating(false);
+                    // Falls du die Beispiele aufgeklappt haben willst:
+                    setExamplesVisible(true);
+                }
+            )
+            .subscribe();
+
+        // Focus Listener (Wenn man den Tab wechselt und zurückkommt)
         const handleFocus = () => {
-            // Auf Mobile feuert 'focus' oft erst, wenn man richtig in die App zurückkehrt
             if (document.visibilityState === 'visible') {
-                console.log("👀 App aktiv - starte Sync...");
-                const currentLocal = JSON.parse(localStorage.getItem('vocabApp_progress') || '{}');
-                syncWithCloud(currentLocal, true);
+                const currentLocalVocab = JSON.parse(localStorage.getItem('vocabApp_progress') || '{}');
+                syncWithCloud(currentLocalVocab, true);
+                syncGrammarWithCloud(true);
             }
         };
+        
+        // Initialer Sync beim Start
+        const currentLocalVocab = JSON.parse(localStorage.getItem('vocabApp_progress') || '{}');
+        syncWithCloud(currentLocalVocab, true);
+        syncGrammarWithCloud(true);
 
         window.addEventListener('visibilitychange', handleFocus);
-        window.addEventListener('focus', handleFocus); // Fallback für Desktop
+        window.addEventListener('focus', handleFocus);
 
+        // Cleanup beim Verlassen
         return () => {
             supabase.removeChannel(channel);
             window.removeEventListener('visibilitychange', handleFocus);
             window.removeEventListener('focus', handleFocus);
         };
-    }, [session]);  
+    }, [session]); 
+    
     // Logout Funktion
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -2866,7 +2898,69 @@ function App() {
             console.error("Sync failed:", err);
         }
     };
+    // In App():
+    const markGrammarComplete = async (topicId) => {
+        // 1. Lokal update (schnell)
+        setGrammarProgress(prev => ({ ...prev, [topicId]: true }));
+        localStorage.setItem(`grammar_passed_${topicId}`, 'true');
 
+        // 2. Cloud update (im Hintergrund)
+        if (session) {
+            await supabase.from('user_grammar').upsert({
+                user_id: session.user.id,
+                topic_id: topicId,
+                passed: true
+            });
+        }
+    };
+    
+    // --- GRAMMAR SYNC ---
+    const syncGrammarWithCloud = async (silent = false) => {
+        if (!session) return;
+        const userId = session.user.id;
+
+        try {
+            // 1. Cloud Daten holen
+            const { data: cloudData, error } = await supabase
+                .from('user_grammar')
+                .select('topic_id')
+                .eq('user_id', userId);
+
+            if (error) throw error;
+
+            // 2. Mergen (True gewinnt immer)
+            const newProgress = { ...grammarProgress };
+            const updatesForCloud = [];
+
+            // A: Cloud -> Lokal
+            cloudData.forEach(row => {
+                if (!newProgress[row.topic_id]) {
+                    newProgress[row.topic_id] = true;
+                    // Auch lokal speichern für Offline-Nutzung
+                    localStorage.setItem(`grammar_passed_${row.topic_id}`, 'true');
+                }
+            });
+
+            // B: Lokal -> Cloud (Was fehlt oben?)
+            Object.keys(newProgress).forEach(topicId => {
+                const inCloud = cloudData.some(row => row.topic_id === topicId);
+                if (!inCloud) {
+                    updatesForCloud.push({ user_id: userId, topic_id: topicId, passed: true });
+                }
+            });
+
+            // 3. Upload
+            if (updatesForCloud.length > 0) {
+                await supabase.from('user_grammar').upsert(updatesForCloud, { onConflict: 'user_id, topic_id' });
+                if (!silent) console.log(`Uploaded ${updatesForCloud.length} grammar topics.`);
+            }
+
+            setGrammarProgress(newProgress);
+            
+        } catch (err) {
+            console.error("Grammar sync failed:", err);
+        }
+    };
     // Hilfsfunktion: Cloud mit Lokal überschreiben
     const overwriteCloud = async (data) => {
         const userId = session.user.id;
@@ -4274,7 +4368,50 @@ function App() {
         setSessionResults({ correct: 0, wrong: 0 });
         setView('test-session'); // Wir nutzen test-session für reines Abfragen
     };
+    const [generating, setGenerating] = useState(false);
 
+    const handleGenerateExample = async (currentWord) => {
+        // Schutz: Nicht klicken, wenn schon lädt
+        if (generating) return;
+        setGenerating(true);
+
+        try {
+            // SCHRITT A: Wir brauchen die echte ID aus der Datenbank Tabelle 'dictionary'
+            // (Deine lokale currentWord Variable hat vermutlich nur den 'rank')
+            const { data: dictEntry, error: dictError } = await supabase
+                .from('dictionary')
+                .select('id')
+                .eq('rank', currentWord.rank) // Wir suchen über den Rang
+                .single();
+
+            if (dictError || !dictEntry) {
+                alert("Fehler: Das Wort wurde noch nicht in die 'dictionary' Tabelle importiert.");
+                console.error(dictError);
+                return;
+            }
+
+            console.log("Wort ID gefunden:", dictEntry.id, "Rufe KI...");
+
+            // SCHRITT B: Die Edge Function aufrufen (Das was du gerade deployt hast)
+            const { data, error } = await supabase.functions.invoke('generate-example', {
+                body: { 
+                    word: currentWord.french, 
+                    wordId: dictEntry.id 
+                }
+            });
+
+            if (error) throw error;
+
+            console.log("KI Antwort:", data);
+            // Kein Alert nötig, Realtime zeigt es gleich an!
+
+        } catch (err) {
+            console.error("KI Fehler:", err);
+            alert("Konnte keinen Satz generieren: " + err.message);
+        } finally {
+            setGenerating(false);
+        }
+    };
     const handleResult = (quality) => { 
         // Quality: 0=Again, 1=Hard, 2=Good, 3=Easy
         // (Für Test-Mode nutzen wir true/false Mapping: false->0, true->2)
@@ -5669,8 +5806,26 @@ function App() {
                             {/* AI GENERATOR (Funktioniert auch hier!) */}
                             <div className="w-full px-2">
                                 {!aiExamples && !loadingExamples && (
-                                    <button onClick={() => fetchAiExamples(word.french)} className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2">
-                                        <Sparkles size={32} /> More examples...
+                                    <button 
+                                        onClick={() => handleGenerateExample(word)} 
+                                        disabled={generating}
+                                        className={`w-full py-3 rounded-xl font-bold text-sm border transition-colors flex items-center justify-center gap-2
+                                        ${generating 
+                                            ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-wait' 
+                                            : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100 shadow-sm'
+                                        }`}
+                                    >
+                                        {generating ? (
+                                            <>
+                                                <Loader2 className="animate-spin" size={18}/> 
+                                                <span>Writing sentence...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Sparkles size={18}/> 
+                                                <span>Generate with AI</span>
+                                            </>
+                                        )}
                                     </button>
                                 )}
                                 {loadingExamples && <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2"><ArrowLeft className="animate-spin" size={16}/> generating...</div>}
@@ -6123,7 +6278,9 @@ function App() {
 
             for (const module of GRAMMAR_MODULES) {
                 for (const topic of module.topics) {
-                    const passed = localStorage.getItem(`grammar_passed_${topic.id}`) === 'true';
+                    // ALT: const passed = localStorage.getItem(`grammar_passed_${topic.id}`) === 'true';
+                    // NEU: Wir nutzen den React State!
+                    const passed = grammarProgress[topic.id] === true;
                     if (module.id === 'a1') { a1Total++; if (passed) a1Done++; }
                     if (module.id === 'a2') { a2Total++; if (passed) a2Done++; }
                     if (module.id === 'b1') { b1Total++; if (passed) b1Done++; }
