@@ -4212,95 +4212,90 @@ function App() {
     };
     
     // --- SESSION LOGIC ---
+    // --- ERSETZEN: startSmartSession ---
     const startSmartSession = () => {
-        const now = Date.now();
-        const sessionSize = smartConfig.sessionSize; 
-        
+        setAiExamples(null);
+        const SESSION_SIZE = 20; // Zielgröße der Session
+
         if (!vocabulary || vocabulary.length === 0) {
             alert("No vocabulary loaded.");
             return;
         }
 
-        // 1. Basis-Pool filtern
-        const rangePool = vocabulary.filter(w => w.rank >= smartConfig.rangeStart && w.rank <= smartConfig.rangeEnd);
+        const now = Date.now();
 
-        // 2. Fällige Wörter (Reviews)
-        let dueWords = rangePool.filter(word => {
-            const p = userProgress[word.rank];
-            const reviewTime = p?.nextReview || 0;
-            return p && (p.box > 0 || p.interval > 0) && reviewTime <= now;
+        // 1. Die Töpfe füllen
+        
+        // A: Bad Words (Box 1 oder explizit falsch markiert)
+        const badWords = vocabulary.filter(w => {
+            const p = userProgress[w.rank];
+            return p && p.box === 1;
         });
 
-        // Reviews mischen
-        for (let i = dueWords.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [dueWords[i], dueWords[j]] = [dueWords[j], dueWords[i]];
+        // B: Due Words (Fällig zur Wiederholung, Box > 1)
+        const dueWords = vocabulary.filter(w => {
+            const p = userProgress[w.rank];
+            // Ist fällig UND nicht in Box 1
+            return p && p.box > 1 && p.nextReview <= now;
+        });
+
+        // C: New Words (Noch nie gesehen)
+        // Wir nehmen nicht irgendwelche, sondern die nächsten in der Rangfolge
+        // Finde den ersten Rang, der noch nicht gelernt wurde
+        const firstUnlearned = vocabulary.find(w => !userProgress[w.rank]);
+        const startRank = firstUnlearned ? firstUnlearned.rank : 1;
+        // Kleines Fenster von 100 Wörtern ab dem aktuellen Stand, damit man nicht Rang 5000 lernt wenn man bei 50 ist
+        const newWordsPool = vocabulary.filter(w => !userProgress[w.rank] && w.rank < startRank + 100);
+
+        // 2. Den Mix erstellen (Ziel: 50% Fehler, 30% Wiederholung, 20% Neu)
+        // Das entspricht bei 20 Wörtern: ca. 10 Bad, 6 Due, 4 New
+        let sessionList = [];
+
+        // Helper zum zufälligen Ziehen
+        const pickRandom = (arr, count) => {
+            return [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
+        };
+
+        // Schritt A: Fehler rein (Max 10)
+        sessionList.push(...pickRandom(badWords, 10));
+
+        // Schritt B: Wiederholungen rein (Max 6, aber fülle auf, falls wir weniger als 10 Fehler hatten)
+        const slotsLeftForDue = 16 - sessionList.length; 
+        // Wir wollen mind. 6 Due Words, aber wenn wir wenig Bad Words hatten, nehmen wir mehr Due Words
+        sessionList.push(...pickRandom(dueWords, Math.max(6, slotsLeftForDue)));
+
+        // Schritt C: Neue Wörter rein (Fülle den Rest bis 20 auf)
+        const slotsLeftTotal = SESSION_SIZE - sessionList.length;
+        if (slotsLeftTotal > 0) {
+            // Nimm die obersten vom Stapel (nicht random, damit man strukturiert lernt), oder random im Fenster
+            sessionList.push(...newWordsPool.slice(0, slotsLeftTotal));
         }
 
-        // 3. Neue Wörter ("Dynamic Fuzzy Pool" Logik)
-        let newWords = [];
-        if (dueWords.length < sessionSize) {
-            const needed = sessionSize - dueWords.length;
-            
-            // Finde alle UNGELERNTEN Wörter, sortiert nach Rang (1, 2, 3...)
-            const unlearnedPool = rangePool
-                .filter(word => !userProgress[word.rank] || (!userProgress[word.rank].box && !userProgress[word.rank].interval))
-                .sort((a, b) => a.rank - b.rank); 
-
-            if (unlearnedPool.length > 0) {
-                // HIER IST DIE NEUE LOGIK:
-                // Wir schauen uns das allererste ungelernte Wort an, um zu wissen, wo der Nutzer steht.
-                const currentRankPosition = unlearnedPool[0].rank;
-                let lookaheadWindow = 100; // Standard
-
-                // Deine gewünschte Progression:
-                if (currentRankPosition < 10) {
-                    lookaheadWindow = 3; // Ganz am Anfang: Nur die nächsten 3 mischen (sehr strikt)
-                } else if (currentRankPosition < 30) {
-                    lookaheadWindow = 10; // 10-30: Kleines Fenster
-                } else if (currentRankPosition < 100) {
-                    lookaheadWindow = 20; // 30-100: Etwas mehr Varianz
-                } else if (currentRankPosition < 200) {
-                    lookaheadWindow = 50; // 100-200: Erweitern
-                } else if (currentRankPosition < 1000) {
-                    lookaheadWindow = 100; // Bis 1000: 100er Schritte
-                } else {
-                    lookaheadWindow = 200; // Ab 1000: Große 200er Schritte
-                }
-
-                // Wir nehmen nur den Ausschnitt (das Fenster) aus dem Pool
-                const candidates = unlearnedPool.slice(0, lookaheadWindow);
-                
-                // ...und mischen NUR diese Kandidaten
-                for (let i = candidates.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
-                }
-
-                // Nimm die benötigte Anzahl
-                newWords = candidates.slice(0, needed);
-            }
+        // Fallback: Wenn immer noch Platz ist (z.B. keine neuen mehr da), fülle mit restlichen Due Words auf
+        if (sessionList.length < SESSION_SIZE) {
+            const remainingCount = SESSION_SIZE - sessionList.length;
+            const usedIds = new Set(sessionList.map(w => w.rank));
+            const moreDue = dueWords.filter(w => !usedIds.has(w.rank));
+            sessionList.push(...pickRandom(moreDue, remainingCount));
         }
 
-        // Zusammenfügen
-        let sessionWords = [...dueWords, ...newWords];
-        
-        // Finales Limit
-        if (sessionWords.length > sessionSize) {
-            sessionWords = sessionWords.slice(0, sessionSize);
-        }
-        
-        if (sessionWords.length === 0) {
-            alert("All caught up! Great job.");
+        if (sessionList.length === 0) {
+            alert("All caught up! Great job. Nothing to learn right now.");
             return;
         }
 
-        setSessionQueue(sessionWords);
+        // 3. Mischen & Starten
+        // WICHTIG: Gut durchmischen für den "Sandwich-Effekt"
+        const finalQueue = sessionList.sort(() => 0.5 - Math.random());
+
+        setSessionQueue(finalQueue);
+        setCurrentIndex(0);
         setIsFlipped(false);
         setSessionResults({ correct: 0, wrong: 0 });
-        setView('smart-session');
+        setView('smart-session'); // Direkt zur Session!
     };
     const startCollectionSession = (collectionIds) => {
+        setAiExamples(null);
         // 1. IDs prüfen
         if (!collectionIds || collectionIds.length === 0) {
             alert("This collection is empty or coming soon! Please add Rank IDs in the code.");
@@ -4336,6 +4331,7 @@ function App() {
         setView('smart-session'); 
     };
     const startTestSession = () => {
+        setAiExamples(null);
         let pool = vocabulary.filter(w => w.rank >= testConfig.startRank && w.rank <= testConfig.endRank);
         for (let i = pool.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -4691,7 +4687,7 @@ function App() {
                 <div className="relative">
                     <h2 className="text-xl font-bold text-slate-800 mb-3 px-1">Today's Focus</h2>
                     <button 
-                        onClick={() => setView('smart-config')} 
+                        onClick={startSmartSession} 
                         className="w-full h-44 bg-gradient-to-br from-indigo-600 to-violet-600 text-white p-6 rounded-[2rem] shadow-xl shadow-indigo-200 transition-transform active:scale-[0.98] flex flex-col justify-between relative overflow-hidden group"
                     >
                         <div className="relative z-10 flex justify-between items-start w-full">
@@ -5970,7 +5966,7 @@ function App() {
                                             disabled={generating}
                                             className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2 active:scale-95"
                                         >
-                                            <Sparkles size={16} /> Generate with AI
+                                            <Sparkles size={16} /> Show examples
                                         </button>
                                     ) : (
                                         <div className="space-y-3 text-left">
