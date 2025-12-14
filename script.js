@@ -4395,16 +4395,28 @@ function App() {
 
             if (error) throw error;
 
-            // 3. WICHTIG: Sofort anzeigen! (Nicht auf Realtime warten)
+            // 3. WICHTIG: Daten verarbeiten und anzeigen
             if (data && data.success && data.data) {
-                console.log("Examples loaded:", data.data);
-                setAiExamples(data.data); // Hier setzen wir die Daten direkt!
-                setExamplesVisible(true); // Und klappen das Menü auf
+                console.log("Examples received:", data.data);
+                
+                // FIX: Wir erzwingen ein Array! Falls das Backend nur ein Objekt schickt, packen wir es in [ ]
+                const examplesArray = Array.isArray(data.data) ? data.data : [data.data];
+                
+                // Sofort anzeigen
+                setAiExamples(examplesArray);
+                
+                // FIX: Auch in den Cache speichern, damit es beim Karten-Drehen bleibt!
+                setExampleCache(prev => ({
+                    ...prev,
+                    [currentWord.rank]: examplesArray
+                }));
+                
+                setExamplesVisible(true);
             }
 
         } catch (err) {
             console.error("Generate Error:", err);
-            alert("Error: " + err.message);
+            // alert("Error: " + err.message); // Optional: Alert stummschalten
         } finally {
             setGenerating(false);
         }
@@ -5855,8 +5867,11 @@ function App() {
         let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
         let progressPercent = !isSmartMode ? (currentIndex / activeSession.length) * 100 : 0;
 
-        // Check Cache oder Live-Daten (aiExamples kommt jetzt vom Realtime Listener)
-        const currentExamples = exampleCache[word.rank] || aiExamples;
+        // Check Cache oder Live-Daten
+        // WICHTIG: Wir stellen sicher, dass es ein Array ist, sonst leeres Array
+        const rawExamples = exampleCache[word.rank] || aiExamples;
+        const currentExamples = Array.isArray(rawExamples) ? rawExamples : (rawExamples ? [rawExamples] : null);
+        const hasExamples = currentExamples && currentExamples.length > 0;
 
         return (
             <div className="flex flex-col h-full max-w-xl mx-auto w-full pt-4">
@@ -5929,8 +5944,7 @@ function App() {
                                         <Loader2 className="animate-spin" size={16}/> Writing sentence...
                                     </div>
                                 ) : (
-                                    (!currentExamples || !Array.isArray(currentExamples)) ? (
-                                        // HIER IST DER NEUE BUTTON:
+                                    !hasExamples ? (
                                         <button 
                                             onClick={() => handleGenerateExample(word)} 
                                             disabled={generating}
@@ -5942,7 +5956,8 @@ function App() {
                                         <div className="space-y-3 text-left">
                                             <div className="flex justify-between items-center px-1 mb-1">
                                                  <span className="text-[10px] font-bold text-slate-400 uppercase">AI Context</span>
-                                                 <button onClick={() => { setAiExamples(null); setExamplesVisible(false); }} className="text-[10px] text-indigo-400 font-bold hover:underline">Clear</button>
+                                                 {/* Clear leert jetzt nur die lokale Ansicht, nicht den Cache, damit man es nicht verliert */}
+                                                 <button onClick={() => { setAiExamples(null); setExamplesVisible(false); }} className="text-[10px] text-indigo-400 font-bold hover:underline">Hide</button>
                                             </div>
                                             {currentExamples.map((ex, idx) => (
                                                 <div key={idx} className="bg-slate-50 border border-slate-100 p-3 rounded-xl shadow-sm relative group animate-in fade-in slide-in-from-bottom-2 duration-300">
