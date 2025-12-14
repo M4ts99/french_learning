@@ -4371,43 +4371,40 @@ function App() {
     const [generating, setGenerating] = useState(false);
 
     const handleGenerateExample = async (currentWord) => {
-        // Schutz: Nicht klicken, wenn schon lädt
         if (generating) return;
         setGenerating(true);
 
         try {
-            // SCHRITT A: Wir brauchen die echte ID aus der Datenbank Tabelle 'dictionary'
-            // (Deine lokale currentWord Variable hat vermutlich nur den 'rank')
+            // 1. Wort ID holen
             const { data: dictEntry, error: dictError } = await supabase
                 .from('dictionary')
                 .select('id')
-                .eq('rank', currentWord.rank) // Wir suchen über den Rang
+                .eq('rank', currentWord.rank)
                 .single();
 
             if (dictError || !dictEntry) {
-                alert("Fehler: Das Wort wurde noch nicht in die 'dictionary' Tabelle importiert.");
-                console.error(dictError);
+                alert("Please import this word into the dictionary table first.");
+                setGenerating(false);
                 return;
             }
 
-            console.log("Wort ID gefunden:", dictEntry.id, "Rufe KI...");
-
-            // SCHRITT B: Die Edge Function aufrufen (Das was du gerade deployt hast)
+            // 2. Backend aufrufen
             const { data, error } = await supabase.functions.invoke('generate-example', {
-                body: { 
-                    word: currentWord.french, 
-                    wordId: dictEntry.id 
-                }
+                body: { word: currentWord.french, wordId: dictEntry.id }
             });
 
             if (error) throw error;
 
-            console.log("KI Antwort:", data);
-            // Kein Alert nötig, Realtime zeigt es gleich an!
+            // 3. WICHTIG: Sofort anzeigen! (Nicht auf Realtime warten)
+            if (data && data.success && data.data) {
+                console.log("Examples loaded:", data.data);
+                setAiExamples(data.data); // Hier setzen wir die Daten direkt!
+                setExamplesVisible(true); // Und klappen das Menü auf
+            }
 
         } catch (err) {
-            console.error("KI Fehler:", err);
-            alert("Konnte keinen Satz generieren: " + err.message);
+            console.error("Generate Error:", err);
+            alert("Error: " + err.message);
         } finally {
             setGenerating(false);
         }
