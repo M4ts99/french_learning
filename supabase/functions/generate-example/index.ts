@@ -1,4 +1,3 @@
-// supabase/functions/generate-example/index.ts
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -8,73 +7,133 @@ const corsHeaders = {
 }
 
 serve(async (req) => {
-  // CORS Handle (für Browser Anfragen)
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
-    // 1. Daten vom Frontend empfangen
     const { word, wordId } = await req.json()
-    
-    if (!word || !wordId) throw new Error("Missing word or wordId")
+    console.log(`[PROCESS] Word: "${word}" (ID: ${wordId})`)
 
-    console.log(`Generating example for: ${word}`)
-
-    // 2. Gemini API aufrufen
     const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY')
-    const prompt = `
-      Generate a simple French sentence (CEFR A1/A2 level) using the word "${word}".
-      Also provide the English translation.
-      Output ONLY valid JSON like this: {"fr": "...", "en": "..."}
-    `
-
-    const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }]
-      })
-    })
-
-    const aiData = await geminiResponse.json()
-    
-    // 3. Antwort parsen
-    // Prüfen ob Gemini überhaupt was zurückgegeben hat
-    if (!aiData.candidates || !aiData.candidates[0] || !aiData.candidates[0].content) {
-       console.error("Gemini Error:", JSON.stringify(aiData))
-       throw new Error("Gemini API returned unexpected format")
-    }
-
-    const rawText = aiData.candidates[0].content.parts[0].text
-    const jsonString = rawText.replace(/```json/g, '').replace(/```/g, '').trim()
-    const result = JSON.parse(jsonString)
-
-    // 4. In Supabase 'examples' Tabelle speichern
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { error: dbError } = await supabaseAdmin
+    // --- SCHRITT 1: DATENBANK PRÜFEN ---
+    const { data: existingExamples } = await supabaseAdmin
       .from('examples')
-      .insert({
-        word_id: wordId,
-        sentence_fr: result.fr,
-        sentence_en: result.en,
-        source: 'ai'
+      .select('sentence_fr, sentence_en')
+      .eq('word_id', wordId)
+
+    const count = existingExamples ? existingExamples.length : 0
+
+    // Fall A: Wir haben schon 3 (oder mehr) Sätze -> Cache nutzen
+    if (count >= 3) {
+      console.log("[CACHE] Returning existing examples.")
+      const formatted = existingExamples.map(e => ({ fr: e.sentence_fr, en: e.sentence_en }))
+      return new Response(JSON.stringify({ success: true, data: formatted, source: 'cache' }), { 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       })
+    }
 
-    if (dbError) throw dbError
+    // Fall B: Wir haben alte Daten (1 oder 2 Sätze) -> Löschen und neu machen
+    if (count > 0 && count < 3) {
+      console.log("[CLEANUP] Deleting old examples to regenerate 3 fresh ones...")
+      await supabaseAdmin.from('examples').delete().eq('word_id', wordId)
+    }
 
-    // 5. Erfolg zurückmelden
+    // --- SCHRITT 2: KI ABFRAGEN (MIT FALLBACK) ---
+    
+    const prompt = `
+      Task: Create exactly 3 distinct, simple French sentences (A1/A2 level) using the word "${word}".
+      Requirement: Provide the English translation for each.
+      Output: Strictly a JSON Array. No Markdown.
+      Format: [{"fr": "...", "en": "..."}, {"fr": "...", "en": "..."}, {"fr": "...", "en": "..."}]
+    `
+
+    let aiData = null;
+    let usedModel = "";
+
+    // VERSUCH 1: Gemini 2.0 Flash (Dein Favorit)
+    try {
+      console.log("[AI] Trying Primary Model: Gemini 2.0 Flash...")
+      const res2 = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      })
+      
+      const json2 = await res2.json()
+      
+      // Prüfen ob Fehler 429 (Quota) oder anderer Fehler
+      if (!res2.ok || json2.error) {
+        throw new Error(json2.error?.message || "2.0 API Error")
+      }
+      
+      aiData = json2;
+      usedModel = "gemini-2.0-flash";
+      console.log("[AI] Success with Gemini 2.0 Flash!")
+
+    } catch (err2) {
+      console.warn(`[AI WARNING] Gemini 2.0 failed (${err2.message}). Switching to backup...`)
+      
+      // VERSUCH 2: Gemini 1.5 Flash (Der stabile Retter)
+      try {
+        console.log("[AI] Trying Backup Model: Gemini 1.5 Flash...")
+        const res15 = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        })
+        
+        const json15 = await res15.json()
+        
+        if (!res15.ok || json15.error) {
+           throw new Error(json15.error?.message || "1.5 API Error")
+        }
+
+        aiData = json15;
+        usedModel = "gemini-1.5-flash";
+        console.log("[AI] Success with Backup Gemini 1.5 Flash.")
+
+      } catch (err15) {
+        // Wenn beide scheitern, geben wir auf
+        throw new Error(`All AI models failed. Last error: ${err15.message}`)
+      }
+    }
+
+    // --- SCHRITT 3: ANTWORT VERARBEITEN ---
+    const rawText = aiData.candidates?.[0]?.content?.parts?.[0]?.text || "[]"
+    const jsonString = rawText.replace(/```json/g, '').replace(/```/g, '').trim()
+    
+    let result
+    try {
+      result = JSON.parse(jsonString)
+      if (!Array.isArray(result)) result = [result]
+    } catch (e) {
+      console.error("[ERROR] JSON Parse Failed:", rawText)
+      throw new Error("AI returned invalid format")
+    }
+
+    // --- SCHRITT 4: SPEICHERN ---
+    console.log(`[DB] Saving ${result.length} sentences...`)
+    const rowsToInsert = result.map(item => ({
+      word_id: wordId,
+      sentence_fr: item.fr,
+      sentence_en: item.en,
+      source: `ai-${usedModel}` // Wir speichern sogar, welches Modell es war!
+    }))
+
+    const { error: insertError } = await supabaseAdmin.from('examples').insert(rowsToInsert)
+    if (insertError) throw insertError
+
     return new Response(
       JSON.stringify({ success: true, data: result }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
 
   } catch (error) {
-    console.error(error)
+    console.error("[CRITICAL]", error.message)
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

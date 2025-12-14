@@ -3434,10 +3434,20 @@ function App() {
     useEffect(() => {
         localStorage.setItem('vocabApp_progress', JSON.stringify(userProgress));
     }, [userProgress]);
+    // --- RESET STATE ON NAVIGATION ---
     useEffect(() => {
-        setExamplesVisible(false); // Klappt die AI-Beispiele zu
-        setLoadingExamples(false); // Stoppt Lade-Animationen
-        setIsFlipped(false);       // Dreht Karte auf die Vorderseite
+        // Klappt Menüs zu
+        setExamplesVisible(false); 
+        
+        // Stoppt Lade-Animationen
+        setLoadingExamples(false); 
+        
+        // Dreht Karte auf Vorderseite
+        setIsFlipped(false);       
+        
+        // FIX: Löscht alte KI-Sätze, damit sie nicht beim nächsten Wort auftauchen!
+        setAiExamples(null);       
+
     }, [currentIndex, view, activeSession]);
 
     // --- HELPERS ---
@@ -5877,7 +5887,13 @@ function App() {
             <div className="flex flex-col h-full max-w-xl mx-auto w-full pt-4">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-2 pl-1">
-                    <button onClick={() => setView('home')} className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
+                    <button 
+                        onClick={() => {
+                            setAiExamples(null); // <--- Explizit löschen beim Schließen
+                            setView('home');
+                        }} 
+                        className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+                    >
                         <X size={24} />
                     </button>
                     <div className="text-sm font-medium text-slate-500 font-mono">{progressText}</div>
