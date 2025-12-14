@@ -5886,10 +5886,14 @@ function App() {
         return (
             <div className="flex flex-col h-full max-w-xl mx-auto w-full pt-4">
                 {/* Header */}
+                {/* Header */}
                 <div className="flex items-center justify-between mb-2 pl-1">
                     <button 
                         onClick={() => {
-                            setAiExamples(null); // <--- Explizit löschen beim Schließen
+                            // FIX: Alles aufräumen beim Schließen!
+                            setAiExamples(null); 
+                            setExamplesVisible(false);
+                            setIsFlipped(false);
                             setView('home');
                         }} 
                         className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
