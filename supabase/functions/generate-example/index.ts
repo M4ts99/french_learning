@@ -21,7 +21,7 @@ serve(async (req) => {
 
     // --- SCHRITT 1: DATENBANK PRÜFEN ---
     const { data: existingExamples } = await supabaseAdmin
-      .from('examples')
+      .from('word_examples')
       .select('sentence_fr, sentence_en')
       .eq('word_id', wordId)
 
