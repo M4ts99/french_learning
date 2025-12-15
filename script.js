@@ -2855,6 +2855,14 @@ function App() {
 
         } catch (err) {
             console.error("Sync failed:", err);
+            
+            // NEU: Notbremse bei "User nicht gefunden" (Zombie Session)
+            if (err.code === '23503' || (err.details && err.details.includes('Key is not present in table "users"'))) {
+                console.warn("User does not exist in DB anymore. Forcing logout.");
+                supabase.auth.signOut();
+                localStorage.clear();
+                window.location.reload();
+            }
         }
     };
     // In App():
