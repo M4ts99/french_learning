@@ -5844,20 +5844,18 @@ function App() {
         let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
         let progressPercent = !isSmartMode ? (currentIndex / activeSession.length) * 100 : 0;
 
-        // Check Cache oder Live-Daten
-        // WICHTIG: Wir stellen sicher, dass es ein Array ist, sonst leeres Array
         const rawExamples = exampleCache[word.rank] || aiExamples;
         const currentExamples = Array.isArray(rawExamples) ? rawExamples : (rawExamples ? [rawExamples] : null);
         const hasExamples = currentExamples && currentExamples.length > 0;
 
         return (
-            <div className="flex flex-col h-full max-w-xl mx-auto w-full pt-4">
+            // CONTAINER: h-[calc(100vh-140px)] sorgt dafür, dass wir den ganzen Screen nutzen (minus Header/Nav)
+            <div className="flex flex-col w-full max-w-xl mx-auto pt-4 h-[calc(100vh-140px)]">
+                
                 {/* Header */}
-                {/* Header */}
-                <div className="flex items-center justify-between mb-2 pl-1">
+                <div className="flex items-center justify-between mb-2 pl-1 shrink-0">
                     <button 
                         onClick={() => {
-                            // FIX: Alles aufräumen beim Schließen!
                             setAiExamples(null); 
                             setExamplesVisible(false);
                             setIsFlipped(false);
@@ -5871,83 +5869,66 @@ function App() {
                     <div className="w-6"></div> 
                 </div>
                 
-                {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-6"><div className="bg-indigo-600 h-2 rounded-full transition-all" style={{ width: `${progressPercent}%` }}></div></div>}
+                {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-4 shrink-0"><div className="bg-indigo-600 h-2 rounded-full transition-all" style={{ width: `${progressPercent}%` }}></div></div>}
                 
                 {/* DIE KARTE */}
-                <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-6 flex flex-col items-center justify-center min-h-[400px] relative transition-all">
+                {/* ÄNDERUNG: flex-1 lässt die Karte wachsen. mb-4 für Abstand zum Rand unten. */}
+                <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl p-6 flex flex-col items-center relative transition-all flex-1 mb-4 overflow-hidden">
                     
-                    <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Rank #{word.rank}</div>
-                    {isSmartMode && userProgress[word.rank] && <div className="absolute top-4 left-4 bg-indigo-50 text-indigo-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
+                    <div className="absolute top-5 right-6 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Rank #{word.rank}</div>
+                    {isSmartMode && userProgress[word.rank] && <div className="absolute top-5 left-6 bg-indigo-50 text-indigo-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
 
-                    {/* VORDERSEITE (Französisch) */}
-                    {!isFlipped ? (
-                        <div className="flex flex-col items-center justify-center flex-1 w-full">
-                            <div className="text-center w-full flex-1 flex flex-col items-center justify-center">
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">French</div>
-                                <div className="flex items-center justify-center gap-3 mb-4">
-                                    <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words text-center leading-tight">{word.french}</h2>
+                    {/* SCROLLABLE CONTENT AREA (Mitte) */}
+                    {/* Dieser Bereich nimmt den Platz ein und ist scrollbar, falls der Text zu lang ist */}
+                    <div className="flex-1 w-full overflow-y-auto flex flex-col items-center justify-center py-4 no-scrollbar">
+                        
+                        {/* VORDERSEITE (Französisch) */}
+                        {!isFlipped ? (
+                            <div className="text-center w-full">
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">French</div>
+                                <div className="flex items-center justify-center gap-3 mb-6">
+                                    <h2 className="text-5xl md:text-6xl font-bold text-slate-800 break-words text-center leading-tight">{word.french}</h2>
                                     <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all shadow-sm shrink-0"><Volume2 size={24} /></button>
                                 </div>
                                 {word.example_fr && (
-                                    <div className="flex items-center justify-center gap-2 mt-4 px-4">
-                                        <p className="text-slate-500 italic text-base text-center">"{word.example_fr}"</p>
-                                        <button onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all shrink-0"><Volume2 size={16} /></button>
+                                    <div className="bg-slate-50/50 border border-slate-100 p-4 rounded-2xl text-left relative group mx-2 inline-block max-w-full">
+                                        <p className="text-slate-600 italic text-lg leading-relaxed pr-8">"{word.example_fr}"</p>
+                                        <button onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }} className="absolute right-2 top-2 p-2 text-slate-300 hover:text-indigo-600 hover:bg-white rounded-full transition-colors"><Volume2 size={18} /></button>
                                     </div>
                                 )}
                             </div>
-                            <button onClick={() => setIsFlipped(true)} className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-indigo-200 transition-all flex items-center gap-2 w-full justify-center">
-                                <BookOpen size={20} /> Show Translation
-                            </button>
-                        </div>
-                    ) : (
-                        /* RÜCKSEITE (Englisch + AI) */
-                        <div className="w-full flex flex-col items-center h-full">
-                            {/* Französisches Wort oben zentriert */}
-                            <div className="text-center mb-3 w-full">
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">French</div>
-                                <div className="flex items-center justify-center gap-2">
-                                    <h2 className="text-3xl font-bold text-slate-800">{word.french}</h2>
-                                    <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-full transition-all"><Volume2 size={20} /></button>
+                        ) : (
+                            /* RÜCKSEITE (Englisch + AI) */
+                            <div className="w-full flex flex-col items-center animate-in fade-in zoom-in-95 duration-300">
+                                {/* Französisches Wort oben (kleiner) */}
+                                <div className="text-center mb-6 w-full opacity-50 scale-90">
+                                    <h2 className="text-2xl font-bold text-slate-800">{word.french}</h2>
                                 </div>
-                                {word.example_fr && (
-                                    <div className="flex items-center justify-center gap-2 mt-2">
-                                        <p className="text-slate-500 italic text-sm">"{word.example_fr}"</p>
-                                        <button onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }} className="p-1 text-slate-400 hover:text-indigo-600 rounded-full transition-all"><Volume2 size={14} /></button>
-                                    </div>
-                                )}
-                            </div>
-                            
-                            {/* Übersetzung zentriert */}
-                            <div className="text-center mb-4 w-full border-t border-slate-100 pt-3">
-                                <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-1">English</div>
-                                <h3 className="text-2xl font-bold text-indigo-900 leading-tight">{word.english || word.german}</h3>
-                                {word.example_en && <p className="text-indigo-400 italic text-sm mt-2 px-4 text-center">"{word.example_en}"</p>}
-                            </div>
+                                
+                                {/* Übersetzung */}
+                                <div className="text-center mb-6 w-full border-t border-b border-slate-100 py-6">
+                                    <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">Meaning</div>
+                                    <h3 className="text-3xl font-bold text-indigo-900 leading-tight">{word.english || word.german}</h3>
+                                    {word.example_en && <p className="text-indigo-400 italic text-sm mt-2 px-4 text-center">"{word.example_en}"</p>}
+                                </div>
 
-                            {/* --- AI SECTION (UPDATED) --- */}
-                            <div className="w-full mb-6 px-2 flex-1 overflow-y-auto max-h-[200px]">
-                                {generating ? (
-                                    <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2">
-                                        <Loader2 className="animate-spin" size={16}/> Writing sentence...
-                                    </div>
-                                ) : (
-                                    !hasExamples ? (
+                                {/* AI Context Area */}
+                                <div className="w-full px-1">
+                                    {!aiExamples && !loadingExamples && (
                                         <button 
                                             onClick={() => handleGenerateExample(word)} 
                                             disabled={generating}
-                                            className="w-full py-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-sm border border-amber-100 hover:bg-amber-100 transition-colors flex items-center justify-center gap-2 active:scale-95"
+                                            className={`w-full py-3 rounded-xl font-bold text-sm border transition-colors flex items-center justify-center gap-2
+                                            ${generating ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-wait' : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100 shadow-sm'}`}
                                         >
-                                            <Sparkles size={16} /> Show examples
+                                            {generating ? <><Loader2 className="animate-spin" size={18}/> <span>Writing...</span></> : <><Sparkles size={18}/> <span>Generate Context</span></>}
                                         </button>
-                                    ) : (
-                                        <div className="space-y-3 text-left">
-                                            <div className="flex justify-between items-center px-1 mb-1">
-                                                 <span className="text-[10px] font-bold text-slate-400 uppercase">AI Context</span>
-                                                 {/* Clear leert jetzt nur die lokale Ansicht, nicht den Cache, damit man es nicht verliert */}
-                                                 <button onClick={() => { setAiExamples(null); setExamplesVisible(false); }} className="text-[10px] text-indigo-400 font-bold hover:underline">Hide</button>
-                                            </div>
+                                    )}
+                                    {loadingExamples && <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2"><ArrowLeft className="animate-spin" size={16}/> generating...</div>}
+                                    {aiExamples && (
+                                        <div className="space-y-3 text-left w-full">
                                             {currentExamples.map((ex, idx) => (
-                                                <div key={idx} className="bg-slate-50 border border-slate-100 p-3 rounded-xl shadow-sm relative group animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                                <div key={idx} className="bg-slate-50 border border-slate-100 p-3 rounded-xl shadow-sm relative group">
                                                     <div className="flex justify-between items-start gap-2">
                                                         <p className="text-slate-700 font-medium text-sm leading-snug pr-6">{ex.fr}</p>
                                                         <button onClick={() => speak(ex.fr)} className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors"><Volume2 size={16} /></button>
@@ -5956,22 +5937,31 @@ function App() {
                                                 </div>
                                             ))}
                                         </div>
-                                    )
-                                )}
+                                    )}
+                                </div>
                             </div>
+                        )}
+                    </div>
 
-                            {/* BUTTONS */}
-                            {isSmartMode ? (
-                                <div className="grid grid-cols-4 gap-2 w-full px-1 mt-auto">
+                    {/* BOTTOM ACTIONS AREA (Sticky Bottom) */}
+                    {/* ÄNDERUNG: mt-auto drückt diesen Bereich ganz nach unten */}
+                    <div className="w-full mt-auto pt-6 border-t border-slate-50">
+                        {!isFlipped ? (
+                            <button onClick={() => setIsFlipped(true)} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-5 rounded-2xl font-bold text-xl shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-3 active:scale-[0.98]">
+                                <BookOpen size={24} /> Reveal
+                            </button>
+                        ) : (
+                            isSmartMode ? (
+                                <div className="grid grid-cols-4 gap-2 w-full">
                                     {[
-                                        { q: 0, label: "Again", color: "bg-red-50 text-red-600 border-red-200" },
-                                        { q: 1, label: "Hard", color: "bg-amber-50 text-amber-600 border-amber-200" },
-                                        { q: 2, label: "Good", color: "bg-green-50 text-green-600 border-green-200" },
-                                        { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200" }
+                                        { q: 0, label: "Again", color: "bg-red-50 text-red-600 border-red-200 hover:bg-red-100" },
+                                        { q: 1, label: "Hard", color: "bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100" },
+                                        { q: 2, label: "Good", color: "bg-green-50 text-green-600 border-green-200 hover:bg-green-100" },
+                                        { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100" }
                                     ].map((btn) => {
                                         const stats = calculateAnkiStats(userProgress[word.rank], btn.q);
                                         return (
-                                            <button key={btn.label} onClick={() => handleResult(btn.q)} className={`${btn.color} border p-1 rounded-xl flex flex-col items-center justify-center transition-all active:scale-95 h-16 shadow-sm`}>
+                                            <button key={btn.label} onClick={() => handleResult(btn.q)} className={`${btn.color} border p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-95 h-20 shadow-sm`}>
                                                 <span className="text-[10px] font-bold uppercase tracking-tighter opacity-60 mb-0.5">{formatInterval(stats.interval)}</span>
                                                 <span className="font-bold text-sm leading-none">{btn.label}</span>
                                             </button>
@@ -5979,13 +5969,14 @@ function App() {
                                     })}
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-2 gap-4 w-full px-2 mt-auto">
-                                    <button onClick={() => handleResult(0)} className="bg-red-50 text-red-600 border border-red-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-16"><X size={20} /> Missed</button>
-                                    <button onClick={() => handleResult(2)} className="bg-green-50 text-green-600 border border-green-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-16"><Check size={20} /> Got it</button>
+                                <div className="grid grid-cols-2 gap-4 w-full">
+                                    <button onClick={() => handleResult(0)} className="bg-red-50 text-red-600 border border-red-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-16 active:scale-95 transition-all"><X size={24} /> Missed</button>
+                                    <button onClick={() => handleResult(2)} className="bg-green-50 text-green-600 border border-green-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-16 active:scale-95 transition-all"><Check size={24} /> Got it</button>
                                 </div>
-                            )}
-                        </div>
-                    )}
+                            )
+                        )}
+                    </div>
+
                 </div>
             </div>
         );

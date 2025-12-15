@@ -214,7 +214,7 @@ window.vocab_List = [
     "rank": 15,
     "french": "ne",
     "display": "ne",
-    "english": "born",
+    "english": "not",
     "type": "ADV",
     "forms": [
       "n'"

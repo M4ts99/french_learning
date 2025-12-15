@@ -7,12 +7,10 @@ const corsHeaders = {
 }
 
 serve(async (req) => {
-  // CORS Handle
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
     const { word, wordId } = await req.json()
-    // WICHTIG: wordId kommt vom Frontend als Rank (z.B. 50)
     console.log(`[PROCESS] Word: "${word}" (Rank: ${wordId})`)
 
     const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY')
@@ -22,34 +20,41 @@ serve(async (req) => {
     )
 
     // --- SCHRITT 1: DATENBANK PRÜFEN (CACHE) ---
-    // Tabelle heißt jetzt 'word_examples' und Spalte 'word_rank'
     const { data: existingExamples } = await supabaseAdmin
       .from('word_examples') 
       .select('sentence_fr, sentence_en')
-      .eq('word_rank', wordId) // Wir suchen nach dem Rank!
+      .eq('word_rank', wordId)
 
     const count = existingExamples ? existingExamples.length : 0
 
-    // Fall A: Wir haben schon Sätze -> Cache nutzen
-    if (count >= 1) { // Schon 1 Satz reicht uns eigentlich, aber KI macht oft mehrere
-      console.log("[CACHE] Returning existing examples.")
+    // Fall A: Wir haben bereits 3 (oder mehr) Sätze -> Cache nutzen
+    if (count >= 3) {
+      console.log(`[CACHE] Returning ${count} existing examples.`)
       const formatted = existingExamples.map(e => ({ fr: e.sentence_fr, en: e.sentence_en }))
       return new Response(JSON.stringify({ success: true, data: formatted, source: 'cache' }), { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       })
     }
 
+    // Fall B: Wir haben weniger als 3 (z.B. alte Daten) -> Löschen und neu machen
+    if (count > 0 && count < 3) {
+        console.log("[CLEANUP] Found partial data. Deleting old to regenerate full set...")
+        await supabaseAdmin.from('word_examples').delete().eq('word_rank', wordId)
+    }
+
     // --- SCHRITT 2: KI ABFRAGEN ---
     
+    // Prompt für 3 Sätze als Array
     const prompt = `
-      Task: Create exactly 1 simple French sentence (A1/A2 level) using the word "${word}".
-      Requirement: Provide the English translation.
-      Output: Strictly a JSON Object (not array). No Markdown.
-      Format: {"fr": "...", "en": "..."}
+      Task: Create exactly 3 distinct, simple French sentences (A1/A2 level) using the word "${word}".
+      Requirement: Provide the English translation for each.
+      Output: Strictly a JSON Array. No Markdown.
+      Format: [{"fr": "...", "en": "..."}, {"fr": "...", "en": "..."}, {"fr": "...", "en": "..."}]
     `
 
     console.log("[AI] Requesting Gemini...")
-    const resAi = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    // Ich nutze hier 1.5 Flash, da es sehr stabil für JSON Arrays ist. Du kannst auch 2.0 nutzen.
+    const resAi = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -62,40 +67,42 @@ serve(async (req) => {
     }
 
     // --- SCHRITT 3: ANTWORT VERARBEITEN ---
-    const rawText = jsonAi.candidates?.[0]?.content?.parts?.[0]?.text || "{}"
+    const rawText = jsonAi.candidates?.[0]?.content?.parts?.[0]?.text || "[]"
     const jsonString = rawText.replace(/```json/g, '').replace(/```/g, '').trim()
     
-    let resultItem
+    let resultsArray
     try {
-      resultItem = JSON.parse(jsonString)
-      // Falls die KI doch ein Array schickt, nimm das erste Element
-      if (Array.isArray(resultItem)) resultItem = resultItem[0]
+      resultsArray = JSON.parse(jsonString)
+      // Sicherheitscheck: Ist es wirklich ein Array? Wenn nicht (z.B. einzelnes Objekt), pack es in ein Array
+      if (!Array.isArray(resultsArray)) resultsArray = [resultsArray]
+      
+      // Begrenzen auf maximal 3, falls die KI durchdreht
+      resultsArray = resultsArray.slice(0, 3)
     } catch (e) {
       console.error("[ERROR] JSON Parse Failed:", rawText)
       throw new Error("AI returned invalid format")
     }
 
-    // --- SCHRITT 4: SPEICHERN ---
-    console.log(`[DB] Saving new sentence...`)
+    // --- SCHRITT 4: SPEICHERN (BULK INSERT) ---
+    console.log(`[DB] Saving ${resultsArray.length} new sentences...`)
     
-    // Wir speichern in 'word_examples'
-    const { error: insertError } = await supabaseAdmin.from('word_examples').insert({
-      word_rank: wordId, // Das ist der Integer Rank (z.B. 50)
-      lemma: word,
-      sentence_fr: resultItem.fr,
-      sentence_en: resultItem.en,
-      source: 'ai-gemini'
-    })
+    // Wir erstellen ein Array von Rows für den Insert
+    const rowsToInsert = resultsArray.map(item => ({
+        word_rank: wordId,
+        lemma: word,
+        sentence_fr: item.fr,
+        sentence_en: item.en,
+        source: 'ai-gemini'
+    }))
+
+    const { error: insertError } = await supabaseAdmin.from('word_examples').insert(rowsToInsert)
 
     if (insertError) {
         console.error("DB Insert Error:", insertError)
-        // Wir werfen keinen Fehler, sondern geben das Ergebnis trotzdem zurück,
-        // damit der User den Satz sieht, auch wenn Speichern fehlschlug.
     }
 
-    // Wir geben ein Array zurück, damit dein Frontend glücklich ist
     return new Response(
-      JSON.stringify({ success: true, data: [resultItem] }),
+      JSON.stringify({ success: true, data: resultsArray }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
 
