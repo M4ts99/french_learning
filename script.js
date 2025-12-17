@@ -423,11 +423,12 @@ const UpdatePasswordScreen = ({ onComplete }) => {
         </div>
     );
 };
-/* script.js - Neue Komponente: ReportModal */
+
 const ReportModal = ({ word, onClose }) => {
     const [type, setType] = useState("wrong_translation");
     const [comment, setComment] = useState("");
     const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false); // NEU: Status für Erfolg
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -439,11 +440,15 @@ const ReportModal = ({ word, onClose }) => {
         });
 
         setLoading(false);
+
         if (error) {
             alert("Error sending report: " + error.message);
         } else {
-            alert("Merci! Report sent.");
-            onClose();
+            // Erfolg! Button ändern & Modal zeitverzögert schließen
+            setSuccess(true);
+            setTimeout(() => {
+                onClose();
+            }, 1500); // 1.5 Sekunden warten, damit man das "Sent!" sieht
         }
     };
 
@@ -470,7 +475,8 @@ const ReportModal = ({ word, onClose }) => {
                         <select 
                             value={type} 
                             onChange={(e) => setType(e.target.value)}
-                            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 text-sm font-medium"
+                            disabled={success}
+                            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 text-sm font-medium disabled:opacity-50"
                         >
                             <option value="wrong_translation">Wrong Translation</option>
                             <option value="wrong_examples">Examples translation incorrect</option>
@@ -485,20 +491,31 @@ const ReportModal = ({ word, onClose }) => {
                         <textarea 
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
+                            disabled={success}
                             maxLength={300}
                             rows={3}
                             placeholder="Describe the error..."
-                            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 text-sm resize-none"
+                            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 text-sm resize-none disabled:opacity-50"
                         />
                         <div className="text-right text-[10px] text-slate-400 mt-1">{comment.length}/300</div>
                     </div>
 
                     <button 
                         onClick={handleSubmit} 
-                        disabled={loading}
-                        className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2"
+                        disabled={loading || success}
+                        className={`w-full py-3 rounded-xl font-bold shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2 
+                        ${success 
+                            ? 'bg-green-600 text-white cursor-default scale-100' // Grüner Erfolgszustand
+                            : 'bg-slate-900 text-white' // Normaler Zustand
+                        }`}
                     >
-                        {loading ? <Loader2 size={18} className="animate-spin" /> : "Submit Report"}
+                        {loading ? (
+                            <Loader2 size={18} className="animate-spin" />
+                        ) : success ? (
+                            <> <Check size={20} /> Sent! </>
+                        ) : (
+                            "Submit Report"
+                        )}
                     </button>
                 </div>
             </div>
