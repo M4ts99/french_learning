@@ -332,7 +332,7 @@ const AuthScreen = ({ onLoginSuccess, isEmbedded = false, initialMode = 'login' 
         </div>
     );
 };
-/* script.js - UpdatePasswordScreen mit Bestätigung */
+    /* script.js - UpdatePasswordScreen mit Bestätigung */
 const UpdatePasswordScreen = ({ onComplete }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState(''); // NEU
@@ -423,7 +423,88 @@ const UpdatePasswordScreen = ({ onComplete }) => {
         </div>
     );
 };
+/* script.js - Neue Komponente: ReportModal */
+const ReportModal = ({ word, onClose }) => {
+    const [type, setType] = useState("wrong_translation");
+    const [comment, setComment] = useState("");
+    const [loading, setLoading] = useState(false);
 
+    const handleSubmit = async () => {
+        setLoading(true);
+        const { error } = await supabase.from('reports').insert({
+            word_id: word.id,
+            french_word: word.french,
+            error_type: type,
+            comment: comment.trim()
+        });
+
+        setLoading(false);
+        if (error) {
+            alert("Error sending report: " + error.message);
+        } else {
+            alert("Merci! Report sent.");
+            onClose();
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+            <div className="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl relative">
+                <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                    <X size={24} />
+                </button>
+
+                <div className="flex items-center gap-3 mb-6">
+                    <div className="bg-amber-100 text-amber-600 p-3 rounded-2xl">
+                        <AlertCircle size={24} />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-slate-800">Report Issue</h3>
+                        <p className="text-xs text-slate-400">Word: <span className="font-bold">{word.french}</span></p>
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-2">What is wrong?</label>
+                        <select 
+                            value={type} 
+                            onChange={(e) => setType(e.target.value)}
+                            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 text-sm font-medium"
+                        >
+                            <option value="wrong_translation">Wrong Translation</option>
+                            <option value="wrong_examples">Examples translation incorrect</option>
+                            <option value="mismatched_examples">Examples don't match word</option>
+                            <option value="typo">Spelling mistake / Typo</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Comment (Optional)</label>
+                        <textarea 
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            maxLength={300}
+                            rows={3}
+                            placeholder="Describe the error..."
+                            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-500 text-sm resize-none"
+                        />
+                        <div className="text-right text-[10px] text-slate-400 mt-1">{comment.length}/300</div>
+                    </div>
+
+                    <button 
+                        onClick={handleSubmit} 
+                        disabled={loading}
+                        className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2"
+                    >
+                        {loading ? <Loader2 size={18} className="animate-spin" /> : "Submit Report"}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
 // --- JOKE DATABASE (Local & Offline) ---
 // --- LOCAL JOKES DATABASE ---
 const FACT_DB = [
@@ -2491,6 +2572,8 @@ function App() {
 
     const [dailyJoke, setDailyJoke] = React.useState(null);
 
+  
+    const [reportingWord, setReportingWord] = useState(null); // Für das Report Popup
     const showRandomJoke = () => {
         const random = JOKE_DB[Math.floor(Math.random() * JOKE_DB.length)];
         setDailyJoke(random);
@@ -5963,14 +6046,28 @@ function App() {
                 {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-4 shrink-0"><div className="bg-indigo-600 h-2 rounded-full transition-all" style={{ width: `${progressPercent}%` }}></div></div>}
                 
                 {/* DIE KARTE */}
-                {/* ÄNDERUNG: flex-1 lässt die Karte wachsen. mb-4 für Abstand zum Rand unten. */}
                 <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl p-6 flex flex-col items-center relative transition-all flex-1 mb-4 overflow-hidden">
                     
+                    {/* --- NEU: REPORT BUTTON OBEN LINKS --- */}
+                    <button 
+                        onClick={(e) => { e.stopPropagation(); setReportingWord(word); }}
+                        className="absolute top-5 left-5 text-slate-300 hover:text-amber-500 transition-colors z-20"
+                        title="Report error"
+                    >
+                        <Icon path={<><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></>} size={20} />
+                    </button>
+                    {/* ------------------------------------ */}
+
                     <div className="absolute top-5 right-6 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Rank #{word.rank}</div>
-                    {isSmartMode && userProgress[word.rank] && <div className="absolute top-5 left-6 bg-indigo-50 text-indigo-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1"><Layers size={10} /> Box {userProgress[word.rank].box}</div>}
+                    
+                    {/* Box Badge (Verschoben auf left-14 damit es nicht mit dem Report Button überlappt) */}
+                    {isSmartMode && userProgress[word.rank] && (
+                        <div className="absolute top-5 left-14 bg-indigo-50 text-indigo-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1">
+                            <Layers size={10} /> Box {userProgress[word.rank].box}
+                        </div>
+                    )}
 
                     {/* SCROLLABLE CONTENT AREA (Mitte) */}
-                    {/* Dieser Bereich nimmt den Platz ein und ist scrollbar, falls der Text zu lang ist */}
                     <div className="flex-1 w-full overflow-y-auto flex flex-col items-center justify-center py-4 no-scrollbar">
                         
                         {/* VORDERSEITE (Französisch) */}
@@ -6035,7 +6132,6 @@ function App() {
                     </div>
 
                     {/* BOTTOM ACTIONS AREA (Sticky Bottom) */}
-                    {/* ÄNDERUNG: mt-auto drückt diesen Bereich ganz nach unten */}
                     <div className="w-full mt-auto pt-6 border-t border-slate-50">
                         {!isFlipped ? (
                             <button onClick={() => setIsFlipped(true)} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-5 rounded-2xl font-bold text-xl shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-3 active:scale-[0.98]">
@@ -7128,6 +7224,12 @@ function App() {
                         </div>
                     </div>
                 </div>
+            )}
+            {reportingWord && (
+                <ReportModal 
+                    word={reportingWord} 
+                    onClose={() => setReportingWord(null)} 
+                />
             )}
         </div>
     );
