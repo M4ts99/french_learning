@@ -426,6 +426,14 @@ const UpdatePasswordScreen = ({ onComplete }) => {
 
 // --- JOKE DATABASE (Local & Offline) ---
 // --- LOCAL JOKES DATABASE ---
+const FACT_DB = [
+    { fr: "La Tour Eiffel grandit en été.", en: "The Eiffel Tower grows in summer (due to thermal expansion).", icon: "🗼" },
+    { fr: "Il est interdit d'appeler un cochon Napoléon.", en: "It is forbidden to name a pig Napoleon.", icon: "🐷" },
+    { fr: "Le croissant est autrichien, pas français.", en: "The croissant is Austrian, not French.", icon: "🥐" },
+    { fr: "La France a le plus de fuseaux horaires.", en: "France has the most time zones.", icon: "🌍" },
+    { fr: "Les French Fries sont belges.", en: "French Fries are actually Belgian.", icon: "🍟" },
+    { fr: "Louis XIX a été roi pendant 20 minutes.", en: "Louis XIX was king for only 20 minutes.", icon: "👑" }
+];
 const JOKE_DB = [
     { 
         q: "Que fait un chien qui entre dans une pharmacie ?", 
@@ -1204,7 +1212,7 @@ const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setVi
 
         // --- SCHRITT 1: LOKALE SUCHE (Top 5000) ---
         // Wir suchen im 'vocabulary' Prop, das von App übergeben wird
-        let found = vocabulary.find(v => v.french.toLowerCase() === cleanWord);
+        let found = vocabList.find(v => v.french.toLowerCase() === cleanWord);
 
         // Verb-Lookup / Irregular Map / Stemming (Deine existierende Logik hier einfügen/behalten)
         // ... (Der Code für VERB_LOOKUP und Stemming bleibt hier identisch zum alten Code) ...
@@ -1213,7 +1221,7 @@ const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setVi
         if (!found) {
              // Kurzer Check in Irregular Map falls vorhanden
              if (typeof IRREGULAR_MAP !== 'undefined' && IRREGULAR_MAP[cleanWord]) {
-                 found = vocabulary.find(v => v.french.toLowerCase() === IRREGULAR_MAP[cleanWord]);
+                 found = vocabList.find(v => v.french.toLowerCase() === IRREGULAR_MAP[cleanWord]);
              }
         }
 
@@ -1437,7 +1445,7 @@ const GrammarDetail = ({ topicId, onBack }) => {
     const [availableBlocks, setAvailableBlocks] = useState([]);
   
     
-    // Vocabulary Flashcard State
+    // vocabList Flashcard State
     const [vocabIndex, setVocabIndex] = useState(0);
     const [vocabFlipped, setVocabFlipped] = useState(false);
     const [vocabKnown, setVocabKnown] = useState([]);
@@ -1445,10 +1453,10 @@ const GrammarDetail = ({ topicId, onBack }) => {
     const [vocabSessionComplete, setVocabSessionComplete] = useState(false);
     const [vocabList, setVocabList] = useState([]);
     
-    // Initialize vocabulary list when data changes
+    // Initialize vocabList list when data changes
     React.useEffect(() => {
-        if (data?.learn?.vocabulary) {
-            const shuffled = [...data.learn.vocabulary].sort(() => Math.random() - 0.5);
+        if (data?.learn?.vocabList) {
+            const shuffled = [...data.learn.vocabList].sort(() => Math.random() - 0.5);
             setVocabList(shuffled);
             setVocabIndex(0);
             setVocabFlipped(false);
@@ -1522,8 +1530,8 @@ const GrammarDetail = ({ topicId, onBack }) => {
 
     const { meta, learn } = data;
     
-    // Debug: Check if vocabulary exists
-    console.log('Topic:', topicId, 'Vocabulary:', learn.vocabulary);
+    // Debug: Check if vocabList exists
+    console.log('Topic:', topicId, 'vocabList:', learn.vocabulary);
     
     const practice = exerciseList;
     const totalQuestions = practice.length; // Dynamisch basierend auf tatsächlicher Fragen-Anzahl
@@ -2479,7 +2487,14 @@ function App() {
         // 2. Normaler Check: War der User schon mal hier?
         return !localStorage.getItem('vocabApp_hasOnboarded');
     });
+    // --- Innerhalb deiner Komponente (z.B. function App() { ... ) einfügen ---
 
+    const [dailyJoke, setDailyJoke] = React.useState(null);
+
+    const showRandomJoke = () => {
+        const random = JOKE_DB[Math.floor(Math.random() * JOKE_DB.length)];
+        setDailyJoke(random);
+    };
     const [view, setView] = useState('home'); 
     const [vocabulary, setVocabulary] = useState([]); // Startet leer, useEffect füllt es sofort
     const [userProgress, setUserProgress] = useState({}); 
@@ -2554,6 +2569,50 @@ function App() {
     /* Innerhalb von function App(), oben bei den States */
     
     /* Innerhalb von function App() */
+
+    // --- JOKE STATE ---
+    const [savedJokes, setSavedJokes] = useState(() => {
+        const saved = localStorage.getItem('vocabApp_savedJokes');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    // --- FACT STATE (Neu, ersetzt Memes) ---
+    const [savedFacts, setSavedFacts] = useState(() => {
+        const saved = localStorage.getItem('vocabApp_savedFacts');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    const [dailyFact, setDailyFact] = useState(null);
+    const [showFactModal, setShowFactModal] = useState(false);
+    
+    // --- DAILY PROGRESS (Neu für Unlock) ---
+    // Resettet sich jeden Tag automatisch
+    const [dailyLearnedCount, setDailyLearnedCount] = useState(() => {
+        const today = new Date().toDateString();
+        const saved = JSON.parse(localStorage.getItem('vocabApp_dailyLearnProgress'));
+        if (saved && saved.date === today) return saved.count;
+        return 0;
+    });
+
+    // --- INITIALISIERUNG (useEffect) ---
+    useEffect(() => {
+        const today = new Date().toDateString();
+        
+        // 1. Daily Fact laden/würfeln
+        const lastFactDate = localStorage.getItem('vocabApp_lastFactDate');
+        if (lastFactDate !== today) {
+            const randomFact = FACT_DB[Math.floor(Math.random() * FACT_DB.length)];
+            setDailyFact(randomFact);
+            localStorage.setItem('vocabApp_lastFactDate', today);
+            localStorage.setItem('vocabApp_dailyFact', JSON.stringify(randomFact));
+        } else {
+            const saved = localStorage.getItem('vocabApp_dailyFact');
+            if (saved) setDailyFact(JSON.parse(saved));
+        }
+        
+        // ... hier folgen deine anderen Initialisierungen (Voices etc.) ...
+    }, []);
+    /* Innerhalb von function App() */
     // --- AUTH CHECK EFFECT (Bugfix für Google Redirect) ---
     // --- AUTH CHECK EFFECT (Korrigiert) ---
     // --- AUTH CHECK & DEBUGGING ---
@@ -2562,6 +2621,72 @@ function App() {
     // --- AUTH & PROFILE CHECK ---
     // --- AUTH & PROFILE CHECK ---
     // --- AUTH & PROFILE CHECK & SYNC ---
+    // --- In deiner App Component ---
+
+    const [vocabList, setVocabList] = React.useState([]); // Statt der importierten Liste nutzen wir jetzt State
+    const [isLoadingVocab, setIsLoadingVocab] = React.useState(true);
+
+    React.useEffect(() => {
+        async function loadVocabulary() {
+            // 1. Prüfen: Haben wir die Daten schon im LocalStorage? (Caching für Speed)
+            const localData = localStorage.getItem('cached_vocabulary');
+            if (localData) {
+                setVocabList(JSON.parse(localData));
+                setIsLoadingVocab(false);
+                // Wir laden trotzdem im Hintergrund neu, um Updates zu kriegen (optional)
+            }
+
+            // 2. Aus Supabase laden (Limit erstmal auf 1000 oder 5000 setzen)
+            // 'Database' ist der Name deiner Tabelle (Achte auf Groß/Kleinschreibung!)
+            const { data, error } = await supabase
+                .from('database') 
+                .select('*')
+                .order('frequency', { ascending: true });
+
+                if (error) {
+                console.error("Fehler beim Laden:", error);
+                } else if (data) {
+                    // Datenstruktur anpassen
+                    const formattedData = data.map(item => {
+                        // Robuste JSON-Prüfung für conjugation/mapping_forms
+                        let parsedConjugation = null;
+                        if (item.mapping_forms) {
+                            if (typeof item.mapping_forms === 'object') {
+                                // Ist schon ein Objekt (Supabase macht das oft automatisch bei JSONB)
+                                parsedConjugation = item.mapping_forms;
+                            } else if (typeof item.mapping_forms === 'string') {
+                                try {
+                                    // Versuchen zu parsen
+                                    parsedConjugation = JSON.parse(item.mapping_forms);
+                                } catch (e) {
+                                    // Fallback: Wenn es kein JSON ist, nimm es als String oder ignorieren
+                                    // console.warn(`Kein valides JSON für Wort ID ${item.id}:`, item.mapping_forms);
+                                    parsedConjugation = item.mapping_forms; 
+                                }
+                            }
+                        }
+
+                        return {
+                            id: item.id,
+                            french: item.lemma,          
+                            english: item.translation_en,
+                            type: item.pos_type,
+                            rank: item.frequency,
+                            conjugation: parsedConjugation
+                        };
+                });
+
+                setVocabList(formattedData);
+                
+                // Speichern für den nächsten Start
+                localStorage.setItem('cached_vocabulary', JSON.stringify(formattedData));
+                setIsLoadingVocab(false);
+            }
+        }
+
+        loadVocabulary();
+    }, []);
+    
     useEffect(() => {
         // Hilfsfunktion: Profil prüfen
         const checkProfile = async (userId) => {
@@ -3031,13 +3156,6 @@ function App() {
     const [apiStatus, setApiStatus] = useState('checking'); // 'online', 'offline', 'checking'
     
     const [selectedMsg, setSelectedMsg] = useState(null); // Umbenannt von activeTranslation, da es jetzt mehr kann
-//s
-    // --- JOKE SYSTEM ---
-    const [dailyJoke, setDailyJoke] = useState(null); // Der Joke des Tages
-    const [savedJokes, setSavedJokes] = useState(() => {
-        const saved = localStorage.getItem('vocabApp_savedJokes');
-        return saved ? JSON.parse(saved) : [];
-    });
 
     const [viewingJoke, setViewingJoke] = useState(null); // Aktuell angeschauter Joke
     const [showJokeModal, setShowJokeModal] = useState(false); // Popup für Joke
@@ -3281,15 +3399,7 @@ function App() {
 
     // AUTOMATISCHER START (Der Trigger)
     // Feuert nur, wenn wir im Meme-Modus sind UND die Liste noch leer ist
-    useEffect(() => {
-        if (view === 'explore' && exploreMode === 'memes' && memesData.length === 0) {
-            fetchMixedMemes();
-        }
-    }, [view, exploreMode]);
-    // Speichert automatisch bei Änderungen
-    useEffect(() => {
-        localStorage.setItem('vocabApp_seenMemes', JSON.stringify(seenMemeIds));
-    }, [seenMemeIds]);
+
 
         // Witze States:
     const [showPunchline, setShowPunchline] = useState(false);   // Zeigt die französische Antwort
@@ -4406,6 +4516,14 @@ function App() {
         setAiExamples(null);
         setLoadingExamples(false);
 
+        if (quality >= 2) {
+            const newCount = dailyLearnedCount + 1;
+            setDailyLearnedCount(newCount);
+            localStorage.setItem('vocabApp_dailyLearnProgress', JSON.stringify({
+                date: new Date().toDateString(),
+                count: newCount
+            }));
+        }
         if (view === 'smart-session') {
             const currentWord = sessionQueue[0];
             
@@ -4498,336 +4616,309 @@ function App() {
     };
 
     // --- RENDERERS ---
-    const renderHomeHeader = () => {
-        const safeVocab = vocabulary || [];
-        const learnedCount = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
-        
-        const hour = currentTime.getHours();
-        const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
-        
-        const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-        const dateStr = currentTime.toLocaleDateString('fr-FR', dateOptions);
-        
-        // Titel basierend auf Fortschritt
-        let currentTitle = "Tourist";
-        let titleColor = "text-slate-600";
-        if (learnedCount >= 100 && learnedCount < 500) {
-            currentTitle = "Explorer";
-            titleColor = "text-blue-600";
-        } else if (learnedCount >= 500 && learnedCount < 1000) {
-            currentTitle = "Citizen";
-            titleColor = "text-indigo-600";
-        } else if (learnedCount >= 1000) {
-            currentTitle = "Master";
-            titleColor = "text-purple-600";
-        }
-
-        // CEFR Level Schätzung
-        let cefrLevel = "A1";
-        let nextGoal = 500;
-        let nextLevel = "A2";
-        
-        if (learnedCount >= 500) {
-            cefrLevel = "A2";
-            nextGoal = 1000;
-            nextLevel = "B1";
-        }
-        if (learnedCount >= 1000) {
-            cefrLevel = "B1";
-            nextGoal = 2000;
-            nextLevel = "B2";
-        }
-        if (learnedCount >= 2000) {
-            cefrLevel = "B2";
-            nextGoal = 3500;
-            nextLevel = "C1";
-        }
-        if (learnedCount >= 3500) {
-            cefrLevel = "C1";
-            nextGoal = 5000;
-            nextLevel = "C2";
-        }
-        if (learnedCount >= 5000) {
-            cefrLevel = "C2";
-            nextGoal = 5000;
-            nextLevel = "C2";
-        }
-
-        // Französische Uhrzeit (Ausgeschrieben)
-        const getFrenchNumber = (n) => {
-            if (n === 0) return "";
-            const units = ["", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf", "dix", "onze", "douze", "treize", "quatorze", "quinze", "seize", "dix-sept", "dix-huit", "dix-neuf"];
-            const tens = ["", "dix", "vingt", "trente", "quarante", "cinquante"];
-            
-            if (n < 20) return units[n];
-            const ten = Math.floor(n / 10);
-            const unit = n % 10;
-            if (unit === 0) return tens[ten];
-            if (unit === 1) return `${tens[ten]}-et-un`;
-            return `${tens[ten]}-${units[unit]}`;
-        };
-
-        const hours = currentTime.getHours();
-        const minutes = currentTime.getMinutes();
-        
-        let hStr = getFrenchNumber(hours);
-        if (hours === 0) hStr = "minuit";
-        else if (hours === 12) hStr = "midi";
-        else if (hours === 1) hStr = "une"; 
-        
-        let frenchTime = `Il est ${hStr}`;
-        if (hours !== 0 && hours !== 12) frenchTime += ` heure${hours !== 1 ? 's' : ''}`;
-        
-        if (minutes > 0) {
-            frenchTime += ` ${getFrenchNumber(minutes)}`;
-        }
-
-        return (
-            <div className="fixed top-0 left-0 right-0 z-40 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-b-2 border-indigo-200 shadow-lg">
-                <div className="max-w-lg md:max-w-2xl mx-auto px-5 py-3">
-                    {/* Zeile 1: Gruß & Zeit */}
-                    <div className="flex justify-between items-center mb-3">
-                        <div>
-                            <h1 className="text-2xl md:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent leading-tight">{greeting}</h1>
-                            <p className="text-slate-500 text-[10px] md:text-sm font-medium capitalize mt-0.5">{dateStr}</p>
-                        </div>
-                        <div className="text-right">
-                            <div className="flex items-center justify-end gap-2">
-                                <div className="text-xl md:text-3xl lg:text-4xl font-extrabold text-slate-800 font-mono leading-tight">
-                                    {currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                                </div>
-                                <div className={`w-2.5 h-2.5 rounded-full ${apiStatus === 'online' ? 'bg-green-500' : apiStatus === 'offline' ? 'bg-red-500' : 'bg-amber-400 animate-pulse'}`} title={`API: ${apiStatus}`}></div>
-                            </div>
-                            <div className="text-xs md:text-sm text-indigo-600 font-semibold italic mt-0.5 capitalize">
-                                {frenchTime}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    {/* Zeile 2: Status & Progress */}
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 border border-indigo-100 shadow-sm">
-                        <div className="flex items-center gap-3 mb-2">
-                            {/* Linker Titel */}
-                            <div className="flex items-center gap-1.5">
-                                <Trophy size={16} className={titleColor} />
-                                <span className={`font-bold text-base ${titleColor}`}>{currentTitle}</span>
-                            </div>
-                            
-                            {/* Fortschrittsbalken (Mitte) */}
-                            <div className="flex-1">
-                                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                    <div 
-                                        className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all"
-                                        style={{ width: `${Math.min(100, (learnedCount / nextGoal) * 100)}%` }}
-                                    ></div>
-                                </div>
-                                <div className="flex justify-between mt-0.5 px-1">
-                                    <span className="text-[9px] text-slate-400 font-bold">{learnedCount}</span>
-                                    <span className="text-[9px] text-indigo-500 font-bold">{nextGoal} ({nextLevel})</span>
-                                </div>
-                            </div>
-                            
-                            {/* Rechter Status */}
-                            <div className="flex items-center gap-2">
-                                <div className="text-right">
-                                    <div className="text-[9px] text-slate-400 font-bold uppercase">Words</div>
-                                    <div className="text-lg font-extrabold text-slate-800">{learnedCount}</div>
-                                </div>
-                                <div className="bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg">
-                                    <div className="text-sm font-bold">{cefrLevel}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        );
-    };
+    
 
     const renderHome = () => {
-        // --- DATA SETUP ---
+        // --- 1. DATEN BERECHNEN (Echtzeit-Stats) ---
         const safeVocab = vocabulary || [];
-        // Daily Joke Logik (nur 1 pro Tag anzeigen, hier vereinfacht random)
-        const dailyJokePreview = JOKE_DB[new Date().getDate() % JOKE_DB.length]; 
+        const now = Date.now();
+
+        // Wie viele Wörter sind fällig? (Box > 1 und Zeit abgelaufen)
+        const dueCount = safeVocab.filter(w => {
+            const p = userProgress[w.rank];
+            return p && p.box > 1 && p.nextReview <= now;
+        }).length;
+
+        // Wie viele "Problem-Wörter"? (Box 1)
+        const badCount = safeVocab.filter(w => {
+            const p = userProgress[w.rank];
+            return p && p.box === 1;
+        }).length;
+
+        // Wie viele heute gelernt? (Einfacher Check: Wurde heute geupdated?)
+        // (Für eine echte "Daily Goal" Anzeige bräuchten wir ein extra Feld, 
+        // aber wir nutzen erstmal die Gesamtanzahl als Motivation)
+        const learnedTotal = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
+
+        // Begrüßung nach Uhrzeit
+        const hour = currentTime.getHours();
+        const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
+
+        // Daily Logic: Witz oder Writer?
+        // Wir prüfen: Hat der User heute schon einen Score im Writer?
+        // (Da wir den Score nur im State haben und nicht persistent speichern für den Reload, 
+        // nehmen wir hier vereinfacht an: Wenn Score da ist -> Witz anzeigen. 
+        // Für echte Persistenz müsste man 'dailyWriterDone' im localStorage speichern.)
+        const showReward = dailyWriterScore !== null; 
 
         return (
-            <div className="pb-24 pt-[160px] px-1 space-y-6">
+            <div className="pb-28 pt-8 px-1 space-y-6">
                 
-                {/* 1. HERO: SMART LEARNING (Keep) */}
-                <div className="relative">
-                    <h2 className="text-xl font-bold text-slate-800 mb-3 px-1">Today's Focus</h2>
-                    <button 
-                        onClick={startSmartSession} 
-                        className="w-full h-44 bg-gradient-to-br from-indigo-600 to-violet-600 text-white p-6 rounded-[2rem] shadow-xl shadow-indigo-200 transition-transform active:scale-[0.98] flex flex-col justify-between relative overflow-hidden group"
-                    >
-                        <div className="relative z-10 flex justify-between items-start w-full">
-                            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
+                {/* --- HEADER (Clean & Personal) --- */}
+                <div className="flex items-center justify-between px-2">
+                    <div>
+                        <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-0.5">{new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+                        <h1 className="text-3xl font-extrabold text-slate-800">{greeting}, {nickname}</h1>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        {/* Streak (Mockup - Logik hast du ja im State 'streak') */}
+                        <div className="flex flex-col items-center">
+                            <div className="flex items-center gap-1 text-orange-500 font-black text-lg">
+                                <Flame size={20} fill="currentColor" />
+                                <span>{streak}</span>
+                            </div>
+                            <span className="text-[9px] text-slate-400 font-bold uppercase">Streak</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* --- HERO SECTION (Smart Learning) --- */}
+                <button 
+                    onClick={startSmartSession} 
+                    className="w-full relative overflow-hidden bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-xl shadow-slate-200 transition-transform active:scale-[0.98] group text-left"
+                >
+                    {/* Deko Hintergrund */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full blur-3xl opacity-20 -mr-16 -mt-16 pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500 rounded-full blur-3xl opacity-20 -ml-10 -mb-10 pointer-events-none"></div>
+
+                    <div className="relative z-10">
+                        <div className="flex justify-between items-start mb-6">
+                            <div className="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10">
                                 <Play size={28} fill="currentColor" />
                             </div>
-                            <div className="bg-indigo-500/30 px-3 py-1 rounded-full text-xs font-medium backdrop-blur-md border border-white/10">
-                                Priority Loop
+                            {dueCount > 0 && (
+                                <div className="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
+                                    {dueCount} Due
+                                </div>
+                            )}
+                        </div>
+                        
+                        <h2 className="text-3xl font-bold mb-2">Smart Session</h2>
+                        <p className="text-slate-300 text-sm mb-6 max-w-[80%]">
+                            {dueCount > 0 
+                                ? `You have ${dueCount} words to review today. Keep your streak alive!` 
+                                : "All caught up! Learn 5 new words to expand your vocabulary."}
+                        </p>
+
+                        {/* Mini Progress Bar Visual */}
+                        <div className="flex items-center gap-3">
+                            <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                                {/* Fake Progress basierend auf Level */}
+                                <div className="h-full bg-gradient-to-r from-indigo-400 to-purple-400 w-1/3"></div>
+                            </div>
+                            <span className="text-xs font-bold text-slate-400">{learnedTotal} learned</span>
+                        </div>
+                    </div>
+                </button>
+
+                {/* --- BENTO GRID (Quick Actions) --- */}
+                <div className="grid grid-cols-2 gap-4">
+                    {/* Card 1: Quick Test */}
+                    <button 
+                        onClick={() => { setTestConfig({ ...testConfig, count: 10 }); startTestSession(); }}
+                        className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between h-36 active:scale-[0.98] transition-all hover:border-blue-200 group"
+                    >
+                        <div className="bg-blue-50 text-blue-600 w-10 h-10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Zap size={20} fill="currentColor"/>
+                        </div>
+                        <div className="text-left">
+                            <div className="font-bold text-slate-800 text-lg">Blitz Quiz</div>
+                            <div className="text-xs text-slate-400">10 Words • 1 Min</div>
+                        </div>
+                    </button>
+
+                    {/* Card 2: Repair (Konditional) */}
+                    <button 
+                        onClick={() => { 
+                            if(badCount > 0) {
+                                setSmartConfig({ ...smartConfig, rangeStart: 1, rangeEnd: 5000, sessionSize: 20 }); 
+                                // Wir rufen hier manuell Repair Mode auf, indem wir sessionQueue setzen (wie in renderSmartConfig logik)
+                                const difficultWords = vocabulary.filter(w => userProgress[w.rank]?.box === 1).slice(0, 20);
+                                setSessionQueue(difficultWords);
+                                setIsFlipped(false);
+                                setSessionResults({ correct: 0, wrong: 0 });
+                                setView('smart-session');
+                            } else {
+                                alert("No weak words found! Great job.");
+                            }
+                        }}
+                        className={`p-5 rounded-[2rem] border shadow-sm flex flex-col justify-between h-36 active:scale-[0.98] transition-all group text-left ${
+                            badCount > 0 
+                            ? 'bg-rose-50 border-rose-100' 
+                            : 'bg-white border-slate-100 opacity-80'
+                        }`}
+                    >
+                        <div className={`w-10 h-10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform ${
+                            badCount > 0 ? 'bg-rose-200 text-rose-600' : 'bg-emerald-50 text-emerald-600'
+                        }`}>
+                            {badCount > 0 ? <Activity size={20} /> : <Check size={20} />}
+                        </div>
+                        <div>
+                            <div className={`font-bold text-lg ${badCount > 0 ? 'text-rose-900' : 'text-slate-800'}`}>
+                                {badCount > 0 ? "Repair" : "All Good"}
+                            </div>
+                            <div className={`text-xs ${badCount > 0 ? 'text-rose-500 font-bold' : 'text-slate-400'}`}>
+                                {badCount > 0 ? `${badCount} mistakes` : "No weak words"}
                             </div>
                         </div>
-                        <div className="relative z-10 text-left">
-                            <h2 className="text-2xl font-bold mb-1">Start Smart Session</h2>
-                            <p className="text-indigo-100 text-sm font-medium opacity-90">Review words & learn new ones.</p>
-                        </div>
-                        <GraduationCap size={140} className="absolute -right-6 -bottom-6 text-white opacity-10 rotate-[-15deg] group-hover:scale-110 transition-transform" />
                     </button>
                 </div>
 
-                {/* 2. DAILY JOKE (Redesigned as Modal Trigger) */}
-                {dailyJoke && (
-                    <button 
-                        onClick={() => setShowJokeModal(true)}
-                        className="w-full bg-amber-50 border border-amber-100 p-4 rounded-2xl relative overflow-hidden hover:bg-amber-100 transition-all active:scale-[0.98] text-left flex items-center gap-4"
-                    >
-                        <div className="bg-white p-2 rounded-xl text-amber-500 shadow-sm shrink-0"><Smile size={20}/></div>
-                        <div className="flex-1 min-w-0">
-                            <span className="font-bold text-amber-900 text-sm">Joke of the Day</span>
-                            <p className="text-amber-800 text-sm truncate mt-0.5">{dailyJoke.q}</p>
-                        </div>
-                        <ChevronRight size={20} className="text-amber-400 shrink-0"/>
-                    </button>
-                )}
+                {/* --- DYNAMIC CONTEXT CARD (Writer or Joke) --- */}
+                <div>
+                    <div className="flex items-center justify-between px-2 mb-2">
+                        <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider">
+                            {showReward ? "Daily Reward" : "Daily Challenge"}
+                        </h3>
+                        {/* Kleiner Link zu den Collections, falls man alte Witze sehen will */}
+                        {showReward && (
+                            <button onClick={() => setView('collections')} className="text-xs text-indigo-500 font-bold">View Archive</button>
+                        )}
+                    </div>
 
-                {/* JOKE MODAL */}
-                {showJokeModal && dailyJoke && (
-                    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowJokeModal(false)}>
-                        <div className="bg-white rounded-3xl max-w-sm w-full shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-                            {/* Header */}
-                            <div className="bg-gradient-to-r from-amber-400 to-orange-400 p-4 flex justify-between items-center">
-                                <div className="flex items-center gap-2">
-                                    <Smile size={20} className="text-white"/>
-                                    <span className="font-bold text-white">Joke of the Day</span>
+                    {!showReward ? (
+                        /* STATE A: CHALLENGE (Writer) */
+                        <button 
+                            onClick={() => setView('daily-writer')}
+                            className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 p-[2px] rounded-[2rem] active:scale-[0.98] transition-all"
+                        >
+                            <div className="bg-white rounded-[1.9rem] p-5 flex items-center gap-5 h-full relative overflow-hidden">
+                                <div className="bg-violet-50 text-violet-600 w-14 h-14 rounded-2xl flex items-center justify-center shrink-0">
+                                    <PenTool size={24} />
                                 </div>
-                                <button onClick={() => setShowJokeModal(false)} className="text-white/80 hover:text-white">
-                                    <X size={20}/>
-                                </button>
+                                <div className="text-left relative z-10">
+                                    <h3 className="font-bold text-slate-800 text-lg">AI Writer</h3>
+                                    <p className="text-slate-500 text-xs mt-0.5">Write a short text & get AI feedback to unlock your daily joke.</p>
+                                </div>
+                                <ChevronRight size={20} className="ml-auto text-slate-300" />
                             </div>
-                            
-                            {/* Content */}
-                            <div className="p-5">
-                                {/* Question */}
-                                <div className="mb-4">
-                                    <div className="flex items-start gap-2">
-                                        <p className="text-lg font-bold text-slate-800 italic">"{dailyJoke.q}"</p>
-                                        <button onClick={() => speak(dailyJoke.q)} className="p-1.5 text-slate-400 hover:text-amber-600 shrink-0">
-                                            <Volume2 size={16}/>
-                                        </button>
-                                    </div>
-                                    <p className="text-xs text-slate-500 mt-1">🇬🇧 {dailyJoke.q_en || "..."}</p>
+                        </button>
+                    ) : (
+                        /* STATE B: REWARD (Joke) */
+                        <button 
+                            onClick={() => setShowJokeModal(true)}
+                            className="w-full bg-amber-400 text-white p-6 rounded-[2rem] shadow-lg shadow-amber-100 text-left relative overflow-hidden active:scale-[0.98] transition-all"
+                        >
+                            <div className="relative z-10 flex items-center gap-4">
+                                <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
+                                    <Smile size={24} className="text-white" />
                                 </div>
-                                
-                                {/* Divider */}
-                                <div className="border-t border-slate-100 my-4"></div>
-                                
-                                {/* Answer */}
                                 <div>
-                                    <div className="flex items-start gap-2">
-                                        <p className="text-lg font-bold text-indigo-600 italic">"{dailyJoke.a}"</p>
-                                        <button onClick={() => speak(dailyJoke.a)} className="p-1.5 text-slate-400 hover:text-indigo-600 shrink-0">
-                                            <Volume2 size={16}/>
-                                        </button>
-                                    </div>
-                                    <p className="text-xs text-slate-500 mt-1">🇬🇧 {dailyJoke.en}</p>
+                                    <h3 className="font-bold text-xl">Joke Unlocked!</h3>
+                                    <p className="text-white/80 text-xs font-medium mt-1">Tap to have a laugh.</p>
+                                </div>
+                            </div>
+                            <div className="absolute -right-6 -bottom-6 opacity-20 rotate-12">
+                                <Smile size={100} />
+                            </div>
+                        </button>
+                    )}
+                </div>
+                {/* --- DAILY LOOT (Unlock System) --- */}
+                <div className="mt-8">
+                    <div className="flex items-center justify-between px-2 mb-3">
+                        <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider">
+                            Daily Loot
+                        </h3>
+                        <span className={`text-xs font-bold ${dailyLearnedCount >= 5 ? 'text-green-500' : 'text-indigo-500'}`}>
+                            {dailyLearnedCount}/5 Words Learned
+                        </span>
+                    </div>
+
+                    {dailyLearnedCount < 5 ? (
+                        /* STATE A: LOCKED */
+                        <div className="w-full bg-slate-100 p-6 rounded-[2rem] border border-slate-200 relative overflow-hidden group">
+                            {/* Pattern Overlay */}
+                            <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                            
+                            <div className="relative z-10 flex items-center gap-5 opacity-50 grayscale group-hover:grayscale-0 transition-all duration-500">
+                                <div className="bg-slate-200 p-4 rounded-2xl">
+                                    <Shield size={28}/> 
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-slate-800 text-lg">Locked Content</h3>
+                                    <p className="text-slate-500 text-xs font-medium mt-1">Learn {5 - dailyLearnedCount} more words to unlock Joke & Fact.</p>
                                 </div>
                             </div>
                             
-                            {/* Footer */}
-                            <div className="px-5 pb-5">
+                            {/* Progress Bar Background */}
+                            <div className="absolute bottom-0 left-0 h-1.5 bg-indigo-500 transition-all duration-500" style={{ width: `${(dailyLearnedCount / 5) * 100}%` }}></div>
+                        </div>
+                    ) : (
+                        /* STATE B: UNLOCKED (Grid with Joke & Fact) */
+                        <div className="grid gap-3">
+                            {/* Card 1: Joke */}
+                            <button 
+                                onClick={() => setShowJokeModal(true)}
+                                className="w-full bg-amber-400 text-white p-5 rounded-[2rem] shadow-lg shadow-amber-100 text-left relative overflow-hidden active:scale-[0.98] transition-all group"
+                            >
+                                <div className="relative z-10 flex items-center gap-4">
+                                    <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm group-hover:rotate-12 transition-transform">
+                                        <Smile size={24} className="text-white" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-lg">Daily Joke</h3>
+                                        <p className="text-white/80 text-xs font-medium">Tap to laugh.</p>
+                                    </div>
+                                </div>
+                                <Smile size={80} className="absolute -right-4 -bottom-4 text-white opacity-20 rotate-12"/>
+                            </button>
+
+                            {/* Card 2: Fact */}
+                            <button 
+                                onClick={() => setShowFactModal(true)}
+                                className="w-full bg-sky-500 text-white p-5 rounded-[2rem] shadow-lg shadow-sky-100 text-left relative overflow-hidden active:scale-[0.98] transition-all group"
+                            >
+                                <div className="relative z-10 flex items-center gap-4">
+                                    <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform">
+                                        <Info size={24} className="text-white" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-lg">Daily Fact</h3>
+                                        <p className="text-white/80 text-xs font-medium">Did you know?</p>
+                                    </div>
+                                </div>
+                                <Info size={80} className="absolute -right-4 -bottom-4 text-white opacity-20 rotate-[-12deg]"/>
+                            </button>
+                        </div>
+                    )}
+                </div>
+                
+                {/* --- MODAL FÜR FAKT --- */}
+                {showFactModal && dailyFact && (
+                    <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4" onClick={() => setShowFactModal(false)}>
+                        <div className="bg-white rounded-[2.5rem] max-w-sm w-full shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
+                            <div className="bg-sky-500 p-6 text-center relative overflow-hidden">
+                                <div className="text-6xl mb-2 relative z-10">{dailyFact.icon}</div>
+                                <h3 className="text-white font-bold text-2xl relative z-10">Le Saviez-Vous ?</h3>
+                                <div className="absolute top-0 left-0 w-full h-full bg-white opacity-10" style={{backgroundImage: 'radial-gradient(circle, #ffffff 2px, transparent 2.5px)', backgroundSize: '20px 20px'}}></div>
+                            </div>
+                            <div className="p-6">
+                                <p className="text-xl font-bold text-slate-800 text-center mb-4 leading-relaxed">
+                                    "{dailyFact.fr}"
+                                </p>
+                                <div className="bg-slate-50 p-4 rounded-xl text-center border border-slate-100 mb-6">
+                                    <p className="text-slate-500 text-sm italic">{dailyFact.en}</p>
+                                </div>
+                                
                                 <button 
                                     onClick={() => {
-                                        if (!savedJokes.some(j => j.q === dailyJoke.q)) {
-                                            const updated = [...savedJokes, dailyJoke];
-                                            setSavedJokes(updated);
-                                            localStorage.setItem('vocabApp_savedJokes', JSON.stringify(updated));
-                                        }
-                                        setShowJokeModal(false);
+                                         if (!savedFacts.some(f => f.fr === dailyFact.fr)) {
+                                             const updated = [...savedFacts, dailyFact];
+                                             setSavedFacts(updated);
+                                             localStorage.setItem('vocabApp_savedFacts', JSON.stringify(updated));
+                                         }
+                                         setShowFactModal(false);
                                     }}
-                                    disabled={savedJokes.some(j => j.q === dailyJoke.q)}
-                                    className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
-                                        savedJokes.some(j => j.q === dailyJoke.q)
-                                        ? 'bg-slate-100 text-slate-400' 
-                                        : 'bg-amber-500 text-white hover:bg-amber-600 active:scale-95'
-                                    }`}
+                                    className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2"
                                 >
-                                    {savedJokes.some(j => j.q === dailyJoke.q) ? <><Check size={16}/> Saved</> : <><Save size={16}/> Save Joke</>}
+                                    {savedFacts.some(f => f.fr === dailyFact.fr) ? <><Check size={20}/> Saved</> : <><Save size={20}/> Save Fact</>}
                                 </button>
                             </div>
                         </div>
                     </div>
                 )}
 
-                {/* 3. DAILY EMAIL TASK (New Feature) */}
-                <DailyEmailTask level="A2" onComplete={(score) => alert(`You got ${score} points!`)} />
-
-                {/* 4. WEAK WORDS / REPAIR (Keep) */}
-                <button 
-                    onClick={() => {
-                        // Repair Logic here
-                        setView('smart-config'); 
-                    }} 
-                    className="w-full bg-white border border-slate-100 p-5 rounded-[2rem] shadow-sm flex items-center justify-between group active:scale-[0.98]"
-                >
-                    <div className="flex items-center gap-4">
-                        <div className="bg-rose-100 w-12 h-12 flex items-center justify-center rounded-2xl text-rose-600"><Activity size={24} /></div>
-                        <div className="text-left">
-                            <h3 className="font-bold text-slate-800 text-lg">Repair Weak Words</h3>
-                            <p className="text-slate-400 text-xs font-medium">Fix mistakes from yesterday</p>
-                        </div>
-                    </div>
-                    <ChevronRight size={24} className="text-slate-200 group-hover:text-rose-400 transition-colors" />
-                </button>
-
-                {/* 5. SUGGESTED GRAMMAR (New Placement) */}
-                {(() => {
-                    // Find the next unpassed grammar lesson
-                    let nextLesson = null;
-                    let nextModule = null;
-                    for (const module of GRAMMAR_MODULES) {
-                        for (const topic of module.topics) {
-                            if (localStorage.getItem(`grammar_passed_${topic.id}`) !== 'true') {
-                                nextLesson = topic;
-                                nextModule = module;
-                                break;
-                            }
-                        }
-                        if (nextLesson) break;
-                    }
-                    
-                    // If all lessons are passed, show congratulations
-                    if (!nextLesson) {
-                        return (
-                            <div className="w-full bg-green-50 border border-green-100 p-5 rounded-[2rem] text-left relative overflow-hidden">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="bg-white text-green-600 p-2 rounded-xl shadow-sm"><GraduationCap size={18} /></div>
-                                    <span className="font-bold text-green-900 text-sm">Grammar Complete!</span>
-                                </div>
-                                <h3 className="font-bold text-green-800 text-xl">All lessons passed!</h3>
-                                <p className="text-green-700/70 text-xs mt-1">Amazing work. Keep practicing!</p>
-                            </div>
-                        );
-                    }
-                    
-                    return (
-                        <button 
-                            onClick={() => { 
-                                setSelectedGrammarId(nextLesson.id); 
-                                setView('grammar-detail'); 
-                            }} 
-                            className="w-full bg-emerald-50 border border-emerald-100 p-5 rounded-[2rem] text-left active:scale-[0.98] relative overflow-hidden"
-                        >
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="bg-white text-emerald-600 p-2 rounded-xl shadow-sm"><Layers size={18} /></div>
-                                <span className="font-bold text-emerald-900 text-sm">Next Grammar • {nextModule.title}</span>
-                            </div>
-                            <h3 className="font-bold text-emerald-800 text-xl">{nextLesson.title}</h3>
-                            <p className="text-emerald-700/70 text-xs mt-1">{nextLesson.desc}</p>
-                        </button>
-                    );
-                })()}
             </div>
         );
     };
@@ -6051,11 +6142,7 @@ function App() {
         </div>
     );
     const renderDataMgmt = () => {
-        // State für Nickname-Bearbeitung (Lokal in dieser Funktion oder oben in App, 
-        // da wir 'renderDataMgmt' in App haben, nutzen wir lokale Variablen hier ist ok, 
-        // aber für Re-Render brauchen wir State.
-        // Da wir das hier inline rendern, nutzen wir 'isEditingName' als State oben in App() 
-        // ODER wir machen es einfach per window.prompt (einfacher für jetzt).
+        // State für Nickname-Bearbeitung
         
         const changeNickname = async () => {
             const newName = window.prompt("New Nickname:", nickname);
@@ -6090,6 +6177,34 @@ function App() {
             }
         };
 
+        // --- NEU: DEBUG FUNKTION ---
+        const runDebugCheck = async () => {
+            const tableName = 'database'; // Deine Haupt-Tabelle
+            alert(`Testing connection to table '${tableName}'...`);
+            
+            try {
+                // Versuche 1 Zeile zu laden
+                const { data, error } = await supabase
+                    .from(tableName)
+                    .select('*')
+                    .limit(1);
+
+                if (error) {
+                    console.error("Supabase Error:", error);
+                    alert(`❌ ERROR: ${error.message}\nCode: ${error.code}\nHint: Check RLS Policies!`);
+                } else {
+                    console.log("Supabase Data:", data);
+                    if (data.length === 0) {
+                        alert("⚠️ Connected, but returned 0 rows.\nPossible causes:\n1. Table is empty\n2. RLS Policy hides data for Anon/Public.");
+                    } else {
+                        alert(`✅ SUCCESS!\nConnection works.\nLoaded entry ID: ${data[0].id}`);
+                    }
+                }
+            } catch (err) {
+                alert("❌ CRITICAL: " + err.message);
+            }
+        };
+
         return (
             <div className="max-w-2xl mx-auto space-y-6 pt-6 pb-24 px-1">
                 {/* Header */}
@@ -6098,7 +6213,7 @@ function App() {
                     <h2 className="text-2xl font-bold text-slate-800">Settings</h2>
                 </div>
 
-                {/* 1. Account Info (Unterscheidung Gast vs User) */}
+                {/* 1. Account Info */}
                 <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
                      <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">
@@ -6119,7 +6234,7 @@ function App() {
                         </div>
                      </div>
 
-                     {/* LOGOUT BUTTON - NUR WENN EINGELOGGT */}
+                     {/* LOGOUT BUTTON */}
                      {session ? (
                          <button onClick={handleLogout} className="w-full py-3 bg-slate-50 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-100 transition-colors flex items-center justify-center gap-2">
                             <RotateCcw size={16} className="rotate-180"/> Log Out
@@ -6146,7 +6261,24 @@ function App() {
                     </select>
                 </div>
 
-                {/* 3. Danger Zone */}
+                {/* 3. System Debugger (NEU) */}
+                <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="bg-sky-50 text-sky-600 p-2 rounded-xl"><Activity size={20}/></div>
+                        <div>
+                            <h3 className="font-bold text-slate-800">System Check</h3>
+                            <p className="text-xs text-slate-400">Test Database Connection & RLS</p>
+                        </div>
+                    </div>
+                    <button 
+                        onClick={runDebugCheck}
+                        className="w-full py-3 bg-sky-50 text-sky-700 border border-sky-100 rounded-xl font-bold text-sm hover:bg-sky-100 transition-colors flex items-center justify-center gap-2"
+                    >
+                        <Wifi size={18}/> Test Connection
+                    </button>
+                </div>
+
+                {/* 4. Danger Zone */}
                 <div className="mt-8 pt-6 border-t border-slate-200">
                     <h3 className="font-bold text-red-500 text-xs uppercase tracking-wider mb-3 px-2">Danger Zone</h3>
                     <button 
@@ -6468,16 +6600,6 @@ function App() {
     const renderCollections = () => {
         return (
             <div className="w-full pt-6 pb-24 px-1">
-                {/* Scroll to Top Button */}
-                {showScrollTop && (
-                    <button 
-                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                        className="fixed bottom-24 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-all z-40"
-                    >
-                        <ChevronRight size={24} className="-rotate-90"/>
-                    </button>
-                )}
-                
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-6 px-1">
                     <button onClick={() => setView('profile')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
@@ -6500,17 +6622,11 @@ function App() {
                         }`}
                     >
                         <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-xl ${
-                                collectionsTab === 'jokes' 
-                                ? 'bg-amber-100 text-amber-600' 
-                                : 'bg-slate-100 text-slate-400'
-                            }`}>
+                            <div className={`p-2 rounded-xl ${collectionsTab === 'jokes' ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 text-slate-400'}`}>
                                 <Smile size={20}/>
                             </div>
                             <div className="text-left">
-                                <div className={`font-bold ${
-                                    collectionsTab === 'jokes' ? 'text-amber-900' : 'text-slate-700'
-                                }`}>Saved Jokes</div>
+                                <div className={`font-bold ${collectionsTab === 'jokes' ? 'text-amber-900' : 'text-slate-700'}`}>Saved Jokes</div>
                                 <div className="text-xs text-slate-400">{savedJokes.length} items</div>
                             </div>
                         </div>
@@ -6518,35 +6634,29 @@ function App() {
                     </button>
 
                     <button 
-                        onClick={() => setCollectionsTab('memes')}
+                        onClick={() => setCollectionsTab('facts')}
                         className={`w-full p-4 rounded-2xl border transition-all flex items-center justify-between ${
-                            collectionsTab === 'memes'
-                            ? 'bg-purple-50 border-purple-200 shadow-sm'
+                            collectionsTab === 'facts'
+                            ? 'bg-sky-50 border-sky-200 shadow-sm'
                             : 'bg-white border-slate-100 hover:bg-slate-50'
                         }`}
                     >
                         <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-xl ${
-                                collectionsTab === 'memes' 
-                                ? 'bg-purple-100 text-purple-600' 
-                                : 'bg-slate-100 text-slate-400'
-                            }`}>
-                                <Image size={20}/>
+                            <div className={`p-2 rounded-xl ${collectionsTab === 'facts' ? 'bg-sky-100 text-sky-600' : 'bg-slate-100 text-slate-400'}`}>
+                                <Info size={20}/>
                             </div>
                             <div className="text-left">
-                                <div className={`font-bold ${
-                                    collectionsTab === 'memes' ? 'text-purple-900' : 'text-slate-700'
-                                }`}>Saved Memes</div>
-                                <div className="text-xs text-slate-400">{savedMemes.length} items</div>
+                                <div className={`font-bold ${collectionsTab === 'facts' ? 'text-sky-900' : 'text-slate-700'}`}>Saved Facts</div>
+                                <div className="text-xs text-slate-400">{savedFacts.length} items</div>
                             </div>
                         </div>
-                        {collectionsTab === 'memes' && <ChevronRight size={20} className="text-purple-400"/>}
+                        {collectionsTab === 'facts' && <ChevronRight size={20} className="text-sky-400"/>}
                     </button>
                 </div>
 
                 {/* Content */}
                 {collectionsTab === 'jokes' ? (
-                    // Jokes View
+                    // --- JOKES LIST ---
                     savedJokes.length > 0 ? (
                         <div className="space-y-3">
                             {savedJokes.map((joke, idx) => (
@@ -6556,9 +6666,7 @@ function App() {
                                     className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:bg-amber-50 transition-all text-left active:scale-[0.98]"
                                 >
                                     <div className="flex items-start gap-3">
-                                        <div className="bg-amber-100 text-amber-600 p-2 rounded-xl shrink-0">
-                                            <Smile size={20}/>
-                                        </div>
+                                        <div className="bg-amber-100 text-amber-600 p-2 rounded-xl shrink-0"><Smile size={20}/></div>
                                         <div className="flex-1 min-w-0">
                                             <p className="font-serif italic text-slate-800 line-clamp-2 mb-1">"{joke.q}"</p>
                                             <p className="text-xs text-slate-400">Tap to view full joke</p>
@@ -6571,34 +6679,31 @@ function App() {
                     ) : (
                         <div className="text-center p-12 bg-white rounded-3xl border border-dashed border-slate-200">
                             <Smile size={48} className="mx-auto text-slate-300 mb-4"/>
-                            <h3 className="font-bold text-slate-600 mb-2">No Jokes Saved Yet</h3>
-                            <p className="text-slate-400 text-sm">Check out the daily joke on your home screen!</p>
+                            <h3 className="font-bold text-slate-600 mb-2">No Jokes Saved</h3>
+                            <p className="text-slate-400 text-sm">Unlock jokes in the Daily Loot!</p>
                         </div>
                     )
                 ) : (
-                    // Memes View
-                    savedMemes.length > 0 ? (
+                    // --- FACTS LIST ---
+                    savedFacts.length > 0 ? (
                         <div className="space-y-3">
-                            {savedMemes.map((meme, idx) => (
-                                <div
-                                    key={idx}
-                                    className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm"
-                                >
-                                    <h3 className="font-bold text-slate-800 mb-3">{meme.title}</h3>
-                                    <div className="rounded-xl overflow-hidden bg-slate-100 mb-3">
-                                        <img src={meme.url} alt="Meme" className="w-full h-auto object-contain max-h-96"/>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-full">⬆️ {meme.ups}</span>
+                            {savedFacts.map((fact, idx) => (
+                                <div key={idx} className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                                    <div className="flex items-start gap-3">
+                                        <div className="text-2xl shrink-0">{fact.icon}</div>
+                                        <div className="flex-1">
+                                            <p className="font-bold text-slate-800 mb-1">{fact.fr}</p>
+                                            <p className="text-sm text-slate-500 italic">{fact.en}</p>
+                                        </div>
                                         <button 
                                             onClick={() => {
-                                                const updated = savedMemes.filter((_, i) => i !== idx);
-                                                setSavedMemes(updated);
-                                                localStorage.setItem('vocabApp_savedMemes', JSON.stringify(updated));
+                                                const updated = savedFacts.filter((_, i) => i !== idx);
+                                                setSavedFacts(updated);
+                                                localStorage.setItem('vocabApp_savedFacts', JSON.stringify(updated));
                                             }}
-                                            className="text-red-400 hover:text-red-600 p-2"
+                                            className="text-slate-300 hover:text-red-400 p-1"
                                         >
-                                            <Trash2 size={18}/>
+                                            <Trash2 size={16}/>
                                         </button>
                                     </div>
                                 </div>
@@ -6606,9 +6711,9 @@ function App() {
                         </div>
                     ) : (
                         <div className="text-center p-12 bg-white rounded-3xl border border-dashed border-slate-200">
-                            <Image size={48} className="mx-auto text-slate-300 mb-4"/>
-                            <h3 className="font-bold text-slate-600 mb-2">No Memes Saved Yet</h3>
-                            <p className="text-slate-400 text-sm">Visit the Meme Gallery in Explore to save some!</p>
+                            <Info size={48} className="mx-auto text-slate-300 mb-4"/>
+                            <h3 className="font-bold text-slate-600 mb-2">No Facts Saved</h3>
+                            <p className="text-slate-400 text-sm">Unlock facts in the Daily Loot!</p>
                         </div>
                     )
                 )}
@@ -6809,15 +6914,30 @@ function App() {
             default: return renderHome();
         }
     };
+    // --- In deinem return (...) Block, ganz am Anfang ---
 
+    if (isLoadingVocab) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 text-slate-500">
+                {/* Ein kleiner Lade-Kringel */}
+                <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4"></div>
+                <p>Chargement du vocabulaire...</p>
+                <p className="text-xs mt-2 text-slate-400">Synchronisation mit der Datenbank</p>
+            </div>
+        );
+    }
+
+// ... Hier geht dann dein normaler Code weiter: return <div className="min-h-screen ...">
     return (
+        
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col items-center">
-            {/* Home Header - Nur auf Home Seite sticky */}
-            {view === 'home' && !isSessionActive && renderHomeHeader()}
             
-            {/* Main Content Area */}
-            {/* pb-24 sorgt dafür, dass Inhalt nicht hinter der Leiste verschwindet */}
-            <div className={`w-full max-w-lg md:max-w-2xl px-5 py-6 md:p-8 ${!isSessionActive ? 'pb-28' : ''}`}>
+            {/* 1. HIER WAR DER ALTE HEADER - DIESE ZEILE HABE ICH GELÖSCHT: */}
+            {/* {view === 'home' && !isSessionActive && renderHomeHeader()} */}
+            
+            {/* 2. Main Content Area */}
+            {/* WICHTIG: pb-28 lassen wir für die Navigation unten */}
+            <div className={`w-full max-w-lg md:max-w-2xl px-5 ${!isSessionActive ? 'pb-28' : ''}`}>
                 
                 {/* Wenn Session aktiv -> Session Views zeigen */}
                 {isSessionActive ? (
@@ -6836,7 +6956,7 @@ function App() {
                 )}
             </div>
 
-            {/* Navigation Bar - Nur anzeigen wenn KEINE Session aktiv ist */}
+            {/* 3. Navigation Bar - Nur anzeigen wenn KEINE Session aktiv ist */}
             {!isSessionActive && (
                 <BottomNav 
                     activeTab={['home', 'smart-config', 'test-config'].includes(view) ? 'home' : 
