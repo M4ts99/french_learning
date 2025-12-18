@@ -3722,6 +3722,7 @@ function App() {
         setReaderMode('reading');
         setView('reader');
     };
+
     const calculateAnkiStats = (currentStats, quality) => {
         // quality: 0=Again, 1=Hard, 2=Good, 3=Easy
         
@@ -3733,67 +3734,57 @@ function App() {
         let nextRepetitions = repetitions + 1;
         let nextEase = ease;
 
-        // --- LOGIK: INTERVALL BERECHNEN ---
+        // --- NEU: FORCED LEARNING & BREITERE INTERVALLE ---
         
-        // 1. Neues Wort (oder nach Reset)
+        // Fall 1: Karte ist neu oder wurde vergessen (Box 1)
         if (interval === 0) {
-            if (quality === 0) { // Again
+            if (quality <= 1) { 
+                // Again (0) oder Hard (1): Bleibt auf 0 -> Muss in dieser Session wiederholt werden!
                 nextInterval = 0; 
-                nextRepetitions = 0;
-            } else if (quality === 1) { // Hard
-                nextInterval = 0; // Bleibt 0, muss nochmal geübt werden
-                // Strafe für Ease, auch am Anfang!
-                nextEase = Math.max(1.3, ease - 0.15); 
-            } else if (quality === 2) { // Good
+                nextRepetitions = 0; 
+            } else if (quality === 2) { 
+                // Good (2): Startet jetzt direkt mit 1 Tag (Box 2)
                 nextInterval = 1; 
-            } else { // Easy
-                nextInterval = 3; // Wir reduzieren den "Easy"-Sprung von 4 auf 3 Tage
+            } else { 
+                // Easy (3): Springt direkt auf 4 Tage (Box 3) - Breiterer Einstieg
+                nextInterval = 4; 
                 nextEase += 0.15;
             }
         } 
-        // 2. Wiederholung
+        // Fall 2: Karte ist bereits im Lernprozess (Wiederholung)
         else {
             if (quality === 0) { // Vergessen
-                nextInterval = 0;
+                nextInterval = 0; // Zurück auf Start
                 nextRepetitions = 0;
                 nextEase = Math.max(1.3, ease - 0.2);
+            } else if (quality === 1) { // Hard
+                // Strafe: Intervall wächst nicht, sondern wird leicht gekürzt, aber nicht auf 0 gesetzt
+                nextInterval = Math.max(1, Math.floor(interval * 0.8)); 
+                nextEase -= 0.15;
             } else {
-                // Ease Anpassung
-                if (quality === 1) nextEase -= 0.15; // Hard macht es schwerer für die Zukunft
-                if (quality === 3) nextEase += 0.15; // Easy macht es leichter
+                // Good / Easy
+                if (quality === 2) nextEase -= 0.05; 
+                if (quality === 3) nextEase += 0.15;
+                
                 nextEase = Math.max(1.3, nextEase);
                 
-                // Faktor Berechnung
-                let factor = (quality === 1) ? 1.2 : (quality === 3 ? nextEase * 1.3 : nextEase);
+                // Standard SM-2 Multiplikator
+                let factor = (quality === 3 ? nextEase * 1.3 : nextEase);
                 nextInterval = Math.ceil(interval * factor);
             }
         }
 
-        // --- NEU: BOX BERECHNUNG (Mapping) ---
-        // Wir trennen Tage von Boxen, damit es logischer aussieht.
-        let visualBox = 0;
-        if (nextInterval === 0) visualBox = 1;       // Lernen / Fehler
-        else if (nextInterval <= 3) visualBox = 2;   // 1-3 Tage (Frisch)
-        else if (nextInterval <= 10) visualBox = 3;  // 4-10 Tage (Sitzt)
-        else if (nextInterval <= 30) visualBox = 4;  // 11-30 Tage (Fest)
-        else visualBox = 5;                          // >30 Tage (Langzeit)
-
-        // Sonderfall: Wenn es "Hard" war, darf die Box nicht steigen (außer es war 0)
-        if (quality === 1 && interval > 0) {
-             // Wir begrenzen die Box visuell auf die aktuelle
-             // Inline-Berechnung statt externe Funktion
-             let oldBox = 1;
-             if (interval <= 0) oldBox = 1;
-             else if (interval <= 3) oldBox = 2;
-             else if (interval <= 10) oldBox = 3;
-             else if (interval <= 30) oldBox = 4;
-             else oldBox = 5;
-             visualBox = Math.min(visualBox, oldBox);
-        }
+        // Visual Box Mapping (1-5)
+        let visualBox = 1;
+        if (nextInterval === 0) visualBox = 1;       
+        else if (nextInterval <= 3) visualBox = 2;   
+        else if (nextInterval <= 10) visualBox = 3;  
+        else if (nextInterval <= 30) visualBox = 4;  
+        else visualBox = 5;                          
 
         return { 
             interval: nextInterval,
-            box: visualBox, // Das ist jetzt eine saubere 1-5 Skala
+            box: visualBox,
             ease: nextEase, 
             repetitions: nextRepetitions,
             nextReview: Date.now() + (nextInterval * 24 * 60 * 60 * 1000) 
@@ -4391,90 +4382,91 @@ function App() {
     
     // --- SESSION LOGIC ---
     // --- ERSETZEN: startSmartSession ---
+    /* script.js - Innerhalb von function App() */
+
     const startSmartSession = () => {
         setAiExamples(null);
-        const SESSION_SIZE = 20; // Zielgröße der Session
+        const SESSION_SIZE = 20; 
 
-        // 1. Sicherheitscheck: Ist die Liste geladen?
         if (!vocabulary || vocabulary.length === 0) {
-            alert("Vocabulary list is empty. Please check your settings or reload.");
+            alert("Vocabulary list is empty.");
             return;
         }
 
         const now = Date.now();
 
-        // 2. Wörter kategorisieren
-
-        // A: Bad Words (Box 1 - Muss sofort gelernt werden)
+        // 1. Kategorisieren
         const badWords = vocabulary.filter(w => {
             const p = userProgress[w.rank];
             return p && p.box === 1;
         });
 
-        // B: Due Words (Fällig zur Wiederholung, Box > 1)
         const dueWords = vocabulary.filter(w => {
             const p = userProgress[w.rank];
-            // Ist fällig (Zeit abgelaufen) UND nicht in Box 1
             return p && p.box > 1 && p.nextReview <= now;
         });
 
-        // C: New Words (Noch nie gesehen)
-        // Strategie: Finde den höchsten Rang, den der User schon gesehen hat, und mache dort weiter.
-        // Das verhindert, dass man Wort #1 lernt und dann Wort #5000.
-        
-        // Alle Ranks sammeln, die der User schon hat
         const knownRanks = Object.keys(userProgress).map(Number);
-        
-        // Höchsten bekannten Rank finden (oder 0, wenn neu)
         const maxKnownRank = knownRanks.length > 0 ? Math.max(...knownRanks) : 0;
         
-        // Pool für neue Wörter: Nimm Wörter, die einen höheren Rang haben als das bisher höchste,
-        // aber begrenze es auf die nächsten 50, damit wir nicht zu weit springen.
-        // Falls maxKnownRank 0 ist, fangen wir bei 1 an.
+        // Nimm neue Wörter, die direkt auf die bekannten folgen
         const newWordsPool = vocabulary
-            .filter(w => !userProgress[w.rank]) // Darf noch keinen Eintrag im Progress haben
-            .sort((a, b) => a.rank - b.rank)     // Sortiere aufsteigend (Wichtig!)
-            .slice(0, 50);                       // Nimm nur die nächsten 50 Kandidaten
+            .filter(w => !userProgress[w.rank])
+            .sort((a, b) => a.rank - b.rank)
+            .slice(0, 50);
 
-        
-        // 3. Den Mix erstellen (Ziel: ~50% Fehler/Due, Rest Neu)
-        let sessionList = [];
+        // 2. Mix erstellen
+        let rawList = [];
+        const pickRandom = (arr, count) => [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
 
-        const pickRandom = (arr, count) => {
-            return [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
-        };
+        // Fehler (Prio 1)
+        rawList.push(...pickRandom(badWords, 10));
 
-        // Priorität 1: Fehler (Max 10)
-        sessionList.push(...pickRandom(badWords, 10));
+        // Wiederholungen (Prio 2)
+        const slotsForDue = Math.max(5, 15 - rawList.length);
+        rawList.push(...pickRandom(dueWords, slotsForDue));
 
-        // Priorität 2: Fällige Wiederholungen (Fülle auf bis 15, mind. 5)
-        const slotsForDue = Math.max(5, 15 - sessionList.length);
-        sessionList.push(...pickRandom(dueWords, slotsForDue));
-
-        // Priorität 3: Neue Wörter (Fülle den Rest bis 20 auf)
-        const slotsLeftTotal = SESSION_SIZE - sessionList.length;
-        
+        // Neue Wörter (Prio 3)
+        const slotsLeftTotal = SESSION_SIZE - rawList.length;
         if (slotsLeftTotal > 0 && newWordsPool.length > 0) {
-            // Bei neuen Wörtern nehmen wir die OBERSTEN von der Liste (nicht random),
-            // damit man die Liste logisch von 1 bis 5000 abarbeitet.
-            sessionList.push(...newWordsPool.slice(0, slotsLeftTotal));
+            // Neue Wörter immer strikt nach Reihenfolge (nicht random), damit man "vorankommt"
+            rawList.push(...newWordsPool.slice(0, slotsLeftTotal));
         }
 
-        // Fallback: Wenn immer noch Platz ist (keine neuen Wörter mehr?), nimm mehr Wiederholungen
-        if (sessionList.length < SESSION_SIZE) {
-            const remaining = SESSION_SIZE - sessionList.length;
-            const usedIds = new Set(sessionList.map(w => w.rank));
+        // Fallback falls immer noch Platz
+        if (rawList.length < SESSION_SIZE) {
+            const remaining = SESSION_SIZE - rawList.length;
+            const usedIds = new Set(rawList.map(w => w.rank));
             const moreDue = dueWords.filter(w => !usedIds.has(w.rank));
-            sessionList.push(...pickRandom(moreDue, remaining));
+            rawList.push(...pickRandom(moreDue, remaining));
         }
 
-        if (sessionList.length === 0) {
-            alert("All caught up! Great job. Nothing to learn right now.");
+        if (rawList.length === 0) {
+            alert("All caught up!");
             return;
         }
 
+        // 3. Modus bestimmen (FR->EN vs EN->FR)
+        // Das ist die "Mixed Mode" Logik
+        const sessionListWithMode = rawList.map(word => {
+            const progress = userProgress[word.rank];
+            
+            // Default: Französisch -> Englisch
+            let mode = 'fr->en'; 
+
+            // Bedingung: Nur wenn Box >= 2 (schon mal gelernt), darf es umgedreht werden
+            if (progress && progress.box >= 2) {
+                // 50% Chance, dass es andersrum gefragt wird
+                if (Math.random() > 0.5) {
+                    mode = 'en->fr';
+                }
+            }
+
+            return { ...word, mode: mode };
+        });
+
         // 4. Mischen & Starten
-        const finalQueue = sessionList.sort(() => 0.5 - Math.random());
+        const finalQueue = sessionListWithMode.sort(() => 0.5 - Math.random());
 
         setSessionQueue(finalQueue);
         setCurrentIndex(0);
@@ -4608,14 +4600,13 @@ function App() {
             setGenerating(false);
         }
     };
+
     const handleResult = (quality) => { 
-        // Quality: 0=Again, 1=Hard, 2=Good, 3=Easy
-        // (Für Test-Mode nutzen wir true/false Mapping: false->0, true->2)
-        
         // UI Reset
         setAiExamples(null);
         setLoadingExamples(false);
 
+        // Daily Progress nur zählen, wenn wirklich gelernt (>= 2)
         if (quality >= 2) {
             const newCount = dailyLearnedCount + 1;
             setDailyLearnedCount(newCount);
@@ -4624,45 +4615,43 @@ function App() {
                 count: newCount
             }));
         }
+
         if (view === 'smart-session') {
             const currentWord = sessionQueue[0];
             
-            // 1. Neue Stats berechnen (Anki Algorithmus)
+            // 1. Stats berechnen
             const oldStats = userProgress[currentWord.rank];
             const newStats = calculateAnkiStats(oldStats, quality);
 
-            // 2. State Update (Lokal - sofort sichtbar)
-            setUserProgress(prev => ({
-                ...prev,
-                [currentWord.rank]: newStats
-            }));
-
-            // --- NEU: CLOUD SYNC (Im Hintergrund) ---
+            // 2. Speichern (Lokal + Cloud Sync Logik hier einfügen wie zuvor)
+            setUserProgress(prev => ({ ...prev, [currentWord.rank]: newStats }));
             if (session) {
+                // ... dein Cloud Sync Code ...
                 supabase.from('user_progress').upsert({
                     user_id: session.user.id,
-                    word_rank: currentWord.rank, // Sicherstellen, dass das rank-Feld im Objekt existiert!
+                    word_rank: currentWord.rank,
                     box: newStats.box,
                     next_review: newStats.nextReview,
                     interval: newStats.interval,
                     ease_factor: newStats.ease
-                }, { onConflict: 'user_id, word_rank' }) // Auch hier Constraint angeben
-                .then(({ error }) => {
-                    if (error) console.error("Cloud save failed:", error);
-                });
+                }, { onConflict: 'user_id, word_rank' }).then(() => {});
             }
-            // ----------------------------------------
 
-            // 3. Queue Management
-            if (quality === 0) {
-                // AGAIN: Karte hinten anstellen (bleibt in der Session)
-                const newQueue = [...sessionQueue.slice(1), currentWord];
+            // 3. Queue Logik (FORCED LEARNING)
+            // Wenn 0 (Again) oder 1 (Hard) -> Karte bleibt drin!
+            if (quality <= 1) {
+                // Wir schieben sie nicht ganz ans Ende, sondern mischen sie in die nächsten 3-6 Karten
+                const reInsertIndex = Math.min(sessionQueue.length, 3 + Math.floor(Math.random() * 3));
+                const newQueue = [...sessionQueue];
+                const itemToRequeue = newQueue.shift(); // Nimm sie von vorne weg
+                newQueue.splice(reInsertIndex, 0, itemToRequeue); // Füge sie weiter hinten ein
+
                 setSessionResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
                 setGeneratedSentences([]);
                 setIsFlipped(false);
                 setSessionQueue(newQueue);
             } else {
-                // HARD/GOOD/EASY: Karte ist für heute fertig
+                // Good/Easy -> Raus damit
                 const newQueue = sessionQueue.slice(1);
                 setSessionResults(prev => ({ ...prev, correct: prev.correct + 1 }));
                 
@@ -4675,20 +4664,16 @@ function App() {
                 }
             }
         } else {
-            // --- TEST MODE LOGIC (Bleibt unverändert) ---
-            // Wir speichern Tests (noch) nicht in der Cloud, da sie keine Boxen ändern
-            const isCorrect = quality >= 2; 
-            
+            // Test Session logic...
+            const isCorrect = quality >= 2;
             setSessionResults(prev => ({
                 ...prev,
                 correct: isCorrect ? prev.correct + 1 : prev.correct,
                 wrong: !isCorrect ? prev.wrong + 1 : prev.wrong
             }));
-
             if (currentIndex < activeSession.length - 1) {
                 setTimeout(() => {
                     setCurrentIndex(currentIndex + 1);
-                    setGeneratedSentences([]);
                     setIsFlipped(false);
                 }, 150);
             } else {
@@ -6026,8 +6011,11 @@ function App() {
             </div>
         );
     };
+/* script.js - Innerhalb von function App() */
+
     const renderFlashcard = () => {
         const isSmartMode = view === 'smart-session';
+        // Bei Smart Mode nehmen wir die Queue, sonst die normale Liste
         const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
         
         if (!word) return <div>Loading...</div>;
@@ -6037,11 +6025,30 @@ function App() {
 
         const rawExamples = exampleCache[word.rank] || aiExamples;
         const currentExamples = Array.isArray(rawExamples) ? rawExamples : (rawExamples ? [rawExamples] : null);
-        const hasExamples = currentExamples && currentExamples.length > 0;
+        
+        // --- MIXED MODE LOGIK ---
+        // Standard: FR -> EN
+        let frontText = word.french;
+        let frontLabel = "French";
+        let backText = word.english || word.german;
+        let backLabel = "Meaning";
+        let showAudioFront = true; 
+
+        // Wenn der Modus EN->FR ist (Reverse)
+        if (word.mode === 'en->fr') {
+            frontText = word.english || word.german;
+            frontLabel = "English"; 
+            backText = word.french;
+            backLabel = "French Solution";
+            showAudioFront = false; 
+        }
+        
+        // Aktuelles Intervall holen (um zu wissen, ob die Karte NEU ist)
+        const currentProgress = userProgress[word.rank];
+        const isNewCard = !currentProgress || currentProgress.interval === 0;
 
         return (
-            // CONTAINER: h-[calc(100vh-140px)] sorgt dafür, dass wir den ganzen Screen nutzen (minus Header/Nav)
-            <div className="flex flex-col w-full max-w-xl mx-auto pt-4 h-[calc(100vh-140px)]">
+            <div className="flex flex-col w-full max-w-xl mx-auto pt-4 h-[calc(100vh-40px)]">
                 
                 {/* Header */}
                 <div className="flex items-center justify-between mb-2 pl-1 shrink-0">
@@ -6065,37 +6072,39 @@ function App() {
                 {/* DIE KARTE */}
                 <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl p-6 flex flex-col items-center relative transition-all flex-1 mb-4 overflow-hidden">
                     
-                    {/* --- NEU: REPORT BUTTON OBEN LINKS --- */}
+                    {/* Report Button */}
                     <button 
                         onClick={(e) => { e.stopPropagation(); setReportingWord(word); }}
                         className="absolute top-5 left-5 text-slate-300 hover:text-amber-500 transition-colors z-20"
-                        title="Report error"
                     >
                         <Icon path={<><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></>} size={20} />
                     </button>
-                    {/* ------------------------------------ */}
 
                     <div className="absolute top-5 right-6 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Rank #{word.rank}</div>
                     
-                    {/* Box Badge (Verschoben auf left-14 damit es nicht mit dem Report Button überlappt) */}
-                    {isSmartMode && userProgress[word.rank] && (
+                    {/* Box Badge */}
+                    {isSmartMode && currentProgress && (
                         <div className="absolute top-5 left-14 bg-indigo-50 text-indigo-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1">
-                            <Layers size={10} /> Box {userProgress[word.rank].box}
+                            <Layers size={10} /> Box {currentProgress.box}
+                            {word.mode === 'en->fr' && <span className="ml-1 text-indigo-600">⇄ Rev</span>}
                         </div>
                     )}
 
-                    {/* SCROLLABLE CONTENT AREA (Mitte) */}
+                    {/* CONTENT AREA */}
                     <div className="flex-1 w-full overflow-y-auto flex flex-col items-center justify-center py-4 no-scrollbar">
                         
-                        {/* VORDERSEITE (Französisch) */}
+                        {/* VORDERSEITE */}
                         {!isFlipped ? (
                             <div className="text-center w-full">
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">French</div>
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{frontLabel}</div>
                                 <div className="flex items-center justify-center gap-3 mb-6">
-                                    <h2 className="text-5xl md:text-6xl font-bold text-slate-800 break-words text-center leading-tight">{word.french}</h2>
-                                    <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all shadow-sm shrink-0"><Volume2 size={24} /></button>
+                                    <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words text-center leading-tight">{frontText}</h2>
+                                    {showAudioFront && (
+                                        <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all shadow-sm shrink-0"><Volume2 size={24} /></button>
+                                    )}
                                 </div>
-                                {word.example_fr && (
+                                
+                                {word.mode === 'fr->en' && word.example_fr && (
                                     <div className="bg-slate-50/50 border border-slate-100 p-4 rounded-2xl text-left relative group mx-2 inline-block max-w-full">
                                         <p className="text-slate-600 italic text-lg leading-relaxed pr-8">"{word.example_fr}"</p>
                                         <button onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }} className="absolute right-2 top-2 p-2 text-slate-300 hover:text-indigo-600 hover:bg-white rounded-full transition-colors"><Volume2 size={18} /></button>
@@ -6103,21 +6112,18 @@ function App() {
                                 )}
                             </div>
                         ) : (
-                            /* RÜCKSEITE (Englisch + AI) */
+                            /* RÜCKSEITE */
                             <div className="w-full flex flex-col items-center animate-in fade-in zoom-in-95 duration-300">
-                                {/* Französisches Wort oben (kleiner) */}
                                 <div className="text-center mb-6 w-full opacity-50 scale-90">
-                                    <h2 className="text-2xl font-bold text-slate-800">{word.french}</h2>
+                                    <h2 className="text-2xl font-bold text-slate-800">{frontText}</h2>
                                 </div>
                                 
-                                {/* Übersetzung */}
                                 <div className="text-center mb-6 w-full border-t border-b border-slate-100 py-6">
-                                    <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">Meaning</div>
-                                    <h3 className="text-3xl font-bold text-indigo-900 leading-tight">{word.english || word.german}</h3>
-                                    {word.example_en && <p className="text-indigo-400 italic text-sm mt-2 px-4 text-center">"{word.example_en}"</p>}
+                                    <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">{backLabel}</div>
+                                    <h3 className="text-3xl font-bold text-indigo-900 leading-tight">{backText}</h3>
+                                    {word.example_en && word.mode === 'fr->en' && <p className="text-indigo-400 italic text-sm mt-2 px-4 text-center">"{word.example_en}"</p>}
                                 </div>
 
-                                {/* AI Context Area */}
                                 <div className="w-full px-1">
                                     {!aiExamples && !loadingExamples && (
                                         <button 
@@ -6148,7 +6154,7 @@ function App() {
                         )}
                     </div>
 
-                    {/* BOTTOM ACTIONS AREA (Sticky Bottom) */}
+                    {/* BOTTOM ACTIONS AREA */}
                     <div className="w-full mt-auto pt-6 border-t border-slate-50">
                         {!isFlipped ? (
                             <button onClick={() => setIsFlipped(true)} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-5 rounded-2xl font-bold text-xl shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-3 active:scale-[0.98]">
@@ -6164,9 +6170,24 @@ function App() {
                                         { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100" }
                                     ].map((btn) => {
                                         const stats = calculateAnkiStats(userProgress[word.rank], btn.q);
+                                        
+                                        // --- HIER IST DIE ÄNDERUNG ---
+                                        let intervalLabel;
+                                        if (isNewCard) {
+                                            // Spezielle Labels für neue Karten
+                                            if (btn.q === 0) intervalLabel = "<1m"; // Again
+                                            else if (btn.q === 1) intervalLabel = "10m"; // Hard
+                                            else if (btn.q === 2) intervalLabel = "1d"; // Good
+                                            else intervalLabel = "4d"; // Easy
+                                        } else {
+                                            // Normale Berechnung für Reviews
+                                            intervalLabel = (btn.q <= 1 && stats.interval === 0) ? "Now" : formatInterval(stats.interval);
+                                        }
+                                        // -----------------------------
+
                                         return (
                                             <button key={btn.label} onClick={() => handleResult(btn.q)} className={`${btn.color} border p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-95 h-20 shadow-sm`}>
-                                                <span className="text-[10px] font-bold uppercase tracking-tighter opacity-60 mb-0.5">{formatInterval(stats.interval)}</span>
+                                                <span className="text-[10px] font-bold uppercase tracking-tighter opacity-60 mb-0.5">{intervalLabel}</span>
                                                 <span className="font-bold text-sm leading-none">{btn.label}</span>
                                             </button>
                                         );
