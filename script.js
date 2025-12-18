@@ -6048,7 +6048,7 @@ function App() {
         const isNewCard = !currentProgress || currentProgress.interval === 0;
 
         return (
-            <div className="flex flex-col w-full max-w-xl mx-auto pt-4 h-[calc(100vh-40px)]">
+            <div className="flex flex-col w-full max-w-xl mx-auto pt-4 h-[calc(100vh-60px)]">
                 
                 {/* Header */}
                 <div className="flex items-center justify-between mb-2 pl-1 shrink-0">
