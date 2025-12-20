@@ -2673,6 +2673,7 @@ function App() {
     // ... andere States ...
     const [typedInput, setTypedInput] = useState(''); // Speichert den Text im Eingabefeld
     const [typingResult, setTypingResult] = useState(null); // 'correct' | 'wrong' | null
+    const [showConjugation, setShowConjugation] = useState(false);
     // ...
     // --- SYNC CONFLICT STATE ---
     const [syncConflict, setSyncConflict] = useState(null); // Wenn Daten da sind: { local, cloud }
@@ -3698,7 +3699,8 @@ function App() {
         setIsFlipped(false);       
         
         // FIX: Löscht alte KI-Sätze, damit sie nicht beim nächsten Wort auftauchen!
-        setAiExamples(null);       
+        setAiExamples(null);  
+        setShowConjugation(false);     
 
     }, [currentIndex, view, activeSession]);
 
@@ -6007,8 +6009,6 @@ function App() {
         if (!word) return <div>Loading...</div>;
 
         let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
-        let progressPercent = !isSmartMode ? (currentIndex / activeSession.length) * 100 : 0;
-
         const currentProgress = userProgress[word.rank];
         const isNewCard = !currentProgress || currentProgress.interval === 0;
         const isMasteryCard = currentProgress && currentProgress.box === 5;
@@ -6028,28 +6028,25 @@ function App() {
         return (
             <div className={`flex flex-col w-full max-w-xl mx-auto pt-2 ${SESSION_CONTAINER_HEIGHT}`}>
                 
-                {/* Header / Progress */}
+                {/* Header */}
                 <div className="flex items-center justify-between mb-1 pl-1 shrink-0">
-                    <button onClick={() => { setView('home'); setIsFlipped(false); setTypedInput(''); setTypingResult(null); }} className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
+                    <button onClick={() => setView('home')} className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
                         <X size={24} />
                     </button>
                     <div className="text-sm font-medium text-slate-500 font-mono">{progressText}</div>
                     <div className="w-6"></div> 
                 </div>
                 
-                {/* DIE KARTE */}
+                {/* KARTE */}
                 <div className={`bg-white border-2 rounded-[2.5rem] shadow-xl p-6 flex flex-col relative transition-all flex-1 mb-4 overflow-hidden
                     ${typingResult === 'correct' ? 'border-green-400 shadow-green-100' : typingResult === 'wrong' ? 'border-red-400 shadow-red-100' : 'border-slate-100'}
                 `}>
                     
-                    {/* Badges oben */}
                     <div className="absolute top-6 right-6 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest z-10">#{word.rank}</div>
                     
                     {!isFlipped ? (
-                        /* --- VORDERSEITE (Mittig ausgerichtet) --- */
-                        <div className="flex-1 flex flex-col justify-center items-center w-full text-center space-y-10">
-                            
-                            {/* Hauptwort (Zentriert) */}
+                        /* --- VORDERSEITE (Zentriert) --- */
+                        <div className="flex-1 flex flex-col justify-center items-center w-full text-center space-y-8">
                             <div className="space-y-4">
                                 <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.2em]">French</span>
                                 <h2 className="text-5xl md:text-6xl font-bold text-slate-800 break-words leading-tight">
@@ -6060,19 +6057,16 @@ function App() {
                                 </button>
                             </div>
 
-                            {/* Beispielsätze nur FR (Vorderseite) */}
+                            {/* Französische Sätze (Vorderseite) */}
                             {word.examples && word.examples.length > 0 && (
-                                <div className="space-y-3 px-4 max-w-sm animate-in fade-in slide-in-from-bottom-2 duration-700">
-                                    <div className="h-px w-12 bg-slate-100 mx-auto mb-4"></div>
+                                <div className="space-y-3 px-4 max-w-sm animate-in fade-in duration-700">
+                                    <div className="h-px w-12 bg-slate-100 mx-auto mb-2"></div>
                                     {word.examples.map((ex, i) => (
-                                        <p key={i} className="text-slate-500 italic text-base leading-relaxed">
-                                            "{ex.fr}"
-                                        </p>
+                                        <p key={i} className="text-slate-500 italic text-base leading-relaxed">"{ex.fr}"</p>
                                     ))}
                                 </div>
                             )}
 
-                            {/* Mastery Input Bereich (falls Box 5) */}
                             {isMasteryCard && (
                                 <div className="w-full max-w-xs pt-4">
                                     <input 
@@ -6087,66 +6081,66 @@ function App() {
                             )}
                         </div>
                     ) : (
-                        /* --- RÜCKSEITE (Detaillierte Liste) --- */
-                        <div className="w-full h-full overflow-y-auto no-scrollbar pt-8 pb-4 animate-in fade-in zoom-in-95 duration-300">
+                        /* --- RÜCKSEITE (Detailliert) --- */
+                        <div className="w-full h-full overflow-y-auto no-scrollbar pt-6 pb-4 animate-in fade-in zoom-in-95 duration-300">
                             
-                            {/* Übersetzung & Audio */}
-                            <div className="text-center mb-8">
+                            {/* Übersetzung */}
+                            <div className="text-center mb-6">
                                 <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Meaning</span>
-                                <h3 className="text-3xl md:text-4xl font-bold text-indigo-900 mt-1">{word.english}</h3>
-                                <div className="flex justify-center mt-3">
-                                    <button onClick={() => speak(word.french)} className="p-2 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100">
-                                        <Volume2 size={20} />
-                                    </button>
-                                </div>
+                                <h3 className="text-3xl font-bold text-indigo-900 mt-1">{word.english}</h3>
+                                <button onClick={() => speak(word.french)} className="mt-2 p-2 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100">
+                                    <Volume2 size={20} />
+                                </button>
                             </div>
 
-                            {/* Explanation Box */}
+                            {/* Explanation */}
                             {word.explanation && (
-                                <div className="bg-slate-50 rounded-2xl p-4 mb-6 border border-slate-100">
-                                    <div className="flex items-center gap-2 mb-1 text-slate-400">
-                                        <Info size={14} />
-                                        <span className="text-[10px] font-bold uppercase tracking-wider">Note</span>
-                                    </div>
-                                    <p className="text-slate-700 text-sm">{word.explanation}</p>
+                                <div className="bg-slate-50 rounded-2xl p-4 mb-4 border border-slate-100">
+                                    <p className="text-slate-700 text-sm leading-relaxed"><span className="font-bold text-slate-400 text-[10px] uppercase block mb-1">Grammar Note</span>{word.explanation}</p>
                                 </div>
                             )}
 
-                            {/* KONJUGATION (Falls Verb) */}
-                            {word.type === 'VERB' && word.conjugationTable && (
-                                <div className="bg-indigo-50/40 rounded-3xl p-5 mb-6 border border-indigo-100">
-                                    <div className="flex items-center justify-center gap-2 mb-4">
-                                        <PenTool size={14} className="text-indigo-400" />
-                                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Present Tense</span>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-                                        {Object.entries(word.conjugationTable).map(([pronoun, form]) => (
-                                            <div key={pronoun} className="flex flex-col border-b border-indigo-100/50 pb-1">
-                                                <span className="text-[10px] text-indigo-300 font-bold uppercase">{pronoun}</span>
-                                                <span className="text-indigo-900 font-bold text-sm">{form}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Beispielsätze mit voller Übersetzung (Rückseite) */}
-                            {word.examples && word.examples.length > 0 && (
-                                <div className="space-y-4 pt-2">
-                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Examples in Context</div>
-                                    {word.examples.map((ex, i) => (
-                                        <div key={i} className="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm flex justify-between items-start gap-3">
-                                            <div className="flex-1">
-                                                <p className="text-slate-800 font-bold text-sm mb-1">{ex.fr}</p>
-                                                <p className="text-slate-400 text-xs italic">{ex.en}</p>
-                                            </div>
-                                            <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 hover:text-indigo-600 transition-colors">
-                                                <Volume2 size={16} />
-                                            </button>
+                            {/* KONJUGATION (Einklappbar) */}
+                            {word.conjugationTable && Object.keys(word.conjugationTable).length > 0 && (
+                                <div className="mb-6">
+                                    <button 
+                                        onClick={() => setShowConjugation(!showConjugation)}
+                                        className="w-full py-3 px-4 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-2xl flex items-center justify-between text-indigo-600 transition-all active:scale-[0.98]"
+                                    >
+                                        <div className="flex items-center gap-2 font-bold text-sm">
+                                            <PenTool size={16} /> Show Conjugation
                                         </div>
-                                    ))}
+                                        <ArrowDown size={18} className={`transition-transform duration-300 ${showConjugation ? 'rotate-180' : ''}`} />
+                                    </button>
+                                    
+                                    {showConjugation && (
+                                        <div className="mt-2 bg-white border border-indigo-100 rounded-2xl p-4 grid grid-cols-2 gap-3 animate-in slide-in-from-top-2 duration-300">
+                                            {Object.entries(word.conjugationTable).map(([pronoun, form]) => (
+                                                <div key={pronoun} className="flex flex-col border-b border-indigo-50 pb-1">
+                                                    <span className="text-[9px] text-indigo-300 font-bold uppercase">{pronoun}</span>
+                                                    <span className="text-indigo-900 font-bold text-sm">{form}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             )}
+
+                            {/* Beispiele FR + EN */}
+                            <div className="space-y-4">
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Examples</div>
+                                {word.examples.map((ex, i) => (
+                                    <div key={i} className="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm flex justify-between items-start gap-3">
+                                        <div className="flex-1">
+                                            <p className="text-slate-800 font-bold text-sm mb-1">{ex.fr}</p>
+                                            <p className="text-slate-400 text-xs italic">{ex.en}</p>
+                                        </div>
+                                        <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 hover:text-indigo-600 transition-colors">
+                                            <Volume2 size={16} />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </div>
@@ -6154,21 +6148,21 @@ function App() {
                 {/* Bottom Actions Area */}
                 <div className="w-full mt-auto pt-2 pb-6 shrink-0">
                     {!isFlipped ? (
-                        <button onClick={isMasteryCard ? checkTyping : () => setIsFlipped(true)} disabled={isMasteryCard && !typedInput.trim()} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-5 rounded-[2rem] font-bold text-xl shadow-xl shadow-indigo-100 transition-all active:scale-[0.98] disabled:opacity-50">
+                        <button onClick={isMasteryCard ? checkTyping : () => setIsFlipped(true)} disabled={isMasteryCard && !typedInput.trim()} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-5 rounded-[2rem] font-bold text-xl shadow-xl shadow-indigo-100 transition-all active:scale-[0.98]">
                             {isMasteryCard ? "Check Answer" : "Reveal Answer"}
                         </button>
                     ) : (
-                        <div className="grid grid-cols-4 gap-2 w-full animate-in slide-in-from-bottom-4">
+                        <div className="grid grid-cols-4 gap-2 w-full">
                             {[
-                                { q: 0, label: "Again", color: "bg-red-50 text-red-600 border-red-200 hover:bg-red-100" },
-                                { q: 1, label: "Hard", color: "bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100" },
-                                { q: 2, label: "Good", color: "bg-green-50 text-green-600 border-green-200 hover:bg-green-100" },
-                                { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100" }
+                                { q: 0, label: "Again", color: "bg-red-50 text-red-600 border-red-200" },
+                                { q: 1, label: "Hard", color: "bg-amber-50 text-amber-600 border-amber-200" },
+                                { q: 2, label: "Good", color: "bg-green-50 text-green-600 border-green-200" },
+                                { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200" }
                             ].map((btn) => {
                                 const stats = calculateAnkiStats(userProgress[word.rank], btn.q);
                                 const intervalLabel = isNewCard ? (btn.q === 0 ? "<1m" : btn.q === 1 ? "10m" : btn.q === 2 ? "1d" : "4d") : formatInterval(stats.interval);
                                 return (
-                                    <button key={btn.label} onClick={() => { handleResult(btn.q); setTypedInput(''); setTypingResult(null); }} className={`${btn.color} border-2 p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-95 h-16`}>
+                                    <button key={btn.label} onClick={() => { handleResult(btn.q); }} className={`${btn.color} border-2 p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-95 h-16`}>
                                         <span className="text-[9px] font-bold uppercase tracking-tighter opacity-60 mb-0.5">{intervalLabel}</span>
                                         <span className="font-bold text-xs leading-none">{btn.label}</span>
                                     </button>
