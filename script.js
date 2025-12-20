@@ -6114,13 +6114,43 @@ function App() {
                                     </button>
                                     
                                     {showConjugation && (
-                                        <div className="mt-2 bg-white border border-indigo-100 rounded-2xl p-4 grid grid-cols-2 gap-3 animate-in slide-in-from-top-2 duration-300">
-                                            {Object.entries(word.conjugationTable).map(([pronoun, form]) => (
-                                                <div key={pronoun} className="flex flex-col border-b border-indigo-50 pb-1">
-                                                    <span className="text-[9px] text-indigo-300 font-bold uppercase">{pronoun}</span>
-                                                    <span className="text-indigo-900 font-bold text-sm">{form}</span>
-                                                </div>
-                                            ))}
+                                        <div className="mt-2 bg-white border border-indigo-100 rounded-2xl p-4 flex gap-4 animate-in slide-in-from-top-2 duration-300">
+                                            {/* Linke Spalte: Singular */}
+                                            <div className="flex-1 space-y-3">
+                                                {[
+                                                    { key: 'je', label: 'je' },
+                                                    { key: 'tu', label: 'tu' },
+                                                    { key: 'il/elle', label: 'il/elle', alt: 'il' } // Prüft 'il/elle' oder nur 'il'
+                                                ].map((item) => {
+                                                    // Wir suchen den Wert in der DB, egal ob der Key "il" oder "il/elle" heißt
+                                                    const form = word.conjugationTable[item.key] || word.conjugationTable[item.alt];
+                                                    if (!form) return null;
+                                                    return (
+                                                        <div key={item.key} className="flex flex-col border-b border-indigo-50 pb-1">
+                                                            <span className="text-[9px] text-indigo-300 font-bold uppercase">{item.label}</span>
+                                                            <span className="text-indigo-900 font-bold text-sm">{form}</span>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            {/* Rechte Spalte: Plural */}
+                                            <div className="flex-1 space-y-3">
+                                                {[
+                                                    { key: 'nous', label: 'nous' },
+                                                    { key: 'vous', label: 'vous' },
+                                                    { key: 'ils/elles', label: 'ils/elles', alt: 'ils' } // Prüft 'ils/elles' oder nur 'ils'
+                                                ].map((item) => {
+                                                    const form = word.conjugationTable[item.key] || word.conjugationTable[item.alt];
+                                                    if (!form) return null;
+                                                    return (
+                                                        <div key={item.key} className="flex flex-col border-b border-indigo-50 pb-1">
+                                                            <span className="text-[9px] text-indigo-300 font-bold uppercase">{item.label}</span>
+                                                            <span className="text-indigo-900 font-bold text-sm">{form}</span>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
                                     )}
                                 </div>
