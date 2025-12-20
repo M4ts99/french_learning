@@ -5,7 +5,34 @@ const { useState, useEffect } = React;
 // --- SUPABASE CONFIG ---
 const SUPABASE_URL = 'https://cqokyipxnkohxzswvjrs.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxb2t5aXB4bmtvaHh6c3d2anJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU1MzQyMjYsImV4cCI6MjA4MTExMDIyNn0.BW3Lvdi5Hy4LwJ-IN4b1DcZL4NN3HxUTxA9Jl-1WULQ';
-
+// --- LINGUISTIC HELPERS ---
+const FRENCH_ELISIONS = {
+    "l'": "le / la (the)",
+    "d'": "de (of/from)",
+    "j'": "je (I)",
+    "m'": "me (me)",
+    "t'": "te (you)",
+    "s'": "se (oneself)",
+    "n'": "ne (not)",
+    "c'": "ce (it/this)",
+    "qu'": "que (that/what)",
+    "jusqu'": "jusque (until)",
+    "lorsqu'": "lorsque (when)",
+    "puisqu'": "puisque (since)"
+};
+const formatTense = (rawTense) => {
+    if (!rawTense) return "";
+    // Macht aus "Ind_Präsens_1S" -> "Présent"
+    if (rawTense.includes("Präsens") || rawTense.includes("Présent")) return "Présent";
+    if (rawTense.includes("Imperfekt") || rawTense.includes("Imparfait")) return "Imparfait";
+    if (rawTense.includes("Futur")) return "Futur";
+    if (rawTense.includes("Passé_Simple")) return "Passé Simple";
+    if (rawTense.includes("Subjonctif")) return "Subjonctif";
+    if (rawTense.includes("Conditionnel") || rawTense.includes("Cond")) return "Conditionnel";
+    if (rawTense.includes("Partizip") || rawTense.includes("Participe")) return "Participe";
+    if (rawTense.includes("Imperatif")) return "Impératif";
+    return rawTense; // Fallback
+};
 // Client erstellen (global verfügbar machen)
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -1268,11 +1295,11 @@ const getMergedGrammarData = () => {
     return merged;
 };
 // --- READER COMPONENT (Ausgelagert) ---
+/* script.js - BookReader Component (Komplett) */
 const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setView, setReaderMode, speak, stopAudio, vocabulary, clickedWord, setClickedWord, loadingTranslation, setLoadingTranslation }) => {
     
     // Lokaler State für Audio
     const [isSpeaking, setIsSpeaking] = useState(false);
-    const [aiExamples, setAiExamples] = useState(null);
 
     // Audio Helper
     const toggleAudio = (text) => {
@@ -1286,91 +1313,163 @@ const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setVi
         }
     };
 
-    // Word Click Logic (Vollständige Logik wie im Haupt-Reader)
-    // Word Click Logic (Optimiert: Vocabulary -> Fallback -> AI)
-    /* script.js - Innerhalb von const BookReader */
-
-    // Word Click Logic (Hybrid: Lokal -> Supabase Fallback -> AI)
+    // --- WORD CLICK LOGIC (Hybrid: Local -> DB -> AI) ---
     const handleWordClick = async (e, wordRaw) => {
         e.stopPropagation();
         
-        const textWithoutFormat = wordRaw.replace(/[*_]/g, "");
-        let cleanWord = textWithoutFormat.replace(/^[.,!?;:"«»()]+|[.,!?;:"«»()]+$/g, "").toLowerCase().trim();
+        // 1. Cleaning & Normalisierung
+        let cleanWord = wordRaw.replace(/[*_#]/g, "")
+                               .replace(/[’]/g, "'") 
+                               .replace(/^[.,!?;:"«»()]+|[.,!?;:"«»()]+$/g, "")
+                               .toLowerCase()
+                               .trim();
         
-        // Elisionen-Logik (bleibt gleich)
-        const ELISION_MAP = { "n": {full:"ne",english:"not"}, "j": {full:"je",english:"I"}, "l": {full:"le/la",english:"the"}, "d": {full:"de",english:"of/from"}, "m": {full:"me",english:"me/myself"}, "t": {full:"te",english:"you/yourself"}, "s": {full:"se",english:"oneself"}, "c": {full:"ce",english:"this/it"}, "qu": {full:"que",english:"that/which"} };
-        let elisionInfo = null;
-        const elisionMatch = cleanWord.match(/^(d|l|n|j|m|t|s|c|qu)'(.+)$/);
-        if (elisionMatch) {
-            elisionInfo = { original: cleanWord, elision: ELISION_MAP[elisionMatch[1]], elisionKey: elisionMatch[1] + "'" };
-            cleanWord = elisionMatch[2]; 
-        }
-        
-        if (/^\d+$/.test(cleanWord)) return; // Zahlen ignorieren
+        if (/^\d+$/.test(cleanWord)) return; 
 
-        // --- SCHRITT 1: LOKALE SUCHE (Top 5000) ---
-        // Wir suchen im 'vocabulary' Prop, das von App übergeben wird
-        let found = vocabList.find(v => v.french.toLowerCase() === cleanWord);
+        let searchWord = cleanWord;
+        let prefixInfo = null;
 
-        // Verb-Lookup / Irregular Map / Stemming (Deine existierende Logik hier einfügen/behalten)
-        // ... (Der Code für VERB_LOOKUP und Stemming bleibt hier identisch zum alten Code) ...
-        
-        // Falls stemming nichts findet, versuchen wir es simpel:
-        if (!found) {
-             // Kurzer Check in Irregular Map falls vorhanden
-             if (typeof IRREGULAR_MAP !== 'undefined' && IRREGULAR_MAP[cleanWord]) {
-                 found = vocabList.find(v => v.french.toLowerCase() === IRREGULAR_MAP[cleanWord]);
-             }
-        }
-
-        // --- SCHRITT 2: SUPABASE FALLBACK (Tier 2) ---
-        // Wenn lokal nichts gefunden wurde, fragen wir die 'dictionary_fallback' Tabelle
-        if (!found) {
-            // Kleiner UI-Hinweis dass wir laden
-            setClickedWord({ french: textWithoutFormat, english: "Loading...", rank: "..." });
-            
-            try {
-                const { data, error } = await supabase
-                    .from('dictionary_fallback') // Deine Tier 2 Tabelle
-                    .select('translation_en')
-                    .eq('lemma', cleanWord)
-                    .maybeSingle();
-
-                if (data && data.translation_en) {
-                    found = {
-                        french: cleanWord,
-                        english: data.translation_en,
-                        rank: "Ext", // Markierung für External/Tier 2
-                        isFallback: true
-                    };
+        // 2. ELISION CHECK (l', d', etc.)
+        if (typeof FRENCH_ELISIONS !== 'undefined') {
+            const prefixes = Object.keys(FRENCH_ELISIONS).sort((a, b) => b.length - a.length);
+            for (const prefix of prefixes) {
+                if (searchWord.startsWith(prefix)) {
+                    searchWord = searchWord.substring(prefix.length);
+                    prefixInfo = { prefix, meaning: FRENCH_ELISIONS[prefix] };
+                    break; 
                 }
-            } catch (err) {
-                console.error("Fallback lookup failed", err);
             }
         }
 
-        // --- SCHRITT 3: ERGEBNIS ODER AI ---
-        if (found) {
+        // --- SAMMEL-PHASE (LOKAL) ---
+        // Wir nutzen eine Map, um Duplikate sofort zu vermeiden (Key = ID)
+        const matchesMap = new Map();
+
+        // SCHRITT A: Ist es ein Lemma? (Direkttreffer)
+        // Beispiel: User klickt "être" -> findet Eintrag "être"
+        const lemmaMatches = vocabulary.filter(v => v.french.toLowerCase() === searchWord);
+        lemmaMatches.forEach(m => matchesMap.set(m.id, { ...m, root: null })); // Root null = es ist das Wort selbst
+
+        // SCHRITT B: Ist es in den Mappings versteckt? (Deep Search)
+        // Beispiel: User klickt "des" -> findet Eintrag "de" (weil "des" in mapping_forms von "de" steht)
+        // SCHRITT B: Ist es in den Mappings versteckt? (Deep Search)
+        // Wir suchen Wörter, deren 'conjugation' Array unser Suchwort enthält
+        const mappingMatches = vocabulary.filter(v => {
+            // Sicherheitscheck: Existiert das Array und ist es gefüllt?
+            if (v.conjugation && Array.isArray(v.conjugation) && v.conjugation.length > 0) {
+                // Wir nutzen includes für exakten Match
+                return v.conjugation.includes(searchWord);
+            }
+            return false;
+        });
+
+        mappingMatches.forEach(m => {
+            // Wir fügen es nur hinzu, wenn wir es nicht schon als Hauptwort (Lemma) gefunden haben.
+            // Ausnahme: Wenn das Lemma z.B. "de" ist und wir nach "des" suchen, wollen wir "de" als Root anzeigen.
+            if (!matchesMap.has(m.id)) {
+                matchesMap.set(m.id, { 
+                    ...m, 
+                    // Hier der Trick: Wir zeigen das Originalwort an, verweisen aber auf die Wurzel
+                    french: wordRaw.replace(/[.,!?;:"«»()]/g, ""), 
+                    root: m.french, // Zeige an: "des -> de"
+                    source: 'mapping'
+                });
+            }
+        });
+
+        // --- CLOUD PHASE (Nur wenn lokal wenig gefunden wurde oder zur Ergänzung) ---
+        
+        // Wir machen weiter, wenn wir Ergebnisse haben, aber schauen trotzdem kurz in die Verb-Tabelle,
+        // falls es eine spezifische Zeitform ist, die wir lokal nicht genau bestimmen können.
+        
+        try {
+            // SCHRITT C: Verb Forms in Supabase (für präzise Zeitformen)
+            // Nur machen, wenn wir nicht schon 100% sicher sind (optional: performance optimierung)
+            const { data: verbData } = await supabase
+                .from('verb_forms')
+                .select('lemma, tense')
+                .eq('form', searchWord);
+
+            if (verbData && verbData.length > 0) {
+                verbData.forEach(vData => {
+                    // Wir suchen das Lemma aus der DB in unserer lokalen Liste
+                    const localEntry = vocabulary.find(v => v.french.toLowerCase() === vData.lemma.toLowerCase());
+                    if (localEntry) {
+                        // Wir fügen es hinzu oder updaten es mit der Zeitform-Info
+                        const existing = matchesMap.get(localEntry.id);
+                        const enhancedEntry = {
+                            ...localEntry,
+                            root: localEntry.french,
+                            verbInfo: { tense: formatTense(vData.tense), person: "" },
+                            source: 'conjugation'
+                        };
+                        matchesMap.set(localEntry.id, enhancedEntry);
+                    }
+                });
+            }
+        } catch (err) { console.error(err); }
+
+        // --- FINALE ZUSAMMENSTELLUNG ---
+        let finalResults = Array.from(matchesMap.values());
+
+        // Sortieren: Häufigstes Wort zuerst (Rank 1 vor Rank 5000)
+        finalResults.sort((a, b) => (a.rank || 99999) - (b.rank || 99999));
+
+        // UI Update: Ergebnisse vorhanden?
+        if (finalResults.length > 0) {
             setClickedWord({
-                ...found,
-                french: textWithoutFormat,
-                english: found.english || found.german,
-                // rank, verbInfo, etc. vom gefundenen Objekt übernehmen
-                elisionInfo: elisionInfo
+                ...finalResults[0], // Das beste Ergebnis als Hauptanzeige
+                french: wordRaw.replace(/[.,!?;:"«»()]/g, ""), // Originalanzeige
+                english: finalResults[0].english || finalResults[0].german, // Übersetzung
+                allMatches: finalResults, // Liste für das Popup
+                elisionInfo: prefixInfo,
+                // Root Logik für die Anzeige
+                root: finalResults[0].root || (finalResults[0].french !== searchWord ? finalResults[0].french : null)
             });
         } else {
-            // Letzter Ausweg: AI API (bleibt wie vorher)
-            setLoadingTranslation(true);
-            setClickedWord({ french: textWithoutFormat, english: "Translating...", rank: "AI" });
+            // SCHRITT D: Fallback Dictionary (Wenn lokal und Verb-DB nichts ergaben)
+            setClickedWord({ french: wordRaw.replace(/[.,!?;:"«»()]/g, ""), english: "Checking Dictionary...", rank: "..." });
             
             try {
-                // Hier rufst du deine translate Funktion auf (oder direkt den fetch)
-                const res = await fetch('/api/translate2', { /* ... wie gehabt ... */ body: JSON.stringify({ word: cleanWord }) });
-                // ... Rest der AI Logik ...
+                const { data } = await supabase
+                    .from('dictionary_fallback')
+                    .select('translation_en')
+                    .eq('lemma', searchWord)
+                    .maybeSingle();
+
+                if (data && data.translation_en) {
+                    setClickedWord({
+                        french: searchWord,
+                        english: data.translation_en,
+                        rank: "Ext",
+                        isFallback: true,
+                        elisionInfo: prefixInfo
+                    });
+                    return; 
+                }
+            } catch (err) {}
+
+            // SCHRITT E: AI (Letzte Hoffnung)
+            setLoadingTranslation(true);
+            setClickedWord({ 
+                french: wordRaw.replace(/[.,!?;:"«»()]/g, ""), 
+                english: "Translating...", 
+                rank: "AI", 
+                elisionInfo: prefixInfo 
+            });
+            
+            try {
+                const res = await fetch('/api/translate', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: searchWord, targetLang: 'en' }) 
+                });
+                const data = await res.json();
+                setClickedWord(prev => ({ ...prev, english: data.translation || "Not found", rank: "AI" }));
             } catch (e) {
-                setClickedWord({ french: textWithoutFormat, english: "Not found", rank: "?" });
+                 setClickedWord(prev => ({ ...prev, english: "Not found", rank: "?" }));
             } finally {
-                setLoadingTranslation(false);
+                 setLoadingTranslation(false);
             }
         }
     };
@@ -1392,7 +1491,6 @@ const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setVi
         });
         if (currentPage.trim()) pgs.push(currentPage);
         
-        // Sicherstellen, dass mindestens eine Seite vorhanden ist
         return pgs.length > 0 ? pgs : [''];
     }, [currentStory?.text]);
 
@@ -1475,26 +1573,28 @@ const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setVi
                     <div>
                         <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                             <div className={`text-[10px] font-bold uppercase tracking-wider inline-block px-1.5 rounded ${
-                                clickedWord.rank === "API" ? "bg-yellow-500/20 text-yellow-300" : 
-                                clickedWord.rank === "External" ? "bg-blue-500/20 text-blue-300" :
+                                clickedWord.rank === "AI" ? "bg-yellow-500/20 text-yellow-300" : 
+                                clickedWord.rank === "Ext" ? "bg-blue-500/20 text-blue-300" :
                                 clickedWord.rank === ">10000" ? "bg-orange-500/20 text-orange-300" : 
                                 "text-slate-400"
                             }`}>
-                                {clickedWord.rank === "API" ? <RotateCcw className="animate-spin w-3 h-3"/> : 
-                                 clickedWord.rank === "External" ? "Web Translation" :
+                                {clickedWord.rank === "AI" ? <Sparkles size={12}/> : 
+                                 clickedWord.rank === "Ext" ? "Web" :
                                  clickedWord.rank === ">10000" ? "Rare Word" : 
                                  `Rank #${clickedWord.rank}`}
                             </div>
+                            
                             {/* Verb Tense Badge */}
                             {clickedWord.verbInfo && (
                                 <div className="text-[10px] font-bold uppercase tracking-wider inline-block px-1.5 rounded bg-indigo-500/30 text-indigo-300">
                                     {clickedWord.verbInfo.tense} · {clickedWord.verbInfo.person}
                                 </div>
                             )}
+                            
                             {/* Elision Badge */}
                             {clickedWord.elisionInfo && (
-                                <div className="text-[10px] font-bold uppercase tracking-wider inline-block px-1.5 rounded bg-emerald-500/30 text-emerald-300">
-                                    {clickedWord.elisionInfo.elisionKey} = {clickedWord.elisionInfo.elision.full} ({clickedWord.elisionInfo.elision.english})
+                                <div className="text-[10px] font-bold uppercase tracking-wider inline-block px-1.5 rounded bg-emerald-500/30 text-emerald-300 border border-emerald-500/50">
+                                    {clickedWord.elisionInfo.prefix} = {clickedWord.elisionInfo.meaning}
                                 </div>
                             )}
                         </div>
@@ -2569,7 +2669,11 @@ function App() {
     const [session, setSession] = useState(null);
     // --- ONBOARDING STATE ---
     // Wir prüfen localStorage. Wenn 'true', dann false (kein Wizard). Sonst true.
-    
+    /* script.js - In function App() */
+    // ... andere States ...
+    const [typedInput, setTypedInput] = useState(''); // Speichert den Text im Eingabefeld
+    const [typingResult, setTypingResult] = useState(null); // 'correct' | 'wrong' | null
+    // ...
     // --- SYNC CONFLICT STATE ---
     const [syncConflict, setSyncConflict] = useState(null); // Wenn Daten da sind: { local, cloud }
     // --- ONBOARDING STATE (Mit Fix für Password Reset) ---
@@ -2728,58 +2832,52 @@ function App() {
 
     React.useEffect(() => {
         async function loadVocabulary() {
-            // 1. Prüfen: Haben wir die Daten schon im LocalStorage? (Caching für Speed)
-            const localData = localStorage.getItem('cached_vocabulary');
-            if (localData) {
-                setVocabList(JSON.parse(localData));
-                setIsLoadingVocab(false);
-                // Wir laden trotzdem im Hintergrund neu, um Updates zu kriegen (optional)
-            }
+            console.log("🛠️ DEBUG: Starte Cloud-Sync von Tabelle 'database'...");
+            
+            // Alten Cache löschen
+            localStorage.removeItem('cached_vocabulary');
+            setIsLoadingVocab(true);
 
-            // 2. Aus Supabase laden (Limit erstmal auf 1000 oder 5000 setzen)
-            // 'Database' ist der Name deiner Tabelle (Achte auf Groß/Kleinschreibung!)
-            const { data, error } = await supabase
-                .from('database') 
-                .select('*')
-                .order('frequency', { ascending: true });
+            try {
+                const { data, error } = await supabase
+                    .from('database')
+                    .select('*')
+                    .order('frequency', { ascending: true });
 
-                if (error) {
-                console.error("Fehler beim Laden:", error);
-                } else if (data) {
-                    // Datenstruktur anpassen
+                if (error) throw error;
+
+                if (data) {
+                    console.log("📡 Supabase Response erhalten. Zeilen:", data.length);
+                    
                     const formattedData = data.map(item => {
-                        // Robuste JSON-Prüfung für conjugation/mapping_forms
-                        let parsedConjugation = null;
-                        if (item.mapping_forms) {
-                            if (typeof item.mapping_forms === 'object') {
-                                // Ist schon ein Objekt (Supabase macht das oft automatisch bei JSONB)
-                                parsedConjugation = item.mapping_forms;
-                            } else if (typeof item.mapping_forms === 'string') {
-                                try {
-                                    // Versuchen zu parsen
-                                    parsedConjugation = JSON.parse(item.mapping_forms);
-                                } catch (e) {
-                                    // Fallback: Wenn es kein JSON ist, nimm es als String oder ignorieren
-                                    // console.warn(`Kein valides JSON für Wort ID ${item.id}:`, item.mapping_forms);
-                                    parsedConjugation = item.mapping_forms; 
-                                }
-                            }
-                        }
+                        const safeParse = (val) => {
+                            if (!val) return null;
+                            if (typeof val === 'object') return val;
+                            try { return JSON.parse(val); } catch (e) { return null; }
+                        };
 
                         return {
                             id: item.id,
-                            french: item.lemma,          
+                            rank: item.frequency,
+                            french: item.lemma,
                             english: item.translation_en,
                             type: item.pos_type,
-                            rank: item.frequency,
-                            conjugation: parsedConjugation
+                            explanation: item.explanation,
+                            conjugationTable: safeParse(item.conjugation),
+                            examples: safeParse(item.examples) || [],
+                            // WICHTIG: Das hier braucht der BookReader und die Suche!
+                            conjugation: safeParse(item.mapping_forms) || [] 
                         };
-                });
+                    });
 
-                setVocabList(formattedData);
-                
-                // Speichern für den nächsten Start
-                localStorage.setItem('cached_vocabulary', JSON.stringify(formattedData));
+                    // WICHTIG: Hier muss setVocabulary stehen, nicht setVocabList!
+                    setVocabulary(formattedData); 
+                    
+                    console.log("✨ App nutzt jetzt Live-Daten von Supabase");
+                }
+            } catch (err) {
+                console.error("❌ Kritischer Datenbankfehler:", err.message);
+            } finally {
                 setIsLoadingVocab(false);
             }
         }
@@ -3005,10 +3103,12 @@ function App() {
     // --- SYNC & MERGE LOGIC ---
     // --- NEUE SYNC LOGIK (Konflikt-basiert) ---
     // --- SYNC LOGIC (Optimiert für Realtime) ---
+    /* script.js - Innerhalb von function App() */
+
     const syncWithCloud = async (localData, silent = false) => {
         if (!session) return;
         const userId = session.user.id;
-
+        
         try {
             // 1. Cloud Daten holen
             const { data: cloudData, error } = await supabase
@@ -3025,14 +3125,14 @@ function App() {
             cloudData.forEach(row => {
                 const localEntry = mergedProgress[row.word_rank];
                 
-                // Logik: Nimm immer den "höheren" Fortschritt oder das neuste Datum
-                // Hier vereinfacht: Wenn Cloud-Box höher ist -> Nimm Cloud
+                // Logik: Nimm Cloud-Daten, wenn lokal nichts existiert ODER Cloud weiter fortgeschritten ist (höhere Box)
                 if (!localEntry || row.box > localEntry.box) {
                     mergedProgress[row.word_rank] = {
                         box: row.box,
                         nextReview: parseInt(row.next_review),
                         interval: row.interval,
-                        ease: row.ease_factor
+                        ease: row.ease_factor,
+                        consecutiveWrong: row.consecutive_wrong || 0 // <--- NEU: Cloud -> Lokal
                     };
                 }
             });
@@ -3049,7 +3149,8 @@ function App() {
                         box: prog.box,
                         next_review: prog.nextReview,
                         interval: prog.interval,
-                        ease_factor: prog.ease || 2.5
+                        ease_factor: prog.ease || 2.5,
+                        consecutive_wrong: prog.consecutiveWrong || 0 // <--- NEU: Lokal -> Cloud
                     });
                 }
             });
@@ -3058,30 +3159,24 @@ function App() {
             if (updatesForCloud.length > 0) {
                 if (!silent) console.log(`Uploading ${updatesForCloud.length} updates...`);
                 
-                // WICHTIG: Wir nutzen jetzt explizit den Constraint-Namen oder lassen Supabase raten (was oft besser klappt ohne onConflict Angabe bei sauberem Schema)
                 const { error } = await supabase
                     .from('user_progress')
                     .upsert(updatesForCloud, { onConflict: 'user_id, word_rank' }); 
-                    // ^-- Das muss exakt mit dem UNIQUE Constraint in SQL übereinstimmen
 
                 if (error) {
                     console.error("Sync Upload Error:", error);
-                    // Falls Fehler 400 kommt, ist oft der Constraint falsch benannt.
-                    // Debugging-Hilfe:
-                    // alert("Sync Error: " + error.message); 
                 }
             }
 
             // 4. Lokal anwenden
             setUserProgress(mergedProgress);
-            // Speichern in LocalStorage passiert automatisch durch deinen anderen useEffect
-
+            
             if (!silent) console.log("Sync complete.");
 
         } catch (err) {
             console.error("Sync failed:", err);
             
-            // NEU: Notbremse bei "User nicht gefunden" (Zombie Session)
+            // Notbremse bei "User nicht gefunden"
             if (err.code === '23503' || (err.details && err.details.includes('Key is not present in table "users"'))) {
                 console.warn("User does not exist in DB anymore. Forcing logout.");
                 supabase.auth.signOut();
@@ -3586,28 +3681,7 @@ function App() {
     }, []);
     /* script.js - Innerhalb von function App() */
 
-    useEffect(() => {
-        // 1. Fortschritt laden
-        const savedProgress = localStorage.getItem('vocabApp_progress');
-        if (savedProgress) {
-            setUserProgress(JSON.parse(savedProgress));
-        }
 
-        // 2. Vokabeln laden (HIER IST DIE ÄNDERUNG)
-        // Wir bevorzugen die lokale Datei (window.vocab_List), da diese sofort da ist.
-        if (typeof window.vocab_List !== 'undefined' && Array.isArray(window.vocab_List)) {
-            console.log("📂 Loaded local vocabulary:", window.vocab_List.length, "words");
-            setVocabulary(window.vocab_List);
-        } else {
-            console.warn("⚠️ Warning: 'vocab_List' not found. Make sure vocabulary.js is loaded in index.html");
-            // Fallback: Leeres Array oder API Call, falls gewünscht
-            setVocabulary([]);
-        }
-
-        // Nickname laden
-        const localNick = localStorage.getItem('vocabApp_nickname');
-        if (localNick) setNickname(localNick);
-    }, []);
 
     useEffect(() => {
         localStorage.setItem('vocabApp_progress', JSON.stringify(userProgress));
@@ -4601,12 +4675,16 @@ function App() {
         }
     };
 
+    /* script.js - Innerhalb von function App() */
+
     const handleResult = (quality) => { 
-        // UI Reset
+        // quality: 0=Again, 1=Hard, 2=Good, 3=Easy
+        
         setAiExamples(null);
         setLoadingExamples(false);
-
-        // Daily Progress nur zählen, wenn wirklich gelernt (>= 2)
+        setTypedInput('');
+        setTypingResult(null);
+        // Daily Progress bei Erfolg
         if (quality >= 2) {
             const newCount = dailyLearnedCount + 1;
             setDailyLearnedCount(newCount);
@@ -4618,40 +4696,63 @@ function App() {
 
         if (view === 'smart-session') {
             const currentWord = sessionQueue[0];
+            const oldStats = userProgress[currentWord.rank] || {};
             
-            // 1. Stats berechnen
-            const oldStats = userProgress[currentWord.rank];
+            // 1. Anki Stats berechnen
             const newStats = calculateAnkiStats(oldStats, quality);
 
-            // 2. Speichern (Lokal + Cloud Sync Logik hier einfügen wie zuvor)
+            // --- NEU: INTELLIGENTE FEHLER-REDUKTION ---
+            let currentWrongCount = oldStats.consecutiveWrong || 0;
+            
+            if (quality <= 1) {
+                // Bei Fehlern (Again/Hard): +1
+                // ABER: Wir cappen es bei 3. Mehr als "Kritisch" gibt es nicht.
+                // Das verhindert, dass man es 10x abbauen muss.
+                currentWrongCount = Math.min(currentWrongCount + 1, 3);
+            } else if (quality === 2) {
+                // Bei GOOD: -1
+                // Wer "Gut" klickt, baut langsam ab (muss es evtl. morgen nochmal machen)
+                currentWrongCount = Math.max(0, currentWrongCount - 1);
+            } else {
+                // Bei EASY: -2 (Turbo)
+                // Wer "Easy" klickt, beweist, dass es sitzt.
+                // Von 2 (Critical) -> 0 (Raus) in einem Klick.
+                // Von 3 (Max) -> 1 (Weak) -> 0 (Raus) in zwei Klicks.
+                currentWrongCount = Math.max(0, currentWrongCount - 2);
+            }
+            
+            newStats.consecutiveWrong = currentWrongCount;
+            // ------------------------------------------
+
+            // 2. Speichern
             setUserProgress(prev => ({ ...prev, [currentWord.rank]: newStats }));
+            
             if (session) {
-                // ... dein Cloud Sync Code ...
-                supabase.from('user_progress').upsert({
+                 supabase.from('user_progress').upsert({
                     user_id: session.user.id,
                     word_rank: currentWord.rank,
                     box: newStats.box,
                     next_review: newStats.nextReview,
                     interval: newStats.interval,
-                    ease_factor: newStats.ease
+                    ease_factor: newStats.ease,
+                    consecutive_wrong: newStats.consecutiveWrong
                 }, { onConflict: 'user_id, word_rank' }).then(() => {});
             }
 
-            // 3. Queue Logik (FORCED LEARNING)
-            // Wenn 0 (Again) oder 1 (Hard) -> Karte bleibt drin!
+            // 3. Queue Logik
             if (quality <= 1) {
-                // Wir schieben sie nicht ganz ans Ende, sondern mischen sie in die nächsten 3-6 Karten
+                // Bei Fehler: Karte bleibt in der Rotation (wird weiter hinten eingefügt)
                 const reInsertIndex = Math.min(sessionQueue.length, 3 + Math.floor(Math.random() * 3));
                 const newQueue = [...sessionQueue];
-                const itemToRequeue = newQueue.shift(); // Nimm sie von vorne weg
-                newQueue.splice(reInsertIndex, 0, itemToRequeue); // Füge sie weiter hinten ein
+                const itemToRequeue = newQueue.shift(); 
+                newQueue.splice(reInsertIndex, 0, itemToRequeue); 
 
                 setSessionResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
                 setGeneratedSentences([]);
                 setIsFlipped(false);
                 setSessionQueue(newQueue);
             } else {
-                // Good/Easy -> Raus damit
+                // Bei Good/Easy: Karte ist für DIESE Session erledigt
                 const newQueue = sessionQueue.slice(1);
                 setSessionResults(prev => ({ ...prev, correct: prev.correct + 1 }));
                 
@@ -4664,21 +4765,12 @@ function App() {
                 }
             }
         } else {
-            // Test Session logic...
+            // Test Mode Logic (bleibt gleich)
             const isCorrect = quality >= 2;
-            setSessionResults(prev => ({
-                ...prev,
-                correct: isCorrect ? prev.correct + 1 : prev.correct,
-                wrong: !isCorrect ? prev.wrong + 1 : prev.wrong
-            }));
+            setSessionResults(prev => ({ ...prev, correct: isCorrect ? prev.correct + 1 : prev.correct, wrong: !isCorrect ? prev.wrong + 1 : prev.wrong }));
             if (currentIndex < activeSession.length - 1) {
-                setTimeout(() => {
-                    setCurrentIndex(currentIndex + 1);
-                    setIsFlipped(false);
-                }, 150);
-            } else {
-                setView('results');
-            }
+                setTimeout(() => { setCurrentIndex(currentIndex + 1); setIsFlipped(false); }, 150);
+            } else { setView('results'); }
         }
     };
 
@@ -4703,50 +4795,46 @@ function App() {
     // --- RENDERERS ---
     
 
+    /* script.js - Innerhalb von function App() */
+
     const renderHome = () => {
-        // --- 1. DATEN BERECHNEN (Echtzeit-Stats) ---
+        // --- 1. DATEN BERECHNEN ---
         const safeVocab = vocabulary || [];
         const now = Date.now();
 
-        // Wie viele Wörter sind fällig? (Box > 1 und Zeit abgelaufen)
+        // A: Due Words (Fällig zur Wiederholung, Box > 1)
         const dueCount = safeVocab.filter(w => {
             const p = userProgress[w.rank];
             return p && p.box > 1 && p.nextReview <= now;
         }).length;
 
-        // Wie viele "Problem-Wörter"? (Box 1)
-        const badCount = safeVocab.filter(w => {
+        // B: Weak / Repair Words (HIER WAR DER FEHLER)
+        // Wir nutzen jetzt exakt dieselbe Logik wie im Smart Config Screen und auf der Flashcard:
+        // Ein Wort ist "bad/weak", wenn der Fehlerzähler >= 1 ist.
+        const difficultWords = safeVocab.filter(w => {
             const p = userProgress[w.rank];
-            return p && p.box === 1;
-        }).length;
+            return p && (p.consecutiveWrong >= 1);
+        });
+        const badCount = difficultWords.length;
 
-        // Wie viele heute gelernt? (Einfacher Check: Wurde heute geupdated?)
-        // (Für eine echte "Daily Goal" Anzeige bräuchten wir ein extra Feld, 
-        // aber wir nutzen erstmal die Gesamtanzahl als Motivation)
+        // C: Learned Total
         const learnedTotal = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
 
-        // Begrüßung nach Uhrzeit
+        // Begrüßung
         const hour = currentTime.getHours();
         const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
-
-        // Daily Logic: Witz oder Writer?
-        // Wir prüfen: Hat der User heute schon einen Score im Writer?
-        // (Da wir den Score nur im State haben und nicht persistent speichern für den Reload, 
-        // nehmen wir hier vereinfacht an: Wenn Score da ist -> Witz anzeigen. 
-        // Für echte Persistenz müsste man 'dailyWriterDone' im localStorage speichern.)
         const showReward = dailyWriterScore !== null; 
 
         return (
             <div className="pb-28 pt-8 px-1 space-y-6">
                 
-                {/* --- HEADER (Clean & Personal) --- */}
+                {/* --- HEADER --- */}
                 <div className="flex items-center justify-between px-2">
                     <div>
                         <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-0.5">{new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
                         <h1 className="text-3xl font-extrabold text-slate-800">{greeting}, {nickname}</h1>
                     </div>
                     <div className="flex items-center gap-3">
-                        {/* Streak (Mockup - Logik hast du ja im State 'streak') */}
                         <div className="flex flex-col items-center">
                             <div className="flex items-center gap-1 text-orange-500 font-black text-lg">
                                 <Flame size={20} fill="currentColor" />
@@ -4762,7 +4850,6 @@ function App() {
                     onClick={startSmartSession} 
                     className="w-full relative overflow-hidden bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-xl shadow-slate-200 transition-transform active:scale-[0.98] group text-left"
                 >
-                    {/* Deko Hintergrund */}
                     <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full blur-3xl opacity-20 -mr-16 -mt-16 pointer-events-none"></div>
                     <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500 rounded-full blur-3xl opacity-20 -ml-10 -mb-10 pointer-events-none"></div>
 
@@ -4782,13 +4869,11 @@ function App() {
                         <p className="text-slate-300 text-sm mb-6 max-w-[80%]">
                             {dueCount > 0 
                                 ? `You have ${dueCount} words to review today. Keep your streak alive!` 
-                                : "All caught up! Learn 5 new words to expand your vocabulary."}
+                                : "All caught up! Learn new words to expand your vocabulary."}
                         </p>
 
-                        {/* Mini Progress Bar Visual */}
                         <div className="flex items-center gap-3">
                             <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
-                                {/* Fake Progress basierend auf Level */}
                                 <div className="h-full bg-gradient-to-r from-indigo-400 to-purple-400 w-1/3"></div>
                             </div>
                             <span className="text-xs font-bold text-slate-400">{learnedTotal} learned</span>
@@ -4812,14 +4897,15 @@ function App() {
                         </div>
                     </button>
 
-                    {/* Card 2: Repair (Konditional) */}
+                    {/* Card 2: Repair (KORRIGIERT) */}
                     <button 
                         onClick={() => { 
                             if(badCount > 0) {
-                                setSmartConfig({ ...smartConfig, rangeStart: 1, rangeEnd: 5000, sessionSize: 20 }); 
-                                // Wir rufen hier manuell Repair Mode auf, indem wir sessionQueue setzen (wie in renderSmartConfig logik)
-                                const difficultWords = vocabulary.filter(w => userProgress[w.rank]?.box === 1).slice(0, 20);
-                                setSessionQueue(difficultWords);
+                                // HIER STARTEN WIR JETZT DIE RICHTIGEN WÖRTER
+                                // Wir sortieren nach Schweregrad (consecutiveWrong absteigend)
+                                const sortedWeak = difficultWords.sort((a,b) => userProgress[b.rank].consecutiveWrong - userProgress[a.rank].consecutiveWrong);
+                                
+                                setSessionQueue(sortedWeak.slice(0, 20));
                                 setIsFlipped(false);
                                 setSessionResults({ correct: 0, wrong: 0 });
                                 setView('smart-session');
@@ -4849,161 +4935,44 @@ function App() {
                     </button>
                 </div>
 
-                {/* --- DYNAMIC CONTEXT CARD (Writer or Joke) --- */}
+                {/* --- DAILY REWARD --- */}
+                {/* (Dein bestehender Code für Daily Reward/Challenge bleibt hier unverändert) */}
                 <div>
                     <div className="flex items-center justify-between px-2 mb-2">
                         <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider">
                             {showReward ? "Daily Reward" : "Daily Challenge"}
                         </h3>
-                        {/* Kleiner Link zu den Collections, falls man alte Witze sehen will */}
                         {showReward && (
                             <button onClick={() => setView('collections')} className="text-xs text-indigo-500 font-bold">View Archive</button>
                         )}
                     </div>
 
                     {!showReward ? (
-                        /* STATE A: CHALLENGE (Writer) */
-                        <button 
-                            onClick={() => setView('daily-writer')}
-                            className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 p-[2px] rounded-[2rem] active:scale-[0.98] transition-all"
-                        >
+                        <button onClick={() => setView('daily-writer')} className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 p-[2px] rounded-[2rem] active:scale-[0.98] transition-all">
                             <div className="bg-white rounded-[1.9rem] p-5 flex items-center gap-5 h-full relative overflow-hidden">
                                 <div className="bg-violet-50 text-violet-600 w-14 h-14 rounded-2xl flex items-center justify-center shrink-0">
                                     <PenTool size={24} />
                                 </div>
                                 <div className="text-left relative z-10">
                                     <h3 className="font-bold text-slate-800 text-lg">AI Writer</h3>
-                                    <p className="text-slate-500 text-xs mt-0.5">Write a short text & get AI feedback to unlock your daily joke.</p>
+                                    <p className="text-slate-500 text-xs mt-0.5">Write a short text to unlock your joke.</p>
                                 </div>
                                 <ChevronRight size={20} className="ml-auto text-slate-300" />
                             </div>
                         </button>
                     ) : (
-                        /* STATE B: REWARD (Joke) */
-                        <button 
-                            onClick={() => setShowJokeModal(true)}
-                            className="w-full bg-amber-400 text-white p-6 rounded-[2rem] shadow-lg shadow-amber-100 text-left relative overflow-hidden active:scale-[0.98] transition-all"
-                        >
+                        <button onClick={() => setShowJokeModal(true)} className="w-full bg-amber-400 text-white p-6 rounded-[2rem] shadow-lg shadow-amber-100 text-left relative overflow-hidden active:scale-[0.98] transition-all">
                             <div className="relative z-10 flex items-center gap-4">
-                                <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
-                                    <Smile size={24} className="text-white" />
-                                </div>
+                                <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><Smile size={24} className="text-white" /></div>
                                 <div>
                                     <h3 className="font-bold text-xl">Joke Unlocked!</h3>
                                     <p className="text-white/80 text-xs font-medium mt-1">Tap to have a laugh.</p>
                                 </div>
                             </div>
-                            <div className="absolute -right-6 -bottom-6 opacity-20 rotate-12">
-                                <Smile size={100} />
-                            </div>
+                            <div className="absolute -right-6 -bottom-6 opacity-20 rotate-12"><Smile size={100} /></div>
                         </button>
                     )}
                 </div>
-                {/* --- DAILY LOOT (Unlock System) --- */}
-                <div className="mt-8">
-                    <div className="flex items-center justify-between px-2 mb-3">
-                        <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider">
-                            Daily Loot
-                        </h3>
-                        <span className={`text-xs font-bold ${dailyLearnedCount >= 5 ? 'text-green-500' : 'text-indigo-500'}`}>
-                            {dailyLearnedCount}/5 Words Learned
-                        </span>
-                    </div>
-
-                    {dailyLearnedCount < 5 ? (
-                        /* STATE A: LOCKED */
-                        <div className="w-full bg-slate-100 p-6 rounded-[2rem] border border-slate-200 relative overflow-hidden group">
-                            {/* Pattern Overlay */}
-                            <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                            
-                            <div className="relative z-10 flex items-center gap-5 opacity-50 grayscale group-hover:grayscale-0 transition-all duration-500">
-                                <div className="bg-slate-200 p-4 rounded-2xl">
-                                    <Shield size={28}/> 
-                                </div>
-                                <div>
-                                    <h3 className="font-bold text-slate-800 text-lg">Locked Content</h3>
-                                    <p className="text-slate-500 text-xs font-medium mt-1">Learn {5 - dailyLearnedCount} more words to unlock Joke & Fact.</p>
-                                </div>
-                            </div>
-                            
-                            {/* Progress Bar Background */}
-                            <div className="absolute bottom-0 left-0 h-1.5 bg-indigo-500 transition-all duration-500" style={{ width: `${(dailyLearnedCount / 5) * 100}%` }}></div>
-                        </div>
-                    ) : (
-                        /* STATE B: UNLOCKED (Grid with Joke & Fact) */
-                        <div className="grid gap-3">
-                            {/* Card 1: Joke */}
-                            <button 
-                                onClick={() => setShowJokeModal(true)}
-                                className="w-full bg-amber-400 text-white p-5 rounded-[2rem] shadow-lg shadow-amber-100 text-left relative overflow-hidden active:scale-[0.98] transition-all group"
-                            >
-                                <div className="relative z-10 flex items-center gap-4">
-                                    <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm group-hover:rotate-12 transition-transform">
-                                        <Smile size={24} className="text-white" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-bold text-lg">Daily Joke</h3>
-                                        <p className="text-white/80 text-xs font-medium">Tap to laugh.</p>
-                                    </div>
-                                </div>
-                                <Smile size={80} className="absolute -right-4 -bottom-4 text-white opacity-20 rotate-12"/>
-                            </button>
-
-                            {/* Card 2: Fact */}
-                            <button 
-                                onClick={() => setShowFactModal(true)}
-                                className="w-full bg-sky-500 text-white p-5 rounded-[2rem] shadow-lg shadow-sky-100 text-left relative overflow-hidden active:scale-[0.98] transition-all group"
-                            >
-                                <div className="relative z-10 flex items-center gap-4">
-                                    <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform">
-                                        <Info size={24} className="text-white" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-bold text-lg">Daily Fact</h3>
-                                        <p className="text-white/80 text-xs font-medium">Did you know?</p>
-                                    </div>
-                                </div>
-                                <Info size={80} className="absolute -right-4 -bottom-4 text-white opacity-20 rotate-[-12deg]"/>
-                            </button>
-                        </div>
-                    )}
-                </div>
-                
-                {/* --- MODAL FÜR FAKT --- */}
-                {showFactModal && dailyFact && (
-                    <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4" onClick={() => setShowFactModal(false)}>
-                        <div className="bg-white rounded-[2.5rem] max-w-sm w-full shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200" onClick={e => e.stopPropagation()}>
-                            <div className="bg-sky-500 p-6 text-center relative overflow-hidden">
-                                <div className="text-6xl mb-2 relative z-10">{dailyFact.icon}</div>
-                                <h3 className="text-white font-bold text-2xl relative z-10">Le Saviez-Vous ?</h3>
-                                <div className="absolute top-0 left-0 w-full h-full bg-white opacity-10" style={{backgroundImage: 'radial-gradient(circle, #ffffff 2px, transparent 2.5px)', backgroundSize: '20px 20px'}}></div>
-                            </div>
-                            <div className="p-6">
-                                <p className="text-xl font-bold text-slate-800 text-center mb-4 leading-relaxed">
-                                    "{dailyFact.fr}"
-                                </p>
-                                <div className="bg-slate-50 p-4 rounded-xl text-center border border-slate-100 mb-6">
-                                    <p className="text-slate-500 text-sm italic">{dailyFact.en}</p>
-                                </div>
-                                
-                                <button 
-                                    onClick={() => {
-                                         if (!savedFacts.some(f => f.fr === dailyFact.fr)) {
-                                             const updated = [...savedFacts, dailyFact];
-                                             setSavedFacts(updated);
-                                             localStorage.setItem('vocabApp_savedFacts', JSON.stringify(updated));
-                                         }
-                                         setShowFactModal(false);
-                                    }}
-                                    className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2"
-                                >
-                                    {savedFacts.some(f => f.fr === dailyFact.fr) ? <><Check size={20}/> Saved</> : <><Save size={20}/> Save Fact</>}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
             </div>
         );
     };
@@ -5285,7 +5254,20 @@ function App() {
             </div>
         );
     };
+    
+
     const renderSmartConfig = () => {
+        // Filter-Logik:
+        // Wir zeigen alle Wörter an, die mindestens 1 Fehler-Punkt haben.
+        // Das sorgt für den "Abbau-Effekt" (2 -> 1 -> 0).
+        const difficultWords = vocabulary.filter(w => {
+            const p = userProgress[w.rank];
+            return p && (p.consecutiveWrong >= 1);
+        });
+        
+        const weakCount = difficultWords.length;
+
+        // ... (Rest der Funktion bleibt gleich, setMode etc.) ...
         const setMode = (mode) => {
             if (mode === 'new') {
                 setSmartConfig({ ...smartConfig, rangeStart: 1, rangeEnd: 5000, sessionSize: 15 });
@@ -5294,15 +5276,13 @@ function App() {
                 setSmartConfig({ ...smartConfig, rangeStart: 1, rangeEnd: 5000, sessionSize: 20 });
                 startSmartSession();
             } else if (mode === 'repair') {
-                const difficultWords = vocabulary.filter(w => {
-                    const p = userProgress[w.rank];
-                    return p && (p.box === 1 || (p.wrongCount && p.wrongCount >= 2));
-                });
-                if (difficultWords.length === 0) {
+                if (weakCount === 0) {
                     alert("Good news! You don't have any 'critical' words right now.");
                     return;
                 }
-                setSessionQueue(difficultWords.slice(0, 20));
+                // Wir nehmen die härtesten Brocken zuerst (sortiert nach Fehlern absteigend)
+                const sortedWeak = difficultWords.sort((a,b) => userProgress[b.rank].consecutiveWrong - userProgress[a.rank].consecutiveWrong);
+                setSessionQueue(sortedWeak.slice(0, 20));
                 setIsFlipped(false);
                 setSessionResults({ correct: 0, wrong: 0 });
                 setView('smart-session');
@@ -5345,12 +5325,16 @@ function App() {
                         </div>
                     </button>
 
-                    {/* OPTION 3: REPAIR */}
-                    <button onClick={() => setMode('repair')} className="w-full group bg-red-50 hover:bg-red-100 border border-red-100 p-5 rounded-3xl shadow-sm transition-all text-left active:scale-[0.98] flex items-center gap-4">
-                        <div className="bg-red-200 text-red-600 p-3 rounded-2xl shrink-0"><Activity size={24} /></div>
+                    {/* OPTION 3: REPAIR (Jetzt sichtbar ab 1 Fehler) */}
+                    <button onClick={() => setMode('repair')} className={`w-full group border p-5 rounded-3xl shadow-sm transition-all text-left active:scale-[0.98] flex items-center gap-4 ${weakCount > 0 ? 'bg-red-50 border-red-100 hover:bg-red-100' : 'bg-white border-slate-100 opacity-60'}`}>
+                        <div className={`p-3 rounded-2xl shrink-0 ${weakCount > 0 ? 'bg-red-200 text-red-600' : 'bg-slate-100 text-slate-400'}`}>
+                            <Activity size={24} />
+                        </div>
                         <div>
-                            <div className="font-bold text-red-900 text-lg leading-tight">Difficult Words</div>
-                            <div className="text-red-400 text-xs mt-1">Fix words you got wrong often.</div>
+                            <div className={`font-bold text-lg leading-tight ${weakCount > 0 ? 'text-red-900' : 'text-slate-700'}`}>Difficult Words</div>
+                            <div className={`${weakCount > 0 ? 'text-red-500 font-bold' : 'text-slate-400'} text-xs mt-1`}>
+                                {weakCount > 0 ? `${weakCount} words need repair` : "No critical words found."}
+                            </div>
                         </div>
                     </button>
                 </div>
@@ -6011,11 +5995,13 @@ function App() {
             </div>
         );
     };
-/* script.js - Innerhalb von function App() */
+    
+    /* script.js - Innerhalb von function App() */
 
     const renderFlashcard = () => {
+        const SESSION_CONTAINER_HEIGHT = "h-[calc(100dvh-20px)]"; 
+
         const isSmartMode = view === 'smart-session';
-        // Bei Smart Mode nehmen wir die Queue, sonst die normale Liste
         const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
         
         if (!word) return <div>Loading...</div>;
@@ -6023,185 +6009,173 @@ function App() {
         let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
         let progressPercent = !isSmartMode ? (currentIndex / activeSession.length) * 100 : 0;
 
-        const rawExamples = exampleCache[word.rank] || aiExamples;
-        const currentExamples = Array.isArray(rawExamples) ? rawExamples : (rawExamples ? [rawExamples] : null);
-        
-        // --- MIXED MODE LOGIK ---
-        // Standard: FR -> EN
-        let frontText = word.french;
-        let frontLabel = "French";
-        let backText = word.english || word.german;
-        let backLabel = "Meaning";
-        let showAudioFront = true; 
-
-        // Wenn der Modus EN->FR ist (Reverse)
-        if (word.mode === 'en->fr') {
-            frontText = word.english || word.german;
-            frontLabel = "English"; 
-            backText = word.french;
-            backLabel = "French Solution";
-            showAudioFront = false; 
-        }
-        
-        // Aktuelles Intervall holen (um zu wissen, ob die Karte NEU ist)
         const currentProgress = userProgress[word.rank];
         const isNewCard = !currentProgress || currentProgress.interval === 0;
+        const isMasteryCard = currentProgress && currentProgress.box === 5;
+
+        const checkTyping = () => {
+            const cleanInput = typedInput.trim().toLowerCase();
+            const cleanTarget = word.french.trim().toLowerCase();
+            if (cleanInput === cleanTarget) {
+                setTypingResult('correct');
+                speak("Excellent !");
+            } else {
+                setTypingResult('wrong');
+            }
+            setIsFlipped(true);
+        };
 
         return (
-            <div className="flex flex-col w-full max-w-xl mx-auto pt-4 h-[calc(100vh-60px)]">
+            <div className={`flex flex-col w-full max-w-xl mx-auto pt-2 ${SESSION_CONTAINER_HEIGHT}`}>
                 
-                {/* Header */}
-                <div className="flex items-center justify-between mb-2 pl-1 shrink-0">
-                    <button 
-                        onClick={() => {
-                            setAiExamples(null); 
-                            setExamplesVisible(false);
-                            setIsFlipped(false);
-                            setView('home');
-                        }} 
-                        className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
-                    >
+                {/* Header / Progress */}
+                <div className="flex items-center justify-between mb-1 pl-1 shrink-0">
+                    <button onClick={() => { setView('home'); setIsFlipped(false); setTypedInput(''); setTypingResult(null); }} className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
                         <X size={24} />
                     </button>
                     <div className="text-sm font-medium text-slate-500 font-mono">{progressText}</div>
                     <div className="w-6"></div> 
                 </div>
                 
-                {!isSmartMode && <div className="w-full bg-slate-200 h-2 rounded-full mb-4 shrink-0"><div className="bg-indigo-600 h-2 rounded-full transition-all" style={{ width: `${progressPercent}%` }}></div></div>}
-                
                 {/* DIE KARTE */}
-                <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl p-6 flex flex-col items-center relative transition-all flex-1 mb-4 overflow-hidden">
+                <div className={`bg-white border-2 rounded-[2.5rem] shadow-xl p-6 flex flex-col relative transition-all flex-1 mb-4 overflow-hidden
+                    ${typingResult === 'correct' ? 'border-green-400 shadow-green-100' : typingResult === 'wrong' ? 'border-red-400 shadow-red-100' : 'border-slate-100'}
+                `}>
                     
-                    {/* Report Button */}
-                    <button 
-                        onClick={(e) => { e.stopPropagation(); setReportingWord(word); }}
-                        className="absolute top-5 left-5 text-slate-300 hover:text-amber-500 transition-colors z-20"
-                    >
-                        <Icon path={<><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></>} size={20} />
-                    </button>
+                    {/* Badges oben */}
+                    <div className="absolute top-6 right-6 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest z-10">#{word.rank}</div>
+                    
+                    {!isFlipped ? (
+                        /* --- VORDERSEITE (Mittig ausgerichtet) --- */
+                        <div className="flex-1 flex flex-col justify-center items-center w-full text-center space-y-10">
+                            
+                            {/* Hauptwort (Zentriert) */}
+                            <div className="space-y-4">
+                                <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.2em]">French</span>
+                                <h2 className="text-5xl md:text-6xl font-bold text-slate-800 break-words leading-tight">
+                                    {word.french}
+                                </h2>
+                                <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all">
+                                    <Volume2 size={28} />
+                                </button>
+                            </div>
 
-                    <div className="absolute top-5 right-6 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Rank #{word.rank}</div>
-                    
-                    {/* Box Badge */}
-                    {isSmartMode && currentProgress && (
-                        <div className="absolute top-5 left-14 bg-indigo-50 text-indigo-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1">
-                            <Layers size={10} /> Box {currentProgress.box}
-                            {word.mode === 'en->fr' && <span className="ml-1 text-indigo-600">⇄ Rev</span>}
+                            {/* Beispielsätze nur FR (Vorderseite) */}
+                            {word.examples && word.examples.length > 0 && (
+                                <div className="space-y-3 px-4 max-w-sm animate-in fade-in slide-in-from-bottom-2 duration-700">
+                                    <div className="h-px w-12 bg-slate-100 mx-auto mb-4"></div>
+                                    {word.examples.map((ex, i) => (
+                                        <p key={i} className="text-slate-500 italic text-base leading-relaxed">
+                                            "{ex.fr}"
+                                        </p>
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* Mastery Input Bereich (falls Box 5) */}
+                            {isMasteryCard && (
+                                <div className="w-full max-w-xs pt-4">
+                                    <input 
+                                        id="mastery-input" type="text" value={typedInput}
+                                        onChange={(e) => setTypedInput(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && checkTyping()}
+                                        autoComplete="off" placeholder="Type answer..."
+                                        className="w-full p-4 text-center text-xl font-bold text-slate-800 bg-slate-50 border-2 border-slate-200 rounded-2xl outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                                        autoFocus
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        /* --- RÜCKSEITE (Detaillierte Liste) --- */
+                        <div className="w-full h-full overflow-y-auto no-scrollbar pt-8 pb-4 animate-in fade-in zoom-in-95 duration-300">
+                            
+                            {/* Übersetzung & Audio */}
+                            <div className="text-center mb-8">
+                                <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Meaning</span>
+                                <h3 className="text-3xl md:text-4xl font-bold text-indigo-900 mt-1">{word.english}</h3>
+                                <div className="flex justify-center mt-3">
+                                    <button onClick={() => speak(word.french)} className="p-2 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100">
+                                        <Volume2 size={20} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Explanation Box */}
+                            {word.explanation && (
+                                <div className="bg-slate-50 rounded-2xl p-4 mb-6 border border-slate-100">
+                                    <div className="flex items-center gap-2 mb-1 text-slate-400">
+                                        <Info size={14} />
+                                        <span className="text-[10px] font-bold uppercase tracking-wider">Note</span>
+                                    </div>
+                                    <p className="text-slate-700 text-sm">{word.explanation}</p>
+                                </div>
+                            )}
+
+                            {/* KONJUGATION (Falls Verb) */}
+                            {word.type === 'VERB' && word.conjugationTable && (
+                                <div className="bg-indigo-50/40 rounded-3xl p-5 mb-6 border border-indigo-100">
+                                    <div className="flex items-center justify-center gap-2 mb-4">
+                                        <PenTool size={14} className="text-indigo-400" />
+                                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Present Tense</span>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                                        {Object.entries(word.conjugationTable).map(([pronoun, form]) => (
+                                            <div key={pronoun} className="flex flex-col border-b border-indigo-100/50 pb-1">
+                                                <span className="text-[10px] text-indigo-300 font-bold uppercase">{pronoun}</span>
+                                                <span className="text-indigo-900 font-bold text-sm">{form}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Beispielsätze mit voller Übersetzung (Rückseite) */}
+                            {word.examples && word.examples.length > 0 && (
+                                <div className="space-y-4 pt-2">
+                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Examples in Context</div>
+                                    {word.examples.map((ex, i) => (
+                                        <div key={i} className="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm flex justify-between items-start gap-3">
+                                            <div className="flex-1">
+                                                <p className="text-slate-800 font-bold text-sm mb-1">{ex.fr}</p>
+                                                <p className="text-slate-400 text-xs italic">{ex.en}</p>
+                                            </div>
+                                            <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 hover:text-indigo-600 transition-colors">
+                                                <Volume2 size={16} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     )}
+                </div>
 
-                    {/* CONTENT AREA */}
-                    <div className="flex-1 w-full overflow-y-auto flex flex-col items-center justify-center py-4 no-scrollbar">
-                        
-                        {/* VORDERSEITE */}
-                        {!isFlipped ? (
-                            <div className="text-center w-full">
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{frontLabel}</div>
-                                <div className="flex items-center justify-center gap-3 mb-6">
-                                    <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words text-center leading-tight">{frontText}</h2>
-                                    {showAudioFront && (
-                                        <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all shadow-sm shrink-0"><Volume2 size={24} /></button>
-                                    )}
-                                </div>
-                                
-                                {word.mode === 'fr->en' && word.example_fr && (
-                                    <div className="bg-slate-50/50 border border-slate-100 p-4 rounded-2xl text-left relative group mx-2 inline-block max-w-full">
-                                        <p className="text-slate-600 italic text-lg leading-relaxed pr-8">"{word.example_fr}"</p>
-                                        <button onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }} className="absolute right-2 top-2 p-2 text-slate-300 hover:text-indigo-600 hover:bg-white rounded-full transition-colors"><Volume2 size={18} /></button>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            /* RÜCKSEITE */
-                            <div className="w-full flex flex-col items-center animate-in fade-in zoom-in-95 duration-300">
-                                <div className="text-center mb-6 w-full opacity-50 scale-90">
-                                    <h2 className="text-2xl font-bold text-slate-800">{frontText}</h2>
-                                </div>
-                                
-                                <div className="text-center mb-6 w-full border-t border-b border-slate-100 py-6">
-                                    <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">{backLabel}</div>
-                                    <h3 className="text-3xl font-bold text-indigo-900 leading-tight">{backText}</h3>
-                                    {word.example_en && word.mode === 'fr->en' && <p className="text-indigo-400 italic text-sm mt-2 px-4 text-center">"{word.example_en}"</p>}
-                                </div>
-
-                                <div className="w-full px-1">
-                                    {!aiExamples && !loadingExamples && (
-                                        <button 
-                                            onClick={() => handleGenerateExample(word)} 
-                                            disabled={generating}
-                                            className={`w-full py-3 rounded-xl font-bold text-sm border transition-colors flex items-center justify-center gap-2
-                                            ${generating ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-wait' : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100 shadow-sm'}`}
-                                        >
-                                            {generating ? <><Loader2 className="animate-spin" size={18}/> <span>Writing...</span></> : <><Sparkles size={18}/> <span>Generate Context</span></>}
-                                        </button>
-                                    )}
-                                    {loadingExamples && <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2"><ArrowLeft className="animate-spin" size={16}/> generating...</div>}
-                                    {aiExamples && (
-                                        <div className="space-y-3 text-left w-full">
-                                            {currentExamples.map((ex, idx) => (
-                                                <div key={idx} className="bg-slate-50 border border-slate-100 p-3 rounded-xl shadow-sm relative group">
-                                                    <div className="flex justify-between items-start gap-2">
-                                                        <p className="text-slate-700 font-medium text-sm leading-snug pr-6">{ex.fr}</p>
-                                                        <button onClick={() => speak(ex.fr)} className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors"><Volume2 size={16} /></button>
-                                                    </div>
-                                                    <p className="text-slate-400 text-xs italic mt-1 border-t border-slate-200/50 pt-1">{ex.en}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* BOTTOM ACTIONS AREA */}
-                    <div className="w-full mt-auto pt-6 border-t border-slate-50">
-                        {!isFlipped ? (
-                            <button onClick={() => setIsFlipped(true)} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-5 rounded-2xl font-bold text-xl shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-3 active:scale-[0.98]">
-                                <BookOpen size={24} /> Reveal
-                            </button>
-                        ) : (
-                            isSmartMode ? (
-                                <div className="grid grid-cols-4 gap-2 w-full">
-                                    {[
-                                        { q: 0, label: "Again", color: "bg-red-50 text-red-600 border-red-200 hover:bg-red-100" },
-                                        { q: 1, label: "Hard", color: "bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100" },
-                                        { q: 2, label: "Good", color: "bg-green-50 text-green-600 border-green-200 hover:bg-green-100" },
-                                        { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100" }
-                                    ].map((btn) => {
-                                        const stats = calculateAnkiStats(userProgress[word.rank], btn.q);
-                                        
-                                        // --- HIER IST DIE ÄNDERUNG ---
-                                        let intervalLabel;
-                                        if (isNewCard) {
-                                            // Spezielle Labels für neue Karten
-                                            if (btn.q === 0) intervalLabel = "<1m"; // Again
-                                            else if (btn.q === 1) intervalLabel = "10m"; // Hard
-                                            else if (btn.q === 2) intervalLabel = "1d"; // Good
-                                            else intervalLabel = "4d"; // Easy
-                                        } else {
-                                            // Normale Berechnung für Reviews
-                                            intervalLabel = (btn.q <= 1 && stats.interval === 0) ? "Now" : formatInterval(stats.interval);
-                                        }
-                                        // -----------------------------
-
-                                        return (
-                                            <button key={btn.label} onClick={() => handleResult(btn.q)} className={`${btn.color} border p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-95 h-20 shadow-sm`}>
-                                                <span className="text-[10px] font-bold uppercase tracking-tighter opacity-60 mb-0.5">{intervalLabel}</span>
-                                                <span className="font-bold text-sm leading-none">{btn.label}</span>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-2 gap-4 w-full">
-                                    <button onClick={() => handleResult(0)} className="bg-red-50 text-red-600 border border-red-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-16 active:scale-95 transition-all"><X size={24} /> Missed</button>
-                                    <button onClick={() => handleResult(2)} className="bg-green-50 text-green-600 border border-green-100 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 h-16 active:scale-95 transition-all"><Check size={24} /> Got it</button>
-                                </div>
-                            )
-                        )}
-                    </div>
-
+                {/* Bottom Actions Area */}
+                <div className="w-full mt-auto pt-2 pb-6 shrink-0">
+                    {!isFlipped ? (
+                        <button onClick={isMasteryCard ? checkTyping : () => setIsFlipped(true)} disabled={isMasteryCard && !typedInput.trim()} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-5 rounded-[2rem] font-bold text-xl shadow-xl shadow-indigo-100 transition-all active:scale-[0.98] disabled:opacity-50">
+                            {isMasteryCard ? "Check Answer" : "Reveal Answer"}
+                        </button>
+                    ) : (
+                        <div className="grid grid-cols-4 gap-2 w-full animate-in slide-in-from-bottom-4">
+                            {[
+                                { q: 0, label: "Again", color: "bg-red-50 text-red-600 border-red-200 hover:bg-red-100" },
+                                { q: 1, label: "Hard", color: "bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100" },
+                                { q: 2, label: "Good", color: "bg-green-50 text-green-600 border-green-200 hover:bg-green-100" },
+                                { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100" }
+                            ].map((btn) => {
+                                const stats = calculateAnkiStats(userProgress[word.rank], btn.q);
+                                const intervalLabel = isNewCard ? (btn.q === 0 ? "<1m" : btn.q === 1 ? "10m" : btn.q === 2 ? "1d" : "4d") : formatInterval(stats.interval);
+                                return (
+                                    <button key={btn.label} onClick={() => { handleResult(btn.q); setTypedInput(''); setTypingResult(null); }} className={`${btn.color} border-2 p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-95 h-16`}>
+                                        <span className="text-[9px] font-bold uppercase tracking-tighter opacity-60 mb-0.5">{intervalLabel}</span>
+                                        <span className="font-bold text-xs leading-none">{btn.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             </div>
         );
