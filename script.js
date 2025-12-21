@@ -457,10 +457,11 @@ const ReportModal = ({ word, onClose }) => {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false); // NEU: Status für Erfolg
 
+    /* Im ReportModal die handleSubmit anpassen */
     const handleSubmit = async () => {
         setLoading(true);
         const { error } = await supabase.from('reports').insert({
-            word_id: word.id,
+            word_id: typeof word.rank === 'number' ? word.rank : 99999,
             french_word: word.french,
             error_type: type,
             comment: comment.trim()
@@ -471,11 +472,16 @@ const ReportModal = ({ word, onClose }) => {
         if (error) {
             alert("Error sending report: " + error.message);
         } else {
-            // Erfolg! Button ändern & Modal zeitverzögert schließen
             setSuccess(true);
+            
+            // --- NEU: Wort als gemeldet markieren ---
+            if (window.setReportedWords) {
+                window.setReportedWords(prev => ({...prev, [word.french.toLowerCase()]: true}));
+            }
+
             setTimeout(() => {
                 onClose();
-            }, 1500); // 1.5 Sekunden warten, damit man das "Sent!" sieht
+            }, 1500);
         }
     };
 
@@ -1302,24 +1308,45 @@ const ReaderWordDetail = ({ word, setView, setUserProgress, session, speak, setR
 
     if (!word) return <div className="p-10 text-center">No word selected.</div>;
 
+    /* In ReaderWordDetail die handleQuickSave Funktion ersetzen */
     const handleQuickSave = async (boxLevel) => {
         setSaveStatus(boxLevel); 
-        const isRare = word.rank === 'AI' || word.rank === '>10000' || word.rank === 'WEB' || word.rank === 'ARCHIVE';
-        const rankKey = isRare ? word.french : word.rank;
-        const newEntry = { box: boxLevel, nextReview: boxLevel === 5 ? Date.now() + 30*24*60*60*1000 : Date.now(), interval: boxLevel === 5 ? 30 : 0, ease: 2.5 };
+        
+        // WICHTIG: rankKey muss für seltene Wörter der Text sein, sonst überschreiben sie sich gegenseitig auf Rank 99999
+        const isRare = typeof word.rank !== 'number';
+        const rankKey = isRare ? word.french.toLowerCase() : word.rank;
+        
+        const newEntry = { 
+            box: boxLevel, 
+            nextReview: boxLevel === 5 ? Date.now() + 30*24*60*60*1000 : Date.now(), 
+            interval: boxLevel === 5 ? 30 : 0, 
+            ease: 2.5 
+        };
 
         try {
+            // 1. Lokal (State) - nutzt Text als Key bei seltenen Wörtern
             setUserProgress(prev => ({ ...prev, [rankKey]: newEntry }));
+            
+            // 2. Cloud (DB)
             if (session) {
                 await supabase.from('user_progress').upsert({
                     user_id: session.user.id,
                     word_rank: typeof word.rank === 'number' ? word.rank : 99999,
+                    // Hinweis: Wenn deine DB nur word_rank (Int) hat, speichern alle seltenen Wörter auf 99999.
+                    // Das ist ein DB-Limit. Lokal funktioniert es aber jetzt pro Wort getrennt!
                     box: boxLevel,
                     next_review: newEntry.nextReview
-                });
+                }, { onConflict: 'user_id, word_rank' });
             }
-            setTimeout(() => { setView('reader'); setSaveStatus(null); }, 1000);
-        } catch (err) { console.error(err); setSaveStatus(null); }
+            
+            setTimeout(() => { 
+                setView('reader'); 
+                setSaveStatus(null); 
+            }, 1000);
+        } catch (err) { 
+            console.error(err); 
+            setSaveStatus(null); 
+        }
     };
 
     return (
@@ -1415,13 +1442,11 @@ const BookReader = ({
     currentStory, pageIndex, setPageIndex, saveProgress, setView, 
     setReaderMode, speak, stopAudio, vocabulary, clickedWord, 
     setClickedWord, userProgress, setUserProgress, session,
-    setSessionQueue, setActiveSession, setCurrentIndex, setIsFlipped, 
-    setShowConjugation, setSelectedWord 
+    setSelectedWord, setReportingWord, reportedWords // Neue Props
 }) => {
     
     const [isSpeaking, setIsSpeaking] = useState(false);
 
-    // 1. Pagination Logik (Ganz oben für Stabilität)
     const pages = React.useMemo(() => {
         if (!currentStory?.text) return [''];
         const paragraphs = currentStory.text.split('\n');
@@ -1442,23 +1467,15 @@ const BookReader = ({
         else { setIsSpeaking(true); speak(text.replace(/[*_#]/g, "")); }
     };
 
-    // --- DIE OPTIMIERTE KASKADE ---
     const handleWordClick = async (e, wordRaw) => {
         e.stopPropagation();
-        
         let cleanBase = wordRaw.replace(/[,]/g, "").replace(/[.!?;:"«»()]+/g, "").trim();
         if (!cleanBase || /^\d+$/.test(cleanBase)) return;
-
-        const searchTerms = [cleanBase.toLowerCase()];
-        if (cleanBase.includes('-')) {
-            cleanBase.split('-').forEach(p => { if (p.length > 1) searchTerms.push(p.toLowerCase()); });
-        }
 
         setClickedWord({ cleanFrench: cleanBase, isLoading: true });
 
         try {
             const matchesMap = new Map();
-
             const addMatch = (newMatch) => {
                 const key = newMatch.rank || newMatch.id || newMatch.french;
                 const existing = matchesMap.get(key);
@@ -1467,125 +1484,61 @@ const BookReader = ({
                 }
             };
 
+            const searchTerms = [cleanBase.toLowerCase()];
             for (let term of searchTerms) {
-                const elisionMatch = term.match(/^([ldnmstcjqu]|qu|jusqu|lorsqu|puisqu)['’](.+)/i);
-                let cleanTerm = elisionMatch ? elisionMatch[2] : term;
-
-                vocabulary.filter(v => v.french.toLowerCase() === cleanTerm)
-                    .forEach(m => addMatch({ ...m, source: 'top10k' }));
-
-                vocabulary.filter(v => v.conjugation && v.conjugation.includes(cleanTerm))
-                    .forEach(m => addMatch({ ...m, source: 'top10k_mapping', isConjugated: true }));
-
-                const { data: vfData } = await supabase
-                    .from('verb_forms')
-                    .select('lemma, tense')
-                    .eq('form', cleanTerm);
-
-                if (vfData && vfData.length > 0) {
-                    vfData.forEach(vfEntry => {
-                        const enrichedLemma = vocabulary.find(v => v.french.toLowerCase() === vfEntry.lemma.toLowerCase());
-                        if (enrichedLemma) {
-                            addMatch({ ...enrichedLemma, source: 'db_verb', isConjugated: true, specificTense: vfEntry.tense });
-                        }
-                    });
-                }
+                vocabulary.filter(v => v.french.toLowerCase() === term).forEach(m => addMatch({ ...m, source: 'top10k' }));
+                vocabulary.filter(v => v.conjugation && v.conjugation.includes(term)).forEach(m => addMatch({ ...m, source: 'top10k_mapping', isConjugated: true }));
+                const { data: vfData } = await supabase.from('verb_forms').select('lemma, tense').eq('form', term);
+                if (vfData) vfData.forEach(vf => {
+                    const enriched = vocabulary.find(v => v.french.toLowerCase() === vf.lemma.toLowerCase());
+                    if (enriched) addMatch({ ...enriched, source: 'db_verb', isConjugated: true, specificTense: vf.tense });
+                });
             }
 
             let finalResults = Array.from(matchesMap.values());
 
-            // --- D: dictionary_fallback (Korrektur: lemma & translation_en) ---
             if (finalResults.length === 0) {
-                console.log(`🔍 Suche in dictionary_fallback: ${cleanBase}`);
-                const { data: fbData } = await supabase
-                    .from('dictionary_fallback')
-                    .select('id, lemma, translation_en, pos')
-                    .eq('lemma', cleanBase.toLowerCase());
-
-                if (fbData && fbData.length > 0) {
-                    fbData.forEach(item => {
-                        addMatch({
-                            id: 'fb_' + item.id,
-                            french: item.lemma,
-                            english: item.translation_en,
-                            type: item.pos || 'Word',
-                            rank: '>10000',
-                            source: 'fallback_db'
-                        });
-                    });
-                    finalResults = Array.from(matchesMap.values());
-                }
+                const { data: fbData } = await supabase.from('dictionary_fallback').select('id, lemma, translation_en, pos').eq('lemma', cleanBase.toLowerCase());
+                if (fbData && fbData.length > 0) fbData.forEach(item => addMatch({ id: 'fb_'+item.id, french: item.lemma, english: item.translation_en, type: item.pos, rank: '>10000', source: 'fallback_db' }));
+                finalResults = Array.from(matchesMap.values());
             }
 
-            // --- E: generated_translations ---
             if (finalResults.length === 0) {
-                const { data: genData } = await supabase
-                    .from('generated_translations')
-                    .select('*')
-                    .eq('french', cleanBase.toLowerCase());
-
-                if (genData && genData.length > 0) {
-                    genData.forEach(item => {
-                        addMatch({
-                            id: 'gen_' + item.id,
-                            french: item.french,
-                            english: item.english,
-                            rank: 'ARCHIVE',
-                            source: 'generated_db'
-                        });
-                    });
-                    finalResults = Array.from(matchesMap.values());
-                }
+                const { data: genData } = await supabase.from('generated_translations').select('*').eq('french', cleanBase.toLowerCase());
+                if (genData && genData.length > 0) genData.forEach(item => addMatch({ id: 'gen_'+item.id, french: item.french, english: item.english, rank: 'ARCHIVE', source: 'generated_db' }));
+                finalResults = Array.from(matchesMap.values());
             }
 
-            // --- F: Online API ---
             if (finalResults.length === 0) {
-                try {
-                    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanBase)}&langpair=fr|en`);
-                    const data = await res.json();
-                    
-                    if (data?.responseData?.translatedText) {
-                        const translation = data.responseData.translatedText;
-                        const webResult = { id: 'web_' + Date.now(), french: cleanBase, english: translation, rank: 'WEB', source: 'mymemory' };
-                        finalResults = [webResult];
-
-                        const { data: existing } = await supabase.from('generated_translations').select('id').eq('french', cleanBase.toLowerCase()).maybeSingle();
-                        if (!existing) {
-                            await supabase.from('generated_translations').insert({ french: cleanBase.toLowerCase(), english: translation });
-                        }
-                    }
-                } catch(e) { console.error("❌ API Error"); }
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanBase)}&langpair=fr|en`);
+                const data = await res.json();
+                if (data?.responseData?.translatedText) {
+                    const translation = data.responseData.translatedText;
+                    finalResults = [{ id: 'web_'+Date.now(), french: cleanBase, english: translation, rank: 'WEB', source: 'mymemory' }];
+                    supabase.from('generated_translations').select('id').eq('french', cleanBase.toLowerCase()).maybeSingle().then(({data: ex}) => {
+                        if(!ex) supabase.from('generated_translations').insert({ french: cleanBase.toLowerCase(), english: translation }).then(()=>{});
+                    });
+                }
             }
 
             finalResults.sort((a, b) => {
-                const rankScore = (r) => {
-                    if (typeof r === 'number') return r;
-                    if (r === '>10000') return 15000;
-                    if (r === 'ARCHIVE') return 20000;
-                    if (r === 'WEB') return 30000;
-                    return 99999;
-                };
-                return rankScore(a.rank) - rankScore(b.rank);
+                const score = (r) => typeof r === 'number' ? r : (r === '>10000' ? 15000 : (r === 'ARCHIVE' ? 20000 : 30000));
+                return score(a.rank) - score(b.rank);
             });
 
             setClickedWord({ cleanFrench: cleanBase, allMatches: finalResults, isLoading: false });
-
-        } catch (err) {
-            console.error("Critical error:", err);
-            setClickedWord(null);
-        }
+        } catch (err) { setClickedWord(null); }
     };
+
     return (
         <div className="pt-6 pb-6 px-1 h-screen flex flex-col bg-slate-50">
-            {/* Header */}
             <div className="flex items-center justify-between mb-4 px-4 shrink-0">
                 <button onClick={() => setView('explore')} className="p-2 bg-white rounded-full shadow-sm text-slate-500"><X size={20} /></button>
                 <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Page {pageIndex + 1} / {pages.length}</div>
                 <button onClick={() => toggleAudio(currentPageText)} className={`p-2 rounded-full ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-white text-slate-400'}`}><Volume2 size={20}/></button>
             </div>
 
-            {/* Buch-Seite */}
-            <div className="flex-1 bg-[#fffdf5] border border-slate-200 shadow-inner mx-2 mb-4 p-6 rounded-3xl overflow-y-auto relative no-scrollbar">
+            <div className="flex-1 bg-[#fffdf5] border border-slate-200 shadow-inner mx-2 mb-4 p-6 rounded-3xl overflow-y-auto no-scrollbar">
                 <div className="text-xl md:text-2xl text-slate-800 leading-relaxed font-serif">
                     {currentPageText.split(/(\s+)/).map((segment, i) => {
                         if (segment.match(/\s+/)) return segment;
@@ -1598,18 +1551,36 @@ const BookReader = ({
                 </div>
             </div>
 
-            {/* Steuerung */}
             <div className="shrink-0 px-4 pb-6 flex gap-3">
-                <button onClick={() => setPageIndex(p => Math.max(0, p - 1))} disabled={pageIndex === 0} className="flex-1 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold disabled:opacity-30 active:scale-95 transition-all">Prev</button>
-                <button onClick={() => pageIndex < pages.length - 1 ? setPageIndex(p => p + 1) : setReaderMode('finish')} className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-lg active:scale-95 transition-all">Next</button>
+                <button onClick={() => setPageIndex(p => Math.max(0, p - 1))} disabled={pageIndex === 0} className="flex-1 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold disabled:opacity-30">Prev</button>
+                <button onClick={() => pageIndex < pages.length - 1 ? setPageIndex(p => p + 1) : setReaderMode('finish')} className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-lg">Next</button>
             </div>
 
-            {/* POPUP */}
             {clickedWord && (
-                <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-5 rounded-[2.5rem] shadow-2xl z-[60] border border-white/10 max-h-[70vh] flex flex-col">
+                <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-5 rounded-[2.5rem] shadow-2xl z-[60] border border-white/10 max-h-[70vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300">
                     <div className="flex justify-between items-center mb-4 shrink-0 px-2">
-                        <h4 className="text-2xl font-bold capitalize">{clickedWord.cleanFrench}</h4>
-                        <button onClick={() => setClickedWord(null)} className="p-2 text-slate-400 hover:text-white"><X size={24} /></button>
+                        <div className="flex items-center gap-3">
+                            <h4 className="text-2xl font-bold capitalize">{clickedWord.cleanFrench}</h4>
+                            {/* ROTE WOLKE BEI MELDUNG */}
+                            {reportedWords[clickedWord.cleanFrench.toLowerCase()] && (
+                                <div className="text-red-500 animate-pulse" title="Reported">
+                                    <Icon path={<path d="M17.5 19c.7 0 1.3-.2 1.9-.5 1.2-.7 2.1-2 2.1-3.5 0-1.7-1-3.1-2.4-3.7C18.8 8.1 16.3 6 13.5 6c-2.1 0-4 1.2-5 3C5.1 9.4 3 11.8 3 14.5 3 17 5 19 7.5 19h10z" />} size={20} className="fill-current" />
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-1">
+                            {/* MELDE BUTTON IM POPUP */}
+                            {!clickedWord.isLoading && clickedWord.allMatches?.length > 0 && (
+                                <button 
+                                    onClick={() => setReportingWord(clickedWord.allMatches[0])}
+                                    className="p-2 text-slate-500 hover:text-red-400 transition-colors"
+                                    title="Report error"
+                                >
+                                    <AlertCircle size={20} />
+                                </button>
+                            )}
+                            <button onClick={() => setClickedWord(null)} className="p-2 text-slate-500 hover:text-white"><X size={24} /></button>
+                        </div>
                     </div>
 
                     <div className="space-y-4 overflow-y-auto no-scrollbar pb-2 px-1">
@@ -1621,31 +1592,32 @@ const BookReader = ({
                                     <div className="flex justify-between items-start mb-1">
                                         <span className="text-[10px] font-black text-indigo-400 uppercase tracking-tighter">
                                             {match.specificTense ? formatTense(match.specificTense) : (match.type || 'Word')}
-                                            {match.isConjugated && !match.specificTense ? ' (Verb Form)' : ''}
                                         </span>
-                                        <span className="text-[10px] text-slate-500 font-mono">{match.rank === 'AI' ? '✨ AI' : `#${match.rank}`}</span>
+                                        <span className="text-[10px] text-slate-500 font-mono">
+                                            {match.rank === 'WEB' ? '🌐 WEB' : (match.rank === 'ARCHIVE' ? '☁️ ARCHIVE' : `#${match.rank}`)}
+                                        </span>
                                     </div>
                                     <div className="text-lg font-bold text-white mb-3 leading-tight">{match.english}</div>
                                     
                                     <div className="flex gap-2">
-                                        {match.rank !== 'AI' && (
-                                            <button 
-                                                onClick={() => {
-                                                    setSelectedWord(match); 
-                                                    setView('reader-word-detail');
-                                                    setClickedWord(null);
-                                                }}
-                                                className="flex-1 bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-xl text-xs font-bold active:scale-95 transition-all"
-                                            >Details</button>
-                                        )}
+                                        <button 
+                                            onClick={() => { setSelectedWord(match); setView('reader-word-detail'); setClickedWord(null); }}
+                                            className="flex-1 bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-xl text-xs font-bold active:scale-95 transition-all"
+                                        >Details</button>
                                         <button 
                                             onClick={async () => {
-                                                const rankKey = (match.rank === 'AI' || match.rank === '>10000') ? match.french : match.rank;
+                                                const isRare = typeof match.rank !== 'number';
+                                                const rankKey = isRare ? match.french.toLowerCase() : match.rank;
+                                                
+                                                // Lokal speichern
                                                 setUserProgress(prev => ({ ...prev, [rankKey]: { box: 1, nextReview: Date.now(), interval: 0, ease: 2.5 } }));
+                                                
+                                                // Cloud speichern
                                                 if (session) {
                                                     await supabase.from('user_progress').upsert({
                                                         user_id: session.user.id,
                                                         word_rank: typeof match.rank === 'number' ? match.rank : 99999,
+                                                        word_string: isRare ? match.french.toLowerCase() : null, // Falls du diese Spalte hast
                                                         box: 1, next_review: Date.now()
                                                     });
                                                 }
@@ -2716,6 +2688,8 @@ function App() {
     // Wir prüfen localStorage. Wenn 'true', dann false (kein Wizard). Sonst true.
     /* script.js - In function App() */
     // ... andere States ...
+    /* In App() bei den States hinzufügen */
+    const [reportedWords, setReportedWords] = useState({}); // Speichert { 'wort': true }
     const [typedInput, setTypedInput] = useState(''); // Speichert den Text im Eingabefeld
     const [typingResult, setTypingResult] = useState(null); // 'correct' | 'wrong' | null
     const [showConjugation, setShowConjugation] = useState(false);
@@ -6682,6 +6656,8 @@ function App() {
                             setSelectedWord={setSelectedWord} // <--- WICHTIG
                             setIsFlipped={setIsFlipped}       // <--- WICHTIG
                             setShowConjugation={setShowConjugation} // <--- WICHTIGugation beim Start zu ist
+                            setReportingWord={setReportingWord} // <--- Diese Zeile muss rein!
+                            reportedWords={reportedWords}
                             // ----------------------------------------
                         />
                     );
