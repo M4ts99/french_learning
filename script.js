@@ -1442,7 +1442,7 @@ const BookReader = ({
     currentStory, pageIndex, setPageIndex, saveProgress, setView, 
     setReaderMode, speak, stopAudio, vocabulary, clickedWord, 
     setClickedWord, userProgress, setUserProgress, session,
-    setSelectedWord, setReportingWord, reportedWords // Neue Props
+    setSelectedWord, setReportingWord, reportedWords 
 }) => {
     
     const [isSpeaking, setIsSpeaking] = useState(false);
@@ -1532,12 +1532,14 @@ const BookReader = ({
 
     return (
         <div className="pt-6 pb-6 px-1 h-screen flex flex-col bg-slate-50">
+            {/* Nav Header */}
             <div className="flex items-center justify-between mb-4 px-4 shrink-0">
                 <button onClick={() => setView('explore')} className="p-2 bg-white rounded-full shadow-sm text-slate-500"><X size={20} /></button>
                 <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Page {pageIndex + 1} / {pages.length}</div>
                 <button onClick={() => toggleAudio(currentPageText)} className={`p-2 rounded-full ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-white text-slate-400'}`}><Volume2 size={20}/></button>
             </div>
 
+            {/* Page Content */}
             <div className="flex-1 bg-[#fffdf5] border border-slate-200 shadow-inner mx-2 mb-4 p-6 rounded-3xl overflow-y-auto no-scrollbar">
                 <div className="text-xl md:text-2xl text-slate-800 leading-relaxed font-serif">
                     {currentPageText.split(/(\s+)/).map((segment, i) => {
@@ -1551,35 +1553,36 @@ const BookReader = ({
                 </div>
             </div>
 
+            {/* Controls */}
             <div className="shrink-0 px-4 pb-6 flex gap-3">
                 <button onClick={() => setPageIndex(p => Math.max(0, p - 1))} disabled={pageIndex === 0} className="flex-1 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold disabled:opacity-30">Prev</button>
                 <button onClick={() => pageIndex < pages.length - 1 ? setPageIndex(p => p + 1) : setReaderMode('finish')} className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-lg">Next</button>
             </div>
 
+            {/* Word Detail Popup */}
             {clickedWord && (
                 <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-5 rounded-[2.5rem] shadow-2xl z-[60] border border-white/10 max-h-[70vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300">
                     <div className="flex justify-between items-center mb-4 shrink-0 px-2">
                         <div className="flex items-center gap-3">
                             <h4 className="text-2xl font-bold capitalize">{clickedWord.cleanFrench}</h4>
-                            {/* ROTE WOLKE BEI MELDUNG */}
-                            {reportedWords[clickedWord.cleanFrench.toLowerCase()] && (
+                            {/* ROTE WOLKE */}
+                            {reportedWords && reportedWords[clickedWord.cleanFrench.toLowerCase()] && (
                                 <div className="text-red-500 animate-pulse" title="Reported">
-                                    <Icon path={<path d="M17.5 19c.7 0 1.3-.2 1.9-.5 1.2-.7 2.1-2 2.1-3.5 0-1.7-1-3.1-2.4-3.7C18.8 8.1 16.3 6 13.5 6c-2.1 0-4 1.2-5 3C5.1 9.4 3 11.8 3 14.5 3 17 5 19 7.5 19h10z" />} size={20} className="fill-current" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 19c.7 0 1.3-.2 1.9-.5 1.2-.7 2.1-2 2.1-3.5 0-1.7-1-3.1-2.4-3.7C18.8 8.1 16.3 6 13.5 6c-2.1 0-4 1.2-5 3C5.1 9.4 3 11.8 3 14.5 3 17 5 19 7.5 19h10z" /></svg>
                                 </div>
                             )}
                         </div>
                         <div className="flex items-center gap-1">
-                            {/* MELDE BUTTON IM POPUP */}
+                            {/* MELDE BUTTON */}
                             {!clickedWord.isLoading && clickedWord.allMatches?.length > 0 && (
                                 <button 
                                     onClick={() => setReportingWord(clickedWord.allMatches[0])}
                                     className="p-2 text-slate-500 hover:text-red-400 transition-colors"
-                                    title="Report error"
                                 >
-                                    <AlertCircle size={20} />
+                                    <AlertCircle size={24} />
                                 </button>
                             )}
-                            <button onClick={() => setClickedWord(null)} className="p-2 text-slate-500 hover:text-white"><X size={24} /></button>
+                            <button onClick={() => setClickedWord(null)} className="p-2 text-slate-500 hover:text-white transition-colors"><X size={28} /></button>
                         </div>
                     </div>
 
@@ -1606,24 +1609,28 @@ const BookReader = ({
                                         >Details</button>
                                         <button 
                                             onClick={async () => {
-                                                const isRare = typeof match.rank !== 'number';
-                                                const rankKey = isRare ? match.french.toLowerCase() : match.rank;
+                                                // Logik für seltene Wörter korrigiert
+                                                const isRare = typeof match.rank !== 'number' || match.rank > 10000;
+                                                const rankKey = isRare ? `str:${match.french.toLowerCase()}` : match.rank;
+                                                
+                                                const newProg = { box: 1, nextReview: Date.now(), interval: 0, ease: 2.5 };
                                                 
                                                 // Lokal speichern
-                                                setUserProgress(prev => ({ ...prev, [rankKey]: { box: 1, nextReview: Date.now(), interval: 0, ease: 2.5 } }));
+                                                setUserProgress(prev => ({ ...prev, [rankKey]: newProg }));
                                                 
                                                 // Cloud speichern
                                                 if (session) {
                                                     await supabase.from('user_progress').upsert({
                                                         user_id: session.user.id,
                                                         word_rank: typeof match.rank === 'number' ? match.rank : 99999,
-                                                        word_string: isRare ? match.french.toLowerCase() : null, // Falls du diese Spalte hast
-                                                        box: 1, next_review: Date.now()
-                                                    });
+                                                        word_string: isRare ? match.french.toLowerCase() : null,
+                                                        box: 1, 
+                                                        next_review: Date.now()
+                                                    }, { onConflict: 'user_id, word_rank, word_string' });
                                                 }
                                                 alert(`"${match.french}" added to Training!`);
                                             }}
-                                            className="flex-1 bg-white/10 py-2.5 rounded-xl text-xs font-bold"
+                                            className="flex-1 bg-white/10 py-2.5 rounded-xl text-xs font-bold hover:bg-white/20 active:scale-95 transition-all"
                                         >Save</button>
                                     </div>
                                 </div>
@@ -3895,159 +3902,98 @@ function App() {
         };
     };
     // --- RENDER TOPIC HUB (Die Detailseite für Themen) ---
-    const renderReaderWordDetail = (word) => {
+    const ReaderWordDetail = ({ word, setView, setUserProgress, session, speak, setReportingWord }) => {
+        const [saveStatus, setSaveStatus] = React.useState(null);
+
         if (!word) return <div className="p-10 text-center">No word selected.</div>;
 
-        // Lokaler Status: null | 'saving' | 'training' | 'learned'
-        const [saveStatus, setSaveStatus] = useState(null);
-
         const handleQuickSave = async (boxLevel) => {
-            // Optimistic UI: set the final visual state immediately
-            const targetStatus = boxLevel === 5 ? 'learned' : 'training';
-            setSaveStatus(targetStatus);
+            setSaveStatus(boxLevel); 
             
-            const isRare = word.rank === 'AI' || word.rank === '>10000';
-            const rankKey = isRare ? word.french : word.rank;
-
-            // 1. Progress berechnen
+            // --- LOGIK FÜR EINDEUTIGE KEYS ---
+            const isRare = typeof word.rank !== 'number' || word.rank >= 99999;
+            const cleanFrench = word.french.toLowerCase().trim();
+            const rankKey = isRare ? `str:${cleanFrench}` : word.rank;
+            
             const newEntry = { 
                 box: boxLevel, 
                 nextReview: boxLevel === 5 ? Date.now() + 30*24*60*60*1000 : Date.now(), 
                 interval: boxLevel === 5 ? 30 : 0, 
-                ease: 2.5 
+                ease: 2.5,
+                consecutiveWrong: 0
             };
 
             try {
-                // 2. Lokal speichern (sofort)
+                // 1. Lokal im State speichern
                 setUserProgress(prev => ({ ...prev, [rankKey]: newEntry }));
 
-                // 3. Cloud-Sync (hinterher)
+                // 2. In der Cloud speichern (Supabase)
                 if (session) {
                     await supabase.from('user_progress').upsert({
                         user_id: session.user.id,
-                        word_rank: typeof word.rank === 'number' ? word.rank : 99999,
+                        word_rank: isRare ? 99999 : word.rank,
+                        word_string: isRare ? cleanFrench : null,
                         box: boxLevel,
-                        next_review: newEntry.nextReview
-                    });
+                        next_review: newEntry.nextReview,
+                        interval: newEntry.interval,
+                        ease_factor: 2.5
+                    }, { onConflict: 'user_id, word_rank, word_string' });
                 }
-
-                // 4. Kurze Verzögerung, dann zurück zum Reader und Reset des Status
-                setTimeout(() => {
-                    setView('reader');
-                    setSaveStatus(null);
-                }, 1200);
-
-            } catch (err) {
-                console.error(err);
-                // Revert visual state bei Fehler
-                setSaveStatus(null);
-                alert("Save failed. Check connection.");
+                
+                // Erfolg anzeigen und zurück
+                setTimeout(() => { 
+                    setView('reader'); 
+                    setSaveStatus(null); 
+                }, 1000);
+            } catch (err) { 
+                console.error("Speicherfehler:", err); 
+                setSaveStatus(null); 
+                alert("Fehler beim Speichern!");
             }
         };
 
         return (
-            <div className="flex flex-col w-full max-w-xl mx-auto pt-6 h-[100dvh] bg-slate-50 animate-in fade-in">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4 px-4 shrink-0">
-                    <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500">
+            <div className="flex flex-col w-full max-w-xl mx-auto h-[100dvh] bg-slate-50 overflow-hidden">
+                <div className="flex items-center justify-between p-4 bg-slate-50 shrink-0">
+                    <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500 hover:text-indigo-600">
                         <ArrowLeft size={24} />
                     </button>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Discovery</span>
-                    <div className="w-10"></div>
-                </div>
-
-                {/* Karten-Inhalt */}
-                <div className="flex-1 bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl mx-2 mb-4 p-8 overflow-y-auto no-scrollbar">
-                    {/* Französisches Wort */}
-                    <div className="text-center mb-8">
-                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">French</span>
-                        <h2 className="text-5xl font-bold text-slate-800 my-2">{word.french}</h2>
-                        <button onClick={() => speak(word.french)} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all active:scale-90">
-                            <Volume2 size={24} />
-                        </button>
-                    </div>
-
-                    {/* Übersetzung */}
-                    <div className="text-center mb-8 border-t border-slate-50 pt-6">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meaning</span>
-                        <h3 className="text-3xl font-bold text-indigo-900 mt-1">{word.english}</h3>
-                    </div>
-
-                    {/* Erklärung & Konjugation (Design bleibt wie gehabt) */}
-                    {word.explanation && (
-                        <div className="bg-slate-50 rounded-2xl p-4 mb-6 border border-slate-100 text-sm text-slate-600 italic">
-                            {word.explanation}
-                        </div>
-                    )}
-
-                    {word.pos_type === 'VERB' && word.conjugationTable && (
-                        <div className="bg-indigo-50/50 rounded-3xl p-5 mb-6 border border-indigo-100">
-                            <div className="flex gap-4">
-                                {/* Konjugations-Spalten (je, tu, il... nous, vous, ils...) */}
-                                <div className="flex-1 space-y-2">
-                                    {['je','tu','il/elle'].map(p => (
-                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
-                                            <span className="text-indigo-300">{p}</span>
-                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="flex-1 space-y-2">
-                                    {['nous','vous','ils/elles'].map(p => (
-                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
-                                            <span className="text-indigo-300">{p}</span>
-                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Beispielsätze */}
-                    {word.examples && word.examples.map((ex, i) => (
-                        <div key={i} className="mb-4 p-4 bg-slate-50 rounded-2xl flex justify-between items-start gap-3">
-                            <div className="flex-1">
-                                <p className="text-slate-800 font-bold text-sm">{ex.fr}</p>
-                                <p className="text-slate-400 text-xs italic">{ex.en}</p>
-                            </div>
-                            <button onClick={() => speak(ex.fr)} className="p-1 text-slate-300 hover:text-indigo-600"><Volume2 size={16} /></button>
-                        </div>
-                    ))}
-                </div>
-
-                {/* --- DIE NEUEN FEEDBACK BUTTONS --- */}
-                <div className="p-4 pb-10 flex gap-3 shrink-0">
-                    {/* Button: Add to Training */}
-                    <button 
-                        onClick={() => handleQuickSave(1)}
-                        disabled={saveStatus !== null}
-                        className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center border-2 
-                            ${saveStatus === 1 
-                                ? 'bg-green-400 border-green-400 text-black scale-[0.98]' 
-                                : 'bg-white border-slate-200 text-slate-600 active:scale-95'
-                            }`}
-                    >
-                        {saveStatus === 1 ? <Check size={24} className="text-black" /> : <span>🏋️</span>}
-                        <span className="text-[10px] font-black uppercase mt-1">
-                            {saveStatus === 1 ? 'Added!' : 'Train later'}
-                        </span>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Detail View</span>
+                    <button onClick={() => setReportingWord(word)} className="p-2 bg-white rounded-full shadow-sm text-slate-300 hover:text-red-500">
+                        <AlertCircle size={20} />
                     </button>
+                </div>
 
-                    {/* Button: Mark as Learned */}
-                    <button 
-                        onClick={() => handleQuickSave(5)}
-                        disabled={saveStatus !== null}
-                        className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center shadow-lg border-2
-                            ${saveStatus === 5 
-                                ? 'bg-green-400 border-green-400 text-black scale-[0.98] shadow-none' 
-                                : 'bg-indigo-600 border-indigo-600 text-white active:scale-95 shadow-indigo-100'
-                            }`}
-                    >
-                        {saveStatus === 5 ? <Check size={24} className="text-black" /> : <span>✅</span>}
-                        <span className="text-[10px] font-black uppercase mt-1">
-                            {saveStatus === 5 ? 'Learned!' : 'I know this'}
-                        </span>
+                <div className="flex-1 overflow-y-auto px-2 pb-4 no-scrollbar">
+                    <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl p-8 min-h-full flex flex-col items-center">
+                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">French</span>
+                        <h2 className="text-5xl font-bold text-slate-800 my-4 text-center">{word.french}</h2>
+                        <button onClick={() => speak(word.french)} className="p-4 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 mb-8">
+                            <Volume2 size={32} />
+                        </button>
+
+                        <div className="w-full border-t border-slate-50 pt-6 text-center mb-8">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Translation</span>
+                            <h3 className="text-3xl font-bold text-indigo-900 mt-2">{word.english}</h3>
+                        </div>
+
+                        {word.explanation && (
+                            <div className="bg-slate-50 rounded-2xl p-5 w-full text-sm text-slate-600 italic leading-relaxed border border-slate-100">
+                                {word.explanation}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Die zwei Aktions-Buttons unten */}
+                <div className="p-4 pb-10 bg-slate-50 flex gap-3 shrink-0 border-t border-slate-100">
+                    <button onClick={() => handleQuickSave(1)} disabled={saveStatus !== null} className={`flex-1 py-5 rounded-2xl font-bold transition-all flex flex-col items-center border-2 ${saveStatus === 1 ? 'bg-green-400 border-green-400 text-black' : 'bg-white border-slate-200 text-slate-600'}`}>
+                        {saveStatus === 1 ? <Check size={24} /> : <span className="text-xl">🏋️</span>}
+                        <span className="text-[10px] font-black uppercase mt-1">Train later</span>
+                    </button>
+                    <button onClick={() => handleQuickSave(5)} disabled={saveStatus !== null} className={`flex-1 py-5 rounded-2xl font-bold transition-all flex flex-col items-center border-2 shadow-lg ${saveStatus === 5 ? 'bg-green-400 border-green-400 text-black' : 'bg-indigo-600 border-indigo-600 text-white'}`}>
+                        {saveStatus === 5 ? <Check size={24} /> : <span className="text-xl">✅</span>}
+                        <span className="text-[10px] font-black uppercase mt-1">Learned!</span>
                     </button>
                 </div>
             </div>
@@ -4225,91 +4171,67 @@ function App() {
     // --- ERSETZEN: startSmartSession ---
     /* script.js - Innerhalb von function App() */
 
-    const startSmartSession = () => {
+    const startSmartSession = async () => {
+        console.log("🚀 STARTING SMART SESSION...");
         setAiExamples(null);
         const SESSION_SIZE = 20; 
-
-        if (!vocabulary || vocabulary.length === 0) {
-            alert("Vocabulary list is empty.");
-            return;
-        }
-
         const now = Date.now();
 
-        // 1. Kategorisieren
-        const badWords = vocabulary.filter(w => {
-            const p = userProgress[w.rank];
-            return p && p.box === 1;
-        });
+        const progressKeys = Object.keys(userProgress);
+        const learnedPool = progressKeys.map(key => {
+            const prog = userProgress[key];
+            if (!prog || prog.box === 0) return null;
 
-        const dueWords = vocabulary.filter(w => {
-            const p = userProgress[w.rank];
-            return p && p.box > 1 && p.nextReview <= now;
-        });
+            let wordData = null;
+            if (!isNaN(key)) {
+                wordData = vocabulary.find(v => v.rank === parseInt(key));
+            } else if (key.startsWith('str:')) {
+                const frenchText = key.replace('str:', '');
+                // Wir erstellen ein vorläufiges Objekt
+                wordData = { rank: 99999, french: frenchText, english: "Loading...", isCustom: true, examples: [] };
+            }
 
-        const knownRanks = Object.keys(userProgress).map(Number);
-        const maxKnownRank = knownRanks.length > 0 ? Math.max(...knownRanks) : 0;
-        
-        // Nimm neue Wörter, die direkt auf die bekannten folgen
-        const newWordsPool = vocabulary
+            if (wordData) return { ...wordData, stats: prog, originalKey: key };
+            return null;
+        }).filter(Boolean);
+
+        const badWords = learnedPool.filter(w => (w.stats.consecutiveWrong || 0) >= 1);
+        const dueWords = learnedPool.filter(w => w.stats.box > 1 && w.stats.nextReview <= now);
+        const learningWords = learnedPool.filter(w => w.stats.box === 1 && (w.stats.consecutiveWrong || 0) === 0);
+
+        const newWords = vocabulary
             .filter(w => !userProgress[w.rank])
             .sort((a, b) => a.rank - b.rank)
             .slice(0, 50);
 
-        // 2. Mix erstellen
-        let rawList = [];
         const pickRandom = (arr, count) => [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
+        let finalSelection = [];
+        finalSelection.push(...pickRandom(badWords, 8));
+        finalSelection.push(...pickRandom(dueWords, 6));
+        const slotsForFresh = Math.max(4, 15 - finalSelection.length);
+        finalSelection.push(...pickRandom(learningWords, slotsForFresh));
+        const remaining = SESSION_SIZE - finalSelection.length;
+        if (remaining > 0) finalSelection.push(...newWords.slice(0, remaining));
 
-        // Fehler (Prio 1)
-        rawList.push(...pickRandom(badWords, 10));
+        if (finalSelection.length === 0) return alert("Add words from Library or Reader first!");
 
-        // Wiederholungen (Prio 2)
-        const slotsForDue = Math.max(5, 15 - rawList.length);
-        rawList.push(...pickRandom(dueWords, slotsForDue));
-
-        // Neue Wörter (Prio 3)
-        const slotsLeftTotal = SESSION_SIZE - rawList.length;
-        if (slotsLeftTotal > 0 && newWordsPool.length > 0) {
-            // Neue Wörter immer strikt nach Reihenfolge (nicht random), damit man "vorankommt"
-            rawList.push(...newWordsPool.slice(0, slotsLeftTotal));
-        }
-
-        // Fallback falls immer noch Platz
-        if (rawList.length < SESSION_SIZE) {
-            const remaining = SESSION_SIZE - rawList.length;
-            const usedIds = new Set(rawList.map(w => w.rank));
-            const moreDue = dueWords.filter(w => !usedIds.has(w.rank));
-            rawList.push(...pickRandom(moreDue, remaining));
-        }
-
-        if (rawList.length === 0) {
-            alert("All caught up!");
-            return;
-        }
-
-        // 3. Modus bestimmen (FR->EN vs EN->FR)
-        // Das ist die "Mixed Mode" Logik
-        const sessionListWithMode = rawList.map(word => {
-            const progress = userProgress[word.rank];
+        // --- NEU: ECHTE ÜBERSETZUNGEN FÜR CUSTOM WORDS LADEN ---
+        const customWords = finalSelection.filter(w => w.isCustom);
+        if (customWords.length > 0) {
+            const { data: translations } = await supabase
+                .from('generated_translations')
+                .select('french, english')
+                .in('french', customWords.map(w => w.french.toLowerCase()));
             
-            // Default: Französisch -> Englisch
-            let mode = 'fr->en'; 
-
-            // Bedingung: Nur wenn Box >= 2 (schon mal gelernt), darf es umgedreht werden
-            if (progress && progress.box >= 2) {
-                // 50% Chance, dass es andersrum gefragt wird
-                if (Math.random() > 0.5) {
-                    mode = 'en->fr';
-                }
+            if (translations) {
+                finalSelection = finalSelection.map(word => {
+                    const found = translations.find(t => t.french === word.french.toLowerCase());
+                    return found ? { ...word, english: found.english } : word;
+                });
             }
+        }
 
-            return { ...word, mode: mode };
-        });
-
-        // 4. Mischen & Starten
-        const finalQueue = sessionListWithMode.sort(() => 0.5 - Math.random());
-
-        setSessionQueue(finalQueue);
+        setSessionQueue(finalSelection.sort(() => 0.5 - Math.random()));
         setCurrentIndex(0);
         setIsFlipped(false);
         setSessionResults({ correct: 0, wrong: 0 });
@@ -4451,7 +4373,8 @@ function App() {
         setLoadingExamples(false);
         setTypedInput('');
         setTypingResult(null);
-        // Daily Progress bei Erfolg
+
+        // Daily Progress Counter
         if (quality >= 2) {
             const newCount = dailyLearnedCount + 1;
             setDailyLearnedCount(newCount);
@@ -4463,80 +4386,69 @@ function App() {
 
         if (view === 'smart-session') {
             const currentWord = sessionQueue[0];
-            const oldStats = userProgress[currentWord.rank] || {};
-            
-            // 1. Anki Stats berechnen
+            if (!currentWord) return;
+
+            // Bestimme den Key: Entweder Zahl-Rank oder String-Key
+            const isRare = currentWord.rank === 99999 || typeof currentWord.rank !== 'number';
+            const rankKey = isRare ? `str:${currentWord.french.toLowerCase()}` : currentWord.rank;
+            // Stats berechnen
+            const oldStats = userProgress[rankKey] || { box: 1, interval: 0, ease: 2.5, consecutiveWrong: 0 };
             const newStats = calculateAnkiStats(oldStats, quality);
 
-            // --- NEU: INTELLIGENTE FEHLER-REDUKTION ---
+            // Fehler-Reduktion Logik
             let currentWrongCount = oldStats.consecutiveWrong || 0;
-            
-            if (quality <= 1) {
-                // Bei Fehlern (Again/Hard): +1
-                // ABER: Wir cappen es bei 3. Mehr als "Kritisch" gibt es nicht.
-                // Das verhindert, dass man es 10x abbauen muss.
-                currentWrongCount = Math.min(currentWrongCount + 1, 3);
-            } else if (quality === 2) {
-                // Bei GOOD: -1
-                // Wer "Gut" klickt, baut langsam ab (muss es evtl. morgen nochmal machen)
-                currentWrongCount = Math.max(0, currentWrongCount - 1);
-            } else {
-                // Bei EASY: -2 (Turbo)
-                // Wer "Easy" klickt, beweist, dass es sitzt.
-                // Von 2 (Critical) -> 0 (Raus) in einem Klick.
-                // Von 3 (Max) -> 1 (Weak) -> 0 (Raus) in zwei Klicks.
-                currentWrongCount = Math.max(0, currentWrongCount - 2);
-            }
-            
+            if (quality <= 1) currentWrongCount = Math.min(currentWrongCount + 1, 3);
+            else if (quality === 2) currentWrongCount = Math.max(0, currentWrongCount - 1);
+            else currentWrongCount = Math.max(0, currentWrongCount - 2);
             newStats.consecutiveWrong = currentWrongCount;
-            // ------------------------------------------
 
-            // 2. Speichern
-            setUserProgress(prev => ({ ...prev, [currentWord.rank]: newStats }));
-            
+            // Lokal im State speichern
+            setUserProgress(prev => ({ ...prev, [rankKey]: newStats }));
+
+            // Cloud-Sync
             if (session) {
-                 supabase.from('user_progress').upsert({
+                supabase.from('user_progress').upsert({
                     user_id: session.user.id,
-                    word_rank: currentWord.rank,
+                    word_rank: isRare ? 99999 : currentWord.rank,
+                    word_string: isRare ? currentWord.french.toLowerCase() : null,
                     box: newStats.box,
                     next_review: newStats.nextReview,
                     interval: newStats.interval,
                     ease_factor: newStats.ease,
                     consecutive_wrong: newStats.consecutiveWrong
-                }, { onConflict: 'user_id, word_rank' }).then(() => {});
+                }, { onConflict: 'user_id, word_rank, word_string' }).then(({ error }) => {
+                    if (error) console.error("Cloud Sync Error:", error.message);
+                });
             }
 
-            // 3. Queue Logik
+            // Queue Management
             if (quality <= 1) {
-                // Bei Fehler: Karte bleibt in der Rotation (wird weiter hinten eingefügt)
-                const reInsertIndex = Math.min(sessionQueue.length, 3 + Math.floor(Math.random() * 3));
+                // Wiederholen
                 const newQueue = [...sessionQueue];
-                const itemToRequeue = newQueue.shift(); 
-                newQueue.splice(reInsertIndex, 0, itemToRequeue); 
-
-                setSessionResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
-                setGeneratedSentences([]);
-                setIsFlipped(false);
+                const item = newQueue.shift(); 
+                const index = Math.min(newQueue.length, 3 + Math.floor(Math.random() * 3));
+                newQueue.splice(index, 0, item); 
                 setSessionQueue(newQueue);
+                setSessionResults(prev => ({ ...prev, wrong: prev.wrong + 1 }));
+                setIsFlipped(false);
             } else {
-                // Bei Good/Easy: Karte ist für DIESE Session erledigt
+                // Erledigt für heute
                 const newQueue = sessionQueue.slice(1);
                 setSessionResults(prev => ({ ...prev, correct: prev.correct + 1 }));
-                
-                if (newQueue.length === 0) {
-                    setView('results');
-                } else {
-                    setGeneratedSentences([]);
-                    setIsFlipped(false);
-                    setSessionQueue(newQueue);
-                }
+                if (newQueue.length === 0) setView('results');
+                else { setSessionQueue(newQueue); setIsFlipped(false); }
             }
         } else {
-            // Test Mode Logic (bleibt gleich)
+            // Normaler Test Modus
             const isCorrect = quality >= 2;
-            setSessionResults(prev => ({ ...prev, correct: isCorrect ? prev.correct + 1 : prev.correct, wrong: !isCorrect ? prev.wrong + 1 : prev.wrong }));
+            setSessionResults(prev => ({ 
+                ...prev, 
+                correct: isCorrect ? prev.correct + 1 : prev.correct, 
+                wrong: !isCorrect ? prev.wrong + 1 : prev.wrong 
+            }));
+
             if (currentIndex < activeSession.length - 1) {
-                setTimeout(() => { setCurrentIndex(currentIndex + 1); setIsFlipped(false); }, 150);
+                setTimeout(() => { setCurrentIndex(prev => prev + 1); setIsFlipped(false); }, 150);
             } else { setView('results'); }
         }
     };
@@ -5667,14 +5579,18 @@ function App() {
 
     const renderFlashcard = () => {
         const SESSION_CONTAINER_HEIGHT = "h-[calc(100dvh-20px)]"; 
-
         const isSmartMode = view === 'smart-session';
         const word = isSmartMode ? sessionQueue[0] : activeSession[currentIndex];
         
-        if (!word) return <div>Loading...</div>;
+        if (!word) return <div className="p-10 text-center">Loading...</div>;
 
         let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
-        const currentProgress = userProgress[word.rank];
+        
+        // Key-Bestimmung für die Stats-Anzeige
+        const isRare = word.isCustom || word.rank >= 99999;
+        const rankKey = isRare ? `str:${word.french.toLowerCase()}` : word.rank;
+        const currentProgress = userProgress[rankKey];
+        
         const isNewCard = !currentProgress || currentProgress.interval === 0;
         const isMasteryCard = currentProgress && currentProgress.box === 5;
 
@@ -5692,8 +5608,6 @@ function App() {
 
         return (
             <div className={`flex flex-col w-full max-w-xl mx-auto pt-2 ${SESSION_CONTAINER_HEIGHT}`}>
-                
-                {/* Header */}
                 <div className="flex items-center justify-between mb-1 pl-1 shrink-0">
                     <button onClick={() => setView('home')} className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
                         <X size={24} />
@@ -5702,28 +5616,26 @@ function App() {
                     <div className="w-6"></div> 
                 </div>
                 
-                {/* KARTE */}
                 <div className={`bg-white border-2 rounded-[2.5rem] shadow-xl p-6 flex flex-col relative transition-all flex-1 mb-4 overflow-hidden
                     ${typingResult === 'correct' ? 'border-green-400 shadow-green-100' : typingResult === 'wrong' ? 'border-red-400 shadow-red-100' : 'border-slate-100'}
                 `}>
                     
-                    <div className="absolute top-6 right-6 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest z-10">#{word.rank}</div>
+                    <div className="absolute top-6 right-6 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest z-10">
+                        {word.isCustom ? '⭐ Custom' : `#${word.rank}`}
+                    </div>
                     
                     {!isFlipped ? (
-                        /* --- VORDERSEITE (Zentriert) --- */
                         <div className="flex-1 flex flex-col justify-center items-center w-full text-center space-y-8">
                             <div className="space-y-4">
                                 <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.2em]">French</span>
-                                <h2 className="text-5xl md:text-6xl font-bold text-slate-800 break-words leading-tight">
-                                    {word.french}
-                                </h2>
+                                <h2 className="text-5xl md:text-6xl font-bold text-slate-800 break-words leading-tight">{word.french}</h2>
                                 <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all">
                                     <Volume2 size={28} />
                                 </button>
                             </div>
 
-                            {/* Französische Sätze (Vorderseite) */}
-                            {word.examples && word.examples.length > 0 && (
+                            {/* Sicherer Map-Aufruf mit ?. */}
+                            {word.examples?.length > 0 && (
                                 <div className="space-y-3 px-4 max-w-sm animate-in fade-in duration-700">
                                     <div className="h-px w-12 bg-slate-100 mx-auto mb-2"></div>
                                     {word.examples.map((ex, i) => (
@@ -5735,21 +5647,18 @@ function App() {
                             {isMasteryCard && (
                                 <div className="w-full max-w-xs pt-4">
                                     <input 
-                                        id="mastery-input" type="text" value={typedInput}
+                                        type="text" value={typedInput}
                                         onChange={(e) => setTypedInput(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && checkTyping()}
                                         autoComplete="off" placeholder="Type answer..."
-                                        className="w-full p-4 text-center text-xl font-bold text-slate-800 bg-slate-50 border-2 border-slate-200 rounded-2xl outline-none focus:border-indigo-500 focus:bg-white transition-all"
+                                        className="w-full p-4 text-center text-xl font-bold text-slate-800 bg-slate-50 border-2 border-slate-200 rounded-2xl outline-none focus:border-indigo-500 transition-all"
                                         autoFocus
                                     />
                                 </div>
                             )}
                         </div>
                     ) : (
-                        /* --- RÜCKSEITE (Detailliert) --- */
                         <div className="w-full h-full overflow-y-auto no-scrollbar pt-6 pb-4 animate-in fade-in zoom-in-95 duration-300">
-                            
-                            {/* Übersetzung */}
                             <div className="text-center mb-6">
                                 <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Meaning</span>
                                 <h3 className="text-3xl font-bold text-indigo-900 mt-1">{word.english}</h3>
@@ -5758,92 +5667,34 @@ function App() {
                                 </button>
                             </div>
 
-                            {/* Explanation */}
                             {word.explanation && (
-                                <div className="bg-slate-50 rounded-2xl p-4 mb-4 border border-slate-100">
-                                    <p className="text-slate-700 text-sm leading-relaxed"><span className="font-bold text-slate-400 text-[10px] uppercase block mb-1">Grammar Note</span>{word.explanation}</p>
+                                <div className="bg-slate-50 rounded-2xl p-4 mb-4 border border-slate-100 text-sm text-slate-700 italic">
+                                    {word.explanation}
                                 </div>
                             )}
 
-                            {/* KONJUGATION (Einklappbar) */}
-                            {word.conjugationTable && Object.keys(word.conjugationTable).length > 0 && (
-                                <div className="mb-6">
-                                    <button 
-                                        onClick={() => setShowConjugation(!showConjugation)}
-                                        className="w-full py-3 px-4 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-2xl flex items-center justify-between text-indigo-600 transition-all active:scale-[0.98]"
-                                    >
-                                        <div className="flex items-center gap-2 font-bold text-sm">
-                                            <PenTool size={16} /> Show Conjugation
-                                        </div>
-                                        <ArrowDown size={18} className={`transition-transform duration-300 ${showConjugation ? 'rotate-180' : ''}`} />
-                                    </button>
-                                    
-                                    {showConjugation && (
-                                        <div className="mt-2 bg-white border border-indigo-100 rounded-2xl p-4 flex gap-4 animate-in slide-in-from-top-2 duration-300">
-                                            {/* Linke Spalte: Singular */}
-                                            <div className="flex-1 space-y-3">
-                                                {[
-                                                    { key: 'je', label: 'je' },
-                                                    { key: 'tu', label: 'tu' },
-                                                    { key: 'il/elle', label: 'il/elle', alt: 'il' } // Prüft 'il/elle' oder nur 'il'
-                                                ].map((item) => {
-                                                    // Wir suchen den Wert in der DB, egal ob der Key "il" oder "il/elle" heißt
-                                                    const form = word.conjugationTable[item.key] || word.conjugationTable[item.alt];
-                                                    if (!form) return null;
-                                                    return (
-                                                        <div key={item.key} className="flex flex-col border-b border-indigo-50 pb-1">
-                                                            <span className="text-[9px] text-indigo-300 font-bold uppercase">{item.label}</span>
-                                                            <span className="text-indigo-900 font-bold text-sm">{form}</span>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-
-                                            {/* Rechte Spalte: Plural */}
-                                            <div className="flex-1 space-y-3">
-                                                {[
-                                                    { key: 'nous', label: 'nous' },
-                                                    { key: 'vous', label: 'vous' },
-                                                    { key: 'ils/elles', label: 'ils/elles', alt: 'ils' } // Prüft 'ils/elles' oder nur 'ils'
-                                                ].map((item) => {
-                                                    const form = word.conjugationTable[item.key] || word.conjugationTable[item.alt];
-                                                    if (!form) return null;
-                                                    return (
-                                                        <div key={item.key} className="flex flex-col border-b border-indigo-50 pb-1">
-                                                            <span className="text-[9px] text-indigo-300 font-bold uppercase">{item.label}</span>
-                                                            <span className="text-indigo-900 font-bold text-sm">{form}</span>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Beispiele FR + EN */}
+                            {/* Beispiele Rückseite (Sicherer Map-Aufruf) */}
                             <div className="space-y-4">
-                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Examples</div>
-                                {word.examples.map((ex, i) => (
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Usage</div>
+                                {word.examples?.length > 0 ? word.examples.map((ex, i) => (
                                     <div key={i} className="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm flex justify-between items-start gap-3">
                                         <div className="flex-1">
                                             <p className="text-slate-800 font-bold text-sm mb-1">{ex.fr}</p>
                                             <p className="text-slate-400 text-xs italic">{ex.en}</p>
                                         </div>
-                                        <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 hover:text-indigo-600 transition-colors">
-                                            <Volume2 size={16} />
-                                        </button>
+                                        <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 hover:text-indigo-600"><Volume2 size={16} /></button>
                                     </div>
-                                ))}
+                                )) : (
+                                    <div className="text-xs text-slate-300 italic p-4 border border-dashed rounded-2xl text-center">No examples available</div>
+                                )}
                             </div>
                         </div>
                     )}
                 </div>
 
-                {/* Bottom Actions Area */}
                 <div className="w-full mt-auto pt-2 pb-6 shrink-0">
                     {!isFlipped ? (
-                        <button onClick={isMasteryCard ? checkTyping : () => setIsFlipped(true)} disabled={isMasteryCard && !typedInput.trim()} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-5 rounded-[2rem] font-bold text-xl shadow-xl shadow-indigo-100 transition-all active:scale-[0.98]">
+                        <button onClick={isMasteryCard ? checkTyping : () => setIsFlipped(true)} disabled={isMasteryCard && !typedInput.trim()} className="w-full bg-indigo-600 text-white px-8 py-5 rounded-[2rem] font-bold text-xl shadow-xl active:scale-[0.98]">
                             {isMasteryCard ? "Check Answer" : "Reveal Answer"}
                         </button>
                     ) : (
@@ -5854,10 +5705,10 @@ function App() {
                                 { q: 2, label: "Good", color: "bg-green-50 text-green-600 border-green-200" },
                                 { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200" }
                             ].map((btn) => {
-                                const stats = calculateAnkiStats(userProgress[word.rank], btn.q);
+                                const stats = calculateAnkiStats(currentProgress, btn.q);
                                 const intervalLabel = isNewCard ? (btn.q === 0 ? "<1m" : btn.q === 1 ? "10m" : btn.q === 2 ? "1d" : "4d") : formatInterval(stats.interval);
                                 return (
-                                    <button key={btn.label} onClick={() => { handleResult(btn.q); }} className={`${btn.color} border-2 p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-95 h-16`}>
+                                    <button key={btn.label} onClick={() => handleResult(btn.q)} className={`${btn.color} border-2 p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-95 h-16`}>
                                         <span className="text-[9px] font-bold uppercase tracking-tighter opacity-60 mb-0.5">{intervalLabel}</span>
                                         <span className="font-bold text-xs leading-none">{btn.label}</span>
                                     </button>
@@ -6520,105 +6371,63 @@ function App() {
     
     // Umbenannt von renderLearnedSection zu renderLibrary für Klarheit
     const renderLibrary = () => {
-        // HIER KEIN useEffect MEHR! (Der Scroll-Listener ist schon in App definiert)
-        
-        // Funktion zum Hochscrollen
-        const scrollToTop = () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
+        // 1. Erstelle die Liste aus den Fortschritts-Keys
+        const learnedList = Object.keys(userProgress).map(key => {
+            const prog = userProgress[key];
+            if (!prog || prog.box === 0) return null;
 
-        // Funktion zum Ändern der Sortierung
-        const toggleSort = (type) => {
-            if (sortType === type) {
-                setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
-            } else {
-                setSortType(type);
-                setSortDir('asc');
+            // Fall A: Normaler Rank (Zahl)
+            if (!isNaN(key)) {
+                const word = vocabulary.find(v => v.rank === parseInt(key));
+                return word ? { ...word, box: prog.box } : null;
+            } 
+            
+            // Fall B: Unbekanntes Wort (str:...)
+            if (key.startsWith('str:')) {
+                const frenchText = key.replace('str:', '');
+                return {
+                    rank: 99999,
+                    french: frenchText,
+                    english: "Individuelles Wort", // Hier könnten wir später die echte Übers. speichern
+                    box: prog.box,
+                    isCustom: true
+                };
             }
-        };
-
-        // --- DATEN VERARBEITUNG ---
-        const safeVocab = vocabulary || [];
-        const learnedList = safeVocab.filter(w => userProgress[w.rank]?.box > 0);
+            return null;
+        }).filter(Boolean);
         
+        // Sortierung & Filterung
         const filteredList = learnedList.filter(w => 
-            w.french.toLowerCase().includes(librarySearch.toLowerCase()) || 
-            (w.english && w.english.toLowerCase().includes(librarySearch.toLowerCase()))
+            w.french.toLowerCase().includes(librarySearch.toLowerCase())
         ).sort((a, b) => {
-            let comparison = 0;
-            if (sortType === 'rank') {
-                comparison = a.rank - b.rank;
-            } else {
-                comparison = a.french.localeCompare(b.french);
-            }
-            return sortDir === 'asc' ? comparison : comparison * -1;
+            if (sortType === 'rank') return a.rank - b.rank;
+            return a.french.localeCompare(b.french);
         });
 
         return (
-            <div className="w-full pt-6 pb-24 px-1 relative min-h-screen">
-                
-                {/* Header mit Zurück-Button */}
+            <div className="w-full pt-6 pb-24 px-1">
                 <div className="flex items-center gap-3 mb-6 px-1">
-                    <button onClick={() => setView('profile')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
-                        <ArrowLeft size={24} />
-                    </button>
-                    <div>
-                        <h2 className="text-2xl font-bold text-slate-800">Collection</h2>
-                        <p className="text-slate-400 text-sm">{learnedList.length} words collected</p>
-                    </div>
+                    <button onClick={() => setView('profile')} className="p-2 -ml-2 text-slate-500"><ArrowLeft size={24} /></button>
+                    <h2 className="text-2xl font-bold text-slate-800">Collection ({learnedList.length})</h2>
                 </div>
 
-                {/* SEARCH & SORT AREA (Sticky) */}
-                <div className="sticky top-4 z-30 space-y-3 mb-6">
-                    <div className="relative shadow-sm">
-                        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <input type="text" value={librarySearch} onChange={(e) => setLibrarySearch(e.target.value)} placeholder="Search collection..." className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-4 text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
-                        {librarySearch && <button onClick={() => setLibrarySearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"><X size={14}/></button>}
-                    </div>
-
-                    {/* Sortier Buttons */}
-                    <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-                        <button onClick={() => toggleSort('rank')} className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all border ${sortType === 'rank' ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-white text-slate-500 border-slate-200'}`}>
-                            <Hash size={14} className={sortType === 'rank' ? 'text-indigo-200' : 'text-slate-400'} /> Rank {sortType === 'rank' && (sortDir === 'asc' ? <ArrowUp size={14}/> : <ArrowDown size={14}/>)}
-                        </button>
-                        <button onClick={() => toggleSort('alpha')} className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all border ${sortType === 'alpha' ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-white text-slate-500 border-slate-200'}`}>
-                            <span>A-Z</span> {sortType === 'alpha' && (sortDir === 'asc' ? <ArrowDown size={14}/> : <ArrowUp size={14}/>)}
-                        </button>
-                    </div>
+                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100">
+                    {filteredList.map(word => (
+                        <div key={word.isCustom ? 'c_'+word.french : word.rank} className="w-full flex items-center justify-between p-4">
+                            <div className="flex items-center gap-4">
+                                <span className="text-xs font-mono text-slate-300 w-8">{word.isCustom ? '⭐' : `#${word.rank}`}</span>
+                                <div>
+                                    <div className="font-bold text-slate-800 capitalize">{word.french}</div>
+                                    <div className="text-xs text-slate-400">{word.english}</div>
+                                </div>
+                            </div>
+                            <div className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-1 rounded-lg">Box {word.box}</div>
+                        </div>
+                    ))}
                 </div>
-
-                {/* LISTE */}
-                {learnedList.length > 0 ? (
-                    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden divide-y divide-slate-100 relative z-10">
-                        {filteredList.slice(0, 100).map(word => (
-                            <button key={word.rank} onClick={() => { setSelectedWord(word); setIsFlipped(false); setAiExamples(null); setView('word-detail'); }} className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors text-left">
-                                <div className="flex items-center gap-4">
-                                    <span className="text-xs font-mono text-slate-300 w-8">#{word.rank}</span>
-                                    <div><div className="font-bold text-slate-800">{word.french}</div><div className="text-xs text-slate-500">{word.english || word.german}</div></div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">Box {userProgress[word.rank]?.box || '?'}</span>
-                                    <ChevronRight size={16} className="text-slate-200" />
-                                </div>
-                            </button>
-                        ))}
-                        {filteredList.length === 0 && <div className="p-8 text-center text-slate-400 text-sm">No matches found.</div>}
-                        {filteredList.length > 100 && <div className="p-3 text-center text-xs text-slate-400 bg-slate-50">...and {filteredList.length - 100} more</div>}
-                    </div>
-                ) : (
-                    <div className="text-center p-10 bg-white rounded-3xl border border-dashed border-slate-200 text-slate-400"><p>Your collection is empty.</p></div>
-                )}
-
-                {/* BACK TO TOP BUTTON */}
-                {showScrollTop && (
-                    <button onClick={scrollToTop} className="fixed bottom-24 right-6 bg-indigo-600 text-white p-3 rounded-full shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-90 transition-all z-50">
-                        <ArrowUp size={24} />
-                    </button>
-                )}
             </div>
         );
     };
-
 
     // Helper: Prüfen, ob wir gerade lernen (dann Menu ausblenden)
     const isSessionActive = ['smart-session', 'test-session', 'results'].includes(view);
