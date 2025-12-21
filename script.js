@@ -1296,16 +1296,15 @@ const getMergedGrammarData = () => {
 };
 // --- READER COMPONENT (Ausgelagert) ---
 /* script.js - BookReader Component (Komplett) */
+/* --- DIESE KOMPONENTE MUSS AUSSERHALB VON APP() STEHEN --- */
 const ReaderWordDetail = ({ word, setView, setUserProgress, session, speak }) => {
     const [saveStatus, setSaveStatus] = React.useState(null);
 
-    if (!word) return null;
+    if (!word) return <div className="p-10 text-center">No word selected.</div>;
 
     const handleQuickSave = async (boxLevel) => {
-        // 1. SOFORTIGES Feedback für die UI
         setSaveStatus(boxLevel); 
-        console.log("Saving box:", boxLevel); // Debug Info
-
+        
         const isRare = word.rank === 'AI' || word.rank === '>10000';
         const rankKey = isRare ? word.french : word.rank;
         const newEntry = { 
@@ -1316,118 +1315,136 @@ const ReaderWordDetail = ({ word, setView, setUserProgress, session, speak }) =>
         };
 
         try {
-            // 2. Lokal im State der App speichern
             setUserProgress(prev => ({ ...prev, [rankKey]: newEntry }));
-
-            // 3. Supabase Update
             if (session) {
                 await supabase.from('user_progress').upsert({
                     user_id: session.user.id,
                     word_rank: typeof word.rank === 'number' ? word.rank : 99999,
                     box: boxLevel,
                     next_review: newEntry.nextReview
-                }, { onConflict: 'user_id, word_rank' });
+                });
             }
-
-            // 4. Länger warten (1.5s), damit man das Grün auch sieht
+            // Wir warten kurz, damit der User das Grün sieht, dann zurück
             setTimeout(() => {
                 setView('reader');
                 setSaveStatus(null);
-            }, 1500);
-
+            }, 1000);
         } catch (err) {
-            console.error("Fehler beim Speichern:", err);
+            console.error(err);
             setSaveStatus(null);
         }
     };
 
     return (
-        <div className="flex flex-col w-full max-w-xl mx-auto pt-6 h-[100dvh] bg-slate-50">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4 px-4 shrink-0">
-                <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500 hover:text-slate-800 transition-colors">
+        <div className="flex flex-col w-full max-w-xl mx-auto h-[100dvh] bg-slate-50 overflow-hidden">
+            {/* 1. Fixer Header (nicht scrollbar) */}
+            <div className="flex items-center justify-between p-4 bg-slate-50 shrink-0">
+                <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500 hover:text-indigo-600 transition-colors">
                     <ArrowLeft size={24} />
                 </button>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Word Details</span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Word Discovery</span>
                 <div className="w-10"></div>
             </div>
 
-            {/* Karte */}
-            <div className="flex-1 bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl mx-2 mb-4 p-8 overflow-y-auto no-scrollbar">
-                <div className="text-center mb-8">
-                    <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">French</span>
-                    <h2 className="text-5xl font-bold text-slate-800 my-2">{word.french}</h2>
-                    <button onClick={() => speak(word.french)} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all active:scale-90">
-                        <Volume2 size={24} />
-                    </button>
-                </div>
-
-                <div className="text-center mb-8 border-t border-slate-50 pt-6">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meaning</span>
-                    <h3 className="text-3xl font-bold text-indigo-900 mt-1">{word.english}</h3>
-                </div>
-
-                {word.explanation && (
-                    <div className="bg-slate-50 rounded-2xl p-4 mb-6 border border-slate-100 text-sm text-slate-600 italic">
-                        {word.explanation}
+            {/* 2. Scrollbarer Content-Bereich */}
+            <div className="flex-1 overflow-y-auto px-2 pb-4 no-scrollbar">
+                <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl p-8 min-h-full">
+                    
+                    {/* Wort & Audio */}
+                    <div className="text-center mb-8">
+                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">French</span>
+                        <h2 className="text-5xl font-bold text-slate-800 my-2">{word.french}</h2>
+                        <button onClick={() => speak(word.french)} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 active:scale-90 transition-all">
+                            <Volume2 size={24} />
+                        </button>
                     </div>
-                )}
 
-                {/* Konjugation (Beispielhaft für Present Tense) */}
-                {word.pos_type === 'VERB' && word.conjugationTable && (
-                    <div className="bg-indigo-50/50 rounded-3xl p-5 mb-6 border border-indigo-100 grid grid-cols-2 gap-4">
-                        {Object.entries(word.conjugationTable).slice(0, 6).map(([p, f]) => (
-                            <div key={p} className="flex justify-between border-b border-indigo-100/30 text-sm py-1">
-                                <span className="text-indigo-300 font-medium">{p}</span>
-                                <span className="text-indigo-900 font-bold">{f}</span>
-                            </div>
-                        ))}
+                    {/* Übersetzung */}
+                    <div className="text-center mb-8 border-t border-slate-50 pt-6">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meaning</span>
+                        <h3 className="text-3xl font-bold text-indigo-900 mt-1">{word.english}</h3>
                     </div>
-                )}
 
-                {/* Beispiele */}
-                {word.examples && word.examples.map((ex, i) => (
-                    <div key={i} className="mb-4 p-4 bg-slate-50 border border-slate-100 rounded-2xl flex justify-between items-start gap-3">
-                        <div className="flex-1">
-                            <p className="text-slate-800 font-bold text-sm leading-snug">{ex.fr}</p>
-                            <p className="text-slate-400 text-xs italic mt-1">{ex.en}</p>
+                    {/* Erklärung */}
+                    {word.explanation && (
+                        <div className="bg-slate-50 rounded-2xl p-5 mb-6 border border-slate-100 text-sm text-slate-600 italic leading-relaxed">
+                            {word.explanation}
                         </div>
-                        <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 hover:text-indigo-600"><Volume2 size={16} /></button>
-                    </div>
-                ))}
+                    )}
+
+                    {/* Konjugation (nur bei Verben) */}
+                    {word.type === 'VERB' && word.conjugationTable && (
+                        <div className="bg-indigo-50/50 rounded-3xl p-5 mb-8 border border-indigo-100">
+                             <div className="flex gap-4">
+                                <div className="flex-1 space-y-2">
+                                    {['je','tu','il/elle'].map(p => (
+                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
+                                            <span className="text-indigo-300 font-bold">{p}</span>
+                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="flex-1 space-y-2">
+                                    {['nous','vous','ils/elles'].map(p => (
+                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
+                                            <span className="text-indigo-300 font-bold">{p}</span>
+                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Beispielsätze */}
+                    {word.examples && word.examples.length > 0 && (
+                        <div className="space-y-4">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-2">Usage</span>
+                            {word.examples.map((ex, i) => (
+                                <div key={i} className="p-4 bg-slate-50 rounded-2xl flex justify-between items-start gap-3 border border-slate-100">
+                                    <div className="flex-1">
+                                        <p className="text-slate-800 font-bold text-sm leading-snug">{ex.fr}</p>
+                                        <p className="text-slate-400 text-xs italic mt-1">{ex.en}</p>
+                                    </div>
+                                    <button onClick={() => speak(ex.fr)} className="p-1 text-slate-300 hover:text-indigo-600 transition-colors">
+                                        <Volume2 size={16} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
 
-            {/* --- FIX: DIE BUTTONS MIT EXPLIZITEN FARBEN --- */}
-            <div className="p-4 pb-12 flex gap-3 shrink-0 bg-slate-50">
-                {/* Button 1: Training */}
+            {/* 3. Fixe Footer-Buttons (nicht scrollbar) */}
+            <div className="p-4 pb-10 bg-slate-50 flex gap-3 shrink-0 border-t border-slate-100">
                 <button 
                     onClick={() => handleQuickSave(1)}
                     disabled={saveStatus !== null}
-                    className={`flex-1 py-5 rounded-2xl font-bold transition-all flex flex-col items-center border-2 
+                    className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center border-2 
                         ${saveStatus === 1 
-                            ? 'bg-green-400 border-green-500 text-black shadow-inner' 
+                            ? 'bg-green-400 border-green-400 text-black shadow-inner scale-95' 
                             : 'bg-white border-slate-200 text-slate-600 active:scale-95 shadow-sm'
                         }`}
                 >
-                    {saveStatus === 1 ? <Check size={24} strokeWidth={3} /> : <span className="text-xl">🏋️</span>}
-                    <span className={`text-[10px] uppercase mt-1 ${saveStatus === 1 ? 'font-black' : ''}`}>
-                        {saveStatus === 1 ? 'Added!' : 'Add to Training'}
+                    {saveStatus === 1 ? <Check size={24} className="text-black" /> : <span className="text-xl">🏋️</span>}
+                    <span className="text-[10px] font-black uppercase mt-1">
+                        {saveStatus === 1 ? 'Added!' : 'Train later'}
                     </span>
                 </button>
 
-                {/* Button 2: Marked as Learned */}
                 <button 
                     onClick={() => handleQuickSave(5)}
                     disabled={saveStatus !== null}
-                    className={`flex-1 py-5 rounded-2xl font-bold transition-all flex flex-col items-center border-2
+                    className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center border-2 shadow-lg
                         ${saveStatus === 5 
-                            ? 'bg-green-400 border-green-500 text-black shadow-inner' 
-                            : 'bg-indigo-600 border-indigo-700 text-white active:scale-95 shadow-lg shadow-indigo-100'
+                            ? 'bg-green-400 border-green-400 text-black shadow-inner scale-95' 
+                            : 'bg-indigo-600 border-indigo-600 text-white active:scale-95 shadow-indigo-100'
                         }`}
                 >
-                    {saveStatus === 5 ? <Check size={24} strokeWidth={3} /> : <span className="text-xl">✅</span>}
-                    <span className={`text-[10px] uppercase mt-1 ${saveStatus === 5 ? 'font-black' : ''}`}>
-                        {saveStatus === 5 ? 'Mastered!' : 'Mark as Learned'}
+                    {saveStatus === 5 ? <Check size={24} className="text-black" /> : <span className="text-xl">✅</span>}
+                    <span className="text-[10px] font-black uppercase mt-1">
+                        {saveStatus === 5 ? 'Learned!' : 'I know this'}
                     </span>
                 </button>
             </div>
@@ -1473,7 +1490,6 @@ const BookReader = ({
         let cleanBase = wordRaw.replace(/[,]/g, "").replace(/[.!?;:"«»()]+/g, "").trim();
         if (!cleanBase || /^\d+$/.test(cleanBase)) return;
 
-        // Bindestrich-Split: ["mêmes-nous"] -> ["mêmes-nous", "mêmes", "nous"]
         const searchTerms = [cleanBase.toLowerCase()];
         if (cleanBase.includes('-')) {
             cleanBase.split('-').forEach(p => { if (p.length > 1) searchTerms.push(p.toLowerCase()); });
@@ -1484,24 +1500,33 @@ const BookReader = ({
         try {
             const matchesMap = new Map();
 
+            // Hilfsfunktion zum Hinzufügen/Überschreiben von Treffern
+            const addMatch = (newMatch) => {
+                // Wir nutzen den Rank als eindeutigen Schlüssel (oder ID, falls kein Rank da ist)
+                const key = newMatch.rank || newMatch.id || newMatch.french;
+                const existing = matchesMap.get(key);
+
+                // Priorisierungs-Logik:
+                // Wir fügen hinzu, wenn noch nichts da ist ODER 
+                // wenn der neue Treffer von 'db_verb' kommt (weil dieser die Tense-Information hat)
+                if (!existing || (newMatch.source === 'db_verb' && !existing.specificTense)) {
+                    matchesMap.set(key, newMatch);
+                }
+            };
+
             for (let term of searchTerms) {
-                // Elision Handling (l'arbre -> arbre)
                 const elisionMatch = term.match(/^([ldnmstcjqu]|qu|jusqu|lorsqu|puisqu)['’](.+)/i);
                 let cleanTerm = elisionMatch ? elisionMatch[2] : term;
 
-                // --- SCHRITT A: Lokale Lemma-Suche (Top 10k) ---
+                // A: Lokale Lemma-Suche (Top 10k)
                 vocabulary.filter(v => v.french.toLowerCase() === cleanTerm)
-                    .forEach(m => matchesMap.set(m.id, { ...m, source: 'top10k' }));
+                    .forEach(m => addMatch({ ...m, source: 'top10k' }));
 
-                // --- SCHRITT B: Lokale Mapping-Suche (Top 10k) ---
+                // B: Lokale Mapping-Suche (Top 10k)
                 vocabulary.filter(v => v.conjugation && v.conjugation.includes(cleanTerm))
-                    .forEach(m => {
-                        if (!matchesMap.has(m.id)) {
-                            matchesMap.set(m.id, { ...m, source: 'top10k_mapping', isConjugated: true });
-                        }
-                    });
+                    .forEach(m => addMatch({ ...m, source: 'top10k_mapping', isConjugated: true }));
 
-                // --- SCHRITT C: Externe Verb-Datenbank (verb_forms) ---
+                // C: Externe Verb-Datenbank (verb_forms)
                 const { data: vfData } = await supabase
                     .from('verb_forms')
                     .select('lemma, tense')
@@ -1509,16 +1534,13 @@ const BookReader = ({
 
                 if (vfData && vfData.length > 0) {
                     vfData.forEach(vfEntry => {
-                        // Suche das Lemma in den Top 10k für volle Details
                         const enrichedLemma = vocabulary.find(v => v.french.toLowerCase() === vfEntry.lemma.toLowerCase());
                         if (enrichedLemma) {
-                            // Wir nutzen eine kombinierte ID, falls ein Wort mehrere Zeitformen hat
-                            const uniqueKey = `verb_${enrichedLemma.id}_${vfEntry.tense}`;
-                            matchesMap.set(uniqueKey, { 
+                            addMatch({ 
                                 ...enrichedLemma, 
                                 source: 'db_verb', 
                                 isConjugated: true, 
-                                specificTense: vfEntry.tense // Zeitform für die Anzeige merken
+                                specificTense: vfEntry.tense 
                             });
                         }
                     });
@@ -1527,24 +1549,33 @@ const BookReader = ({
 
             let finalResults = Array.from(matchesMap.values());
 
-            // --- SCHRITT D: Letzter Fallback AI (nur wenn absolut leer) ---
+            // D: Letzter Fallback AI
             if (finalResults.length === 0) {
-                const res = await fetch('/api/translate', { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: cleanBase, targetLang: 'en' }) 
-                });
-                if (res.ok) {
-                    const aiData = await res.json();
-                    finalResults.push({ id: 'ai_' + Date.now(), french: cleanBase, english: aiData.translation, rank: 'AI', source: 'ai' });
-                }
+                try {
+                    const res = await fetch('/api/translate', { 
+                        method: 'POST', 
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text: cleanBase, targetLang: 'en' }) 
+                    });
+                    if (res.ok) {
+                        const aiData = await res.json();
+                        finalResults.push({ id: 'ai_' + Date.now(), french: cleanBase, english: aiData.translation, rank: 'AI', source: 'ai' });
+                    }
+                } catch(e) { console.error("AI Offline"); }
             }
+
+            // Sortierung nach Rank (wichtig für die Anzeige)
+            finalResults.sort((a, b) => {
+                const rankA = typeof a.rank === 'number' ? a.rank : 99999;
+                const rankB = typeof b.rank === 'number' ? b.rank : 99999;
+                return rankA - rankB;
+            });
 
             setClickedWord({ cleanFrench: cleanBase, allMatches: finalResults, isLoading: false });
 
         } catch (err) {
             console.error("Search error:", err);
-            setClickedWord({ cleanFrench: cleanBase, allMatches: [], isLoading: false });
+            setClickedWord(null);
         }
     };
 
@@ -4218,428 +4249,7 @@ function App() {
 
         window.speechSynthesis.speak(utterance);
     };
-    const renderTranslatorContent = () => {
-        // KEIN useState HIER! Wir nutzen die Variablen von oben aus App()
-
-        // --- LOGIK ---
-        const handleTranslate = async () => {
-            if (!input.trim()) return;
-            setLoading(true);
-            setTranslationData(null);
-            
-            try {
-                const target = direction === 'en-fr' ? 'fr' : 'en';
-                const res = await fetch('/api/translate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: input.trim(), targetLang: target })
-                });
-                const data = await res.json();
-                setTranslationData(data);
-            } catch (err) {
-                alert("Translation failed.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        const handleCorrection = async () => {
-            if (!input.trim()) return;
-            setLoading(true);
-            setCorrectionData(null); 
-
-            try {
-                const res = await fetch('/api/correct', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: input.trim() })
-                });
-                const data = await res.json();
-                setCorrectionData(data);
-            } catch (err) {
-                alert("Correction failed.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        const copyToClipboard = (text) => {
-            navigator.clipboard.writeText(text);
-        };
-
-        // Labels bestimmen
-        const isFrToEn = direction === 'fr-en';
-        const sourceLabel = isFrToEn ? "🇫🇷 French" : "🇬🇧 English";
-        const targetLabel = isFrToEn ? "🇬🇧 English" : "🇫🇷 French";
-
-        // --- UI RETURN ---
-        return (
-            <div className="w-full max-w-xl mx-auto space-y-6">
-                
-                {/* 1. MODE TABS (Translator vs Coach) */}
-                <div className="bg-slate-200 p-1 rounded-2xl flex shadow-sm">
-                    <button onClick={() => { setMode('translate'); setInput(''); setTranslationData(null); }} className={`flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'translate' ? 'bg-white text-indigo-600 shadow-sm scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}>
-                        <ArrowLeftRight size={18}/> Translator
-                    </button>
-                    <button onClick={() => { setMode('coach'); setInput(''); setCorrectionData(null); }} className={`flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all ${mode === 'coach' ? 'bg-white text-emerald-600 shadow-sm scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}>
-                        <MessageSquare size={18}/> Writing Coach
-                    </button>
-                </div>
-
-                {/* --- ANSICHT A: TRANSLATOR (Split View) --- */}
-                {mode === 'translate' && (
-                    <div className="flex flex-col gap-2">
-                        
-                        {/* BLOCK 1: INPUT */}
-                        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden relative z-10">
-                            {/* Header Source */}
-                            <div className="bg-slate-50 px-5 py-3 border-b border-slate-100 flex justify-between items-center">
-                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                    {sourceLabel} (Detected)
-                                </span>
-                                {input && <button onClick={() => { setInput(''); setTranslationData(null); }} className="text-slate-400 hover:text-slate-600"><X size={18}/></button>}
-                            </div>
-                            
-                            <textarea 
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                placeholder="Type here..."
-                                className="w-full h-32 p-5 text-lg text-slate-800 outline-none resize-none bg-transparent placeholder-slate-300 font-medium"
-                            />
-
-                            {/* Translate Action Button (inside Input Block) */}
-                            <div className="px-4 py-3 border-t border-slate-50 flex justify-end bg-white">
-                                <button 
-                                    onClick={handleTranslate}
-                                    disabled={loading || !input}
-                                    className="bg-indigo-600 text-white px-6 py-2 rounded-xl font-bold shadow-md shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all flex items-center gap-2 text-sm"
-                                >
-                                    {loading ? <Loader2 size={16} className="animate-spin"/> : "Translate"}
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* MIDDLE: SWAP BUTTON */}
-                        <div className="relative h-6 flex justify-center items-center z-20 -my-5">
-                            <button 
-                                onClick={() => setDirection(prev => prev === 'en-fr' ? 'fr-en' : 'en-fr')} 
-                                className="bg-white p-3 rounded-full shadow-lg border border-slate-100 text-indigo-500 hover:text-indigo-700 hover:scale-110 transition-all"
-                            >
-                                <ArrowLeftRight size={20} /> 
-                            </button>
-                        </div>
-
-                        {/* BLOCK 2: OUTPUT */}
-                        <div className="bg-indigo-50 rounded-3xl border border-indigo-100 shadow-sm overflow-hidden min-h-[140px] relative z-0 pt-6">
-                            {/* Header Target */}
-                            <div className="px-5 py-2 flex justify-between items-center">
-                                <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">
-                                    {targetLabel}
-                                </span>
-                                {translationData && (
-                                    <div className="flex gap-2">
-                                        <button onClick={() => copyToClipboard(translationData.translation)} className="p-2 text-indigo-400 hover:text-indigo-600 hover:bg-indigo-100 rounded-full transition-colors"><Copy size={18}/></button>
-                                        <button onClick={() => speak(translationData.translation)} className="p-2 text-indigo-400 hover:text-indigo-600 hover:bg-indigo-100 rounded-full transition-colors"><Volume2 size={20}/></button>
-                                    </div>
-                                )}
-                            </div>
-                            
-                            <div className="p-5 pt-2">
-                                {translationData ? (
-                                    <p className="text-2xl text-indigo-900 font-serif leading-relaxed">
-                                        {translationData.translation}
-                                    </p>
-                                ) : (
-                                    <p className="text-indigo-300 text-lg italic">Translation will appear here...</p>
-                                )}
-                            </div>
-
-                            {/* Context Examples (Optional) */}
-                            {translationData && translationData.examples && translationData.examples.length > 0 && (
-                                <div className="px-5 pb-5">
-                                    <div className="h-px w-full bg-indigo-200/50 mb-4"></div>
-                                    <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider mb-2">Context</p>
-                                    <div className="space-y-2">
-                                        {translationData.examples.map((ex, idx) => (
-                                            <div key={idx} className="text-sm text-indigo-800">
-                                                <span className="font-medium">{ex.fr}</span>
-                                                <span className="text-indigo-400 mx-2">•</span>
-                                                <span className="italic opacity-80">{ex.en}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                )}
-
-                {/* --- ANSICHT B: WRITING COACH (Bleibt wie vorher, aber mit Copy Button) --- */}
-                {mode === 'coach' && (
-                    <div className="space-y-6">
-                        {/* Input für Coach */}
-                        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                            <div className="bg-emerald-50 px-5 py-3 border-b border-emerald-100 flex justify-between items-center">
-                                <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-2"><PenTool size={16}/> Write French</span>
-                                {input && <button onClick={() => setInput('')} className="text-emerald-400 hover:text-emerald-700"><X size={18}/></button>}
-                            </div>
-                            <textarea value={input} onChange={(e) => setInput(e.target.value)} placeholder="Write here..." className="w-full h-32 p-5 text-lg text-slate-800 outline-none resize-none bg-transparent placeholder-slate-300" />
-                            <div className="px-5 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
-                                <button onClick={handleCorrection} disabled={loading || !input} className="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-700 active:scale-95 flex items-center gap-2">
-                                    {loading ? <Loader2 size={20} className="animate-spin"/> : <Check size={20}/>} Check
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Coach Results */}
-                        {correctionData && (
-                            <div className="space-y-4">
-                                <div className="bg-emerald-600 rounded-3xl shadow-lg shadow-emerald-200 overflow-hidden text-white p-6 relative">
-                                    <div className="absolute top-4 right-4 flex gap-2">
-                                        {/* COPY BUTTON */}
-                                        <button onClick={() => copyToClipboard(correctionData.corrected)} className="p-2 bg-emerald-700/50 hover:bg-emerald-500 rounded-full transition-colors"><Copy size={18}/></button>
-                                        <button onClick={() => speak(correctionData.corrected)} className="p-2 bg-emerald-700/50 hover:bg-emerald-500 rounded-full transition-colors"><Volume2 size={20}/></button>
-                                    </div>
-                                    <span className="text-xs font-bold text-emerald-200 uppercase tracking-wide block mb-2">Corrected Version</span>
-                                    <p className="text-2xl font-medium leading-snug pr-8">{correctionData.corrected}</p>
-                                </div>
-                                <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm">
-                                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide block mb-2 flex items-center gap-2"><Info size={16}/> Teacher's Note</span>
-                                    <p className="text-slate-700 text-base leading-relaxed">{correctionData.explanation}</p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                )}
-
-            </div>
-        );
-    };
-    const renderChat = () => {
-
-        const sendMessage = async (textOverride = null) => {
-            const msgText = textOverride || chatInput;
-            if (!msgText.trim()) return;
-            
-            const userMsg = { role: 'user', content: msgText };
-            setChatHistory(prev => [...prev, userMsg]);
-            setChatInput('');
-            setChatLoading(true);
-            setSuggestions([]); 
-
-            try {
-                const currentHistoryForApi = [...chatHistory, userMsg];
-                const contextSlice = currentHistoryForApi.slice(-6);
-
-                // ... vor dem fetch ...
-
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        history: contextSlice, 
-                        scenario: chatScenario.title, 
-                        goal: chatScenario.goal, // <--- NEU: Wir schicken das Ziel mit!
-                        level: chatLevel 
-                    })
-                });
-                
-                // ... nach dem fetch ...
-                
-                const data = await res.json();
-
-                if (data.suggestions && Array.isArray(data.suggestions)) {
-                    setSuggestions(data.suggestions);
-                }
-
-                setChatHistory(prev => {
-                    const newHistory = [...prev];
-                    if (data.correction) {
-                        const lastIndex = newHistory.length - 1;
-                        if (newHistory[lastIndex].role === 'user') {
-                            newHistory[lastIndex].correction = data.correction;
-                        }
-                    }
-                    newHistory.push({ role: 'model', content: data.text, translation: data.translation });
-                    return newHistory;
-                });
-
-                if (data.patience_change < 0) setChatHearts(h => Math.max(0, h - 1));
-                if (data.mission_status === 'success') setChatStatus('won');
-                else if (data.mission_status === 'failed' || (chatHearts <= 1 && data.patience_change < 0)) setChatStatus('lost');
-
-            } catch (e) {
-                console.error(e);
-                // Wichtig: Zeige einen Fehler im Chat an, statt gar nichts
-                setChatHistory(prev => [...prev, { role: 'model', content: "⚠️ Connection hiccup. Please try again." }]);
-            } finally {
-                setChatLoading(false); // Das muss IMMER ausgeführt werden
-            }
-        };
-
-        // --- LOBBY & GAME OVER BLEIBEN GLEICH (Kopiere sie von vorher oder lass sie so) ---
-        if (chatStatus === 'lobby') { 
-            // ... dein Lobby Code von vorhin ...
-             return (
-                <div className="w-full pt-6 pb-24 px-1">
-                    <div className="flex items-center gap-3 mb-6 px-1">
-                        <button onClick={() => setView('skills')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"><ArrowLeft size={24}/></button>
-                        <h2 className="text-2xl font-bold text-slate-800">Roleplay</h2>
-                    </div>
-
-                    {/* Level Selector */}
-                    <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm mb-6">
-                        <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Difficulty</div>
-                        <div className="flex justify-between">
-                            {['A1','A2','B1','B2','C1','C2'].map(lvl => (
-                                <button key={lvl} onClick={() => setChatLevel(lvl)} className={`w-10 h-10 rounded-xl text-xs font-bold transition-all ${chatLevel === lvl ? 'bg-indigo-600 text-white shadow-md scale-110' : 'bg-slate-50 text-slate-400'}`}>{lvl}</button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <p className="text-slate-500 px-2 text-sm font-medium mb-3">Choose your Mission</p>
-                    <div className="grid grid-cols-2 gap-3">
-                        {CHAT_SCENARIOS.map(s => (
-                            <button key={s.id} 
-                                onClick={() => {
-                                    setChatScenario(s);
-                                    setChatHistory([{ role: 'system', content: s.intro }]);
-                                    setChatHearts(3);   
-                                    setChatStatus('active');
-                                    setSuggestions([]); 
-                                }}
-                                className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all h-40 flex flex-col justify-between group hover:border-indigo-200"
-                            >
-                                <div className="text-3xl bg-slate-50 w-12 h-12 flex items-center justify-center rounded-2xl group-hover:scale-110 transition-transform">{s.icon}</div>
-                                <div><h3 className="font-bold text-slate-800">{s.title}</h3><p className="text-[10px] text-slate-400 mt-1 leading-tight">{s.desc}</p></div>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            );
-        }
-        if (chatStatus === 'won' || chatStatus === 'lost') {
-             return (
-                <div className="h-[80vh] flex flex-col items-center justify-center text-center px-6">
-                    <div className="text-6xl mb-4">{chatStatus === 'won' ? '🎉' : '💀'}</div>
-                    <h2 className="text-3xl font-bold text-slate-800 mb-2">{chatStatus === 'won' ? 'Mission Accomplished!' : 'Mission Failed'}</h2>
-                    <p className="text-slate-500 mb-8">{chatStatus === 'won' ? "Great job! You handled the situation perfectly." : "You ran out of patience."}</p>
-                    <button onClick={() => setChatStatus('lobby')} className="bg-indigo-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg">Back to Lobby</button>
-                </div>
-            );
-        }
-
-        // --- VIEW 3: ACTIVE CHAT (Update) ---
-        return (
-            <div className="fixed top-0 left-0 w-full h-[100dvh] z-40 bg-slate-50 flex flex-col">
-                
-                {/* Header */}
-                <div className="bg-white border-b border-slate-200 px-4 py-4 pt-safe flex justify-between items-center shadow-sm z-10 shrink-0">
-                    <button onClick={() => setChatStatus('lobby')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full"><ArrowLeft size={24}/></button>
-                    <div className="text-center">
-                        <div className="font-bold text-slate-800">{chatScenario?.title}</div>
-                        <div className="text-[10px] text-slate-400 uppercase tracking-wide">Level {chatLevel}</div>
-                    </div>
-                    <div className="flex gap-1">{[1,2,3].map(i => (<Heart key={i} size={20} className={i <= chatHearts ? "fill-red-500 text-red-500" : "text-slate-200"} />))}</div>
-                </div>
-
-                {/* Chat Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    <div className="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-center mb-6 text-xs text-indigo-800">🎯 Goal: {chatScenario?.goal}</div>
-
-                    {chatHistory.map((msg, idx) => {
-                        if (msg.role === 'system') return <div key={idx} className="text-center text-xs text-slate-400 italic my-4">✨ {msg.content}</div>;
-
-                        return (
-                            <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                                
-                                {/* Bubble */}
-                                <div 
-                                    className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed relative group shadow-sm cursor-pointer active:scale-95 transition-transform flex items-center gap-2 ${
-                                        msg.role === 'user' 
-                                        ? 'bg-indigo-600 text-white rounded-tr-none' 
-                                        : 'bg-white border border-slate-100 text-slate-800 rounded-tl-none'
-                                    }`}
-                                    // Klick öffnet jetzt das Detail-Popup (für Übersetzung ODER Korrektur)
-                                    onClick={() => setSelectedMsg(msg)} 
-                                >
-                                    {/* Rotes Icon wenn Fehler (nur bei User) */}
-                                    {msg.role === 'user' && msg.correction && msg.correction !== 'null' && msg.correction !== msg.content && (
-                                    <div className="mb-1 mr-1 bg-rose-50 text-rose-700 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-rose-100 max-w-[85%] shadow-sm flex items-start gap-1">
-                                        <span className="mt-0.5">💡</span> 
-                                        <span>{msg.correction}</span>
-                                    </div>
-                                )}
-                                    
-                                    <div>{msg.content}</div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                    {chatLoading && <div className="flex justify-start"><div className="bg-slate-200 text-slate-500 px-4 py-2 rounded-2xl rounded-tl-none text-xs animate-pulse">...</div></div>}
-                    <div style={{ height: 10 }}></div>
-                </div>
-
-                {/* Input & Suggestions */}
-                <div className="bg-white border-t border-slate-200 p-4 pb-20 w-full shrink-0 flex flex-col gap-3">
-                    {suggestions.length > 0 && !chatLoading && (
-                        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                            {suggestions.map((sugg, idx) => (
-                                <button key={idx} onClick={() => sendMessage(sugg)} className="whitespace-nowrap bg-indigo-50 text-indigo-600 border border-indigo-100 px-3 py-1.5 rounded-full text-xs font-bold active:scale-95 transition-transform">{sugg}</button>
-                            ))}
-                        </div>
-                    )}
-                    <div className="flex gap-2">
-                        <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && sendMessage()} placeholder="Type your reply..." className="flex-1 bg-slate-100 border-none rounded-xl px-4 py-3 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500"/>
-                        <button onClick={() => sendMessage()} disabled={!chatInput.trim() || chatLoading} className="bg-indigo-600 text-white p-3 rounded-xl disabled:opacity-50"><ArrowUp size={24} className="rotate-90"/></button>
-                    </div>
-                </div>
-
-                {/* --- DETAIL MODAL (Overlay für Korrektur & Übersetzung) --- */}
-                {selectedMsg && (
-                    <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/30 backdrop-blur-sm" onClick={() => setSelectedMsg(null)}>
-                        <div className="bg-white w-full p-6 pb-12 rounded-t-[2.5rem] shadow-2xl0 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                            
-                            <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6"></div>
-
-                            {/* Sektion 1: Original */}
-                            <div className="mb-6">
-                                <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">Original</p>
-                                <p className="text-lg text-slate-800 font-medium leading-snug">{selectedMsg.content}</p>
-                            </div>
-
-                            {/* Sektion 2: Korrektur (Nur wenn vorhanden) */}
-                            {selectedMsg.correction && (
-                                <div className="mb-6 bg-rose-50 border border-rose-100 p-4 rounded-2xl">
-                                    <div className="flex items-center gap-2 mb-2 text-rose-600">
-                                        <AlertCircle size={18} />
-                                        <p className="text-xs font-bold uppercase tracking-wider">Correction</p>
-                                    </div>
-                                    <p className="text-lg text-rose-800 font-medium leading-snug">{selectedMsg.correction}</p>
-                                </div>
-                            )}
-
-                            {/* Sektion 3: Übersetzung (Nur wenn vorhanden) */}
-                            {selectedMsg.translation && (
-                                <div className="mb-6">
-                                    <div className="flex items-center gap-2 mb-2 text-indigo-500">
-                                        <BookOpen size={18} />
-                                        <p className="text-xs font-bold uppercase tracking-wider">Translation</p>
-                                    </div>
-                                    <p className="text-lg text-indigo-900 font-medium leading-snug">{selectedMsg.translation}</p>
-                                </div>
-                            )}
-
-                            <button onClick={() => setSelectedMsg(null)} className="w-full bg-slate-100 text-slate-600 py-4 rounded-xl font-bold active:scale-[0.98] transition-transform">
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-            </div>
-        );
-    };
+    
     
     // --- SESSION LOGIC ---
     // --- ERSETZEN: startSmartSession ---
@@ -6081,135 +5691,6 @@ function App() {
         } finally {
             setLoadingStory(false);
         }
-    };
-    const ReaderWordDetail = ({ word, setView, setUserProgress, session, speak }) => {
-        // Hooks dürfen nur hier, am Anfang einer echten Komponente stehen!
-        const [saveStatus, setSaveStatus] = React.useState(null);
-
-        if (!word) return null;
-
-        const handleQuickSave = async (boxLevel) => {
-            // SOFORT den Status setzen für visuelles Feedback
-            setSaveStatus(boxLevel); 
-            
-            const isRare = word.rank === 'AI' || word.rank === '>10000';
-            const rankKey = isRare ? word.french : word.rank;
-            const newEntry = { 
-                box: boxLevel, 
-                nextReview: boxLevel === 5 ? Date.now() + 30*24*60*60*1000 : Date.now(), 
-                interval: boxLevel === 5 ? 30 : 0, 
-                ease: 2.5 
-            };
-
-            try {
-                // Im Hintergrund speichern
-                setUserProgress(prev => ({ ...prev, [rankKey]: newEntry }));
-                if (session) {
-                    await supabase.from('user_progress').upsert({
-                        user_id: session.user.id,
-                        word_rank: typeof word.rank === 'number' ? word.rank : 99999,
-                        box: boxLevel,
-                        next_review: newEntry.nextReview
-                    });
-                }
-                
-                // Nach einer kurzen Pause zurückkehren
-                setTimeout(() => {
-                    setView('reader');
-                    setSaveStatus(null);
-                }, 1000);
-            } catch (err) {
-                console.error(err);
-                setSaveStatus(null); // Bei Fehler zurücksetzen
-            }
-        };
-
-        return (
-            <div className="flex flex-col w-full max-w-xl mx-auto pt-6 h-[100dvh] bg-slate-50">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4 px-4 shrink-0">
-                    <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500"><ArrowLeft size={24} /></button>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Discovery</span>
-                    <div className="w-10"></div>
-                </div>
-
-                {/* Inhalt */}
-                <div className="flex-1 bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl mx-2 mb-4 p-8 overflow-y-auto no-scrollbar">
-                    <div className="text-center mb-8">
-                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">French</span>
-                        <h2 className="text-5xl font-bold text-slate-800 my-2">{word.french}</h2>
-                        <button onClick={() => speak(word.french)} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100"><Volume2 size={24} /></button>
-                    </div>
-
-                    <div className="text-center mb-8 border-t border-slate-50 pt-6">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meaning</span>
-                        <h3 className="text-3xl font-bold text-indigo-900 mt-1">{word.english}</h3>
-                    </div>
-
-                    {word.explanation && (
-                        <div className="bg-slate-50 rounded-2xl p-4 mb-6 border border-slate-100 text-sm text-slate-600 italic">
-                            {word.explanation}
-                        </div>
-                    )}
-
-                    {word.type === 'VERB' && word.conjugationTable && (
-                        <div className="bg-indigo-50/50 rounded-3xl p-5 mb-6 border border-indigo-100">
-                            <div className="flex gap-4">
-                                <div className="flex-1 space-y-2">
-                                    {['je','tu','il/elle'].map(p => (
-                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
-                                            <span className="text-indigo-300">{p}</span>
-                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="flex-1 space-y-2">
-                                    {['nous','vous','ils/elles'].map(p => (
-                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
-                                            <span className="text-indigo-300">{p}</span>
-                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {word.examples && word.examples.map((ex, i) => (
-                        <div key={i} className="mb-4 p-4 bg-slate-50 rounded-2xl flex justify-between items-start gap-3">
-                            <div className="flex-1 text-slate-800 text-sm">
-                                <p className="font-bold">{ex.fr}</p>
-                                <p className="text-slate-400 italic">{ex.en}</p>
-                            </div>
-                            <button onClick={() => speak(ex.fr)} className="p-1 text-slate-300 hover:text-indigo-600"><Volume2 size={16} /></button>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Feedback Buttons */}
-                <div className="p-4 pb-10 flex gap-3 shrink-0">
-                    <button 
-                        onClick={() => handleQuickSave(1)}
-                        disabled={saveStatus !== null}
-                        className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center border-2 
-                            ${saveStatus === 'training' ? 'bg-green-500 border-green-500 text-white' : 'bg-white border-slate-200 text-slate-600'}`}
-                    >
-                        {saveStatus === 'training' ? <Check size={24} /> : <span>🏋️</span>}
-                        <span className="text-[10px] uppercase mt-1">{saveStatus === 'training' ? 'Added!' : 'Train later'}</span>
-                    </button>
-
-                    <button 
-                        onClick={() => handleQuickSave(5)}
-                        disabled={saveStatus !== null}
-                        className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center shadow-lg
-                            ${saveStatus === 'learned' ? 'bg-green-600 text-white' : 'bg-indigo-600 text-white'}`}
-                    >
-                        {saveStatus === 'learned' ? <Check size={24} /> : <span>✅</span>}
-                        <span className="text-[10px] uppercase mt-1">{saveStatus === 'learned' ? 'Learned!' : 'I know this'}</span>
-                    </button>
-                </div>
-            </div>
-        );
     };
     
     /* script.js - Innerhalb von function App() */
