@@ -103,6 +103,9 @@ const Wifi = (p) => <Icon {...p} path={<><path d="M5 12.55a11 11 0 0 1 14.08 0"/
 const WifiOff = (p) => <Icon {...p} path={<><line x1="1" x2="23" y1="1" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></>} />;
 const AlertCircle = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></>} />;
 const Copy = (p) => <Icon {...p} path={<><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>} />;
+// Füge das zu deinen anderen Icon-Definitionen hinzu
+const HeartIcon = Heart;
+const LoaderIcon = Loader2; // Falls Loader2 verwendet wird
 // Sicherstellen, dass lucide vorhanden ist, bevor wir entpacken
 /* script.js - Ganz oben nach den Linguistic Helpers */
 
@@ -742,23 +745,78 @@ const GRAMMAR_MODULES = [
     }
 ];
 // Merge grammar data: A1, A2, B1, B2 from separate files
-const MissionPlayer = ({ mission, onFinish, onSaveCard }) => {
-    const [step, setStep] = useState('briefing'); // 'briefing', 'chat', 'result'
+const MissionPlayer = ({ mission, onFinish, onSaveCard, vocabulary, speak }) => {
+    const [step, setStep] = useState('briefing');
     const [currentNodeId, setCurrentNodeId] = useState('start');
     const [hearts, setHearts] = useState(3);
     const [history, setHistory] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
     const [completedGoals, setCompletedGoals] = useState([]);
-    const [showCard, setShowCard] = useState(false);
+    
+    // States für das Wörterbuch-Popup (identisch zum Reader)
+    const [clickedWord, setClickedWord] = useState(null);
+    const [savingId, setSavingId] = useState(null);
 
     const currentNode = mission.nodes[currentNodeId];
 
-    // NPC Initialisierung
     useEffect(() => {
         if (step === 'chat' && history.length === 0) {
             processNPCResponse(mission.nodes.start.npc);
         }
     }, [step]);
+
+    // --- WÖRTERBUCH LOGIK (Kopie aus BookReader) ---
+    const handleWordClickInChat = async (e, wordRaw) => {
+        e.stopPropagation();
+        let cleanBase = wordRaw.replace(/[,]/g, "").replace(/[.!?;:"«»()]+/g, "").trim();
+        if (!cleanBase || /^\d+$/.test(cleanBase)) return;
+
+        setClickedWord({ cleanFrench: cleanBase, isLoading: true });
+        
+        try {
+            const matchesMap = new Map();
+            const addMatch = (newMatch) => {
+                const key = newMatch.rank || newMatch.id || newMatch.french;
+                matchesMap.set(key, newMatch);
+            };
+
+            const term = cleanBase.toLowerCase();
+            vocabulary.filter(v => v.french.toLowerCase() === term).forEach(m => addMatch({ ...m, source: 'top10k' }));
+            vocabulary.filter(v => v.conjugation && v.conjugation.includes(term)).forEach(m => addMatch({ ...m, source: 'top10k_mapping', isConjugated: true }));
+
+            let finalResults = Array.from(matchesMap.values());
+            
+            if (finalResults.length === 0) {
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanBase)}&langpair=fr|en`);
+                const data = await res.json();
+                if (data?.responseData?.translatedText) {
+                    finalResults = [{ id: 'web_'+Date.now(), french: cleanBase, english: data.responseData.translatedText, rank: 'WEB', source: 'mymemory' }];
+                }
+            }
+            setClickedWord({ cleanFrench: cleanBase, allMatches: finalResults, isLoading: false });
+        } catch (err) { setClickedWord(null); }
+    };
+
+    // --- HELFER: TEXT IN ANKLICKBARE SPANS UMWANDELN ---
+    const renderClickableText = (text, isUser = false) => {
+        return text.split(/(\s+)/).map((segment, i) => {
+            if (segment.match(/\s+/)) return segment;
+            const clean = segment.replace(/[*_]/g, "");
+            return (
+                <span 
+                    key={i} 
+                    onClick={(e) => handleWordClickInChat(e, clean)} 
+                    className={`cursor-pointer rounded px-0.5 transition-colors ${
+                        isUser 
+                        ? 'hover:bg-white/20 hover:text-white' 
+                        : 'hover:bg-indigo-100 hover:text-indigo-800'
+                    }`}
+                >
+                    {clean}
+                </span>
+            );
+        });
+    };
 
     const processNPCResponse = (text) => {
         setIsTyping(true);
@@ -770,168 +828,95 @@ const MissionPlayer = ({ mission, onFinish, onSaveCard }) => {
 
     const handleOptionClick = (option) => {
         if (isTyping) return;
-
-        // User Nachricht hinzufügen
         setHistory(prev => [...prev, { type: 'user', text: option.text }]);
-
-        // Ziel prüfen
         if (option.goal && !completedGoals.includes(option.goal)) {
             setCompletedGoals(prev => [...prev, option.goal]);
         }
 
-        // Verzögerte NPC Reaktion
         setIsTyping(true);
         setTimeout(() => {
             setIsTyping(false);
             const nextNode = mission.nodes[option.next];
-            
-            // Schaden prüfen
             if (option.correct === false || nextNode.damage) {
                 setHearts(h => h - 1);
-                if (hearts <= 1) {
-                    setStep('result');
-                    return;
-                }
+                if (hearts <= 1) { setStep('result'); return; }
             }
-
-            // Ende prüfen
-            if (nextNode.isEnd) {
-                setCurrentNodeId(option.next);
-                setHistory(prev => [...prev, { type: 'npc', text: nextNode.npc }]);
-                setTimeout(() => setStep('result'), 1500);
-            } else {
-                setCurrentNodeId(option.next);
-                setHistory(prev => [...prev, { type: 'npc', text: nextNode.npc }]);
-            }
+            setCurrentNodeId(option.next);
+            setHistory(prev => [...prev, { type: 'npc', text: nextNode.npc }]);
+            if (nextNode.isEnd) setTimeout(() => setStep('result'), 1500);
         }, 1200);
     };
 
-    // --- RENDER BRIEFING ---
+    // --- UI RENDERING ---
     if (step === 'briefing') {
         return (
             <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
                 <div className="bg-white w-full max-w-md rounded-[2.5rem] overflow-hidden animate-in slide-in-from-bottom-8 duration-500">
                     <div className={`p-8 ${mission.coverColor} ${mission.textColor}`}>
                         <div className="flex justify-between items-start mb-4">
-                            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
-                                <MapIcon size={24} />
-                            </div>
+                            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md"><MapIcon size={24} /></div>
                             <button onClick={onFinish} className="p-2 bg-black/10 rounded-full"><X size={20}/></button>
                         </div>
                         <h2 className="text-3xl font-black mb-1">{mission.title}</h2>
                         <div className="text-xs font-bold uppercase tracking-widest opacity-70">Level {mission.level} • {mission.genre}</div>
                     </div>
-                    
                     <div className="p-8 space-y-6">
-                        <div>
-                            <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-2">Your Mission</h4>
-                            <p className="text-slate-600 leading-relaxed">{mission.briefing.description}</p>
-                        </div>
-
-                        <div>
-                            <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-3">Checklist</h4>
-                            <div className="space-y-2">
-                                {mission.briefing.goals.map(g => (
-                                    <div key={g.id} className="flex items-center gap-3 text-sm font-medium text-slate-500">
-                                        <div className="w-5 h-5 rounded-full border-2 border-slate-200 flex items-center justify-center text-[10px]">○</div>
-                                        {g.text}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <button 
-                            onClick={() => setStep('chat')}
-                            className="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-bold shadow-xl active:scale-95 transition-all"
-                        >Start Mission</button>
+                        <p className="text-slate-600 leading-relaxed">{mission.briefing.description}</p>
+                        <button onClick={() => setStep('chat')} className="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-bold shadow-xl active:scale-95 transition-all">Mission Starten</button>
                     </div>
                 </div>
             </div>
         );
     }
 
-    // --- RENDER RESULT ---
     if (step === 'result') {
         const isWin = hearts > 0 && mission.nodes[currentNodeId]?.success;
         return (
-            <div className="fixed inset-0 z-[110] bg-indigo-950 flex items-center justify-center p-6 text-white overflow-hidden">
-                <div className="text-center w-full max-w-sm animate-in zoom-in-95 duration-500">
-                    {isWin ? (
-                        <>
-                            <div className="text-6xl mb-6">🎉</div>
-                            <h2 className="text-4xl font-black mb-2">Mission Accomplished!</h2>
-                            <p className="text-indigo-200 mb-12">You've mastered the {mission.title}!</p>
-                            
-                            {/* Pokemon Card Reward */}
-                            <div className="relative group perspective-1000 mx-auto w-64 h-80 mb-12">
-                                <div className="w-full h-full bg-gradient-to-br from-amber-300 via-yellow-400 to-orange-500 rounded-[2rem] p-1 shadow-2xl shadow-orange-500/40">
-                                    <div className="w-full h-full bg-white rounded-[1.8rem] overflow-hidden flex flex-col">
-                                        <div className="h-1/2 bg-amber-50 flex items-center justify-center text-5xl relative">
-                                            {mission.id.includes('bakery') ? '🥐' : '🗺️'}
-                                            <div className="absolute top-3 right-3 text-[10px] font-black text-amber-600 border-2 border-amber-600 px-2 py-0.5 rounded-lg rotate-12">LEGENDARY</div>
-                                        </div>
-                                        <div className="p-4 flex-1 flex flex-col">
-                                            <div className="text-[10px] font-black text-indigo-600 uppercase mb-1">{mission.level} Mastery</div>
-                                            <h3 className="text-slate-800 font-bold text-xl mb-3">{mission.rewardCard.title}</h3>
-                                            <div className="mt-auto flex gap-1 justify-center">
-                                                {[1,2,3].map(s => <div key={s} className="w-2 h-2 rounded-full bg-amber-400"></div>)}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button 
-                                onClick={() => { onSaveCard(mission.rewardCard); onFinish(); }}
-                                className="w-full py-5 bg-white text-indigo-900 rounded-[2rem] font-black shadow-xl active:scale-95 transition-all"
-                            >Claim Card & Exit</button>
-                        </>
-                    ) : (
-                        <>
-                            <div className="text-6xl mb-6">💔</div>
-                            <h2 className="text-4xl font-black mb-4">Mission Failed</h2>
-                            <p className="text-indigo-200 mb-12">The NPC got too frustrated. Don't worry, take a breath and try again!</p>
-                            <button onClick={onFinish} className="w-full py-5 bg-white/10 border-2 border-white/20 text-white rounded-[2rem] font-bold active:scale-95 transition-all">Back to Explore</button>
-                        </>
-                    )}
-                </div>
+            <div className="fixed inset-0 z-[110] bg-indigo-950 flex items-center justify-center p-6 text-white text-center">
+               <div className="max-w-sm animate-in zoom-in-95 duration-500">
+                    <div className="text-6xl mb-6">{isWin ? '🎉' : '💔'}</div>
+                    <h2 className="text-4xl font-black mb-2">{isWin ? 'Gagné !' : 'Perdu...'}</h2>
+                    <p className="text-indigo-200 mb-12">{isWin ? `Du hast die Mission ${mission.title} gemeistert!` : 'Versuch es gleich noch einmal.'}</p>
+                    <button onClick={isWin ? () => { onSaveCard(mission.rewardCard); onFinish(); } : onFinish} className="w-full py-5 bg-white text-indigo-900 rounded-[2rem] font-black shadow-xl">
+                        {isWin ? 'Karte abholen' : 'Zurück'}
+                    </button>
+               </div>
             </div>
         );
     }
 
-    // --- RENDER CHAT ---
     return (
         <div className="fixed inset-0 z-[100] bg-slate-50 flex flex-col overflow-hidden">
-            {/* Mission Header */}
+            {/* Header */}
             <div className="pt-8 pb-4 px-6 flex items-center justify-between bg-white border-b border-slate-100 shadow-sm">
                 <button onClick={onFinish} className="text-slate-400"><X size={24}/></button>
-                <div className="flex-1 px-4">
+                <div className="flex-1 px-4 text-center">
                     <div className="flex gap-1 justify-center mb-1">
                         {[...Array(3)].map((_, i) => (
-                            <Heart key={i} size={16} fill={i < hearts ? "#ef4444" : "none"} className={i < hearts ? "text-red-500" : "text-slate-200"} />
+                            <HeartIcon key={i} size={16} fill={i < hearts ? "#ef4444" : "none"} className={i < hearts ? "text-red-500" : "text-slate-200"} />
                         ))}
                     </div>
-                    <div className="text-[9px] font-black text-slate-400 uppercase text-center tracking-widest">{mission.title}</div>
+                    <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{mission.title}</div>
                 </div>
                 <div className="w-6"></div>
             </div>
 
             {/* Chat Area */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar pb-32">
                 {history.map((msg, idx) => (
                     <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
-                        <div className={`max-w-[80%] p-4 rounded-3xl font-medium text-sm leading-relaxed shadow-sm ${
+                        <div className={`max-w-[85%] p-4 rounded-[1.8rem] font-medium text-sm leading-relaxed shadow-sm ${
                             msg.type === 'user' 
                             ? 'bg-slate-900 text-white rounded-tr-none' 
                             : 'bg-white text-slate-800 border border-slate-100 rounded-tl-none'
                         }`}>
-                            {msg.text}
+                            {renderClickableText(msg.text, msg.type === 'user')}
                         </div>
                     </div>
                 ))}
                 {isTyping && (
                     <div className="flex justify-start">
-                        <div className="bg-white p-4 rounded-3xl rounded-tl-none border border-slate-100 flex gap-1">
+                        <div className="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-100 flex gap-1">
                             <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce"></div>
                             <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]"></div>
                             <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.4s]"></div>
@@ -942,17 +927,42 @@ const MissionPlayer = ({ mission, onFinish, onSaveCard }) => {
 
             {/* Response Options */}
             {!currentNode.isEnd && (
-                <div className="p-6 bg-white border-t border-slate-100 space-y-3">
+                <div className="p-6 bg-white border-t border-slate-100 space-y-3 absolute bottom-0 left-0 right-0">
                     {currentNode.options.map((opt, i) => (
                         <button 
                             key={i}
                             disabled={isTyping}
                             onClick={() => handleOptionClick(opt)}
-                            className="w-full p-5 bg-slate-50 border border-slate-100 hover:border-indigo-500 hover:bg-indigo-50 text-slate-700 rounded-2xl text-left text-sm font-bold transition-all active:scale-[0.98] disabled:opacity-50"
+                            className="w-full p-4 bg-slate-50 border border-slate-100 hover:border-indigo-500 hover:bg-indigo-50 text-slate-700 rounded-2xl text-left text-sm font-bold transition-all active:scale-[0.98] disabled:opacity-50"
                         >
                             {opt.text}
                         </button>
                     ))}
+                </div>
+            )}
+
+            {/* DICTIONARY POPUP (Identisch zum Reader) */}
+            {clickedWord && (
+                <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-5 rounded-[2.5rem] shadow-2xl z-[150] border border-white/10 max-h-[60vh] flex flex-col animate-in slide-in-from-bottom-4">
+                    <div className="flex justify-between items-center mb-4 px-2">
+                        <h4 className="text-xl font-bold capitalize">{clickedWord.cleanFrench}</h4>
+                        <button onClick={() => setClickedWord(null)} className="p-2 text-slate-500 hover:text-white"><X size={24} /></button>
+                    </div>
+                    <div className="space-y-3 overflow-y-auto no-scrollbar pb-2">
+                        {clickedWord.isLoading ? (
+                            <div className="flex justify-center py-8"><Loader2 className="animate-spin text-indigo-400" /></div>
+                        ) : (
+                            clickedWord.allMatches.map((match, idx) => (
+                                <div key={idx} className="bg-white/5 border border-white/10 rounded-3xl p-4">
+                                    <div className="text-lg font-bold text-white mb-2">{match.english}</div>
+                                    <div className="flex gap-2">
+                                        <button onClick={() => speak(match.french)} className="flex-1 bg-white/10 py-2 rounded-xl text-xs font-bold active:scale-95">Anhören</button>
+                                        <button className="flex-1 bg-indigo-600 py-2 rounded-xl text-xs font-bold active:scale-95">Speichern</button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </div>
             )}
         </div>
@@ -4601,15 +4611,17 @@ function App() {
                 </div>
 
                 {/* MISSION PLAYER OVERLAY */}
+                {/* In renderExplore (innerhalb von App) */}
                 {selectedMission && (
                     <MissionPlayer 
                         mission={selectedMission} 
+                        vocabulary={vocabulary} // <--- Hinzugefügt
+                        speak={speak}           // <--- Hinzugefügt
                         onFinish={() => setSelectedMission(null)}
                         onSaveCard={(card) => {
-                            setCollectedCards(prev => {
-                                if (prev.some(c => c.id === card.id)) return prev;
-                                return [...prev, card];
-                            });
+                            if (!collectedCards.some(c => c.id === card.id)) {
+                                setCollectedCards(prev => [...prev, card]);
+                            }
                         }}
                     />
                 )}
