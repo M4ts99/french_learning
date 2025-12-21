@@ -188,40 +188,6 @@ const IRREGULAR_MAP = {
     "dis": "dire", "dit": "dire", "dites": "dire"
 };
 // --- TOPIC HUB CONTENT ---
-const TOPIC_CONTENT = {
-    animals: {
-        idioms: [
-            { fr: "Il fait un temps de chien", en: "The weather is awful (lit. dog weather)" },
-            { fr: "Avoir un chat dans la gorge", en: "To have a frog in one's throat (lit. cat)" },
-            { fr: "Poser un lapin", en: "To stand someone up (lit. to place a rabbit)" }
-        ],
-        story: {
-            title: "Visite au Zoo",
-            text: "Aujourd'hui, nous allons au zoo. Le lion dort sous un arbre, mais les singes jouent. J'aime regarder les grands éléphants. C'est une belle journée.",
-            en: "Today we are going to the zoo. The lion sleeps under a tree, but the monkeys are playing. I like watching the big elephants. It is a beautiful day."
-        },
-        roleplay: {
-            title: "My Favorite Pet",
-            desc: "Tell the AI about your dog or cat. What is its name? What does it like to eat?"
-        }
-    },
-    food: {
-        idioms: [
-            { fr: "C'est la fin des haricots", en: "It's the last straw (lit. end of the beans)" },
-            { fr: "Raconter des salades", en: "To tell lies (lit. to tell salads)" },
-            { fr: "Occupe-toi de tes oignons", en: "Mind your own business (lit. your onions)" }
-        ],
-        story: {
-            title: "Au Restaurant",
-            text: "Je voudrais réserver une table pour deux personnes. Le menu est délicieux. Je prends un steak avec des frites et un verre de vin rouge. L'addition, s'il vous plaît !",
-            en: "I would like to reserve a table for two. The menu is delicious. I'll have a steak with fries and a glass of red wine. The check, please!"
-        },
-        roleplay: {
-            title: "Ordering Dinner",
-            desc: "You are at a bistro in Paris. Order a 3-course meal and ask for the bill."
-        }
-    }
-};
 // --- AUTH COMPONENT ---
 /* script.js - Ersetze die alte AuthScreen Komponente hiermit */
 
@@ -359,7 +325,6 @@ const AuthScreen = ({ onLoginSuccess, isEmbedded = false, initialMode = 'login' 
         </div>
     );
 };
-    /* script.js - UpdatePasswordScreen mit Bestätigung */
 const UpdatePasswordScreen = ({ onComplete }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState(''); // NEU
@@ -764,517 +729,6 @@ const GRAMMAR_MODULES = [
         ] 
     }
 ];
-// --- NEWS SOURCES ---
-
-
-/* script.js - Ersetzt LITERATURE_DATA */
-
-
-
-// --- NEW COMPONENTS ---
-// --- NEW COMPONENTS ---
-/* script.js - Einfügen nach JOKE_DB */
-
-const LIBRARY_CONTENT = {
-    books: [
-        {
-            id: 'lupin',
-            type: 'book',
-            title: "Arsène Lupin",
-            author: "Maurice Leblanc",
-            coverColor: "bg-indigo-900",
-            icon: "User", 
-            chapters: [
-            {
-                    title: "1. L'Arrestation d'Arsène Lupin",
-                    // Hier fügst du den Text ein, den wir schon hatten
-                    simple: `... (Text hier) ...`, 
-                    advanced: `... (Text hier) ...`,
-                    original: `L’étrange voyage ! Il avait si bien commencé cependant ! Pour ma part, je n’en fis jamais qui s’annonçât sous de plus heureux auspices. La Provence est un transatlantique rapide, confortable, commandé par le plus affable des hommes. La société la plus choisie s’y trouvait réunie. Des relations se formaient, des divertissements s’organisaient. Nous avions cette impression exquise d’être séparés du monde, réduits à nous-mêmes comme sur une île inconnue, obligés, par conséquent, de nous rapprocher les uns des autres.
-
-Et nous nous rapprochions…
-
-Avez-vous jamais songé à ce qu’il y a d’original et d’imprévu dans ce groupement d’êtres qui, la veille encore, ne se connaissaient pas, et qui, durant quelques jours, entre le ciel infini et la mer immense, vont vivre de la vie la plus intime, ensemble vont défier les colères de l’Océan, l’assaut terrifiant des vagues, la méchanceté des tempêtes et le calme sournois de l’eau endormie ?
-
-C’est, au fond, vécue en une sorte de raccourci tragique, la vie elle-même, avec ses orages et ses grandeurs, sa monotonie et sa diversité, et voilà pourquoi, peut-être, on goûte avec une hâte fiévreuse et une volupté d’autant plus intense ce court voyage dont on aperçoit la fin au moment même où il commence.
-
-Mais, depuis plusieurs années, quelque chose se passe qui ajoute singulièrement aux émotions de la traversée. La petite île flottante dépend encore de ce monde dont on se croyait affranchi. Un lien subsiste, qui ne se dénoue que peu à peu en plein Océan, et peu à peu, en plein Océan, se renoue. Le télégraphe sans fil ! appel d’un autre univers d’où l’on recevrait des nouvelles de la façon la plus mystérieuse qui soit ! L’imagination n’a plus la ressource d’évoquer des fils de fer au creux desquels glisse l’invisible message. Le mystère est plus insondable encore, plus poétique aussi, et c’est aux ailes du vent qu’il faut recourir pour expliquer ce nouveau miracle.
-
-Ainsi, les premières heures, nous sentîmes-nous suivis, escortés, précédés même par cette voix lointaine, qui, de temps en temps, chuchotait à l’un de nous quelques paroles de là-bas. Deux amis me parlèrent. Dix autres, vingt autres nous envoyèrent à tous, au travers de l’espace, leurs adieux attristés ou souriants.
-
-Or, le second jour, à cinq cents milles des côtes françaises, par une après-midi orageuse, le télégraphe sans fil nous transmettait une dépêche dont voici la teneur :
-
-« Arsène Lupin à votre bord, première classe, cheveux blonds, blessure avant-bras droit, voyage seul, sous le nom de R… »
-
-À ce moment précis, un coup de tonnerre violent éclata dans le ciel sombre. Les ondes électriques furent interrompues. Le reste de la dépêche ne nous parvint pas. Du nom sous lequel se cachait Arsène Lupin, on ne sut que l’initiale.
-
-Il se fût agi de toute autre nouvelle, je ne doute point que le secret en eût été scrupuleusement gardé par les employés du poste télégraphique, ainsi que par le commissaire du bord et par le commandant. Mais il est de ces événements qui semblent forcer la discrétion la plus rigoureuse. Le jour même, sans qu’on pût dire comment la chose avait été ébruitée, nous savions tous que le fameux Arsène Lupin se cachait parmi nous.
-
-Arsène Lupin parmi nous ! l’insaisissable cambrioleur dont on racontait les prouesses dans tous les journaux depuis des mois ! l’énigmatique personnage avec qui le vieux Ganimard, notre meilleur policier, avait engagé ce duel à mort dont les péripéties se déroulaient de façon si pittoresque ! Arsène Lupin, le fantaisiste gentleman qui n’opère que dans les châteaux et les salons, et qui, une nuit, où il avait pénétré chez le baron Schormann, en était parti les mains vides et avait laissé sa carte, ornée de cette formule : « Arsène Lupin, gentleman-cambrioleur, reviendra quand les meubles seront authentiques ». Arsène Lupin, l’homme aux mille déguisements : tour à tour chauffeur, ténor, bookmaker, fils de famille, adolescent, vieillard, commis-voyageur marseillais, médecin russe, torero espagnol !
-
-Qu’on se rende bien compte de ceci : Arsène Lupin allant et venant dans le cadre relativement restreint d’un transatlantique, que dis-je ! dans ce petit coin des premières où l’on se retrouvait à tout instant, dans cette salle à manger, dans ce salon, dans ce fumoir ! Arsène Lupin, c’était peut-être ce monsieur… ou celui-là… mon voisin de table… mon compagnon de cabine…
-
-— Et cela va durer encore cinq fois vingt-quatre heures ! s’écria le lendemain miss Nelly Underdown, mais c’est intolérable ! J’espère bien qu’on va l’arrêter.
-
-Et s’adressant à moi :
-
-— Voyons, vous, monsieur d’Andrézy, qui êtes déjà au mieux avec le commandant, vous ne savez rien ?
-
-J’aurais bien voulu savoir quelque chose pour plaire à miss Nelly ! C’était une de ces magnifiques créatures qui, partout où elles sont, occupent aussitôt la place la plus en vue. Leur beauté autant que leur fortune éblouit. Elles ont une cour, des fervents, des enthousiastes.
-
-Élevée à Paris par une mère française, elle rejoignait son père, le richissime Underdown, de Chicago. Une de ses amies, lady Jerland, l’accompagnait.
-
-Dès la première heure, j’avais posé ma candidature de flirt. Mais, dans l’intimité rapide du voyage, tout de suite son charme m’avait troublé, et je me sentais un peu trop ému pour un flirt quand ses grands yeux noirs rencontraient les miens. Cependant elle accueillait mes hommages avec une certaine faveur. Elle daignait rire de mes bons mots et s’intéresser à mes anecdotes. Une vague sympathie semblait répondre à l’empressement que je lui témoignais.
-
-Un seul rival peut-être m’eût inquiété, un assez beau garçon, élégant, réservé, dont elle paraissait quelquefois préférer l’humeur taciturne à mes façons plus « en dehors » de Parisien.
-
-Il faisait justement partie du groupe d’admirateurs qui entourait miss Nelly, lorsqu’elle m’interrogea. Nous étions sur le pont, agréablement installés dans des rocking-chairs. L’orage de la veille avait éclairci le ciel. L’heure était délicieuse.
-
-— Je ne sais rien de précis, mademoiselle, lui répondis-je, mais est-il impossible de conduire nous-mêmes notre enquête, tout aussi bien que le ferait le vieux Ganimard, l’ennemi personnel d’Arsène Lupin ?
-
-— Oh ! oh ! vous vous avancez beaucoup !
-
-— En quoi donc ? Le problème est-il si compliqué ?
-
-— Très compliqué.
-
-— C’est que vous oubliez les éléments que nous avons pour le résoudre.
-
-— Quels éléments ?
-
-— 1o Lupin se fait appeler monsieur R…
-
-— Signalement un peu vague.
-
-— 2o Il voyage seul.
-
-— Si cette particularité vous suffit !
-
-— 3o Il est blond.
-
-— Et alors ?
-
-— Alors nous n’avons plus qu’à consulter la liste des passagers et à procéder par élimination.
-
-J’avais cette liste dans ma poche. Je la pris et la parcourus.
-
-— Je note d’abord qu’il n’y a que treize personnes que leur initiale désigne à notre attention.
-
-— Treize seulement ?
-
-— En première classe, oui. Sur ces treize messieurs R…, comme vous pouvez vous en assurer, neuf sont accompagnés de femmes, d’enfants ou de domestiques. Restent quatre personnages isolés : le marquis de Raverdan…
-
-— Secrétaire d’ambassade, interrompit miss Nelly, je le connais.
-
-— Le major Rawson…
-
-— C’est mon oncle, dit quelqu’un.
-
-— M. Rivolta…
-
-— Présent, s’écria l’un de nous, un Italien dont la figure disparaissait sous une barbe du plus beau noir.
-
-Miss Nelly éclata de rire.
-
-— Monsieur n’est pas précisément blond.
-
-— Alors, repris-je, nous sommes obligés de conclure que le coupable est le dernier de la liste.
-
-— C’est-à-dire ?
-
-— C’est-à-dire, M. Rozaine. Quelqu’un connaît-il M. Rozaine ?
-
-On se tut. Mais miss Nelly, interpellant le jeune homme taciturne dont l’assiduité près d’elle me tourmentait, lui dit :
-
-— Eh bien, monsieur Rozaine, vous ne répondez pas ?
-
-On tourna les yeux vers lui. Il était blond.
-
-Avouons-le, je sentis comme un petit choc au fond de moi. Et le silence gêné qui pesa sur nous m’indiqua que les autres assistants éprouvaient aussi cette sorte de suffocation. C’était absurde d’ailleurs, car enfin rien dans les allures de ce monsieur ne permettait qu’on le suspectât.
-
-— Pourquoi je ne réponds pas ? dit-il, mais parce que, vu mon nom, ma qualité de voyageur isolé et la couleur de mes cheveux, j’ai déjà procédé à une enquête analogue, et que je suis arrivé au même résultat. Je suis donc d’avis qu’on m’arrête.
-
-Il avait un drôle d’air, en prononçant ces paroles. Ses lèvres minces comme deux traits inflexibles s’amincirent encore et pâlirent. Des filets de sang strièrent ses yeux.
-
-Certes, il plaisantait. Pourtant sa physionomie, son attitude nous impressionnèrent. Naïvement, miss Nelly demanda :
-
-— Mais vous n’avez pas de blessure ?
-
-— Il est vrai, dit-il, la blessure manque.
-
-D’un geste nerveux il releva sa manchette et découvrit son bras. Mais aussitôt une idée me frappa. Mes yeux croisèrent ceux de miss Nelly : il avait montré le bras gauche.
-
-Et ma foi, j’allais en faire nettement la remarque, quand un incident détourna notre attention. Lady Jerland, l’amie de miss Nelly, arrivait en courant.
-
-Elle était bouleversée. On s’empressa autour d’elle, et ce n’est qu’après bien des efforts qu’elle réussit à balbutier :
-
-— Mes bijoux, mes perles !… on a tout pris !…
-
-Non, on n’avait pas tout pris, comme nous le sûmes par la suite ; chose bien plus curieuse : on avait choisi !
-
-De l’étoile en diamants, du pendentif en cabochons de rubis, des colliers et des bracelets brisés, on avait enlevé, non point les pierres les plus grosses, mais les plus fines, les plus précieuses, celles, aurait-on dit, qui avaient le plus de valeur tout en tenant le moins de place. Les montures gisaient là, sur la table. Je les vis, tous nous les vîmes, dépouillées de leurs joyaux comme des fleurs dont on eût arraché les beaux pétales étincelants et colorés.
-
-Et pour exécuter ce travail, il avait fallu, pendant l’heure où lady Jerland prenait le thé, il avait fallu, en plein jour, et dans un couloir fréquenté, fracturer la porte de la cabine, trouver un petit sac dissimulé à dessein au fond d’un carton à chapeau, l’ouvrir et choisir !
-
-Il n’y eut qu’un cri parmi nous. Il n’y eut qu’une opinion parmi tous les passagers, lorsque le vol fut connu : c’est Arsène Lupin. Et de fait, c’était bien sa manière compliquée, mystérieuse, inconcevable… et logique cependant, car s’il était difficile de recéler la masse encombrante qu’eût formée l’ensemble des bijoux, combien moindre était l’embarras avec de petites choses indépendantes les unes des autres, perles, émeraudes et saphirs.
-
-Et au dîner, il se passa ceci : à droite et à gauche de Rozaine, les deux places restèrent vides. Et le soir on sut qu’il avait été convoqué par le commandant.
-
-Son arrestation, que personne ne mit en doute, causa un véritable soulagement. On respirait enfin. Ce soir-là on joua aux petits jeux. On dansa. Miss Nelly, surtout, montra une gaieté étourdissante qui me fit voir que, si les hommages de Rozaine avaient pu lui agréer au début, elle ne s’en souvenait guère. Sa grâce acheva de me conquérir. Vers minuit, à la clarté sereine de la lune, je lui affirmai mon dévouement avec une émotion qui ne parut pas lui déplaire.
-
-Mais le lendemain, à la stupeur générale, on apprit que, les charges relevées contre lui n’étant pas suffisantes, Rozaine était libre.
-
-Fils d’un négociant considérable de Bordeaux, il avait exhibé des papiers parfaitement en règle. En outre, ses bras n’offraient pas la moindre trace de blessure.
-
-— Des papiers ! des actes de naissance ! s’écrièrent les ennemis de Rozaine, mais Arsène Lupin vous en fournira tant que vous voudrez ! Quant à la blessure, c’est qu’il n’en a pas reçu… ou qu’il en a effacé la trace !
-
-On leur objectait qu’à l’heure du vol, Rozaine — c’était démontré — se promenait sur le pont. À quoi ils ripostaient :
-
-— Est-ce qu’un homme de la trempe d’Arsène Lupin a besoin d’assister au vol qu’il commet ?
-
-Et puis, en dehors de toute considération étrangère, il y avait un point sur lequel les plus sceptiques ne pouvaient épiloguer : Qui, sauf Rozaine, voyageait seul, était blond, et portait un nom commençant par R ? Qui le télégramme désignait-il, si ce n’était Rozaine ?
-
-Et quand Rozaine, quelques minutes avant le déjeuner, se dirigea audacieusement vers notre groupe, miss Nelly et lady Jerland se levèrent et s’éloignèrent.
-
-C’était bel et bien de la peur.
-
-Une heure plus tard, une circulaire manuscrite passait de main en main parmi les employés du bord, les matelots, les voyageurs de toutes classes : M. Louis Rozaine promettait une somme de dix mille francs à qui démasquerait Arsène Lupin, ou trouverait le possesseur des pierres dérobées.
-
-— Et si personne ne me vient en aide contre ce bandit, déclara Rozaine au commandant, moi, je lui ferai son affaire.
-
-Rozaine contre Arsène Lupin, ou plutôt, selon le mot qui courut, Arsène Lupin lui-même contre Arsène Lupin, la lutte ne manquait pas d’intérêt !
-
-Elle se prolongea durant deux journées. On vit Rozaine errer de droite et de gauche, se mêler au personnel, interroger, fureter. On aperçut son ombre, la nuit, qui rôdait.
-
-De son côté, le commandant déploya l’énergie la plus active. Du haut en bas, en tous les coins, la Provence fut fouillée. On perquisitionna dans toutes les cabines, sans exception, sous le prétexte fort juste que les objets étaient cachés dans n’importe quel endroit, sauf dans la cabine du coupable.
-
-— On finira bien par découvrir quelque chose, n’est-ce pas ? me demandait miss Nelly. Tout sorcier qu’il soit, il ne peut faire que des diamants et des perles deviennent invisibles.
-
-— Mais si, lui répondais-je, ou alors il faudrait explorer la coiffe de nos chapeaux, la doublure de nos vestes, et tout ce que nous portons sur nous.
-
-Et lui montrant mon kodak, un 9 × 12 avec lequel je ne me lassais pas de la photographier dans les attitudes les plus diverses :
-
-— Rien que dans un appareil pas plus grand que celui-ci, ne pensez-vous pas qu’il y aurait place pour toutes les pierres précieuses de lady Jerland ? On affecte de prendre des vues et le tour est joué.
-
-— Mais cependant j’ai entendu dire qu’il n’y a point de voleur qui ne laisse derrière lui un indice quelconque.
-
-— Il y en a un : Arsène Lupin.
-
-— Pourquoi ?
-
-— Pourquoi ? parce qu’il ne pense pas seulement au vol qu’il commet, mais à toutes les circonstances qui pourraient le dénoncer.
-
-— Au début, vous étiez plus confiant.
-
-— Mais, depuis, je l’ai vu à l’œuvre.
-
-— Et alors, selon vous ?
-
-— Selon moi, on perd son temps.
-
-Et de fait, les investigations ne donnaient aucun résultat, ou du moins, celui qu’elles donnèrent ne correspondait pas à l’effort général : la montre du commandant lui fut volée.
-
-Furieux, il redoubla d’ardeur et surveilla de plus près encore Rozaine avec qui il avait eu plusieurs entrevues. Le lendemain, ironie charmante, on retrouvait la montre parmi les faux-cols du commandant en second.
-
-Tout cela avait un air de prodige, et dénonçait bien la manière humoristique d’Arsène Lupin, cambrioleur, soit, mais dilettante aussi. Il travaillait par goût et par vocation, certes, mais par amusement aussi. Il donnait l’impression du monsieur qui se divertit à la pièce qu’il fait jouer, et qui, dans la coulisse, rit à gorge déployée de ses traits d’esprit et des situations qu’il imagina.
-
-Décidément, c’était un artiste en son genre, et quand j’observais Rozaine, sombre et opiniâtre, et que je songeais au double rôle que tenait sans doute ce curieux personnage, je ne pouvais en parler sans une certaine admiration.
-
-Or, l’avant-dernière nuit, l’officier de quart entendit des gémissements à l’endroit le plus obscur du pont. Il s’approcha. Un homme était étendu, la tête enveloppée dans une écharpe grise très épaisse, les poignets ficelés à l’aide d’une fine cordelette.
-
-On le délivra de ses liens. On le releva, des soins lui furent prodigués.
-
-Cet homme, c’était Rozaine.
-
-C’était Rozaine assailli au cours d’une de ses expéditions, terrassé et dépouillé. Une carte de visite fixée par une épingle à son vêtement portait ces mots : « Arsène Lupin accepte avec reconnaissance les dix mille francs de M. Rozaine. »
-
-En réalité, le portefeuille dérobé contenait vingt billets de mille.
-
-Naturellement, on accusa le malheureux d’avoir simulé cette attaque contre lui-même. Mais, outre qu’il lui eût été impossible de se lier de cette façon, il fut établi que l’écriture de la carte différait absolument de l’écriture de Rozaine, et ressemblait au contraire, à s’y méprendre, à celle d’Arsène Lupin, telle que la reproduisait un ancien journal trouvé à bord.
-
-Ainsi donc, Rozaine n’était plus Arsène Lupin. Rozaine était Rozaine, fils d’un négociant de Bordeaux ! Et la présence d’Arsène Lupin s’affirmait une fois de plus, et par quel acte redoutable !
-
-Ce fut la terreur. On n’osa plus rester seul dans sa cabine, et pas davantage s’aventurer seul aux endroits trop écartés. Prudemment on se groupait entre gens sûrs les uns des autres. Et encore, une défiance instinctive divisait les plus intimes. C’est que la menace ne provenait pas d’un individu isolé, surveillé, et par là même moins dangereux. Arsène Lupin, maintenant, c’était… c’était tout le monde. Notre imagination surexcitée lui attribuait un pouvoir miraculeux et illimité. On le supposait capable de prendre les déguisements les plus inattendus, d’être tour à tour le respectable major Rawson, ou le noble marquis de Raverdan, ou même, car on ne s’arrêtait plus à l’initiale accusatrice, ou même telle ou telle personne connue de tous, ayant femme, enfants, domestiques.
-
-Les premières dépêches sans fil n’apportèrent aucune nouvelle. Du moins le commandant ne nous en fit point part, et un tel silence n’était pas pour nous rassurer.
-
-Aussi, le dernier jour parut-il interminable. On vivait dans l’attente anxieuse d’un malheur. Cette fois, ce ne serait plus un vol, ce ne serait plus une simple agression, ce serait le crime, le meurtre. On n’admettait pas qu’Arsène Lupin s’en tînt à ces deux larcins insignifiants. Maître absolu du navire, les autorités réduites à l’impuissance, il n’avait qu’à vouloir, tout lui était permis, il disposait des biens et des existences.
-
-Heures délicieuses pour moi, je l’avoue, car elles me valurent la confiance de miss Nelly. Impressionnée par tant d’événements, de nature déjà inquiète, elle chercha spontanément à mes côtés une protection, une sécurité que j’étais heureux de lui offrir.
-
-Au fond, je bénissais Arsène Lupin. N’était-ce pas lui qui nous rapprochait ? N’était-ce pas grâce à lui que j’avais le droit de m’abandonner aux plus beaux rêves ? Rêves d’amour et rêves moins chimériques, pourquoi ne pas le confesser ? Les Andrézy sont de bonne souche poitevine, mais leur blason est quelque peu dédoré, et il ne me paraît pas indigne d’un gentilhomme de songer à rendre à son nom le lustre perdu.
-
-Et ces rêves, je le sentais, n’offusquaient point Nelly. Ses yeux souriants m’autorisaient à les faire. La douceur de sa voix me disait d’espérer.
-
-Et jusqu’au dernier moment, accoudés aux bastingages, nous restâmes l’un près de l’autre, tandis que la ligne des côtes américaines voguait au-devant de nous.
-
-On avait interrompu les perquisitions. On attendait. Depuis les premières jusqu’à l’entrepont où grouillaient les émigrants, on attendait la minute suprême où s’expliquerait enfin l’insoluble énigme. Qui était Arsène Lupin ? Sous quel nom, sous quel masque se cachait le fameux Arsène Lupin ?
-
-Et cette minute suprême arriva. Dussé-je vivre cent ans, je n’en oublierai pas le plus infime détail.
-
-— Comme vous êtes pâle, miss Nelly, dis-je à ma compagne qui s’appuyait à mon bras, toute défaillante.
-
-— Et vous ! me répondit-elle, ah ! vous êtes si changé !
-
-— Songez donc ! cette minute est passionnante, et je suis si heureux de la vivre auprès de vous, miss Nelly. Il me semble que votre souvenir s’attardera quelquefois…
-
-Elle n’écoutait pas, haletante et fiévreuse. La passerelle s’abattit. Mais avant que nous eûmes la liberté de la franchir, des gens montèrent à bord, des douaniers, des hommes en uniforme, des facteurs.
-
-Miss Nelly balbutia :
-
-— On s’apercevrait qu’Arsène Lupin s’est échappé pendant la traversée que je n’en serais pas surprise.
-
-— Il a peut-être préféré la mort au déshonneur, et plonger dans l’Atlantique plutôt que d’être arrêté.
-
-— Ne riez pas, fit-elle, agacée.
-
-Soudain je tressaillis, et comme elle me questionnait, je lui dis :
-
-— Vous voyez ce vieux petit homme debout à l’extrémité de la passerelle ?
-
-— Avec un parapluie et une redingote vert-olive ?
-
-— C’est Ganimard.
-
-— Ganimard ?
-
-— Oui, le célèbre policier, celui qui a juré qu’Arsène Lupin serait arrêté de sa propre main. Ah ! je comprends que l’on n’ait pas eu de renseignements de ce côté de l’Océan. Ganimard était là ! et il aime bien que personne ne s’occupe de ses petites affaires.
-
-— Alors Arsène Lupin est sûr d’être pris ?
-
-— Qui sait ? Ganimard ne l’a jamais vu, paraît-il, que grimé et déguisé. À moins qu’il ne connaisse son nom d’emprunt…
-
-— Ah ! dit-elle, avec cette curiosité un peu cruelle de la femme, si je pouvais assister à l’arrestation !
-
-— Patientons. Certainement Arsène Lupin a déjà remarqué la présence de son ennemi. Il préférera sortir parmi les derniers, quand l’œil du vieux sera fatigué.
-
-Le débarquement commença. Appuyé sur son parapluie, l’air indifférent, Ganimard ne semblait pas prêter attention à la foule qui se pressait entre les deux balustrades. Je notai qu’un officier du bord, posté derrière lui, le renseignait de temps à autre.
-
-Le marquis de Raverdan, le major Rawson, l’Italien Rivolta, défilèrent, et d’autres, et beaucoup d’autres… Et j’aperçus Rozaine qui s’approchait.
-
-Pauvre Rozaine ! il ne paraissait pas remis de ses mésaventures !
-
-— C’est peut-être lui tout de même, me dit miss Nelly… Qu’en pensez-vous ?
-
-— Je pense qu’il serait fort intéressant d’avoir sur une même photographie Ganimard et Rozaine. Prenez donc mon appareil, je suis si chargé.
-
-Je le lui donnai, mais trop tard pour qu’elle s’en servît. Rozaine passait. L’officier se pencha à l’oreille de Ganimard, celui-ci haussa légèrement les épaules, et Rozaine passa.
-
-Mais alors, mon Dieu, qui était Arsène Lupin ?
-
-— Oui, fit-elle à haute voix, qui est-ce ?
-
-Il n’y avait plus qu’une vingtaine de personnes. Elle les observait tour à tour, avec la crainte confuse qu’il ne fût pas, lui, au nombre de ces vingt personnes.
-
-Je lui dis :
-
-— Nous ne pouvons attendre plus longtemps.
-
-Elle s’avança. Je la suivis. Mais nous n’avions pas fait dix pas que Ganimard nous barra le passage.
-
-— Eh bien, quoi ? m’écriai-je.
-
-— Un instant, monsieur, qui vous presse ?
-
-— J’accompagne mademoiselle.
-
-— Un instant, répéta-t-il d’une voix plus impérieuse.
-
-Il me dévisagea profondément, puis il me dit, les yeux dans les yeux :
-
-— Arsène Lupin, n’est-ce pas ?
-
-Je me mis à rire.
-
-— Non, Bernard d’Andrézy, tout simplement.
-
-— Bernard d’Andrézy est mort il y a trois ans en Macédoine.
-
-— Si Bernard d’Andrézy était mort, je ne serais plus de ce monde. Et ce n’est pas le cas. Voici mes papiers.
-
-— Ce sont les siens. Comment les avez-vous, c’est ce que j’aurai le plaisir de vous expliquer.
-
-— Mais vous êtes fou ! Arsène Lupin s’est embarqué sous le nom de R.
-
-— Oui, encore un truc de vous, une fausse piste sur laquelle vous les avez lancés, là-bas. Ah ! vous êtes d’une jolie force, mon gaillard. Mais cette fois, la chance a tourné. Voyons, Lupin, montrez-vous beau joueur.
-
-J’hésitai une seconde. D’un coup sec, il me frappa sur l’avant-bras droit. Je poussai un cri de douleur. Il avait frappé sur la blessure encore mal fermée que signalait le télégramme.
-
-Allons, il fallait se résigner. Je me tournai vers miss Nelly. Elle écoutait, livide, chancelante.
-
-Son regard rencontra le mien, puis s’abaissa sur le kodak que je lui avais remis. Elle fit un geste brusque, et j’eus l’impression, j’eus la certitude qu’elle comprenait tout à coup. Oui, c’était là, entre les parois étroites de chagrin noir, au creux du petit objet que j’avais eu la précaution de déposer entre ses mains avant que Ganimard ne m’arrêtât, c’était bien là que se trouvaient les vingt mille francs de Rozaine, les perles et les diamants de lady Jerland.
-
-Ah ! je le jure, à ce moment solennel, alors que Ganimard et deux de ses acolytes m’entouraient, tout me fut indifférent, mon arrestation, l’hostilité des gens, tout, hors ceci : la résolution qu’allait prendre miss Nelly au sujet de ce que je lui avais confié.
-
-Que l’on eût contre moi cette preuve matérielle et décisive, je ne songeais même pas à le redouter, mais cette preuve, miss Nelly se déciderait-elle à la fournir ?
-
-Serais-je trahi par elle ? perdu par elle ? Agirait-elle en ennemie qui ne pardonne pas, ou bien en femme qui se souvient et dont le mépris s’adoucit d’un peu d’indulgence, d’un peu de sympathie involontaire ?
-
-Elle passa devant moi, je la saluai très bas, sans un mot. Mêlée aux autres voyageurs, elle se dirigea vers la passerelle, mon kodak à la main.
-
-Sans doute, pensai-je, elle n’ose pas, en public. C’est dans une heure, dans un instant, qu’elle le donnera.
-
-Mais, arrivée au milieu de la passerelle, par un mouvement de maladresse simulée, elle le laissa tomber dans l’eau, entre le mur du quai et le flanc du navire.
-
-Puis, je la vis s’éloigner.
-
-Sa jolie silhouette se perdit dans la foule, m’apparut de nouveau et disparut. C’était fini, fini pour jamais.
-
-Un instant, je restai immobile, triste à la fois et pénétré d’un doux attendrissement, puis je soupirai, au grand étonnement de Ganimard :
-
-— Dommage, tout de même, de ne pas être un honnête homme…
-
-C’est ainsi qu’un soir d’hiver, Arsène Lupin me raconta l’histoire de son arrestation. Le hasard d’incidents dont j’écrirai quelque jour le récit avait noué entre nous des liens… dirai-je d’amitié ? Oui, j’ose croire qu’Arsène Lupin m’honore de quelque amitié, et que c’est par amitié qu’il arrive parfois chez moi à l’improviste, apportant, dans le silence de mon cabinet de travail, sa gaieté juvénile, le rayonnement de sa vie ardente, sa belle humeur d’homme pour qui la destinée n’a que faveurs et sourires.
-
-Son portrait ? Comment pourrais-je le faire ? Vingt fois j’ai vu Arsène Lupin, et vingt fois c’est un être différent qui m’est apparu… ou plutôt le même être dont vingt miroirs m’auraient renvoyé autant d’images déformées, chacune ayant ses yeux particuliers, sa forme spéciale de figure, son geste propre, sa silhouette et son caractère.
-
-— Moi-même, me dit-il, je ne sais plus bien qui je suis. Dans une glace je ne me reconnais plus.
-
-Boutade, certes, et paradoxe, mais vérité à l’égard de ceux qui le rencontrent et qui ignorent ses ressources infinies, sa patience, son art du maquillage, sa prodigieuse faculté de transformer jusqu’aux proportions de son visage, et d’altérer le rapport même de ses traits entre eux.
-
-— Pourquoi, dit-il encore, aurais-je une apparence définie ? Pourquoi ne pas éviter ce danger d’une personnalité toujours identique ? Mes actes me désignent suffisamment.
-
-Et il précise avec une pointe d’orgueil :
-
-— Tant mieux si l’on ne peut jamais dire en toute certitude : Voici Arsène Lupin. L’essentiel est qu’on dise sans crainte d’erreur : Arsène Lupin a fait cela.
-
-
-
-Ce sont quelques-uns de ces actes, quelques-unes de ces aventures que j’essaie de reconstituer, d’après les confidences dont il eut la bonne grâce de me favoriser, certains soirs d’hiver, dans le silence de mon cabinet de travail…`
-                },
-                {
-                    title: "2. Arsène Lupin en prison",
-                    simple: "Coming soon...", 
-                    advanced: "Coming soon...",
-                    original: "Text folgt..." 
-                },
-                {
-                    title: "3. L'Évasion d'Arsène Lupin",
-                    simple: "Coming soon...", 
-                    advanced: "Coming soon...",
-                    original: "Text folgt..." 
-                },
-                {
-                    title: "4. Le Mystérieux Voyageur",
-                    simple: "Coming soon...", 
-                    advanced: "Coming soon...",
-                    original: "Text folgt..." 
-                },
-                {
-                    title: "5. Le Collier de la Reine",
-                    simple: "Coming soon...", 
-                    advanced: "Coming soon...",
-                    original: "Text folgt..." 
-                },
-                {
-                    title: "6. Le Sept de Cœur",
-                    simple: "Coming soon...", 
-                    advanced: "Coming soon...",
-                    original: "Text folgt..." 
-                },
-                {
-                    title: "7. Le Coffre-fort de Madame Imbert",
-                    simple: "Coming soon...", 
-                    advanced: "Coming soon...",
-                    original: "Text folgt..." 
-                },
-                {
-                    title: "8. La Perle Noire",
-                    simple: "Coming soon...", 
-                    advanced: "Coming soon...",
-                    original: "Text folgt..." 
-                },
-                {
-                    title: "9. Herlock Sholmès arrive trop tard",
-                    simple: "Coming soon...", 
-                    advanced: "Coming soon...",
-                    original: "Text folgt..." 
-                }
-
-            ]
-        },
-        {
-            id: 'prince',
-            type: 'book',
-            title: "Le Petit Prince",
-            author: "Antoine de Saint-Exupéry",
-            coverColor: "bg-sky-600",
-            icon: "Crown",
-            chapters: [
-                {
-                    title: "Le Dessin",
-                    simple: "Quand j'avais six ans, j'ai vu une image magnifique. C'était un serpent qui mangeait un animal. J'ai fait un dessin, mais les grands n'ont pas compris.",
-                    advanced: "À l'âge de six ans, j'ai vu une image extraordinaire dans un livre sur la forêt vierge. Elle représentait un serpent boa qui avalait un fauve.",
-                    original: "Lorsque j'avais six ans j'ai vu, une fois, une magnifique image, dans un livre sur la Forêt Vierge qui s'appelait 'Histoires Vécues'."
-                }
-            ]
-        }
-    ],
-    culture: [
-        {
-            id: 'crepes',
-            type: 'recipe',
-            title: "La Crêpe Française",
-            author: "Recette Traditionnelle",
-            coverColor: "bg-amber-500",
-            icon: "Coffee",
-            chapters: [
-                {
-                    title: "1. Les Ingrédients (Ingredients)",
-                    simple: `Pour 4 personnes, il faut :\n- 250g de farine (flour)\n- 4 œufs (eggs)\n- 500ml de lait (milk)\n- 1 pincée de sel (salt)\n- 2 cuillères de sucre (sugar)\n- 50g de beurre (butter)\n\nC'est tout ! C'est très facile et pas cher.`,
-                    advanced: `Voici ce qu'il vous faut pour environ 15 crêpes :\n- 250g de farine de blé type 55\n- 4 œufs entiers de plein air\n- un demi-litre de lait demi-écrémé\n- 1 sachet de sucre vanillé pour le goût\n- une pincée de sel fin\n- 50g de beurre fondu pour la cuisson.\n\nVous pouvez aussi ajouter un peu de rhum ou de fleur d'oranger pour parfumer la pâte.`,
-                    original: `La composition de la pâte à crêpes classique requiert des produits de qualité :\n- 250g de farine tamisée\n- 4 gros œufs frais\n- 50 cl de lait entier\n- 1 pincée de sel\n- 2 cuillères à soupe de sucre semoule\n- 50g de beurre noisette\n- Optionnel : Un zeste de citron ou une cuillère de Rhum ambré.\n\nLe secret réside dans la température des ingrédients : ils doivent tous être à température ambiante.`
-                },
-                {
-                    title: "2. La Préparation (The Batter)",
-                    simple: "1. Mettez la farine dans un grand bol.\n2. Ajoutez les œufs et le sel.\n3. Mélangez doucement.\n4. Ajoutez le lait petit à petit.\n5. Mélangez bien pour ne pas avoir de morceaux.\n6. Ajoutez le sucre et le beurre fondu.\n7. Laissez reposer une heure au frigo.",
-                    advanced: "Dans un saladier, versez la farine et formez un puits (un trou) au milieu. Cassez les œufs dans ce puits. Commencez à mélanger doucement avec un fouet en partant du centre. Incorporez le lait progressivement pour éviter la formation de grumeaux (lumps). Une fois la pâte lisse, ajoutez le beurre fondu et le parfum de votre choix. Il est conseillé de laisser reposer la pâte pendant une heure.",
-                    original: "Disposer la farine en fontaine dans une terrine. Y verser les œufs, le sucre, le sel et le beurre fondu (ou noisette). Travailler énergiquement la pâte au fouet ou à la spatule en bois. Mouiller progressivement avec le lait jusqu'à l'obtention d'un ruban lisse et homogène. La pâte doit avoir la consistance d'une crème liquide. Couvrir d'un linge et laisser reposer la pâte (l'appareil) une à deux heures à température ambiante pour permettre au gluten de se détendre."
-                },
-                {
-                    title: "3. La Cuisson (Cooking)",
-                    simple: "Chauffez une poêle. Mettez un peu de beurre. Versez une louche de pâte. Tournez la poêle pour étaler la pâte. Attendez une minute. Retournez la crêpe. Attendez encore une minute. C'est prêt ! Mangez avec du sucre ou du chocolat.",
-                    advanced: "Faites chauffer une poêle antiadhésive à feu moyen. Graissez la poêle avec un papier absorbant imbibé d'huile ou de beurre. Versez une louche de pâte et faites un mouvement de rotation du poignet pour répartir la pâte uniformément. Lorsque les bords se décollent et dorent, retournez la crêpe avec une spatule. Laissez cuire l'autre face quelques secondes.",
-                    original: "Saisir la crêpe dans une poêle très chaude ou sur une billig (plaque bretonne) légèrement graissée au saindoux ou au beurre clarifié. Verser l'appareil et l'étaler rapidement à l'aide d'un rozell (râteau en bois) si vous en avez un. La crêpe doit être fine comme de la dentelle. Retourner dès qu'elle est dorée (« kraz » en breton). Servir immédiatement, saupoudrée de sucre."
-                }
-            ]
-        },
-        {
-            id: 'napoleon',
-            type: 'bio',
-            title: "Napoléon Bonaparte",
-            author: "Figure Historique",
-            coverColor: "bg-red-700",
-            icon: "Sword",
-            chapters: [
-                {
-                    title: "L'Empereur",
-                    simple: "Napoléon est né en Corse. Il était très fort à l'école militaire. Il est devenu Empereur des Français et a changé l'Europe.",
-                    advanced: "Né à Ajaccio, Napoléon Bonaparte a gravi les échelons militaires rapidement durant la Révolution. Son génie stratégique est légendaire.",
-                    original: "Napoléon Ier, né le 15 août 1769 à Ajaccio et mort le 5 mai 1821 sur l'île Sainte-Hélène, est le premier empereur des Français."
-                }
-            ]
-        }
-    ],
-    phrases: [
-        {
-            id: 'restaurant',
-            type: 'phrase',
-            title: "Au Restaurant",
-            author: "Survival French",
-            coverColor: "bg-emerald-600",
-            icon: "Coffee",
-            chapters: [
-                {
-                    title: "Commander",
-                    simple: "Je voudrais de l'eau. / L'addition s'il vous plaît. / C'est délicieux.",
-                    advanced: "Pourrais-je avoir la carte ? / Je vais prendre le menu du jour. / Est-ce que le service est compris ?",
-                    original: "Garçon, nous sommes prêts à commander. Pour commencer, nous prendrons une douzaine d'huîtres et le vin blanc sec."
-                }
-            ]
-        }
-    ]
-};
 // Merge grammar data: A1, A2, B1, B2 from separate files
 const getMergedGrammarData = () => {
     const merged = {};
@@ -1448,20 +902,53 @@ const BookReader = ({
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [savingId, setSavingId] = useState(null);
 
+    // Pagination-Logik
     const pages = React.useMemo(() => {
         if (!currentStory?.text) return [''];
-        const paragraphs = currentStory.text.split('\n');
+
+        const fullText = currentStory.text;
         const pgs = [];
-        let cur = "";
-        paragraphs.forEach(p => {
-            if ((cur + p).length > 450 && cur.length > 0) { pgs.push(cur); cur = p + "\n"; }
-            else cur += p + "\n";
-        });
-        if (cur.trim()) pgs.push(cur);
+        const TARGET_LIMIT = 950; // Deine gewünschte Zeichenanzahl
+        let currentIndex = 0;
+
+        while (currentIndex < fullText.length) {
+            // 1. Wenn der Resttext kleiner als das Limit ist, nimm den Rest
+            if (fullText.length - currentIndex <= TARGET_LIMIT) {
+                pgs.push(fullText.slice(currentIndex).trim());
+                break;
+            }
+
+            // 2. Gehe zum Ziel-Limit
+            let splitIndex = currentIndex + TARGET_LIMIT;
+
+            // 3. Suche ab dem Ziel-Limit nach dem nächsten natürlichen Umbruch (., ! ? ; oder Leerzeichen)
+            // Wir suchen im restlichen Text ab dem splitIndex
+            const remainingText = fullText.slice(splitIndex);
+            const nextBreak = remainingText.search(/[.,!?;]|\s/);
+
+            if (nextBreak !== -1) {
+                // Wir haben einen Umbruch gefunden (Index ist relativ zum remainingText)
+                splitIndex += nextBreak + 1; // +1 um das Satzzeichen/Leerzeichen noch mitzunehmen
+            }
+
+            // 4. Seite ausschneiden und zum Array hinzufügen
+            pgs.push(fullText.slice(currentIndex, splitIndex).trim());
+            
+            // 5. Index für die nächste Seite aktualisieren
+            currentIndex = splitIndex;
+        }
+
         return pgs.length > 0 ? pgs : [''];
     }, [currentStory?.text]);
 
     const currentPageText = pages[pageIndex] || "";
+
+    // --- AUTOMATISCHES SPEICHERN BEI SEITENWECHSEL ---
+    React.useEffect(() => {
+        if (currentStory?.id) {
+            saveProgress(currentStory.id, currentStory.chapterIndex, pageIndex);
+        }
+    }, [pageIndex, currentStory]);
 
     const toggleAudio = (text) => {
         if (isSpeaking) { stopAudio(); setIsSpeaking(false); }
@@ -1472,9 +959,7 @@ const BookReader = ({
         e.stopPropagation();
         let cleanBase = wordRaw.replace(/[,]/g, "").replace(/[.!?;:"«»()]+/g, "").trim();
         if (!cleanBase || /^\d+$/.test(cleanBase)) return;
-
         setClickedWord({ cleanFrench: cleanBase, isLoading: true });
-
         try {
             const matchesMap = new Map();
             const addMatch = (newMatch) => {
@@ -1484,7 +969,6 @@ const BookReader = ({
                     matchesMap.set(key, newMatch);
                 }
             };
-
             const searchTerms = [cleanBase.toLowerCase()];
             for (let term of searchTerms) {
                 vocabulary.filter(v => v.french.toLowerCase() === term).forEach(m => addMatch({ ...m, source: 'top10k' }));
@@ -1495,21 +979,17 @@ const BookReader = ({
                     if (enriched) addMatch({ ...enriched, source: 'db_verb', isConjugated: true, specificTense: vf.tense });
                 });
             }
-
             let finalResults = Array.from(matchesMap.values());
-
             if (finalResults.length === 0) {
                 const { data: fbData } = await supabase.from('dictionary_fallback').select('id, lemma, translation_en, pos').eq('lemma', cleanBase.toLowerCase());
                 if (fbData && fbData.length > 0) fbData.forEach(item => addMatch({ id: 'fb_'+item.id, french: item.lemma, english: item.translation_en, type: item.pos, rank: '>10000', source: 'fallback_db' }));
                 finalResults = Array.from(matchesMap.values());
             }
-
             if (finalResults.length === 0) {
                 const { data: genData } = await supabase.from('generated_translations').select('*').eq('french', cleanBase.toLowerCase());
                 if (genData && genData.length > 0) genData.forEach(item => addMatch({ id: 'gen_'+item.id, french: item.french, english: item.english, rank: 'ARCHIVE', source: 'generated_db' }));
                 finalResults = Array.from(matchesMap.values());
             }
-
             if (finalResults.length === 0) {
                 const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanBase)}&langpair=fr|en`);
                 const data = await res.json();
@@ -1521,158 +1001,109 @@ const BookReader = ({
                     });
                 }
             }
-
             finalResults.sort((a, b) => {
                 const score = (r) => typeof r === 'number' ? r : (r === '>10000' ? 15000 : (r === 'ARCHIVE' ? 20000 : 30000));
                 return score(a.rank) - score(b.rank);
             });
-
             setClickedWord({ cleanFrench: cleanBase, allMatches: finalResults, isLoading: false });
         } catch (err) { setClickedWord(null); }
     };
 
     return (
-        <div className="h-screen flex flex-col bg-slate-50 animate-in fade-in duration-500">
-            {/* Minimalist Header */}
-            <div className="flex items-center justify-between pt-8 pb-4 px-6 shrink-0 bg-slate-50/80 backdrop-blur-sm z-20">
-                <button onClick={() => setView('explore')} className="p-2 -ml-2 bg-white rounded-full shadow-sm text-slate-500 hover:text-indigo-600 transition-all active:scale-90">
-                    <X size={20} />
-                </button>
-                <div className="flex flex-col items-center">
-                    <div className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-0.5">Reading</div>
-                    <div className="text-xs font-bold text-slate-500">{pageIndex + 1} / {pages.length}</div>
-                </div>
-                <button onClick={() => toggleAudio(currentPageText)} className={`p-2 bg-white rounded-full shadow-sm transition-all active:scale-90 ${isSpeaking ? 'text-red-500 animate-pulse ring-2 ring-red-100' : 'text-slate-400'}`}>
-                    <Volume2 size={20}/>
-                </button>
+        <div className="h-screen flex flex-col bg-slate-50 animate-in fade-in duration-300 overflow-hidden">
+            <div className="flex items-center justify-between pt-4 pb-2 px-3 shrink-0 bg-slate-50/90 backdrop-blur-md z-20">
+                <button onClick={() => setView('explore')} className="p-2 bg-white rounded-full shadow-sm text-slate-400 active:scale-90 transition-all"><X size={18} /></button>
+                <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Page {pageIndex + 1} / {pages.length}</div>
+                <button onClick={() => toggleAudio(currentPageText)} className={`p-2 bg-white rounded-full shadow-sm transition-all active:scale-90 ${isSpeaking ? 'text-red-500 animate-pulse' : 'text-slate-300'}`}><Volume2 size={18}/></button>
             </div>
 
-            {/* Content Area - No more Box! Text blends with background */}
-            <div className="flex-1 px-8 py-4 overflow-y-auto no-scrollbar relative">
-                <div className="text-2xl md:text-3xl text-slate-800 leading-[1.6] font-serif transition-all">
-                    {currentPageText.split(/(\s+)/).map((segment, i) => {
-                        if (segment.match(/\s+/)) return segment;
-                        const clean = segment.replace(/[*_]/g, "");
-                        return (
-                            <span 
-                                key={i} 
-                                onClick={(e) => handleWordClick(e, clean)} 
-                                className="cursor-pointer hover:bg-indigo-50 hover:text-indigo-700 rounded-md px-0.5 transition-all duration-200"
-                            >
-                                {clean}
-                            </span>
-                        );
-                    })}
-                </div>
-                {/* Visual fading for longer text */}
-                <div className="h-12 w-full bg-gradient-to-t from-slate-50 to-transparent sticky bottom-0 pointer-events-none"></div>
-            </div>
-
-            {/* Minimalist Controls */}
-            <div className="shrink-0 px-6 pb-12 pt-4 flex gap-4 bg-slate-50">
-                <button 
-                    onClick={() => setPageIndex(p => Math.max(0, p - 1))} 
-                    disabled={pageIndex === 0} 
-                    className="flex-1 py-4 bg-white border border-slate-200 text-slate-400 rounded-2xl font-bold disabled:opacity-30 active:scale-95 transition-all"
-                >
-                    Prev
-                </button>
-                <button 
-                    onClick={() => pageIndex < pages.length - 1 ? setPageIndex(p => p + 1) : setReaderMode('finish')} 
-                    className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-lg shadow-slate-200 active:scale-95 transition-all"
-                >
-                    {pageIndex < pages.length - 1 ? 'Next Page' : 'Finish Chapter'}
-                </button>
-            </div>
-
-            {/* Word Detail Popup (Bleibt dunkel für Fokus) */}
-            {clickedWord && (
-                <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-6 rounded-[2.5rem] shadow-2xl z-[60] border border-white/10 max-h-[70vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300">
-                    <div className="flex justify-between items-center mb-6 shrink-0">
-                        <div className="flex items-center gap-3">
-                            <h4 className="text-2xl font-bold capitalize tracking-tight">{clickedWord.cleanFrench}</h4>
-                            {reportedWords && reportedWords[clickedWord.cleanFrench.toLowerCase()] && (
-                                <div className="text-red-500 animate-pulse">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 19c.7 0 1.3-.2 1.9-.5 1.2-.7 2.1-2 2.1-3.5 0-1.7-1-3.1-2.4-3.7C18.8 8.1 16.3 6 13.5 6c-2.1 0-4 1.2-5 3C5.1 9.4 3 11.8 3 14.5 3 17 5 19 7.5 19h10z" /></svg>
-                                </div>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                            {!clickedWord.isLoading && clickedWord.allMatches?.length > 0 && (
-                                <button 
-                                    onClick={() => setReportingWord(clickedWord.allMatches[0])}
-                                    className="p-2 text-slate-500 hover:text-red-400 transition-colors"
-                                >
-                                    <AlertCircle size={22} />
-                                </button>
-                            )}
-                            <button onClick={() => setClickedWord(null)} className="p-2 text-slate-500 hover:text-white transition-colors">
-                                <X size={28} />
-                            </button>
-                        </div>
+            <div className="flex-1 overflow-y-auto no-scrollbar">
+                <div className="px-3 pt-4 pb-12 w-full max-w-full">
+                    <div className="text-base md:text-lg text-slate-800 leading-[1.7] font-serif mb-12">
+                        {currentPageText.split(/(\s+)/).map((segment, i) => {
+                            if (segment.match(/\s+/)) return segment;
+                            const clean = segment.replace(/[*_]/g, "");
+                            return (
+                                <span key={i} onClick={(e) => handleWordClick(e, clean)} className="cursor-pointer hover:bg-indigo-100/50 hover:text-indigo-800 rounded px-0.5 transition-colors inline-block">{clean}</span>
+                            );
+                        })}
                     </div>
 
-                    <div className="space-y-4 overflow-y-auto no-scrollbar pb-2">
+                    <div className="flex gap-2 max-w-md mx-auto mb-10">
+                        <button 
+                            onClick={() => { 
+                                setPageIndex(p => Math.max(0, p - 1)); 
+                                document.querySelector('.flex-1.overflow-y-auto').scrollTo(0,0);
+                            }} 
+                            disabled={pageIndex === 0} 
+                            className="flex-1 py-4 bg-white border border-slate-200 text-slate-400 rounded-2xl font-bold disabled:opacity-20 active:scale-95 transition-all shadow-sm"
+                        >Back</button>
+                        <button 
+                            onClick={() => { 
+                                if(pageIndex < pages.length - 1) {
+                                    setPageIndex(p => p + 1); 
+                                    document.querySelector('.flex-1.overflow-y-auto').scrollTo(0,0);
+                                } else {
+                                    saveProgress(currentStory.id, currentStory.chapterIndex, pageIndex, true);
+                                    setReaderMode('finish');
+                                }
+                            }} 
+                            className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-lg active:scale-95 transition-all"
+                        >{pageIndex < pages.length - 1 ? 'Next Page' : 'Finish Chapter'}</button>
+                    </div>
+                </div>
+            </div>
+
+            {clickedWord && (
+                <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-5 rounded-[2.5rem] shadow-2xl z-[60] border border-white/10 max-h-[70vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300">
+                    <div className="flex justify-between items-center mb-4 shrink-0 px-2">
+                        <div className="flex items-center gap-3">
+                            <h4 className="text-xl font-bold capitalize">{clickedWord.cleanFrench}</h4>
+                            {reportedWords && reportedWords[clickedWord.cleanFrench.toLowerCase()] && (
+                                <div className="text-red-500 animate-pulse"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 19c.7 0 1.3-.2 1.9-.5 1.2-.7 2.1-2 2.1-3.5 0-1.7-1-3.1-2.4-3.7C18.8 8.1 16.3 6 13.5 6c-2.1 0-4 1.2-5 3C5.1 9.4 3 11.8 3 14.5 3 17 5 19 7.5 19h10z" /></svg></div>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-1">
+                            {!clickedWord.isLoading && clickedWord.allMatches?.length > 0 && (
+                                <button onClick={() => setReportingWord(clickedWord.allMatches[0])} className="p-2 text-slate-500 hover:text-red-400"><AlertCircle size={20} /></button>
+                            )}
+                            <button onClick={() => setClickedWord(null)} className="p-2 text-slate-500 hover:text-white"><X size={24} /></button>
+                        </div>
+                    </div>
+                    <div className="space-y-3 overflow-y-auto no-scrollbar pb-2 px-1">
                         {clickedWord.isLoading ? (
-                            <div className="flex flex-col items-center justify-center py-12 gap-3">
-                                <Loader2 className="animate-spin text-indigo-400" size={32} />
-                                <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">Searching...</span>
-                            </div>
+                            <div className="flex justify-center py-8"><Loader2 className="animate-spin text-indigo-400" /></div>
                         ) : (
                             clickedWord.allMatches.map((match, idx) => {
-                                const isSavingThis = savingId === match.id;
+                                const isSaving = savingId === match.id;
                                 return (
-                                    <div key={idx} className="bg-white/5 border border-white/10 rounded-[2rem] p-5">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">
-                                                {match.specificTense ? formatTense(match.specificTense) : (match.type || 'Word')}
-                                            </span>
-                                            <span className="text-[10px] text-slate-500 font-mono">
-                                                {match.rank === 'WEB' ? '🌐 WEB' : (match.rank === 'ARCHIVE' ? '☁️ ARCHIVE' : `#${match.rank}`)}
-                                            </span>
+                                    <div key={idx} className="bg-white/5 border border-white/10 rounded-3xl p-4">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <span className="text-[9px] font-black text-indigo-400 uppercase tracking-widest">{match.specificTense ? formatTense(match.specificTense) : (match.type || 'Word')}</span>
+                                            <span className="text-[9px] text-slate-500 font-mono">{match.rank === 'WEB' ? '🌐 WEB' : `#${match.rank}`}</span>
                                         </div>
-                                        <div className="text-xl font-bold text-white mb-4 leading-tight">{match.english}</div>
-                                        
-                                        <div className="flex gap-3">
-                                            <button 
-                                                onClick={() => { setSelectedWord(match); setView('reader-word-detail'); setClickedWord(null); }}
-                                                className="flex-1 bg-indigo-600 hover:bg-indigo-500 py-3 rounded-2xl text-xs font-bold active:scale-95 transition-all shadow-lg shadow-indigo-900/20"
-                                            >Details</button>
+                                        <div className="text-lg font-bold text-white mb-3">{match.english}</div>
+                                        <div className="flex gap-2">
+                                            <button onClick={() => { setSelectedWord(match); setView('reader-word-detail'); setClickedWord(null); }} className="flex-1 bg-indigo-600 py-2.5 rounded-xl text-xs font-bold active:scale-95">Details</button>
                                             <button 
                                                 onClick={async () => {
                                                     const isRare = typeof match.rank !== 'number' || match.rank >= 99999;
-                                                    const cleanFrench = match.french.toLowerCase().trim();
-                                                    const rankKey = isRare ? `str:${cleanFrench}` : match.rank;
+                                                    const cleanFr = match.french.toLowerCase().trim();
+                                                    const rKey = isRare ? `str:${cleanFr}` : match.rank;
                                                     setSavingId(match.id);
-                                                    
-                                                    setUserProgress(prev => ({ 
-                                                        ...prev, 
-                                                        [rankKey]: { box: 1, nextReview: Date.now(), interval: 0, ease: 2.5, consecutiveWrong: 0 } 
-                                                    }));
-                                                    
+                                                    setUserProgress(p => ({ ...p, [rKey]: { box: 1, nextReview: Date.now(), interval: 0, ease: 2.5, consecutiveWrong: 0 } }));
                                                     if (session) {
                                                         await supabase.from('user_progress').upsert({
                                                             user_id: session.user.id,
                                                             word_rank: typeof match.rank === 'number' ? match.rank : 99999,
-                                                            word_string: isRare ? cleanFrench : null,
+                                                            word_string: isRare ? cleanFr : null,
                                                             box: 1, next_review: Date.now()
                                                         }, { onConflict: 'user_id, word_rank, word_string' });
                                                     }
-                                                    
-                                                    setTimeout(() => {
-                                                        setClickedWord(null);
-                                                        setSavingId(null);
-                                                    }, 600);
+                                                    setTimeout(() => { setClickedWord(null); setSavingId(null); }, 600);
                                                 }}
-                                                className={`flex-1 py-3 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
-                                                    isSavingThis 
-                                                    ? 'bg-green-500 text-white' 
-                                                    : 'bg-white/10 text-white hover:bg-white/20 active:scale-95'
-                                                }`}
-                                            >
-                                                {isSavingThis ? <Check size={16} /> : null}
-                                                {isSavingThis ? 'Saved' : 'Save'}
-                                            </button>
+                                                className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 ${isSaving ? 'bg-green-500' : 'bg-white/10'}`}
+                                            >{isSaving ? <Check size={14}/> : 'Save'}</button>
                                         </div>
                                     </div>
                                 );
@@ -3368,22 +2799,31 @@ function App() {
 
     // Helper: Fortschritt speichern
     const saveProgress = (bookId, chapterIdx, pageIdx, isComplete = false) => {
-        const newProgress = { ...bookProgress };
-        
-        if (!newProgress[bookId]) newProgress[bookId] = { completedChapters: [] };
-        
-        newProgress[bookId].lastChapter = chapterIdx;
-        newProgress[bookId].lastPage = pageIdx;
-        newProgress[bookId].lastActive = Date.now(); // Damit wir wissen, was zuletzt gelesen wurde
-        
-        if (isComplete && !newProgress[bookId].completedChapters.includes(chapterIdx)) {
-            newProgress[bookId].completedChapters.push(chapterIdx);
-        }
-
-        setBookProgress(newProgress);
-        localStorage.setItem('vocabApp_bookProgress', JSON.stringify(newProgress));
+        setBookProgress(prev => {
+            const bookData = prev[bookId] || { chapters: {}, completedChapters: [] };
+            
+            // Wir speichern den Fortschritt spezifisch für dieses Kapitel
+            const newProgress = {
+                ...prev,
+                [bookId]: {
+                    ...bookData,
+                    lastActiveChapter: chapterIdx,
+                    lastActiveTime: Date.now(),
+                    chapters: {
+                        ...bookData.chapters,
+                        [chapterIdx]: { lastPage: pageIdx } // Der entscheidende Fix
+                    },
+                    completedChapters: isComplete && !bookData.completedChapters.includes(chapterIdx)
+                        ? [...bookData.completedChapters, chapterIdx]
+                        : bookData.completedChapters
+                }
+            };
+            
+            localStorage.setItem('vocabApp_bookProgress', JSON.stringify(newProgress));
+            return newProgress;
+        });
     };
-    
+        
     // Ist der Witz aufgelöst?
     const [jokeRevealed, setJokeRevealed] = useState(false);
     // Audio & Voices (WICHTIG!)
@@ -3852,24 +3292,29 @@ function App() {
     
     /* Innerhalb von App(), ersetzt openArticle */
     /* Innerhalb von App() */
-    const openBookChapter = (book, chapterIndex, restorePage = false) => {
+    const openBookChapter = (book, chapterIndex) => {
         const chapter = book.chapters[chapterIndex];
         const textContent = chapter[readingLevel] || chapter.original; 
         
+        // Hol den Speicherstand für dieses spezifische Buch
+        const bookStore = bookProgress[book.id];
+        
         setCurrentStory({
-            id: book.id, // Wichtig für den Speicherstand
-            chapterIndex: chapterIndex, // Wichtig für den Speicherstand
+            id: book.id,
+            chapterIndex: chapterIndex,
             title: `${book.title} - ${chapter.title}`,
             text: textContent,
             quiz: null, 
             isArticle: false
         });
 
-        // Lade immer den gespeicherten Fortschritt, wenn vorhanden
-        if (bookProgress[book.id]) {
-            setPageIndex(bookProgress[book.id].lastPage || 0);
+        // PRÜFUNG: Haben wir einen Stand für GENAU dieses Kapitel?
+        const savedChapterPage = bookStore?.chapters?.[chapterIndex]?.lastPage;
+        
+        if (typeof savedChapterPage === 'number') {
+            setPageIndex(savedChapterPage);
         } else {
-            setPageIndex(0);
+            setPageIndex(0); // Falls Kapitel neu, starte bei 0
         }
 
         setReaderMode('reading');
@@ -4730,12 +4175,15 @@ function App() {
         );
     };
     const renderExplore = () => {
-        // A. EINZELANSICHT (Wenn ein Buch/Rezept offen ist)
+        // Sicherheits-Check: Falls Datei noch nicht geladen
+        const libData = window.LIBRARY_CONTENT;
+        if (!libData) return <div className="p-10 text-center text-slate-400">Loading Library...</div>;
+
         if (selectedBook) {
             return (
-                <div className="w-full pt-6 pb-24 px-1">
-                    <div className="flex items-center gap-3 mb-6 px-1">
-                        <button onClick={() => setSelectedBook(null)} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500">
+                <div className="w-full pt-6 pb-24 px-1 animate-in fade-in duration-300">
+                    <div className="flex items-center gap-3 mb-6 px-4">
+                        <button onClick={() => setSelectedBook(null)} className="p-2 -ml-2 bg-white rounded-full shadow-sm text-slate-500">
                             <ArrowLeft size={24}/>
                         </button>
                         <div className="flex-1 min-w-0">
@@ -4744,45 +4192,40 @@ function App() {
                         </div>
                     </div>
 
-                    {/* Level Selector */}
-                    <div className="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm mb-6 sticky top-2 z-20 flex gap-1">
-                        {['simple', 'advanced', 'original'].map(lvl => (
+                    {/* Level Selector - Nur noch 2 Stufen */}
+                    <div className="bg-white/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-100 shadow-sm mb-6 sticky top-4 z-20 flex gap-1 mx-4">
+                        {[
+                            { id: 'simple', label: '🌱 Simple' },
+                            { id: 'original', label: '📖 Original' }
+                        ].map(lvl => (
                             <button 
-                                key={lvl}
-                                onClick={() => setReadingLevel(lvl)}
-                                className={`flex-1 py-2 rounded-xl text-xs font-bold capitalize transition-all ${
-                                    readingLevel === lvl 
-                                    ? 'bg-indigo-600 text-white shadow-sm' 
+                                key={lvl.id}
+                                onClick={() => setReadingLevel(lvl.id)}
+                                className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
+                                    readingLevel === lvl.id 
+                                    ? 'bg-indigo-600 text-white shadow-md' 
                                     : 'text-slate-500 hover:bg-slate-50'
                                 }`}
                             >
-                                {lvl}
+                                {lvl.label}
                             </button>
                         ))}
                     </div>
 
-                    {/* Chapters List */}
-                    <div className="space-y-3">
+                    <div className="space-y-3 px-4">
                         {selectedBook.chapters.map((chap, idx) => (
                             <button 
                                 key={idx}
                                 onClick={() => openBookChapter(selectedBook, idx)}
-                                className="w-full bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all group"
+                                className="w-full bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all group"
                             >
                                 <div className="flex justify-between items-center mb-2">
-                                    <div className="flex items-center gap-2">
-                                        <h3 className="font-bold text-slate-700">{chap.title}</h3>
-                                        {/* Checkmark wenn gelesen */}
-                                        {bookProgress[selectedBook.id]?.completedChapters?.includes(idx) && (
-                                            <div className="bg-green-100 text-green-600 p-0.5 rounded-full"><Check size={12}/></div>
-                                        )}
-                                    </div>
-                                    <div className="bg-slate-50 p-1.5 rounded-full text-slate-300 group-hover:text-indigo-600 group-hover:bg-indigo-50 transition-colors">
-                                        <Play size={16} fill="currentColor"/>
+                                    <h3 className="font-bold text-slate-700">{chap.title}</h3>
+                                    <div className="text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Play size={18} fill="currentColor"/>
                                     </div>
                                 </div>
-                                <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed opacity-80">
-                                    {/* Preview based on level */}
+                                <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed italic">
                                     {chap[readingLevel] || chap.original}
                                 </p>
                             </button>
@@ -4792,106 +4235,56 @@ function App() {
             );
         }
 
-        // B. HAUPTANSICHT (Regal Übersicht)
-        const activeCollection = LIBRARY_CONTENT[libraryTab] || [];
+        const activeCollection = libData[libraryTab] || [];
 
         return (
-            <div className="w-full pt-6 pb-24 px-1">
-                <div className="flex items-center gap-3 mb-6 px-1">
-                    <div className="bg-indigo-100 p-2 rounded-full text-indigo-600"><BookOpen size={24} /></div>
-                    <h2 className="text-2xl font-bold text-slate-800">Library</h2>
+            <div className="w-full pt-6 pb-24 relative">
+                <div className="sticky top-4 z-40 px-4 mb-8">
+                    <div className="bg-white/70 backdrop-blur-xl border border-white/40 p-1.5 rounded-[2rem] shadow-lg flex items-center w-full max-w-sm mx-auto">
+                        {[
+                            { id: 'books', label: 'Books', icon: <BookOpen size={16}/> },
+                            { id: 'culture', label: 'Culture', icon: <GraduationCap size={16}/> },
+                            { id: 'phrases', label: 'Phrases', icon: <MessageSquare size={16}/> }
+                        ].map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setLibraryTab(tab.id)}
+                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-[1.6rem] text-sm font-bold transition-all ${
+                                    libraryTab === tab.id ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500'
+                                }`}
+                            >
+                                {tab.icon} <span>{tab.label}</span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
-                {/* RESUME BANNER (Nur wenn ein Buch angefangen wurde & wir im Books Tab sind) */}
-                {(() => {
-                    // Finde das zuletzt gelesene Buch (sortiert nach Zeitstempel)
-                    const lastReadBookId = Object.keys(bookProgress).sort((a,b) => bookProgress[b].lastActive - bookProgress[a].lastActive)[0];
-                    
-                    if (lastReadBookId && libraryTab === 'books') {
-                        const prog = bookProgress[lastReadBookId];
-                        // Finde Buch-Daten in LIBRARY_CONTENT
-                        let bookData = null;
-                        // Wir suchen in allen Kategorien sicherheitshalber
-                        ['books', 'culture', 'phrases'].forEach(cat => {
-                            if (LIBRARY_CONTENT[cat]) {
-                                const found = LIBRARY_CONTENT[cat].find(b => b.id === lastReadBookId);
-                                if(found) bookData = found;
-                            }
-                        });
+                <div className="px-5">
+                    <div className="mb-6">
+                        <h2 className="text-2xl font-bold text-slate-800">
+                            {libraryTab === 'books' ? 'Library' : libraryTab === 'culture' ? 'Culture' : 'Phrases'}
+                        </h2>
+                    </div>
 
-                        if (bookData) {
-                            // Sicherstellen dass Kapitel existiert (Fallback auf 0)
-                            const chapterIdx = prog.lastChapter || 0;
-                            const chapterTitle = bookData.chapters[chapterIdx]?.title || "Chapter " + (chapterIdx + 1);
-                            
-                            return (
-                                <div className="mb-6 px-1">
-                                    <button 
-                                        onClick={() => { setSelectedBook(bookData); openBookChapter(bookData, chapterIdx, true); }}
-                                        className="w-full bg-slate-800 text-white p-4 rounded-3xl shadow-xl shadow-slate-200 flex items-center justify-between group active:scale-[0.98] transition-all"
-                                    >
-                                        <div className="flex items-center gap-4">
-                                            <div className="bg-white/10 p-3 rounded-2xl">
-                                                <RotateCcw size={20} className="text-white"/>
-                                            </div>
-                                            <div className="text-left">
-                                                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Continue Reading</div>
-                                                <div className="font-bold text-lg leading-tight truncate max-w-[150px]">{bookData.title}</div>
-                                                <div className="text-xs text-slate-400">Page {(prog.lastPage || 0) + 1} • {chapterTitle}</div>
-                                            </div>
-                                        </div>
-                                        <div className="bg-indigo-500 p-2 rounded-full group-hover:bg-indigo-400 transition-colors">
-                                            <Play size={16} fill="currentColor"/>
-                                        </div>
-                                    </button>
-                                </div>
-                            );
-                        }
-                    }
-                    return null;
-                })()}
-
-                {/* Library Tabs */}
-                <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide px-1">
-                    <button onClick={() => setLibraryTab('books')} className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${libraryTab === 'books' ? 'bg-slate-800 text-white shadow-lg' : 'bg-white text-slate-500 border border-slate-200'}`}>📚 Books</button>
-                    <button onClick={() => setLibraryTab('culture')} className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${libraryTab === 'culture' ? 'bg-amber-600 text-white shadow-lg' : 'bg-white text-slate-500 border border-slate-200'}`}>🥐 Culture & Bios</button>
-                    <button onClick={() => setLibraryTab('phrases')} className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${libraryTab === 'phrases' ? 'bg-emerald-600 text-white shadow-lg' : 'bg-white text-slate-500 border border-slate-200'}`}>💬 Phrasebook</button>
-                </div>
-
-                {/* Content Grid */}
-                <div className="grid gap-5">
-                    {activeCollection.map(item => (
-                        <button 
-                            key={item.id}
-                            onClick={() => setSelectedBook(item)}
-                            className={`w-full ${item.coverColor} text-white p-5 rounded-[2rem] shadow-xl text-left relative overflow-hidden group active:scale-[0.98] transition-all`}
-                        >
-                            {/* Deko Icon Background */}
-                            <div className="absolute -right-4 -bottom-4 p-8 opacity-20 rotate-12 scale-150">
-                                {getIcon(item.icon)}
-                            </div>
-                            
-                            <div className="relative z-10 flex gap-4 items-start">
-                                <div className="bg-white/20 backdrop-blur-md w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border border-white/10">
+                    <div className="grid gap-4">
+                        {activeCollection.map(item => (
+                            <button key={item.id} onClick={() => setSelectedBook(item)} className={`w-full ${item.coverColor} text-white p-5 rounded-[2rem] shadow-md text-left relative overflow-hidden active:scale-[0.98] transition-all group`}>
+                                <div className="absolute -right-4 -bottom-4 p-8 opacity-20 rotate-12 scale-150 transition-transform group-hover:scale-[1.7]">
                                     {getIcon(item.icon)}
                                 </div>
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1 opacity-80">
-                                        <span className="text-[10px] font-bold uppercase tracking-wider border border-white/30 px-2 py-0.5 rounded-full">{item.type}</span>
-                                        <span className="text-[10px] font-bold">{item.chapters.length} Parts</span>
+                                <div className="relative z-10 flex gap-4 items-center">
+                                    <div className="bg-white/20 backdrop-blur-md w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border border-white/10 shadow-inner">
+                                        {getIcon(item.icon)}
                                     </div>
-                                    <h3 className="text-xl font-serif font-bold leading-tight mb-1">{item.title}</h3>
-                                    <p className="text-white/70 text-xs font-medium">{item.author}</p>
+                                    <div className="min-w-0 flex-1">
+                                        <h3 className="text-lg font-bold leading-tight mb-0.5 truncate">{item.title}</h3>
+                                        <p className="text-white/60 text-xs font-medium truncate">{item.author}</p>
+                                    </div>
+                                    <ChevronRight size={20} className="text-white/40" />
                                 </div>
-                            </div>
-                        </button>
-                    ))}
-                    
-                    {activeCollection.length === 0 && (
-                        <div className="p-10 text-center text-slate-400 border-2 border-dashed border-slate-200 rounded-[2rem]">
-                            Nothing here yet. Coming soon!
-                        </div>
-                    )}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
         );
