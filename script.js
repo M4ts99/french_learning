@@ -1446,7 +1446,6 @@ const BookReader = ({
 }) => {
     
     const [isSpeaking, setIsSpeaking] = useState(false);
-    // NEU: Status um zu verfolgen, welcher Speicher-Button gerade "grün" sein soll
     const [savingId, setSavingId] = useState(null);
 
     const pages = React.useMemo(() => {
@@ -1533,113 +1532,141 @@ const BookReader = ({
     };
 
     return (
-        <div className="pt-6 pb-6 px-1 h-screen flex flex-col bg-slate-50">
-            <div className="flex items-center justify-between mb-4 px-4 shrink-0">
-                <button onClick={() => setView('explore')} className="p-2 bg-white rounded-full shadow-sm text-slate-500"><X size={20} /></button>
-                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Page {pageIndex + 1} / {pages.length}</div>
-                <button onClick={() => toggleAudio(currentPageText)} className={`p-2 rounded-full ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-white text-slate-400'}`}><Volume2 size={20}/></button>
+        <div className="h-screen flex flex-col bg-slate-50 animate-in fade-in duration-500">
+            {/* Minimalist Header */}
+            <div className="flex items-center justify-between pt-8 pb-4 px-6 shrink-0 bg-slate-50/80 backdrop-blur-sm z-20">
+                <button onClick={() => setView('explore')} className="p-2 -ml-2 bg-white rounded-full shadow-sm text-slate-500 hover:text-indigo-600 transition-all active:scale-90">
+                    <X size={20} />
+                </button>
+                <div className="flex flex-col items-center">
+                    <div className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-0.5">Reading</div>
+                    <div className="text-xs font-bold text-slate-500">{pageIndex + 1} / {pages.length}</div>
+                </div>
+                <button onClick={() => toggleAudio(currentPageText)} className={`p-2 bg-white rounded-full shadow-sm transition-all active:scale-90 ${isSpeaking ? 'text-red-500 animate-pulse ring-2 ring-red-100' : 'text-slate-400'}`}>
+                    <Volume2 size={20}/>
+                </button>
             </div>
 
-            <div className="flex-1 bg-[#fffdf5] border border-slate-200 shadow-inner mx-2 mb-4 p-6 rounded-3xl overflow-y-auto no-scrollbar">
-                <div className="text-xl md:text-2xl text-slate-800 leading-relaxed font-serif">
+            {/* Content Area - No more Box! Text blends with background */}
+            <div className="flex-1 px-8 py-4 overflow-y-auto no-scrollbar relative">
+                <div className="text-2xl md:text-3xl text-slate-800 leading-[1.6] font-serif transition-all">
                     {currentPageText.split(/(\s+)/).map((segment, i) => {
                         if (segment.match(/\s+/)) return segment;
+                        const clean = segment.replace(/[*_]/g, "");
                         return (
-                            <span key={i} onClick={(e) => handleWordClick(e, segment)} className="cursor-pointer hover:bg-indigo-100 hover:text-indigo-700 rounded px-0.5 transition-colors">
-                                {segment.replace(/[*_]/g, "")}
+                            <span 
+                                key={i} 
+                                onClick={(e) => handleWordClick(e, clean)} 
+                                className="cursor-pointer hover:bg-indigo-50 hover:text-indigo-700 rounded-md px-0.5 transition-all duration-200"
+                            >
+                                {clean}
                             </span>
                         );
                     })}
                 </div>
+                {/* Visual fading for longer text */}
+                <div className="h-12 w-full bg-gradient-to-t from-slate-50 to-transparent sticky bottom-0 pointer-events-none"></div>
             </div>
 
-            <div className="shrink-0 px-4 pb-6 flex gap-3">
-                <button onClick={() => setPageIndex(p => Math.max(0, p - 1))} disabled={pageIndex === 0} className="flex-1 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold disabled:opacity-30">Prev</button>
-                <button onClick={() => pageIndex < pages.length - 1 ? setPageIndex(p => p + 1) : setReaderMode('finish')} className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-lg">Next</button>
+            {/* Minimalist Controls */}
+            <div className="shrink-0 px-6 pb-12 pt-4 flex gap-4 bg-slate-50">
+                <button 
+                    onClick={() => setPageIndex(p => Math.max(0, p - 1))} 
+                    disabled={pageIndex === 0} 
+                    className="flex-1 py-4 bg-white border border-slate-200 text-slate-400 rounded-2xl font-bold disabled:opacity-30 active:scale-95 transition-all"
+                >
+                    Prev
+                </button>
+                <button 
+                    onClick={() => pageIndex < pages.length - 1 ? setPageIndex(p => p + 1) : setReaderMode('finish')} 
+                    className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-lg shadow-slate-200 active:scale-95 transition-all"
+                >
+                    {pageIndex < pages.length - 1 ? 'Next Page' : 'Finish Chapter'}
+                </button>
             </div>
 
+            {/* Word Detail Popup (Bleibt dunkel für Fokus) */}
             {clickedWord && (
-                <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-5 rounded-[2.5rem] shadow-2xl z-[60] border border-white/10 max-h-[70vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300">
-                    <div className="flex justify-between items-center mb-4 shrink-0 px-2">
+                <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-6 rounded-[2.5rem] shadow-2xl z-[60] border border-white/10 max-h-[70vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300">
+                    <div className="flex justify-between items-center mb-6 shrink-0">
                         <div className="flex items-center gap-3">
-                            <h4 className="text-2xl font-bold capitalize">{clickedWord.cleanFrench}</h4>
+                            <h4 className="text-2xl font-bold capitalize tracking-tight">{clickedWord.cleanFrench}</h4>
                             {reportedWords && reportedWords[clickedWord.cleanFrench.toLowerCase()] && (
-                                <div className="text-red-500 animate-pulse" title="Reported">
+                                <div className="text-red-500 animate-pulse">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 19c.7 0 1.3-.2 1.9-.5 1.2-.7 2.1-2 2.1-3.5 0-1.7-1-3.1-2.4-3.7C18.8 8.1 16.3 6 13.5 6c-2.1 0-4 1.2-5 3C5.1 9.4 3 11.8 3 14.5 3 17 5 19 7.5 19h10z" /></svg>
                                 </div>
                             )}
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-2">
                             {!clickedWord.isLoading && clickedWord.allMatches?.length > 0 && (
                                 <button 
                                     onClick={() => setReportingWord(clickedWord.allMatches[0])}
                                     className="p-2 text-slate-500 hover:text-red-400 transition-colors"
                                 >
-                                    <AlertCircle size={24} />
+                                    <AlertCircle size={22} />
                                 </button>
                             )}
-                            <button onClick={() => setClickedWord(null)} className="p-2 text-slate-500 hover:text-white transition-colors"><X size={28} /></button>
+                            <button onClick={() => setClickedWord(null)} className="p-2 text-slate-500 hover:text-white transition-colors">
+                                <X size={28} />
+                            </button>
                         </div>
                     </div>
 
-                    <div className="space-y-4 overflow-y-auto no-scrollbar pb-2 px-1">
+                    <div className="space-y-4 overflow-y-auto no-scrollbar pb-2">
                         {clickedWord.isLoading ? (
-                            <div className="flex items-center justify-center py-8"><Loader2 className="animate-spin text-indigo-400" /></div>
+                            <div className="flex flex-col items-center justify-center py-12 gap-3">
+                                <Loader2 className="animate-spin text-indigo-400" size={32} />
+                                <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">Searching...</span>
+                            </div>
                         ) : (
                             clickedWord.allMatches.map((match, idx) => {
                                 const isSavingThis = savingId === match.id;
                                 return (
-                                    <div key={idx} className="bg-white/5 border border-white/10 rounded-3xl p-4">
-                                        <div className="flex justify-between items-start mb-1">
-                                            <span className="text-[10px] font-black text-indigo-400 uppercase tracking-tighter">
+                                    <div key={idx} className="bg-white/5 border border-white/10 rounded-[2rem] p-5">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">
                                                 {match.specificTense ? formatTense(match.specificTense) : (match.type || 'Word')}
                                             </span>
                                             <span className="text-[10px] text-slate-500 font-mono">
                                                 {match.rank === 'WEB' ? '🌐 WEB' : (match.rank === 'ARCHIVE' ? '☁️ ARCHIVE' : `#${match.rank}`)}
                                             </span>
                                         </div>
-                                        <div className="text-lg font-bold text-white mb-3 leading-tight">{match.english}</div>
+                                        <div className="text-xl font-bold text-white mb-4 leading-tight">{match.english}</div>
                                         
-                                        <div className="flex gap-2">
+                                        <div className="flex gap-3">
                                             <button 
                                                 onClick={() => { setSelectedWord(match); setView('reader-word-detail'); setClickedWord(null); }}
-                                                className="flex-1 bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-xl text-xs font-bold active:scale-95 transition-all"
+                                                className="flex-1 bg-indigo-600 hover:bg-indigo-500 py-3 rounded-2xl text-xs font-bold active:scale-95 transition-all shadow-lg shadow-indigo-900/20"
                                             >Details</button>
                                             <button 
                                                 onClick={async () => {
                                                     const isRare = typeof match.rank !== 'number' || match.rank >= 99999;
                                                     const cleanFrench = match.french.toLowerCase().trim();
                                                     const rankKey = isRare ? `str:${cleanFrench}` : match.rank;
-                                                    
-                                                    // 1. Visuelles Feedback (Button wird grün)
                                                     setSavingId(match.id);
                                                     
-                                                    // 2. Lokal speichern
                                                     setUserProgress(prev => ({ 
                                                         ...prev, 
                                                         [rankKey]: { box: 1, nextReview: Date.now(), interval: 0, ease: 2.5, consecutiveWrong: 0 } 
                                                     }));
                                                     
-                                                    // 3. Cloud speichern
                                                     if (session) {
                                                         await supabase.from('user_progress').upsert({
                                                             user_id: session.user.id,
                                                             word_rank: typeof match.rank === 'number' ? match.rank : 99999,
                                                             word_string: isRare ? cleanFrench : null,
-                                                            box: 1, 
-                                                            next_review: Date.now()
+                                                            box: 1, next_review: Date.now()
                                                         }, { onConflict: 'user_id, word_rank, word_string' });
                                                     }
                                                     
-                                                    // 4. Kurz warten und dann das ganze Popup schließen
                                                     setTimeout(() => {
                                                         setClickedWord(null);
                                                         setSavingId(null);
                                                     }, 600);
                                                 }}
-                                                className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 ${
+                                                className={`flex-1 py-3 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
                                                     isSavingThis 
-                                                    ? 'bg-green-500 text-white scale-95' 
+                                                    ? 'bg-green-500 text-white' 
                                                     : 'bg-white/10 text-white hover:bg-white/20 active:scale-95'
                                                 }`}
                                             >
@@ -3918,14 +3945,18 @@ function App() {
     };
     // --- RENDER TOPIC HUB (Die Detailseite für Themen) ---
     const ReaderWordDetail = ({ word, setView, setUserProgress, session, speak, setReportingWord }) => {
-        const [saveStatus, setSaveStatus] = React.useState(null);
+        // Lokaler State für das Grün-Feedback
+        const [saveStatus, setSaveStatus] = React.useState(null); // null | 1 | 5
 
         if (!word) return <div className="p-10 text-center">No word selected.</div>;
 
         const handleQuickSave = async (boxLevel) => {
+            console.log("Button clicked, level:", boxLevel); // Debug
+            
+            // 1. SOFORT das Feedback anzeigen (noch vor der Datenbank-Logik)
             setSaveStatus(boxLevel); 
             
-            // --- LOGIK FÜR EINDEUTIGE KEYS ---
+            // Key-Logik für seltene Wörter
             const isRare = typeof word.rank !== 'number' || word.rank >= 99999;
             const cleanFrench = word.french.toLowerCase().trim();
             const rankKey = isRare ? `str:${cleanFrench}` : word.rank;
@@ -3938,11 +3969,12 @@ function App() {
                 consecutiveWrong: 0
             };
 
+            // 2. Datenbank-Aktionen im Hintergrund
             try {
-                // 1. Lokal im State speichern
+                // Lokal speichern
                 setUserProgress(prev => ({ ...prev, [rankKey]: newEntry }));
 
-                // 2. In der Cloud speichern (Supabase)
+                // Cloud speichern
                 if (session) {
                     await supabase.from('user_progress').upsert({
                         user_id: session.user.id,
@@ -3955,40 +3987,42 @@ function App() {
                     }, { onConflict: 'user_id, word_rank, word_string' });
                 }
                 
-                // Erfolg anzeigen und zurück
+                // 3. Nach einer Sekunde zurück zum Reader
                 setTimeout(() => { 
                     setView('reader'); 
-                    setSaveStatus(null); 
                 }, 1000);
+
             } catch (err) { 
-                console.error("Speicherfehler:", err); 
-                setSaveStatus(null); 
-                alert("Fehler beim Speichern!");
+                console.error("Save Error:", err); 
+                setSaveStatus(null); // Reset bei Fehler
             }
         };
 
         return (
-            <div className="flex flex-col w-full max-w-xl mx-auto h-[100dvh] bg-slate-50 overflow-hidden">
+            <div className="flex flex-col w-full max-w-xl mx-auto h-[100dvh] bg-slate-50 overflow-hidden animate-in fade-in duration-300">
+                {/* Top Bar */}
                 <div className="flex items-center justify-between p-4 bg-slate-50 shrink-0">
-                    <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500 hover:text-indigo-600">
+                    <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500">
                         <ArrowLeft size={24} />
                     </button>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Detail View</span>
-                    <button onClick={() => setReportingWord(word)} className="p-2 bg-white rounded-full shadow-sm text-slate-300 hover:text-red-500">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dictionary</span>
+                    <button onClick={() => setReportingWord(word)} className="p-2 bg-white rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
                         <AlertCircle size={20} />
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto px-2 pb-4 no-scrollbar">
+                {/* Main Card */}
+                <div className="flex-1 overflow-y-auto px-4 pb-4 no-scrollbar">
                     <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl p-8 min-h-full flex flex-col items-center">
                         <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">French</span>
-                        <h2 className="text-5xl font-bold text-slate-800 my-4 text-center">{word.french}</h2>
-                        <button onClick={() => speak(word.french)} className="p-4 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 mb-8">
+                        <h2 className="text-5xl font-bold text-slate-800 my-4 text-center leading-tight">{word.french}</h2>
+                        
+                        <button onClick={() => speak(word.french)} className="p-4 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 mb-8 active:scale-90 transition-all">
                             <Volume2 size={32} />
                         </button>
 
                         <div className="w-full border-t border-slate-50 pt-6 text-center mb-8">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Translation</span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meaning</span>
                             <h3 className="text-3xl font-bold text-indigo-900 mt-2">{word.english}</h3>
                         </div>
 
@@ -4000,16 +4034,41 @@ function App() {
                     </div>
                 </div>
 
-                {/* Die zwei Aktions-Buttons unten */}
+                {/* Bottom Buttons - Hier ist das erzwungene Grün */}
                 <div className="p-4 pb-10 bg-slate-50 flex gap-3 shrink-0 border-t border-slate-100">
-                    <button onClick={() => handleQuickSave(1)} disabled={saveStatus !== null} className={`flex-1 py-5 rounded-2xl font-bold transition-all flex flex-col items-center border-2 ${saveStatus === 1 ? 'bg-green-400 border-green-400 text-black' : 'bg-white border-slate-200 text-slate-600'}`}>
-                        {saveStatus === 1 ? <Check size={24} /> : <span className="text-xl">🏋️</span>}
-                        <span className="text-[10px] font-black uppercase mt-1">Train later</span>
+                    
+                    {/* Button 1: Train later */}
+                    <button 
+                        onClick={() => handleQuickSave(1)} 
+                        disabled={saveStatus !== null}
+                        className={`flex-1 py-5 rounded-2xl font-bold transition-all duration-300 flex flex-col items-center border-2 shadow-sm
+                            ${saveStatus === 1 
+                                ? '!bg-green-500 !border-green-500 !text-white scale-95 shadow-inner' 
+                                : 'bg-white border-slate-200 text-slate-600 active:scale-95'
+                            }`}
+                    >
+                        {saveStatus === 1 ? <Check size={28} className="animate-in zoom-in" /> : <span className="text-2xl mb-1">🏋️</span>}
+                        <span className="text-[10px] font-black uppercase tracking-wider">
+                            {saveStatus === 1 ? 'Added!' : 'Train later'}
+                        </span>
                     </button>
-                    <button onClick={() => handleQuickSave(5)} disabled={saveStatus !== null} className={`flex-1 py-5 rounded-2xl font-bold transition-all flex flex-col items-center border-2 shadow-lg ${saveStatus === 5 ? 'bg-green-400 border-green-400 text-black' : 'bg-indigo-600 border-indigo-600 text-white'}`}>
-                        {saveStatus === 5 ? <Check size={24} /> : <span className="text-xl">✅</span>}
-                        <span className="text-[10px] font-black uppercase mt-1">Learned!</span>
+
+                    {/* Button 2: I know this */}
+                    <button 
+                        onClick={() => handleQuickSave(5)} 
+                        disabled={saveStatus !== null}
+                        className={`flex-1 py-5 rounded-2xl font-bold transition-all duration-300 flex flex-col items-center border-2 shadow-lg
+                            ${saveStatus === 5 
+                                ? '!bg-green-500 !border-green-500 !text-white scale-95 shadow-none' 
+                                : 'bg-indigo-600 border-indigo-600 text-white active:scale-95 shadow-indigo-100'
+                            }`}
+                    >
+                        {saveStatus === 5 ? <Check size={28} className="animate-in zoom-in" /> : <span className="text-2xl mb-1">✅</span>}
+                        <span className="text-[10px] font-black uppercase tracking-wider">
+                            {saveStatus === 5 ? 'Mastered!' : 'I know this'}
+                        </span>
                     </button>
+
                 </div>
             </div>
         );
