@@ -1296,322 +1296,340 @@ const getMergedGrammarData = () => {
 };
 // --- READER COMPONENT (Ausgelagert) ---
 /* script.js - BookReader Component (Komplett) */
-const BookReader = ({ currentStory, pageIndex, setPageIndex, saveProgress, setView, setReaderMode, speak, stopAudio, vocabulary, clickedWord, setClickedWord, loadingTranslation, setLoadingTranslation }) => {
-    
-    // Lokaler State für Audio
-    const [isSpeaking, setIsSpeaking] = useState(false);
+const ReaderWordDetail = ({ word, setView, setUserProgress, session, speak }) => {
+    const [saveStatus, setSaveStatus] = React.useState(null);
 
-    // Audio Helper
-    const toggleAudio = (text) => {
-        if (isSpeaking) {
-            stopAudio();
-            setIsSpeaking(false);
-        } else {
-            setIsSpeaking(true);
-            const cleanText = text.replace(/[*_#]/g, ""); 
-            speak(cleanText);
-        }
-    };
+    if (!word) return null;
 
-    // --- WORD CLICK LOGIC (Hybrid: Local -> DB -> AI) ---
-    const handleWordClick = async (e, wordRaw) => {
-        e.stopPropagation();
-        
-        // 1. Cleaning & Normalisierung
-        let cleanWord = wordRaw.replace(/[*_#]/g, "")
-                               .replace(/[’]/g, "'") 
-                               .replace(/^[.,!?;:"«»()]+|[.,!?;:"«»()]+$/g, "")
-                               .toLowerCase()
-                               .trim();
-        
-        if (/^\d+$/.test(cleanWord)) return; 
+    const handleQuickSave = async (boxLevel) => {
+        // 1. SOFORTIGES Feedback für die UI
+        setSaveStatus(boxLevel); 
+        console.log("Saving box:", boxLevel); // Debug Info
 
-        let searchWord = cleanWord;
-        let prefixInfo = null;
+        const isRare = word.rank === 'AI' || word.rank === '>10000';
+        const rankKey = isRare ? word.french : word.rank;
+        const newEntry = { 
+            box: boxLevel, 
+            nextReview: boxLevel === 5 ? Date.now() + 30*24*60*60*1000 : Date.now(), 
+            interval: boxLevel === 5 ? 30 : 0, 
+            ease: 2.5 
+        };
 
-        // 2. ELISION CHECK (l', d', etc.)
-        if (typeof FRENCH_ELISIONS !== 'undefined') {
-            const prefixes = Object.keys(FRENCH_ELISIONS).sort((a, b) => b.length - a.length);
-            for (const prefix of prefixes) {
-                if (searchWord.startsWith(prefix)) {
-                    searchWord = searchWord.substring(prefix.length);
-                    prefixInfo = { prefix, meaning: FRENCH_ELISIONS[prefix] };
-                    break; 
-                }
-            }
-        }
-
-        // --- SAMMEL-PHASE (LOKAL) ---
-        // Wir nutzen eine Map, um Duplikate sofort zu vermeiden (Key = ID)
-        const matchesMap = new Map();
-
-        // SCHRITT A: Ist es ein Lemma? (Direkttreffer)
-        // Beispiel: User klickt "être" -> findet Eintrag "être"
-        const lemmaMatches = vocabulary.filter(v => v.french.toLowerCase() === searchWord);
-        lemmaMatches.forEach(m => matchesMap.set(m.id, { ...m, root: null })); // Root null = es ist das Wort selbst
-
-        // SCHRITT B: Ist es in den Mappings versteckt? (Deep Search)
-        // Beispiel: User klickt "des" -> findet Eintrag "de" (weil "des" in mapping_forms von "de" steht)
-        // SCHRITT B: Ist es in den Mappings versteckt? (Deep Search)
-        // Wir suchen Wörter, deren 'conjugation' Array unser Suchwort enthält
-        const mappingMatches = vocabulary.filter(v => {
-            // Sicherheitscheck: Existiert das Array und ist es gefüllt?
-            if (v.conjugation && Array.isArray(v.conjugation) && v.conjugation.length > 0) {
-                // Wir nutzen includes für exakten Match
-                return v.conjugation.includes(searchWord);
-            }
-            return false;
-        });
-
-        mappingMatches.forEach(m => {
-            // Wir fügen es nur hinzu, wenn wir es nicht schon als Hauptwort (Lemma) gefunden haben.
-            // Ausnahme: Wenn das Lemma z.B. "de" ist und wir nach "des" suchen, wollen wir "de" als Root anzeigen.
-            if (!matchesMap.has(m.id)) {
-                matchesMap.set(m.id, { 
-                    ...m, 
-                    // Hier der Trick: Wir zeigen das Originalwort an, verweisen aber auf die Wurzel
-                    french: wordRaw.replace(/[.,!?;:"«»()]/g, ""), 
-                    root: m.french, // Zeige an: "des -> de"
-                    source: 'mapping'
-                });
-            }
-        });
-
-        // --- CLOUD PHASE (Nur wenn lokal wenig gefunden wurde oder zur Ergänzung) ---
-        
-        // Wir machen weiter, wenn wir Ergebnisse haben, aber schauen trotzdem kurz in die Verb-Tabelle,
-        // falls es eine spezifische Zeitform ist, die wir lokal nicht genau bestimmen können.
-        
         try {
-            // SCHRITT C: Verb Forms in Supabase (für präzise Zeitformen)
-            // Nur machen, wenn wir nicht schon 100% sicher sind (optional: performance optimierung)
-            const { data: verbData } = await supabase
-                .from('verb_forms')
-                .select('lemma, tense')
-                .eq('form', searchWord);
+            // 2. Lokal im State der App speichern
+            setUserProgress(prev => ({ ...prev, [rankKey]: newEntry }));
 
-            if (verbData && verbData.length > 0) {
-                verbData.forEach(vData => {
-                    // Wir suchen das Lemma aus der DB in unserer lokalen Liste
-                    const localEntry = vocabulary.find(v => v.french.toLowerCase() === vData.lemma.toLowerCase());
-                    if (localEntry) {
-                        // Wir fügen es hinzu oder updaten es mit der Zeitform-Info
-                        const existing = matchesMap.get(localEntry.id);
-                        const enhancedEntry = {
-                            ...localEntry,
-                            root: localEntry.french,
-                            verbInfo: { tense: formatTense(vData.tense), person: "" },
-                            source: 'conjugation'
-                        };
-                        matchesMap.set(localEntry.id, enhancedEntry);
-                    }
-                });
+            // 3. Supabase Update
+            if (session) {
+                await supabase.from('user_progress').upsert({
+                    user_id: session.user.id,
+                    word_rank: typeof word.rank === 'number' ? word.rank : 99999,
+                    box: boxLevel,
+                    next_review: newEntry.nextReview
+                }, { onConflict: 'user_id, word_rank' });
             }
-        } catch (err) { console.error(err); }
 
-        // --- FINALE ZUSAMMENSTELLUNG ---
-        let finalResults = Array.from(matchesMap.values());
+            // 4. Länger warten (1.5s), damit man das Grün auch sieht
+            setTimeout(() => {
+                setView('reader');
+                setSaveStatus(null);
+            }, 1500);
 
-        // Sortieren: Häufigstes Wort zuerst (Rank 1 vor Rank 5000)
-        finalResults.sort((a, b) => (a.rank || 99999) - (b.rank || 99999));
-
-        // UI Update: Ergebnisse vorhanden?
-        if (finalResults.length > 0) {
-            setClickedWord({
-                ...finalResults[0], // Das beste Ergebnis als Hauptanzeige
-                french: wordRaw.replace(/[.,!?;:"«»()]/g, ""), // Originalanzeige
-                english: finalResults[0].english || finalResults[0].german, // Übersetzung
-                allMatches: finalResults, // Liste für das Popup
-                elisionInfo: prefixInfo,
-                // Root Logik für die Anzeige
-                root: finalResults[0].root || (finalResults[0].french !== searchWord ? finalResults[0].french : null)
-            });
-        } else {
-            // SCHRITT D: Fallback Dictionary (Wenn lokal und Verb-DB nichts ergaben)
-            setClickedWord({ french: wordRaw.replace(/[.,!?;:"«»()]/g, ""), english: "Checking Dictionary...", rank: "..." });
-            
-            try {
-                const { data } = await supabase
-                    .from('dictionary_fallback')
-                    .select('translation_en')
-                    .eq('lemma', searchWord)
-                    .maybeSingle();
-
-                if (data && data.translation_en) {
-                    setClickedWord({
-                        french: searchWord,
-                        english: data.translation_en,
-                        rank: "Ext",
-                        isFallback: true,
-                        elisionInfo: prefixInfo
-                    });
-                    return; 
-                }
-            } catch (err) {}
-
-            // SCHRITT E: AI (Letzte Hoffnung)
-            setLoadingTranslation(true);
-            setClickedWord({ 
-                french: wordRaw.replace(/[.,!?;:"«»()]/g, ""), 
-                english: "Translating...", 
-                rank: "AI", 
-                elisionInfo: prefixInfo 
-            });
-            
-            try {
-                const res = await fetch('/api/translate', { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: searchWord, targetLang: 'en' }) 
-                });
-                const data = await res.json();
-                setClickedWord(prev => ({ ...prev, english: data.translation || "Not found", rank: "AI" }));
-            } catch (e) {
-                 setClickedWord(prev => ({ ...prev, english: "Not found", rank: "?" }));
-            } finally {
-                 setLoadingTranslation(false);
-            }
-        }
-    };
-
-    // Pagination Logic (Memoized)
-    const pages = React.useMemo(() => {
-        if (!currentStory?.text) return [''];
-        const paragraphs = currentStory.text.split('\n');
-        const pgs = [];
-        let currentPage = "";
-
-        paragraphs.forEach(para => {
-            if ((currentPage + para).length > 450 && currentPage.length > 0) {
-                pgs.push(currentPage);
-                currentPage = para + "\n";
-            } else {
-                currentPage += para + "\n";
-            }
-        });
-        if (currentPage.trim()) pgs.push(currentPage);
-        
-        return pgs.length > 0 ? pgs : [''];
-    }, [currentStory?.text]);
-
-    const currentPageText = pages[pageIndex] || "";
-    const progressPct = Math.round(((pageIndex + 1) / pages.length) * 100);
-
-    const nextPage = () => {
-        if (pageIndex < pages.length - 1) {
-            const newPage = pageIndex + 1;
-            setPageIndex(newPage);
-            saveProgress(currentStory.id, currentStory.chapterIndex, newPage);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-            saveProgress(currentStory.id, currentStory.chapterIndex, pageIndex, true);
-            setReaderMode('finish');
-        }
-    };
-
-    const prevPage = () => {
-        if (pageIndex > 0) {
-            const newPage = pageIndex - 1;
-            setPageIndex(newPage);
-            saveProgress(currentStory.id, currentStory.chapterIndex, newPage);
+        } catch (err) {
+            console.error("Fehler beim Speichern:", err);
+            setSaveStatus(null);
         }
     };
 
     return (
-        <div className="pt-6 pb-6 px-1 h-screen flex flex-col">
+        <div className="flex flex-col w-full max-w-xl mx-auto pt-6 h-[100dvh] bg-slate-50">
             {/* Header */}
-            <div className="flex items-center justify-between mb-4 px-2 shrink-0">
-                <button onClick={() => setView('explore')} className="p-2 -ml-2 hover:bg-slate-100 rounded-full text-slate-500">
-                    <X size={24} />
+            <div className="flex items-center justify-between mb-4 px-4 shrink-0">
+                <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500 hover:text-slate-800 transition-colors">
+                    <ArrowLeft size={24} />
                 </button>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                    Page {pageIndex + 1} of {pages.length || 1}
-                </div>
-                <button onClick={() => toggleAudio(currentPageText)} className={`p-2 rounded-full ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'text-slate-400'}`}>
-                    <Volume2 size={24}/>
-                </button>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Word Details</span>
+                <div className="w-10"></div>
             </div>
 
-            {/* PAGE */}
-            <div className="flex-1 bg-[#fffdf5] border-x border-slate-200 shadow-xl mx-1 mb-4 p-6 md:p-8 rounded-lg overflow-y-auto relative">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-black/5 to-transparent opacity-50"></div>
-                
-                <h2 className="text-sm font-bold text-slate-400 mb-6 uppercase tracking-wider border-b border-slate-100 pb-2">
-                    {currentStory.title}
-                </h2>
-                
-                <div className="text-xl md:text-2xl text-slate-800 leading-loose font-serif text-justify">
+            {/* Karte */}
+            <div className="flex-1 bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl mx-2 mb-4 p-8 overflow-y-auto no-scrollbar">
+                <div className="text-center mb-8">
+                    <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">French</span>
+                    <h2 className="text-5xl font-bold text-slate-800 my-2">{word.french}</h2>
+                    <button onClick={() => speak(word.french)} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all active:scale-90">
+                        <Volume2 size={24} />
+                    </button>
+                </div>
+
+                <div className="text-center mb-8 border-t border-slate-50 pt-6">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meaning</span>
+                    <h3 className="text-3xl font-bold text-indigo-900 mt-1">{word.english}</h3>
+                </div>
+
+                {word.explanation && (
+                    <div className="bg-slate-50 rounded-2xl p-4 mb-6 border border-slate-100 text-sm text-slate-600 italic">
+                        {word.explanation}
+                    </div>
+                )}
+
+                {/* Konjugation (Beispielhaft für Present Tense) */}
+                {word.pos_type === 'VERB' && word.conjugationTable && (
+                    <div className="bg-indigo-50/50 rounded-3xl p-5 mb-6 border border-indigo-100 grid grid-cols-2 gap-4">
+                        {Object.entries(word.conjugationTable).slice(0, 6).map(([p, f]) => (
+                            <div key={p} className="flex justify-between border-b border-indigo-100/30 text-sm py-1">
+                                <span className="text-indigo-300 font-medium">{p}</span>
+                                <span className="text-indigo-900 font-bold">{f}</span>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Beispiele */}
+                {word.examples && word.examples.map((ex, i) => (
+                    <div key={i} className="mb-4 p-4 bg-slate-50 border border-slate-100 rounded-2xl flex justify-between items-start gap-3">
+                        <div className="flex-1">
+                            <p className="text-slate-800 font-bold text-sm leading-snug">{ex.fr}</p>
+                            <p className="text-slate-400 text-xs italic mt-1">{ex.en}</p>
+                        </div>
+                        <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 hover:text-indigo-600"><Volume2 size={16} /></button>
+                    </div>
+                ))}
+            </div>
+
+            {/* --- FIX: DIE BUTTONS MIT EXPLIZITEN FARBEN --- */}
+            <div className="p-4 pb-12 flex gap-3 shrink-0 bg-slate-50">
+                {/* Button 1: Training */}
+                <button 
+                    onClick={() => handleQuickSave(1)}
+                    disabled={saveStatus !== null}
+                    className={`flex-1 py-5 rounded-2xl font-bold transition-all flex flex-col items-center border-2 
+                        ${saveStatus === 1 
+                            ? 'bg-green-400 border-green-500 text-black shadow-inner' 
+                            : 'bg-white border-slate-200 text-slate-600 active:scale-95 shadow-sm'
+                        }`}
+                >
+                    {saveStatus === 1 ? <Check size={24} strokeWidth={3} /> : <span className="text-xl">🏋️</span>}
+                    <span className={`text-[10px] uppercase mt-1 ${saveStatus === 1 ? 'font-black' : ''}`}>
+                        {saveStatus === 1 ? 'Added!' : 'Add to Training'}
+                    </span>
+                </button>
+
+                {/* Button 2: Marked as Learned */}
+                <button 
+                    onClick={() => handleQuickSave(5)}
+                    disabled={saveStatus !== null}
+                    className={`flex-1 py-5 rounded-2xl font-bold transition-all flex flex-col items-center border-2
+                        ${saveStatus === 5 
+                            ? 'bg-green-400 border-green-500 text-black shadow-inner' 
+                            : 'bg-indigo-600 border-indigo-700 text-white active:scale-95 shadow-lg shadow-indigo-100'
+                        }`}
+                >
+                    {saveStatus === 5 ? <Check size={24} strokeWidth={3} /> : <span className="text-xl">✅</span>}
+                    <span className={`text-[10px] uppercase mt-1 ${saveStatus === 5 ? 'font-black' : ''}`}>
+                        {saveStatus === 5 ? 'Mastered!' : 'Mark as Learned'}
+                    </span>
+                </button>
+            </div>
+        </div>
+    );
+};
+const BookReader = ({ 
+    currentStory, pageIndex, setPageIndex, saveProgress, setView, 
+    setReaderMode, speak, stopAudio, vocabulary, clickedWord, 
+    setClickedWord, userProgress, setUserProgress, session,
+    setSessionQueue, setActiveSession, setCurrentIndex, setIsFlipped, 
+    setShowConjugation, setSelectedWord 
+}) => {
+    
+    const [isSpeaking, setIsSpeaking] = useState(false);
+
+    // 1. Pagination Logik (Ganz oben für Stabilität)
+    const pages = React.useMemo(() => {
+        if (!currentStory?.text) return [''];
+        const paragraphs = currentStory.text.split('\n');
+        const pgs = [];
+        let cur = "";
+        paragraphs.forEach(p => {
+            if ((cur + p).length > 450 && cur.length > 0) { pgs.push(cur); cur = p + "\n"; }
+            else cur += p + "\n";
+        });
+        if (cur.trim()) pgs.push(cur);
+        return pgs.length > 0 ? pgs : [''];
+    }, [currentStory?.text]);
+
+    const currentPageText = pages[pageIndex] || "";
+
+    const toggleAudio = (text) => {
+        if (isSpeaking) { stopAudio(); setIsSpeaking(false); }
+        else { setIsSpeaking(true); speak(text.replace(/[*_#]/g, "")); }
+    };
+
+    // --- DIE OPTIMIERTE KASKADE ---
+    const handleWordClick = async (e, wordRaw) => {
+        e.stopPropagation();
+        
+        // 1. Reinigung
+        let cleanBase = wordRaw.replace(/[,]/g, "").replace(/[.!?;:"«»()]+/g, "").trim();
+        if (!cleanBase || /^\d+$/.test(cleanBase)) return;
+
+        // Bindestrich-Split: ["mêmes-nous"] -> ["mêmes-nous", "mêmes", "nous"]
+        const searchTerms = [cleanBase.toLowerCase()];
+        if (cleanBase.includes('-')) {
+            cleanBase.split('-').forEach(p => { if (p.length > 1) searchTerms.push(p.toLowerCase()); });
+        }
+
+        setClickedWord({ cleanFrench: cleanBase, isLoading: true });
+
+        try {
+            const matchesMap = new Map();
+
+            for (let term of searchTerms) {
+                // Elision Handling (l'arbre -> arbre)
+                const elisionMatch = term.match(/^([ldnmstcjqu]|qu|jusqu|lorsqu|puisqu)['’](.+)/i);
+                let cleanTerm = elisionMatch ? elisionMatch[2] : term;
+
+                // --- SCHRITT A: Lokale Lemma-Suche (Top 10k) ---
+                vocabulary.filter(v => v.french.toLowerCase() === cleanTerm)
+                    .forEach(m => matchesMap.set(m.id, { ...m, source: 'top10k' }));
+
+                // --- SCHRITT B: Lokale Mapping-Suche (Top 10k) ---
+                vocabulary.filter(v => v.conjugation && v.conjugation.includes(cleanTerm))
+                    .forEach(m => {
+                        if (!matchesMap.has(m.id)) {
+                            matchesMap.set(m.id, { ...m, source: 'top10k_mapping', isConjugated: true });
+                        }
+                    });
+
+                // --- SCHRITT C: Externe Verb-Datenbank (verb_forms) ---
+                const { data: vfData } = await supabase
+                    .from('verb_forms')
+                    .select('lemma, tense')
+                    .eq('form', cleanTerm);
+
+                if (vfData && vfData.length > 0) {
+                    vfData.forEach(vfEntry => {
+                        // Suche das Lemma in den Top 10k für volle Details
+                        const enrichedLemma = vocabulary.find(v => v.french.toLowerCase() === vfEntry.lemma.toLowerCase());
+                        if (enrichedLemma) {
+                            // Wir nutzen eine kombinierte ID, falls ein Wort mehrere Zeitformen hat
+                            const uniqueKey = `verb_${enrichedLemma.id}_${vfEntry.tense}`;
+                            matchesMap.set(uniqueKey, { 
+                                ...enrichedLemma, 
+                                source: 'db_verb', 
+                                isConjugated: true, 
+                                specificTense: vfEntry.tense // Zeitform für die Anzeige merken
+                            });
+                        }
+                    });
+                }
+            }
+
+            let finalResults = Array.from(matchesMap.values());
+
+            // --- SCHRITT D: Letzter Fallback AI (nur wenn absolut leer) ---
+            if (finalResults.length === 0) {
+                const res = await fetch('/api/translate', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: cleanBase, targetLang: 'en' }) 
+                });
+                if (res.ok) {
+                    const aiData = await res.json();
+                    finalResults.push({ id: 'ai_' + Date.now(), french: cleanBase, english: aiData.translation, rank: 'AI', source: 'ai' });
+                }
+            }
+
+            setClickedWord({ cleanFrench: cleanBase, allMatches: finalResults, isLoading: false });
+
+        } catch (err) {
+            console.error("Search error:", err);
+            setClickedWord({ cleanFrench: cleanBase, allMatches: [], isLoading: false });
+        }
+    };
+
+    return (
+        <div className="pt-6 pb-6 px-1 h-screen flex flex-col bg-slate-50">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4 px-4 shrink-0">
+                <button onClick={() => setView('explore')} className="p-2 bg-white rounded-full shadow-sm text-slate-500"><X size={20} /></button>
+                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Page {pageIndex + 1} / {pages.length}</div>
+                <button onClick={() => toggleAudio(currentPageText)} className={`p-2 rounded-full ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-white text-slate-400'}`}><Volume2 size={20}/></button>
+            </div>
+
+            {/* Buch-Seite */}
+            <div className="flex-1 bg-[#fffdf5] border border-slate-200 shadow-inner mx-2 mb-4 p-6 rounded-3xl overflow-y-auto relative no-scrollbar">
+                <div className="text-xl md:text-2xl text-slate-800 leading-relaxed font-serif">
                     {currentPageText.split(/(\s+)/).map((segment, i) => {
-                        if (segment.match(/\s+/)) return segment; 
-                        const clean = segment.replace(/[\*_]/g, "");
+                        if (segment.match(/\s+/)) return segment;
                         return (
-                            <span key={i} onClick={(e) => handleWordClick(e, segment)} className="cursor-pointer hover:bg-yellow-200 hover:text-slate-900 rounded px-0.5 transition-colors">
-                                {clean}
+                            <span key={i} onClick={(e) => handleWordClick(e, segment)} className="cursor-pointer hover:bg-indigo-100 hover:text-indigo-700 rounded px-0.5 transition-colors">
+                                {segment.replace(/[*_]/g, "")}
                             </span>
                         );
                     })}
                 </div>
             </div>
 
-            {/* CONTROLS */}
-            <div className="shrink-0 px-2 pb-safe">
-                <div className="w-full bg-slate-200 h-1.5 rounded-full mb-4 overflow-hidden">
-                    <div className="bg-indigo-600 h-full transition-all duration-300" style={{width: `${progressPct}%`}}></div>
-                </div>
-
-                <div className="flex gap-4">
-                    <button onClick={prevPage} disabled={pageIndex === 0} className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-xl font-bold disabled:opacity-30 active:scale-95 transition-all">← Prev</button>
-                    <button onClick={nextPage} className="flex-[2] py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all">
-                        {pageIndex < pages.length - 1 ? "Next Page →" : "Finish Chapter 🎉"}
-                    </button>
-                </div>
+            {/* Steuerung */}
+            <div className="shrink-0 px-4 pb-6 flex gap-3">
+                <button onClick={() => setPageIndex(p => Math.max(0, p - 1))} disabled={pageIndex === 0} className="flex-1 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold disabled:opacity-30 active:scale-95 transition-all">Prev</button>
+                <button onClick={() => pageIndex < pages.length - 1 ? setPageIndex(p => p + 1) : setReaderMode('finish')} className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-lg active:scale-95 transition-all">Next</button>
             </div>
 
-             {/* POPUP */}
-             {clickedWord && (
-                <div className="fixed bottom-24 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center justify-between">
-                    <div>
-                        <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                            <div className={`text-[10px] font-bold uppercase tracking-wider inline-block px-1.5 rounded ${
-                                clickedWord.rank === "AI" ? "bg-yellow-500/20 text-yellow-300" : 
-                                clickedWord.rank === "Ext" ? "bg-blue-500/20 text-blue-300" :
-                                clickedWord.rank === ">10000" ? "bg-orange-500/20 text-orange-300" : 
-                                "text-slate-400"
-                            }`}>
-                                {clickedWord.rank === "AI" ? <Sparkles size={12}/> : 
-                                 clickedWord.rank === "Ext" ? "Web" :
-                                 clickedWord.rank === ">10000" ? "Rare Word" : 
-                                 `Rank #${clickedWord.rank}`}
-                            </div>
-                            
-                            {/* Verb Tense Badge */}
-                            {clickedWord.verbInfo && (
-                                <div className="text-[10px] font-bold uppercase tracking-wider inline-block px-1.5 rounded bg-indigo-500/30 text-indigo-300">
-                                    {clickedWord.verbInfo.tense} · {clickedWord.verbInfo.person}
-                                </div>
-                            )}
-                            
-                            {/* Elision Badge */}
-                            {clickedWord.elisionInfo && (
-                                <div className="text-[10px] font-bold uppercase tracking-wider inline-block px-1.5 rounded bg-emerald-500/30 text-emerald-300 border border-emerald-500/50">
-                                    {clickedWord.elisionInfo.prefix} = {clickedWord.elisionInfo.meaning}
-                                </div>
-                            )}
-                        </div>
-                        
-                        <div className="text-xl font-bold flex items-baseline gap-2">
-                            {clickedWord.french}
-                            {clickedWord.root && clickedWord.root.toLowerCase() !== clickedWord.french.toLowerCase() && (
-                                <span className="text-xs text-slate-500 font-normal">
-                                    → {clickedWord.root}
-                                </span>
-                            )}
-                        </div>
-                        <div className="text-slate-300 text-sm italic">{clickedWord.english || clickedWord.german}</div>
+            {/* POPUP */}
+            {clickedWord && (
+                <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-5 rounded-[2.5rem] shadow-2xl z-[60] border border-white/10 max-h-[70vh] flex flex-col">
+                    <div className="flex justify-between items-center mb-4 shrink-0 px-2">
+                        <h4 className="text-2xl font-bold capitalize">{clickedWord.cleanFrench}</h4>
+                        <button onClick={() => setClickedWord(null)} className="p-2 text-slate-400 hover:text-white"><X size={24} /></button>
                     </div>
-                    <div className="flex gap-3">
-                        <button onClick={() => speak(clickedWord.french)} className="p-3 bg-white/10 rounded-full hover:bg-white/20"><Volume2 size={20}/></button>
-                        <button onClick={() => setClickedWord(null)} className="p-3 text-slate-400 hover:text-white"><X size={20}/></button>
+
+                    <div className="space-y-4 overflow-y-auto no-scrollbar pb-2 px-1">
+                        {clickedWord.isLoading ? (
+                            <div className="flex items-center justify-center py-8"><Loader2 className="animate-spin text-indigo-400" /></div>
+                        ) : (
+                            clickedWord.allMatches.map((match, idx) => (
+                                <div key={idx} className="bg-white/5 border border-white/10 rounded-3xl p-4">
+                                    <div className="flex justify-between items-start mb-1">
+                                        <span className="text-[10px] font-black text-indigo-400 uppercase tracking-tighter">
+                                            {match.specificTense ? formatTense(match.specificTense) : (match.type || 'Word')}
+                                            {match.isConjugated && !match.specificTense ? ' (Verb Form)' : ''}
+                                        </span>
+                                        <span className="text-[10px] text-slate-500 font-mono">{match.rank === 'AI' ? '✨ AI' : `#${match.rank}`}</span>
+                                    </div>
+                                    <div className="text-lg font-bold text-white mb-3 leading-tight">{match.english}</div>
+                                    
+                                    <div className="flex gap-2">
+                                        {match.rank !== 'AI' && (
+                                            <button 
+                                                onClick={() => {
+                                                    setSelectedWord(match); 
+                                                    setView('reader-word-detail');
+                                                    setClickedWord(null);
+                                                }}
+                                                className="flex-1 bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-xl text-xs font-bold active:scale-95 transition-all"
+                                            >Details</button>
+                                        )}
+                                        <button 
+                                            onClick={async () => {
+                                                const rankKey = (match.rank === 'AI' || match.rank === '>10000') ? match.french : match.rank;
+                                                setUserProgress(prev => ({ ...prev, [rankKey]: { box: 1, nextReview: Date.now(), interval: 0, ease: 2.5 } }));
+                                                if (session) {
+                                                    await supabase.from('user_progress').upsert({
+                                                        user_id: session.user.id,
+                                                        word_rank: typeof match.rank === 'number' ? match.rank : 99999,
+                                                        box: 1, next_review: Date.now()
+                                                    });
+                                                }
+                                                alert(`"${match.french}" added to Training!`);
+                                            }}
+                                            className="flex-1 bg-white/10 py-2.5 rounded-xl text-xs font-bold"
+                                        >Save</button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
             )}
@@ -2696,10 +2714,6 @@ function App() {
 
   
     const [reportingWord, setReportingWord] = useState(null); // Für das Report Popup
-    const showRandomJoke = () => {
-        const random = JOKE_DB[Math.floor(Math.random() * JOKE_DB.length)];
-        setDailyJoke(random);
-    };
     const [view, setView] = useState('home'); 
     const [vocabulary, setVocabulary] = useState([]); // Startet leer, useEffect füllt es sofort
     const [userProgress, setUserProgress] = useState({}); 
@@ -2834,48 +2848,61 @@ function App() {
     React.useEffect(() => {
         async function loadVocabulary() {
             console.log("🛠️ DEBUG: Starte Cloud-Sync von Tabelle 'database'...");
-            
-            // Alten Cache löschen
-            localStorage.removeItem('cached_vocabulary');
             setIsLoadingVocab(true);
 
             try {
-                const { data, error } = await supabase
-                    .from('database')
-                    .select('*')
-                    .order('frequency', { ascending: true });
+                let allFormattedData = [];
+                let from = 0;
+                const step = 1000; // Wir laden immer 1000er Blöcke
+                let finished = false;
 
-                if (error) throw error;
+                // Loop, bis wir weniger als 1000 Zeilen zurückbekommen (dann sind wir am Ende)
+                while (!finished) {
+                    console.log(`📡 Lade Batch: ${from} bis ${from + step}...`);
+                    const { data, error } = await supabase
+                        .from('database')
+                        .select('*')
+                        .order('frequency', { ascending: true })
+                        .range(from, from + step - 1); // Hier setzen wir den Bereich
 
-                if (data) {
-                    console.log("📡 Supabase Response erhalten. Zeilen:", data.length);
-                    
-                    const formattedData = data.map(item => {
-                        const safeParse = (val) => {
-                            if (!val) return null;
-                            if (typeof val === 'object') return val;
-                            try { return JSON.parse(val); } catch (e) { return null; }
-                        };
+                    if (error) throw error;
 
-                        return {
-                            id: item.id,
-                            rank: item.frequency,
-                            french: item.lemma,
-                            english: item.translation_en,
-                            type: item.pos_type,
-                            explanation: item.explanation,
-                            conjugationTable: safeParse(item.conjugation),
-                            examples: safeParse(item.examples) || [],
-                            // WICHTIG: Das hier braucht der BookReader und die Suche!
-                            conjugation: safeParse(item.mapping_forms) || [] 
-                        };
-                    });
+                    if (data && data.length > 0) {
+                        const formattedBatch = data.map(item => {
+                            const safeParse = (val) => {
+                                if (!val) return null;
+                                if (typeof val === 'object') return val;
+                                try { return JSON.parse(val); } catch (e) { return null; }
+                            };
 
-                    // WICHTIG: Hier muss setVocabulary stehen, nicht setVocabList!
-                    setVocabulary(formattedData); 
-                    
-                    console.log("✨ App nutzt jetzt Live-Daten von Supabase");
+                            return {
+                                id: item.id,
+                                rank: item.frequency,
+                                french: item.lemma,
+                                english: item.translation_en,
+                                type: item.pos_type,
+                                explanation: item.explanation,
+                                conjugationTable: safeParse(item.conjugation),
+                                examples: safeParse(item.examples) || [],
+                                conjugation: safeParse(item.mapping_forms) || [] 
+                            };
+                        });
+
+                        allFormattedData = [...allFormattedData, ...formattedBatch];
+                        
+                        if (data.length < step) {
+                            finished = true; // Wir haben den letzten Rest geladen
+                        } else {
+                            from += step; // Nächsten Block vorbereiten
+                        }
+                    } else {
+                        finished = true;
+                    }
                 }
+
+                console.log("✨ Gesamtes Vokabular geladen. Zeilen:", allFormattedData.length);
+                setVocabulary(allFormattedData); 
+
             } catch (err) {
                 console.error("❌ Kritischer Datenbankfehler:", err.message);
             } finally {
@@ -3867,6 +3894,164 @@ function App() {
         };
     };
     // --- RENDER TOPIC HUB (Die Detailseite für Themen) ---
+    const renderReaderWordDetail = (word) => {
+        if (!word) return <div className="p-10 text-center">No word selected.</div>;
+
+        // Lokaler Status: null | 'saving' | 'training' | 'learned'
+        const [saveStatus, setSaveStatus] = useState(null);
+
+        const handleQuickSave = async (boxLevel) => {
+            // Optimistic UI: set the final visual state immediately
+            const targetStatus = boxLevel === 5 ? 'learned' : 'training';
+            setSaveStatus(targetStatus);
+            
+            const isRare = word.rank === 'AI' || word.rank === '>10000';
+            const rankKey = isRare ? word.french : word.rank;
+
+            // 1. Progress berechnen
+            const newEntry = { 
+                box: boxLevel, 
+                nextReview: boxLevel === 5 ? Date.now() + 30*24*60*60*1000 : Date.now(), 
+                interval: boxLevel === 5 ? 30 : 0, 
+                ease: 2.5 
+            };
+
+            try {
+                // 2. Lokal speichern (sofort)
+                setUserProgress(prev => ({ ...prev, [rankKey]: newEntry }));
+
+                // 3. Cloud-Sync (hinterher)
+                if (session) {
+                    await supabase.from('user_progress').upsert({
+                        user_id: session.user.id,
+                        word_rank: typeof word.rank === 'number' ? word.rank : 99999,
+                        box: boxLevel,
+                        next_review: newEntry.nextReview
+                    });
+                }
+
+                // 4. Kurze Verzögerung, dann zurück zum Reader und Reset des Status
+                setTimeout(() => {
+                    setView('reader');
+                    setSaveStatus(null);
+                }, 1200);
+
+            } catch (err) {
+                console.error(err);
+                // Revert visual state bei Fehler
+                setSaveStatus(null);
+                alert("Save failed. Check connection.");
+            }
+        };
+
+        return (
+            <div className="flex flex-col w-full max-w-xl mx-auto pt-6 h-[100dvh] bg-slate-50 animate-in fade-in">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4 px-4 shrink-0">
+                    <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500">
+                        <ArrowLeft size={24} />
+                    </button>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Discovery</span>
+                    <div className="w-10"></div>
+                </div>
+
+                {/* Karten-Inhalt */}
+                <div className="flex-1 bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl mx-2 mb-4 p-8 overflow-y-auto no-scrollbar">
+                    {/* Französisches Wort */}
+                    <div className="text-center mb-8">
+                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">French</span>
+                        <h2 className="text-5xl font-bold text-slate-800 my-2">{word.french}</h2>
+                        <button onClick={() => speak(word.french)} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all active:scale-90">
+                            <Volume2 size={24} />
+                        </button>
+                    </div>
+
+                    {/* Übersetzung */}
+                    <div className="text-center mb-8 border-t border-slate-50 pt-6">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meaning</span>
+                        <h3 className="text-3xl font-bold text-indigo-900 mt-1">{word.english}</h3>
+                    </div>
+
+                    {/* Erklärung & Konjugation (Design bleibt wie gehabt) */}
+                    {word.explanation && (
+                        <div className="bg-slate-50 rounded-2xl p-4 mb-6 border border-slate-100 text-sm text-slate-600 italic">
+                            {word.explanation}
+                        </div>
+                    )}
+
+                    {word.pos_type === 'VERB' && word.conjugationTable && (
+                        <div className="bg-indigo-50/50 rounded-3xl p-5 mb-6 border border-indigo-100">
+                            <div className="flex gap-4">
+                                {/* Konjugations-Spalten (je, tu, il... nous, vous, ils...) */}
+                                <div className="flex-1 space-y-2">
+                                    {['je','tu','il/elle'].map(p => (
+                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
+                                            <span className="text-indigo-300">{p}</span>
+                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="flex-1 space-y-2">
+                                    {['nous','vous','ils/elles'].map(p => (
+                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
+                                            <span className="text-indigo-300">{p}</span>
+                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Beispielsätze */}
+                    {word.examples && word.examples.map((ex, i) => (
+                        <div key={i} className="mb-4 p-4 bg-slate-50 rounded-2xl flex justify-between items-start gap-3">
+                            <div className="flex-1">
+                                <p className="text-slate-800 font-bold text-sm">{ex.fr}</p>
+                                <p className="text-slate-400 text-xs italic">{ex.en}</p>
+                            </div>
+                            <button onClick={() => speak(ex.fr)} className="p-1 text-slate-300 hover:text-indigo-600"><Volume2 size={16} /></button>
+                        </div>
+                    ))}
+                </div>
+
+                {/* --- DIE NEUEN FEEDBACK BUTTONS --- */}
+                <div className="p-4 pb-10 flex gap-3 shrink-0">
+                    {/* Button: Add to Training */}
+                    <button 
+                        onClick={() => handleQuickSave(1)}
+                        disabled={saveStatus !== null}
+                        className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center border-2 
+                            ${saveStatus === 1 
+                                ? 'bg-green-400 border-green-400 text-black scale-[0.98]' 
+                                : 'bg-white border-slate-200 text-slate-600 active:scale-95'
+                            }`}
+                    >
+                        {saveStatus === 1 ? <Check size={24} className="text-black" /> : <span>🏋️</span>}
+                        <span className="text-[10px] font-black uppercase mt-1">
+                            {saveStatus === 1 ? 'Added!' : 'Train later'}
+                        </span>
+                    </button>
+
+                    {/* Button: Mark as Learned */}
+                    <button 
+                        onClick={() => handleQuickSave(5)}
+                        disabled={saveStatus !== null}
+                        className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center shadow-lg border-2
+                            ${saveStatus === 5 
+                                ? 'bg-green-400 border-green-400 text-black scale-[0.98] shadow-none' 
+                                : 'bg-indigo-600 border-indigo-600 text-white active:scale-95 shadow-indigo-100'
+                            }`}
+                    >
+                        {saveStatus === 5 ? <Check size={24} className="text-black" /> : <span>✅</span>}
+                        <span className="text-[10px] font-black uppercase mt-1">
+                            {saveStatus === 5 ? 'Learned!' : 'I know this'}
+                        </span>
+                    </button>
+                </div>
+            </div>
+        );
+    };
     const renderTopicHub = () => {
         // Welches Thema wurde gewählt?
         const topicConfig = COLLECTIONS.topics.find(t => t.id === selectedTopicId);
@@ -5897,102 +6082,131 @@ function App() {
             setLoadingStory(false);
         }
     };
-    const renderWordDetail = () => {
-        if (!selectedWord) return null;
-        const word = selectedWord;
+    const ReaderWordDetail = ({ word, setView, setUserProgress, session, speak }) => {
+        // Hooks dürfen nur hier, am Anfang einer echten Komponente stehen!
+        const [saveStatus, setSaveStatus] = React.useState(null);
+
+        if (!word) return null;
+
+        const handleQuickSave = async (boxLevel) => {
+            // SOFORT den Status setzen für visuelles Feedback
+            setSaveStatus(boxLevel); 
+            
+            const isRare = word.rank === 'AI' || word.rank === '>10000';
+            const rankKey = isRare ? word.french : word.rank;
+            const newEntry = { 
+                box: boxLevel, 
+                nextReview: boxLevel === 5 ? Date.now() + 30*24*60*60*1000 : Date.now(), 
+                interval: boxLevel === 5 ? 30 : 0, 
+                ease: 2.5 
+            };
+
+            try {
+                // Im Hintergrund speichern
+                setUserProgress(prev => ({ ...prev, [rankKey]: newEntry }));
+                if (session) {
+                    await supabase.from('user_progress').upsert({
+                        user_id: session.user.id,
+                        word_rank: typeof word.rank === 'number' ? word.rank : 99999,
+                        box: boxLevel,
+                        next_review: newEntry.nextReview
+                    });
+                }
+                
+                // Nach einer kurzen Pause zurückkehren
+                setTimeout(() => {
+                    setView('reader');
+                    setSaveStatus(null);
+                }, 1000);
+            } catch (err) {
+                console.error(err);
+                setSaveStatus(null); // Bei Fehler zurücksetzen
+            }
+        };
 
         return (
-            <div className="flex flex-col h-full max-w-xl mx-auto w-full pt-4">
-                {/* Header: Zurück zur Library */}
-                <div className="flex items-center justify-between mb-4 pl-1">
-                    <button 
-                        onClick={() => {
-                            setSelectedWord(null); 
-                            setView('learned-section'); // Zurück zur Liste
-                            setAiExamples(null); // Reset AI
-                            setIsFlipped(false);
-                        }} 
-                        className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors"
-                    >
-                        <div className="p-2 bg-white border border-slate-200 rounded-full"><ArrowLeft size={16} /></div>
-                        <span className="font-bold text-sm">Back to Library</span>
-                    </button>
+            <div className="flex flex-col w-full max-w-xl mx-auto pt-6 h-[100dvh] bg-slate-50">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4 px-4 shrink-0">
+                    <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500"><ArrowLeft size={24} /></button>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Discovery</span>
+                    <div className="w-10"></div>
                 </div>
 
-                {/* DIE KARTE (Wiederverwendetes Design) */}
-                <div className="bg-white border-2 border-slate-100 rounded-3xl shadow-lg p-6 flex flex-col items-center justify-center min-h-[400px] relative transition-all">
-                    <div className="absolute top-4 right-4 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Rank #{word.rank}</div>
-
-                    {/* FRONT */}
-                    <div className="mb-6 text-center w-full relative">
-                        <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">French</div>
-                        <div className="flex items-center justify-center gap-3 mb-6">
-                            <h2 className="text-4xl md:text-5xl font-bold text-slate-800 break-words text-center leading-tight">{word.french}</h2>
-                            <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all shadow-sm shrink-0"><Volume2 size={24} /></button>
-                        </div>
-                        {word.example_fr && (
-                            <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl text-left relative group mx-2">
-                                <p className="text-slate-600 italic text-lg leading-relaxed pr-8">"{word.example_fr}"</p>
-                                <button onClick={(e) => { e.stopPropagation(); speak(word.example_fr); }} className="absolute right-2 top-2 p-2 text-slate-300 hover:text-indigo-600 hover:bg-white rounded-full transition-colors"><Volume2 size={18} /></button>
-                            </div>
-                        )}
+                {/* Inhalt */}
+                <div className="flex-1 bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl mx-2 mb-4 p-8 overflow-y-auto no-scrollbar">
+                    <div className="text-center mb-8">
+                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">French</span>
+                        <h2 className="text-5xl font-bold text-slate-800 my-2">{word.french}</h2>
+                        <button onClick={() => speak(word.french)} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100"><Volume2 size={24} /></button>
                     </div>
 
-                    {/* BACK / INTERACTION */}
-                    {!isFlipped ? (
-                        <button onClick={() => setIsFlipped(true)} className="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg transition-all flex items-center gap-2">
-                            <BookOpen size={20} /> Show Details
-                        </button>
-                    ) : (
-                        <div className="w-full flex flex-col items-center border-t border-slate-100 pt-6 mt-2 w-full">
-                            <div className="text-center mb-6 w-full">
-                                <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">English</div>
-                                <h3 className="text-3xl font-bold text-indigo-900 mb-2 leading-tight">{word.english || word.german}</h3>
-                                {word.example_en && <p className="text-indigo-400 italic text-sm mt-2 px-4">"{word.example_en}"</p>}
-                            </div>
+                    <div className="text-center mb-8 border-t border-slate-50 pt-6">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meaning</span>
+                        <h3 className="text-3xl font-bold text-indigo-900 mt-1">{word.english}</h3>
+                    </div>
 
-                            {/* AI GENERATOR (Funktioniert auch hier!) */}
-                            <div className="w-full px-2">
-                                {!aiExamples && !loadingExamples && (
-                                    <button 
-                                        onClick={() => handleGenerateExample(word)} 
-                                        disabled={generating}
-                                        className={`w-full py-3 rounded-xl font-bold text-sm border transition-colors flex items-center justify-center gap-2
-                                        ${generating 
-                                            ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-wait' 
-                                            : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100 shadow-sm'
-                                        }`}
-                                    >
-                                        {generating ? (
-                                            <>
-                                                <Loader2 className="animate-spin" size={18}/> 
-                                                <span>Writing sentence...</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Sparkles size={18}/> 
-                                                <span>Generate with AI</span>
-                                            </>
-                                        )}
-                                    </button>
-                                )}
-                                {loadingExamples && <div className="w-full py-4 text-center text-amber-500 text-sm font-medium animate-pulse flex justify-center items-center gap-2"><ArrowLeft className="animate-spin" size={16}/> generating...</div>}
-                                {aiExamples && (
-                                    <div className="space-y-3 text-left">
-                                        {aiExamples.map((ex, idx) => (
-                                            <div key={idx} className="bg-white border border-slate-200 p-3 rounded-xl shadow-sm relative">
-                                                <div className="flex justify-between items-start gap-2">
-                                                    <p className="text-slate-700 font-medium text-base leading-snug pr-6">{ex.fr}</p>
-                                                    <button onClick={() => speak(ex.fr)} className="absolute right-2 top-2 text-indigo-300 hover:text-indigo-600 transition-colors"><Volume2 size={16} /></button>
-                                                </div>
-                                                <p className="text-slate-400 text-sm italic mt-1 border-t border-slate-50 pt-1">{ex.en}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+                    {word.explanation && (
+                        <div className="bg-slate-50 rounded-2xl p-4 mb-6 border border-slate-100 text-sm text-slate-600 italic">
+                            {word.explanation}
+                        </div>
+                    )}
+
+                    {word.type === 'VERB' && word.conjugationTable && (
+                        <div className="bg-indigo-50/50 rounded-3xl p-5 mb-6 border border-indigo-100">
+                            <div className="flex gap-4">
+                                <div className="flex-1 space-y-2">
+                                    {['je','tu','il/elle'].map(p => (
+                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
+                                            <span className="text-indigo-300">{p}</span>
+                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="flex-1 space-y-2">
+                                    {['nous','vous','ils/elles'].map(p => (
+                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
+                                            <span className="text-indigo-300">{p}</span>
+                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     )}
+
+                    {word.examples && word.examples.map((ex, i) => (
+                        <div key={i} className="mb-4 p-4 bg-slate-50 rounded-2xl flex justify-between items-start gap-3">
+                            <div className="flex-1 text-slate-800 text-sm">
+                                <p className="font-bold">{ex.fr}</p>
+                                <p className="text-slate-400 italic">{ex.en}</p>
+                            </div>
+                            <button onClick={() => speak(ex.fr)} className="p-1 text-slate-300 hover:text-indigo-600"><Volume2 size={16} /></button>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Feedback Buttons */}
+                <div className="p-4 pb-10 flex gap-3 shrink-0">
+                    <button 
+                        onClick={() => handleQuickSave(1)}
+                        disabled={saveStatus !== null}
+                        className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center border-2 
+                            ${saveStatus === 'training' ? 'bg-green-500 border-green-500 text-white' : 'bg-white border-slate-200 text-slate-600'}`}
+                    >
+                        {saveStatus === 'training' ? <Check size={24} /> : <span>🏋️</span>}
+                        <span className="text-[10px] uppercase mt-1">{saveStatus === 'training' ? 'Added!' : 'Train later'}</span>
+                    </button>
+
+                    <button 
+                        onClick={() => handleQuickSave(5)}
+                        disabled={saveStatus !== null}
+                        className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center shadow-lg
+                            ${saveStatus === 'learned' ? 'bg-green-600 text-white' : 'bg-indigo-600 text-white'}`}
+                    >
+                        {saveStatus === 'learned' ? <Check size={24} /> : <span>✅</span>}
+                        <span className="text-[10px] uppercase mt-1">{saveStatus === 'learned' ? 'Learned!' : 'I know this'}</span>
+                    </button>
                 </div>
             </div>
         );
@@ -6961,18 +7175,19 @@ function App() {
     // Helper: Content basierend auf dem Tab rendern (wenn wir nicht in einer Session sind)
     const renderTabContent = () => {
         switch (view) {
-            // ... Home, Explore, Skills Cases wie vorher ...
+            // ... Home, Explore, Skills Cases bleiben gleich ...
             case 'home': case 'smart-config': case 'test-config': return renderHome();
             case 'explore': 
                 return renderExplore();
+            
             case 'reader':
                 if (readerMode === 'select') {
-                    // Falls du im Auswahl-Modus bist, zeig die Library
                     return renderExplore(); 
                 }
                 if (readerMode === 'reading' && currentStory) {
                     return (
                         <BookReader 
+                        
                             currentStory={currentStory}
                             pageIndex={pageIndex}
                             setPageIndex={setPageIndex}
@@ -6984,13 +7199,18 @@ function App() {
                             vocabulary={vocabulary}
                             clickedWord={clickedWord}
                             setClickedWord={setClickedWord}
-                            loadingTranslation={loadingTranslation}
-                            setLoadingTranslation={setLoadingTranslation}
+                            userProgress={userProgress}
+                            setUserProgress={setUserProgress}
+                            session={session}
+                            setSelectedWord={setSelectedWord} // <--- WICHTIG
+                            setIsFlipped={setIsFlipped}       // <--- WICHTIG
+                            setShowConjugation={setShowConjugation} // <--- WICHTIGugation beim Start zu ist
+                            // ----------------------------------------
                         />
                     );
                 }
                 if (readerMode === 'finish') {
-                     return (
+                    return (
                         <div className="h-screen flex flex-col items-center justify-center text-center px-6 pb-20">
                             <div className="text-6xl mb-6">🏆</div>
                             <h2 className="text-3xl font-bold text-slate-800 mb-2">Chapter Complete!</h2>
@@ -7000,49 +7220,35 @@ function App() {
                     );
                 }
                 return null;
-            case 'culture': 
-                return renderExplore();
-            // TAB 3: SKILLS
-            case 'skills':
-                return renderSkills(); // Zeigt das Hauptmenü
-            case 'daily-writer':
-                return renderDailyWriterEditor();
-            
-            case 'translator': // <--- HIER WAR DER FEHLER
-                return renderTranslator(); // Muss auf die eigene Translator-Ansicht zeigen
-            
-            case 'grammar':      
-                return renderSkills();
-            case 'update-password':
-                return <UpdatePasswordScreen onComplete={() => setView('home')} />;    
 
-            // --- PROFILE AREA ---
-            case 'profile':
-                return renderProfile(); // Das neue Dashboard
-            
-            case 'library': // <--- WIRD JETZT HIER GEHANDELT
-            case 'learned-section':
-                return renderLibrary(); 
-            
-            case 'collections': // <--- NEU: Collections mit Jokes
-                return renderCollections();
-            
-            case 'joke-detail': // <--- NEU: Joke Detail View
-                return renderJokeDetail();
-            
-            case 'data-mgmt':
-                return renderDataMgmt();
-            
-            case 'word-detail':
-                return renderWordDetail();
-            
-            case 'topic-hub': // <--- NEU
-                return renderTopicHub();
-            case 'chat': // <--- Das müssen wir im Skills-Tab verlinken
-                return renderChat();    
-            case 'grammar-detail': // <--- NEU
-                return <GrammarDetail topicId={selectedGrammarId} onBack={() => setView('skills')} />;    
-            
+            // Innerhalb von renderTabContent switch(view):
+            case 'reader-word-detail':
+                // WICHTIG: Wir rendern es jetzt als <ReaderWordDetail /> Komponente!
+                return (
+                    <ReaderWordDetail 
+                        word={selectedWord} 
+                        setView={setView} 
+                        setUserProgress={setUserProgress} 
+                        session={session} 
+                        speak={speak} 
+                    />
+                );
+            case 'culture': return renderExplore();
+            case 'skills': return renderSkills();
+            case 'daily-writer': return renderDailyWriterEditor();
+            case 'translator': return renderTranslator();
+            case 'grammar': return renderSkills();
+            case 'update-password': return <UpdatePasswordScreen onComplete={() => setView('home')} />;
+            case 'profile': return renderProfile();
+            case 'library':
+            case 'learned-section': return renderLibrary();
+            case 'collections': return renderCollections();
+            case 'joke-detail': return renderJokeDetail();
+            case 'data-mgmt': return renderDataMgmt();
+            case 'word-detail': return renderWordDetail();
+            case 'topic-hub': return renderTopicHub();
+            case 'chat': return renderChat();
+            case 'grammar-detail': return <GrammarDetail topicId={selectedGrammarId} onBack={() => setView('skills')} />;
             default: return renderHome();
         }
     };
