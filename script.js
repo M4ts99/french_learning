@@ -1446,6 +1446,8 @@ const BookReader = ({
 }) => {
     
     const [isSpeaking, setIsSpeaking] = useState(false);
+    // NEU: Status um zu verfolgen, welcher Speicher-Button gerade "grün" sein soll
+    const [savingId, setSavingId] = useState(null);
 
     const pages = React.useMemo(() => {
         if (!currentStory?.text) return [''];
@@ -1532,14 +1534,12 @@ const BookReader = ({
 
     return (
         <div className="pt-6 pb-6 px-1 h-screen flex flex-col bg-slate-50">
-            {/* Nav Header */}
             <div className="flex items-center justify-between mb-4 px-4 shrink-0">
                 <button onClick={() => setView('explore')} className="p-2 bg-white rounded-full shadow-sm text-slate-500"><X size={20} /></button>
                 <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Page {pageIndex + 1} / {pages.length}</div>
                 <button onClick={() => toggleAudio(currentPageText)} className={`p-2 rounded-full ${isSpeaking ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-white text-slate-400'}`}><Volume2 size={20}/></button>
             </div>
 
-            {/* Page Content */}
             <div className="flex-1 bg-[#fffdf5] border border-slate-200 shadow-inner mx-2 mb-4 p-6 rounded-3xl overflow-y-auto no-scrollbar">
                 <div className="text-xl md:text-2xl text-slate-800 leading-relaxed font-serif">
                     {currentPageText.split(/(\s+)/).map((segment, i) => {
@@ -1553,19 +1553,16 @@ const BookReader = ({
                 </div>
             </div>
 
-            {/* Controls */}
             <div className="shrink-0 px-4 pb-6 flex gap-3">
                 <button onClick={() => setPageIndex(p => Math.max(0, p - 1))} disabled={pageIndex === 0} className="flex-1 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold disabled:opacity-30">Prev</button>
                 <button onClick={() => pageIndex < pages.length - 1 ? setPageIndex(p => p + 1) : setReaderMode('finish')} className="flex-[2] py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-lg">Next</button>
             </div>
 
-            {/* Word Detail Popup */}
             {clickedWord && (
                 <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-5 rounded-[2.5rem] shadow-2xl z-[60] border border-white/10 max-h-[70vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300">
                     <div className="flex justify-between items-center mb-4 shrink-0 px-2">
                         <div className="flex items-center gap-3">
                             <h4 className="text-2xl font-bold capitalize">{clickedWord.cleanFrench}</h4>
-                            {/* ROTE WOLKE */}
                             {reportedWords && reportedWords[clickedWord.cleanFrench.toLowerCase()] && (
                                 <div className="text-red-500 animate-pulse" title="Reported">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 19c.7 0 1.3-.2 1.9-.5 1.2-.7 2.1-2 2.1-3.5 0-1.7-1-3.1-2.4-3.7C18.8 8.1 16.3 6 13.5 6c-2.1 0-4 1.2-5 3C5.1 9.4 3 11.8 3 14.5 3 17 5 19 7.5 19h10z" /></svg>
@@ -1573,7 +1570,6 @@ const BookReader = ({
                             )}
                         </div>
                         <div className="flex items-center gap-1">
-                            {/* MELDE BUTTON */}
                             {!clickedWord.isLoading && clickedWord.allMatches?.length > 0 && (
                                 <button 
                                     onClick={() => setReportingWord(clickedWord.allMatches[0])}
@@ -1590,51 +1586,70 @@ const BookReader = ({
                         {clickedWord.isLoading ? (
                             <div className="flex items-center justify-center py-8"><Loader2 className="animate-spin text-indigo-400" /></div>
                         ) : (
-                            clickedWord.allMatches.map((match, idx) => (
-                                <div key={idx} className="bg-white/5 border border-white/10 rounded-3xl p-4">
-                                    <div className="flex justify-between items-start mb-1">
-                                        <span className="text-[10px] font-black text-indigo-400 uppercase tracking-tighter">
-                                            {match.specificTense ? formatTense(match.specificTense) : (match.type || 'Word')}
-                                        </span>
-                                        <span className="text-[10px] text-slate-500 font-mono">
-                                            {match.rank === 'WEB' ? '🌐 WEB' : (match.rank === 'ARCHIVE' ? '☁️ ARCHIVE' : `#${match.rank}`)}
-                                        </span>
+                            clickedWord.allMatches.map((match, idx) => {
+                                const isSavingThis = savingId === match.id;
+                                return (
+                                    <div key={idx} className="bg-white/5 border border-white/10 rounded-3xl p-4">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <span className="text-[10px] font-black text-indigo-400 uppercase tracking-tighter">
+                                                {match.specificTense ? formatTense(match.specificTense) : (match.type || 'Word')}
+                                            </span>
+                                            <span className="text-[10px] text-slate-500 font-mono">
+                                                {match.rank === 'WEB' ? '🌐 WEB' : (match.rank === 'ARCHIVE' ? '☁️ ARCHIVE' : `#${match.rank}`)}
+                                            </span>
+                                        </div>
+                                        <div className="text-lg font-bold text-white mb-3 leading-tight">{match.english}</div>
+                                        
+                                        <div className="flex gap-2">
+                                            <button 
+                                                onClick={() => { setSelectedWord(match); setView('reader-word-detail'); setClickedWord(null); }}
+                                                className="flex-1 bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-xl text-xs font-bold active:scale-95 transition-all"
+                                            >Details</button>
+                                            <button 
+                                                onClick={async () => {
+                                                    const isRare = typeof match.rank !== 'number' || match.rank >= 99999;
+                                                    const cleanFrench = match.french.toLowerCase().trim();
+                                                    const rankKey = isRare ? `str:${cleanFrench}` : match.rank;
+                                                    
+                                                    // 1. Visuelles Feedback (Button wird grün)
+                                                    setSavingId(match.id);
+                                                    
+                                                    // 2. Lokal speichern
+                                                    setUserProgress(prev => ({ 
+                                                        ...prev, 
+                                                        [rankKey]: { box: 1, nextReview: Date.now(), interval: 0, ease: 2.5, consecutiveWrong: 0 } 
+                                                    }));
+                                                    
+                                                    // 3. Cloud speichern
+                                                    if (session) {
+                                                        await supabase.from('user_progress').upsert({
+                                                            user_id: session.user.id,
+                                                            word_rank: typeof match.rank === 'number' ? match.rank : 99999,
+                                                            word_string: isRare ? cleanFrench : null,
+                                                            box: 1, 
+                                                            next_review: Date.now()
+                                                        }, { onConflict: 'user_id, word_rank, word_string' });
+                                                    }
+                                                    
+                                                    // 4. Kurz warten und dann das ganze Popup schließen
+                                                    setTimeout(() => {
+                                                        setClickedWord(null);
+                                                        setSavingId(null);
+                                                    }, 600);
+                                                }}
+                                                className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 ${
+                                                    isSavingThis 
+                                                    ? 'bg-green-500 text-white scale-95' 
+                                                    : 'bg-white/10 text-white hover:bg-white/20 active:scale-95'
+                                                }`}
+                                            >
+                                                {isSavingThis ? <Check size={16} /> : null}
+                                                {isSavingThis ? 'Saved' : 'Save'}
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="text-lg font-bold text-white mb-3 leading-tight">{match.english}</div>
-                                    
-                                    <div className="flex gap-2">
-                                        <button 
-                                            onClick={() => { setSelectedWord(match); setView('reader-word-detail'); setClickedWord(null); }}
-                                            className="flex-1 bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-xl text-xs font-bold active:scale-95 transition-all"
-                                        >Details</button>
-                                        <button 
-                                            onClick={async () => {
-                                                // Logik für seltene Wörter korrigiert
-                                                const isRare = typeof match.rank !== 'number' || match.rank > 10000;
-                                                const rankKey = isRare ? `str:${match.french.toLowerCase()}` : match.rank;
-                                                
-                                                const newProg = { box: 1, nextReview: Date.now(), interval: 0, ease: 2.5 };
-                                                
-                                                // Lokal speichern
-                                                setUserProgress(prev => ({ ...prev, [rankKey]: newProg }));
-                                                
-                                                // Cloud speichern
-                                                if (session) {
-                                                    await supabase.from('user_progress').upsert({
-                                                        user_id: session.user.id,
-                                                        word_rank: typeof match.rank === 'number' ? match.rank : 99999,
-                                                        word_string: isRare ? match.french.toLowerCase() : null,
-                                                        box: 1, 
-                                                        next_review: Date.now()
-                                                    }, { onConflict: 'user_id, word_rank, word_string' });
-                                                }
-                                                alert(`"${match.french}" added to Training!`);
-                                            }}
-                                            className="flex-1 bg-white/10 py-2.5 rounded-xl text-xs font-bold hover:bg-white/20 active:scale-95 transition-all"
-                                        >Save</button>
-                                    </div>
-                                </div>
-                            ))
+                                );
+                            })
                         )}
                     </div>
                 </div>
