@@ -35,13 +35,13 @@ const formatTense = (rawTense) => {
 };
 // Client erstellen (global verfügbar machen)
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// --- ICONS (Inline SVGs) ---
 const Icon = ({ path, size = 24, className = "" }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
         {path}
     </svg>
 );
+// --- ICONS (Inline SVGs) ---
+
 const BookCheck = (p) => <Icon {...p} path={<><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="m9 9.5 2 2 4-4"/></>} />;
 const BookOpen = (p) => <Icon {...p} path={<><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></>} />;
 const Check = (p) => <Icon {...p} path={<polyline points="20 6 9 17 4 12"/>} />;
@@ -103,7 +103,19 @@ const Wifi = (p) => <Icon {...p} path={<><path d="M5 12.55a11 11 0 0 1 14.08 0"/
 const WifiOff = (p) => <Icon {...p} path={<><line x1="1" x2="23" y1="1" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></>} />;
 const AlertCircle = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></>} />;
 const Copy = (p) => <Icon {...p} path={<><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>} />;
+// Sicherstellen, dass lucide vorhanden ist, bevor wir entpacken
+/* script.js - Ganz oben nach den Linguistic Helpers */
 
+// --- SICHERE ICON DEFINITIONEN (SVG) ---
+
+// NEU: Diese Namen werden in renderExplore verwendet
+const BookIcon = BookOpen; 
+const CultureIcon = GraduationCap;
+const TargetIcon = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></>} />;
+const MapIcon = (p) => <Icon {...p} path={<><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></>} />;
+const ChevronIcon = ChevronRight;
+
+// Lösche die Zeilen mit "const { ... } = lucide", die verursachen den Absturz!
 /* script.js - Oben bei den Icon Definitionen hinzufügen */
 
 // Mapping von String-Namen zu echten Komponenten
@@ -730,6 +742,222 @@ const GRAMMAR_MODULES = [
     }
 ];
 // Merge grammar data: A1, A2, B1, B2 from separate files
+const MissionPlayer = ({ mission, onFinish, onSaveCard }) => {
+    const [step, setStep] = useState('briefing'); // 'briefing', 'chat', 'result'
+    const [currentNodeId, setCurrentNodeId] = useState('start');
+    const [hearts, setHearts] = useState(3);
+    const [history, setHistory] = useState([]);
+    const [isTyping, setIsTyping] = useState(false);
+    const [completedGoals, setCompletedGoals] = useState([]);
+    const [showCard, setShowCard] = useState(false);
+
+    const currentNode = mission.nodes[currentNodeId];
+
+    // NPC Initialisierung
+    useEffect(() => {
+        if (step === 'chat' && history.length === 0) {
+            processNPCResponse(mission.nodes.start.npc);
+        }
+    }, [step]);
+
+    const processNPCResponse = (text) => {
+        setIsTyping(true);
+        setTimeout(() => {
+            setHistory(prev => [...prev, { type: 'npc', text }]);
+            setIsTyping(false);
+        }, 1500);
+    };
+
+    const handleOptionClick = (option) => {
+        if (isTyping) return;
+
+        // User Nachricht hinzufügen
+        setHistory(prev => [...prev, { type: 'user', text: option.text }]);
+
+        // Ziel prüfen
+        if (option.goal && !completedGoals.includes(option.goal)) {
+            setCompletedGoals(prev => [...prev, option.goal]);
+        }
+
+        // Verzögerte NPC Reaktion
+        setIsTyping(true);
+        setTimeout(() => {
+            setIsTyping(false);
+            const nextNode = mission.nodes[option.next];
+            
+            // Schaden prüfen
+            if (option.correct === false || nextNode.damage) {
+                setHearts(h => h - 1);
+                if (hearts <= 1) {
+                    setStep('result');
+                    return;
+                }
+            }
+
+            // Ende prüfen
+            if (nextNode.isEnd) {
+                setCurrentNodeId(option.next);
+                setHistory(prev => [...prev, { type: 'npc', text: nextNode.npc }]);
+                setTimeout(() => setStep('result'), 1500);
+            } else {
+                setCurrentNodeId(option.next);
+                setHistory(prev => [...prev, { type: 'npc', text: nextNode.npc }]);
+            }
+        }, 1200);
+    };
+
+    // --- RENDER BRIEFING ---
+    if (step === 'briefing') {
+        return (
+            <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+                <div className="bg-white w-full max-w-md rounded-[2.5rem] overflow-hidden animate-in slide-in-from-bottom-8 duration-500">
+                    <div className={`p-8 ${mission.coverColor} ${mission.textColor}`}>
+                        <div className="flex justify-between items-start mb-4">
+                            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
+                                <MapIcon size={24} />
+                            </div>
+                            <button onClick={onFinish} className="p-2 bg-black/10 rounded-full"><X size={20}/></button>
+                        </div>
+                        <h2 className="text-3xl font-black mb-1">{mission.title}</h2>
+                        <div className="text-xs font-bold uppercase tracking-widest opacity-70">Level {mission.level} • {mission.genre}</div>
+                    </div>
+                    
+                    <div className="p-8 space-y-6">
+                        <div>
+                            <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-2">Your Mission</h4>
+                            <p className="text-slate-600 leading-relaxed">{mission.briefing.description}</p>
+                        </div>
+
+                        <div>
+                            <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-3">Checklist</h4>
+                            <div className="space-y-2">
+                                {mission.briefing.goals.map(g => (
+                                    <div key={g.id} className="flex items-center gap-3 text-sm font-medium text-slate-500">
+                                        <div className="w-5 h-5 rounded-full border-2 border-slate-200 flex items-center justify-center text-[10px]">○</div>
+                                        {g.text}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <button 
+                            onClick={() => setStep('chat')}
+                            className="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-bold shadow-xl active:scale-95 transition-all"
+                        >Start Mission</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // --- RENDER RESULT ---
+    if (step === 'result') {
+        const isWin = hearts > 0 && mission.nodes[currentNodeId]?.success;
+        return (
+            <div className="fixed inset-0 z-[110] bg-indigo-950 flex items-center justify-center p-6 text-white overflow-hidden">
+                <div className="text-center w-full max-w-sm animate-in zoom-in-95 duration-500">
+                    {isWin ? (
+                        <>
+                            <div className="text-6xl mb-6">🎉</div>
+                            <h2 className="text-4xl font-black mb-2">Mission Accomplished!</h2>
+                            <p className="text-indigo-200 mb-12">You've mastered the {mission.title}!</p>
+                            
+                            {/* Pokemon Card Reward */}
+                            <div className="relative group perspective-1000 mx-auto w-64 h-80 mb-12">
+                                <div className="w-full h-full bg-gradient-to-br from-amber-300 via-yellow-400 to-orange-500 rounded-[2rem] p-1 shadow-2xl shadow-orange-500/40">
+                                    <div className="w-full h-full bg-white rounded-[1.8rem] overflow-hidden flex flex-col">
+                                        <div className="h-1/2 bg-amber-50 flex items-center justify-center text-5xl relative">
+                                            {mission.id.includes('bakery') ? '🥐' : '🗺️'}
+                                            <div className="absolute top-3 right-3 text-[10px] font-black text-amber-600 border-2 border-amber-600 px-2 py-0.5 rounded-lg rotate-12">LEGENDARY</div>
+                                        </div>
+                                        <div className="p-4 flex-1 flex flex-col">
+                                            <div className="text-[10px] font-black text-indigo-600 uppercase mb-1">{mission.level} Mastery</div>
+                                            <h3 className="text-slate-800 font-bold text-xl mb-3">{mission.rewardCard.title}</h3>
+                                            <div className="mt-auto flex gap-1 justify-center">
+                                                {[1,2,3].map(s => <div key={s} className="w-2 h-2 rounded-full bg-amber-400"></div>)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button 
+                                onClick={() => { onSaveCard(mission.rewardCard); onFinish(); }}
+                                className="w-full py-5 bg-white text-indigo-900 rounded-[2rem] font-black shadow-xl active:scale-95 transition-all"
+                            >Claim Card & Exit</button>
+                        </>
+                    ) : (
+                        <>
+                            <div className="text-6xl mb-6">💔</div>
+                            <h2 className="text-4xl font-black mb-4">Mission Failed</h2>
+                            <p className="text-indigo-200 mb-12">The NPC got too frustrated. Don't worry, take a breath and try again!</p>
+                            <button onClick={onFinish} className="w-full py-5 bg-white/10 border-2 border-white/20 text-white rounded-[2rem] font-bold active:scale-95 transition-all">Back to Explore</button>
+                        </>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    // --- RENDER CHAT ---
+    return (
+        <div className="fixed inset-0 z-[100] bg-slate-50 flex flex-col overflow-hidden">
+            {/* Mission Header */}
+            <div className="pt-8 pb-4 px-6 flex items-center justify-between bg-white border-b border-slate-100 shadow-sm">
+                <button onClick={onFinish} className="text-slate-400"><X size={24}/></button>
+                <div className="flex-1 px-4">
+                    <div className="flex gap-1 justify-center mb-1">
+                        {[...Array(3)].map((_, i) => (
+                            <Heart key={i} size={16} fill={i < hearts ? "#ef4444" : "none"} className={i < hearts ? "text-red-500" : "text-slate-200"} />
+                        ))}
+                    </div>
+                    <div className="text-[9px] font-black text-slate-400 uppercase text-center tracking-widest">{mission.title}</div>
+                </div>
+                <div className="w-6"></div>
+            </div>
+
+            {/* Chat Area */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
+                {history.map((msg, idx) => (
+                    <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
+                        <div className={`max-w-[80%] p-4 rounded-3xl font-medium text-sm leading-relaxed shadow-sm ${
+                            msg.type === 'user' 
+                            ? 'bg-slate-900 text-white rounded-tr-none' 
+                            : 'bg-white text-slate-800 border border-slate-100 rounded-tl-none'
+                        }`}>
+                            {msg.text}
+                        </div>
+                    </div>
+                ))}
+                {isTyping && (
+                    <div className="flex justify-start">
+                        <div className="bg-white p-4 rounded-3xl rounded-tl-none border border-slate-100 flex gap-1">
+                            <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce"></div>
+                            <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                            <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Response Options */}
+            {!currentNode.isEnd && (
+                <div className="p-6 bg-white border-t border-slate-100 space-y-3">
+                    {currentNode.options.map((opt, i) => (
+                        <button 
+                            key={i}
+                            disabled={isTyping}
+                            onClick={() => handleOptionClick(opt)}
+                            className="w-full p-5 bg-slate-50 border border-slate-100 hover:border-indigo-500 hover:bg-indigo-50 text-slate-700 rounded-2xl text-left text-sm font-bold transition-all active:scale-[0.98] disabled:opacity-50"
+                        >
+                            {opt.text}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
 const getMergedGrammarData = () => {
     const merged = {};
     // First add all from original GRAMMAR_DATA (fallback)
@@ -2194,6 +2422,24 @@ function App() {
     const [typingResult, setTypingResult] = useState(null); // 'correct' | 'wrong' | null
     const [showConjugation, setShowConjugation] = useState(false);
     // ...
+    const [viewedCard, setViewedCard] = React.useState(null);
+    // In App.js
+    const [unlockedMissions, setUnlockedMissions] = useState(() => {
+        return JSON.parse(localStorage.getItem('vocabApp_unlockedMissions')) || ["bakery_a1"];
+    });
+
+    const [collectedCards, setCollectedCards] = useState(() => {
+        return JSON.parse(localStorage.getItem('vocabApp_collectedCards')) || [];
+    });
+
+    // Sync mit LocalStorage
+    useEffect(() => {
+        localStorage.setItem('vocabApp_unlockedMissions', JSON.stringify(unlockedMissions));
+    }, [unlockedMissions]);
+
+    useEffect(() => {
+        localStorage.setItem('vocabApp_collectedCards', JSON.stringify(collectedCards));
+    }, [collectedCards]);
     // --- SYNC CONFLICT STATE ---
     const [syncConflict, setSyncConflict] = useState(null); // Wenn Daten da sind: { local, cloud }
     // --- ONBOARDING STATE (Mit Fix für Password Reset) ---
@@ -4194,118 +4440,179 @@ function App() {
             </div>
         );
     };
-    const renderExplore = () => {
-        // Sicherheits-Check: Falls Datei noch nicht geladen
-        const libData = window.LIBRARY_CONTENT;
-        if (!libData) return <div className="p-10 text-center text-slate-400">Loading Library...</div>;
+    // Oben in der App.js den neuen State hinzufügen:
+    const [selectedMission, setSelectedMission] = useState(null);
+    const renderBookChapters = () => {
+        if (!selectedBook) return null;
 
-        if (selectedBook) {
-            return (
-                <div className="w-full pt-6 pb-24 px-1 animate-in fade-in duration-300">
-                    <div className="flex items-center gap-3 mb-6 px-4">
-                        <button onClick={() => setSelectedBook(null)} className="p-2 -ml-2 bg-white rounded-full shadow-sm text-slate-500">
-                            <ArrowLeft size={24}/>
-                        </button>
-                        <div className="flex-1 min-w-0">
-                            <h2 className="text-xl font-bold text-slate-800 truncate">{selectedBook.title}</h2>
-                            <p className="text-xs text-slate-400">{selectedBook.author}</p>
-                        </div>
-                    </div>
+        const progress = bookProgress[selectedBook.id] || { completedChapters: [] };
 
-                    {/* Level Selector - Nur noch 2 Stufen */}
-                    <div className="bg-white/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-100 shadow-sm mb-6 sticky top-4 z-20 flex gap-1 mx-4">
-                        {[
-                            { id: 'simple', label: '🌱 Simple' },
-                            { id: 'original', label: '📖 Original' }
-                        ].map(lvl => (
-                            <button 
-                                key={lvl.id}
-                                onClick={() => setReadingLevel(lvl.id)}
-                                className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
-                                    readingLevel === lvl.id 
-                                    ? 'bg-indigo-600 text-white shadow-md' 
-                                    : 'text-slate-500 hover:bg-slate-50'
-                                }`}
-                            >
-                                {lvl.label}
-                            </button>
-                        ))}
-                    </div>
-
-                    <div className="space-y-3 px-4">
-                        {selectedBook.chapters.map((chap, idx) => (
-                            <button 
-                                key={idx}
-                                onClick={() => openBookChapter(selectedBook, idx)}
-                                className="w-full bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm text-left active:scale-[0.98] transition-all group"
-                            >
-                                <div className="flex justify-between items-center mb-2">
-                                    <h3 className="font-bold text-slate-700">{chap.title}</h3>
-                                    <div className="text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <Play size={18} fill="currentColor"/>
-                                    </div>
-                                </div>
-                                <p className="text-sm text-slate-400 line-clamp-2 leading-relaxed italic">
-                                    {chap[readingLevel] || chap.original}
-                                </p>
-                            </button>
-                        ))}
+        return (
+            <div className="w-full pt-6 pb-24 px-1 animate-in fade-in duration-300">
+                {/* Header mit Back Button */}
+                <div className="flex items-center gap-3 mb-8 px-2">
+                    <button 
+                        onClick={() => setSelectedBook(null)} 
+                        className="p-2 -ml-2 bg-white rounded-full shadow-sm text-slate-500 hover:text-indigo-600 transition-all"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                    <div>
+                        <h2 className="text-2xl font-bold text-slate-800 leading-tight">{selectedBook.title}</h2>
+                        <p className="text-slate-400 text-xs font-medium uppercase tracking-widest mt-0.5">{selectedBook.author}</p>
                     </div>
                 </div>
-            );
+
+                {/* Kapitel Liste */}
+                <div className="space-y-3 px-1">
+                    {selectedBook.chapters.map((chapter, idx) => {
+                        const isCompleted = progress.completedChapters.includes(idx);
+                        const isLastActive = progress.lastActiveChapter === idx;
+
+                        return (
+                            <button
+                                key={idx}
+                                onClick={() => openBookChapter(selectedBook, idx)}
+                                className={`w-full p-5 rounded-[2rem] border transition-all flex items-center justify-between group active:scale-[0.98] ${
+                                    isLastActive 
+                                    ? 'bg-indigo-50 border-indigo-200 shadow-sm' 
+                                    : 'bg-white border-slate-100 hover:border-indigo-100 shadow-sm'
+                                }`}
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold ${
+                                        isCompleted ? 'bg-green-100 text-green-600' : 'bg-slate-100 text-slate-400'
+                                    }`}>
+                                        {isCompleted ? <Check size={20} /> : idx + 1}
+                                    </div>
+                                    <div className="text-left">
+                                        <div className={`font-bold ${isLastActive ? 'text-indigo-900' : 'text-slate-700'}`}>
+                                            {chapter.title}
+                                        </div>
+                                        <div className="text-[10px] text-slate-400 uppercase font-black tracking-tighter">
+                                            {isCompleted ? 'Completed' : (isLastActive ? 'Last Read' : 'Not started')}
+                                        </div>
+                                    </div>
+                                </div>
+                                <ChevronIcon size={20} className={isLastActive ? 'text-indigo-400' : 'text-slate-300'} />
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    };
+    const renderExplore = () => {
+        // 1. Datenquellen sicher abgreifen
+        const libData = window.LIBRARY_CONTENT || {};
+        const missionData = window.MISSION_DATA || {};
+
+        // Falls ein Buch offen ist, Kapitel-Ansicht zeigen
+        if (selectedBook) {
+            return renderBookChapters();
         }
 
-        const activeCollection = libData[libraryTab] || [];
+        // 2. Tab-Definition
+        const tabs = [
+            { id: 'books', label: 'Books', icon: BookIcon },
+            { id: 'missions', label: 'Missions', icon: TargetIcon },
+            { id: 'culture', label: 'Culture', icon: CultureIcon }
+        ];
+
+        // 3. Daten für den aktiven Tab sammeln
+        let activeCollection = [];
+        
+        if (libraryTab === 'missions') {
+            // Wir nehmen alle Listen aus MISSION_DATA (egal wie sie heißen: daily_life, vie_quotidienne, etc.)
+            // und führen sie in einem großen Array zusammen.
+            activeCollection = Object.values(missionData).flat().filter(item => item && item.id);
+        } else {
+            // Normaler Abgleich für Books und Culture
+            activeCollection = libData[libraryTab] || [];
+        }
 
         return (
             <div className="w-full pt-6 pb-24 relative">
+                {/* Glass Island Navigation */}
                 <div className="sticky top-4 z-40 px-4 mb-8">
                     <div className="bg-white/70 backdrop-blur-xl border border-white/40 p-1.5 rounded-[2rem] shadow-lg flex items-center w-full max-w-sm mx-auto">
-                        {[
-                            { id: 'books', label: 'Books', icon: <BookOpen size={16}/> },
-                            { id: 'culture', label: 'Culture', icon: <GraduationCap size={16}/> },
-                            { id: 'phrases', label: 'Phrases', icon: <MessageSquare size={16}/> }
-                        ].map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setLibraryTab(tab.id)}
-                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-[1.6rem] text-sm font-bold transition-all ${
-                                    libraryTab === tab.id ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500'
-                                }`}
-                            >
-                                {tab.icon} <span>{tab.label}</span>
-                            </button>
-                        ))}
+                        {tabs.map((tab) => {
+                            const IconTag = tab.icon;
+                            return (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setLibraryTab(tab.id)}
+                                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-[1.6rem] text-sm font-bold transition-all ${
+                                        libraryTab === tab.id ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500'
+                                    }`}
+                                >
+                                    {IconTag && <IconTag size={16} />} 
+                                    <span>{tab.label}</span>
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 
+                {/* Content Liste */}
                 <div className="px-5">
-                    <div className="mb-6">
-                        <h2 className="text-2xl font-bold text-slate-800">
-                            {libraryTab === 'books' ? 'Library' : libraryTab === 'culture' ? 'Culture' : 'Phrases'}
-                        </h2>
-                    </div>
-
-                    <div className="grid gap-4">
-                        {activeCollection.map(item => (
-                            <button key={item.id} onClick={() => setSelectedBook(item)} className={`w-full ${item.coverColor} text-white p-5 rounded-[2rem] shadow-md text-left relative overflow-hidden active:scale-[0.98] transition-all group`}>
-                                <div className="absolute -right-4 -bottom-4 p-8 opacity-20 rotate-12 scale-150 transition-transform group-hover:scale-[1.7]">
-                                    {getIcon(item.icon)}
-                                </div>
-                                <div className="relative z-10 flex gap-4 items-center">
-                                    <div className="bg-white/20 backdrop-blur-md w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border border-white/10 shadow-inner">
-                                        {getIcon(item.icon)}
+                    {activeCollection.length === 0 ? (
+                        <div className="text-center py-20 bg-white rounded-[2.5rem] border border-dashed border-slate-200">
+                            <div className="text-4xl mb-3 opacity-20">📂</div>
+                            <p className="text-slate-400 text-sm font-medium">
+                                No {libraryTab} items available yet.
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="grid gap-4">
+                            {activeCollection.map(item => (
+                                <button 
+                                    key={item.id} 
+                                    onClick={() => {
+                                        if (libraryTab === 'missions') setSelectedMission(item);
+                                        else setSelectedBook(item);
+                                    }} 
+                                    className={`w-full ${item.coverColor || 'bg-white'} p-5 rounded-[2.5rem] shadow-md text-left relative overflow-hidden active:scale-[0.98] transition-all group border border-black/5`}
+                                >
+                                    <div className="relative z-10 flex gap-4 items-center">
+                                        <div className="bg-white/30 backdrop-blur-md w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 text-2xl shadow-sm">
+                                            {/* Icon Fallback Logik */}
+                                            {item.icon === 'Croissant' ? '🥐' : (item.type === 'mission' ? '🎯' : '📚')}
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <div className={`text-[9px] font-black uppercase tracking-widest opacity-60 ${item.textColor || 'text-slate-500'}`}>
+                                                Level {item.level}
+                                            </div>
+                                            <h3 className={`text-lg font-bold leading-tight ${item.textColor || 'text-slate-800'}`}>
+                                                {item.title}
+                                            </h3>
+                                        </div>
+                                        {ChevronIcon && <ChevronIcon size={20} className="opacity-30" />}
                                     </div>
-                                    <div className="min-w-0 flex-1">
-                                        <h3 className="text-lg font-bold leading-tight mb-0.5 truncate">{item.title}</h3>
-                                        <p className="text-white/60 text-xs font-medium truncate">{item.author}</p>
-                                    </div>
-                                    <ChevronRight size={20} className="text-white/40" />
-                                </div>
-                            </button>
-                        ))}
-                    </div>
+                                    
+                                    {/* Kleiner Glanz-Effekt für Missions */}
+                                    {libraryTab === 'missions' && (
+                                        <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
+
+                {/* MISSION PLAYER OVERLAY */}
+                {selectedMission && (
+                    <MissionPlayer 
+                        mission={selectedMission} 
+                        onFinish={() => setSelectedMission(null)}
+                        onSaveCard={(card) => {
+                            setCollectedCards(prev => {
+                                if (prev.some(c => c.id === card.id)) return prev;
+                                return [...prev, card];
+                            });
+                        }}
+                    />
+                )}
             </div>
         );
     };
@@ -5508,9 +5815,6 @@ function App() {
     };
     
     const renderProfile = () => {
-        // --- HIER WURDE DER "IF (!SESSION)" BLOCK ENTFERNT ---
-        // Jetzt läuft der Code einfach weiter, auch für Gäste.
-
         // --- 1. DATEN BERECHNEN ---
         const safeVocab = vocabulary || [];
         
@@ -5534,10 +5838,8 @@ function App() {
             let b1Done = 0, b1Total = 0;
             let b2Done = 0, b2Total = 0;
 
-            for (const module of GRAMMAR_MODULES) {
+            for (const module of (window.GRAMMAR_MODULES || [])) {
                 for (const topic of module.topics) {
-                    // ALT: const passed = localStorage.getItem(`grammar_passed_${topic.id}`) === 'true';
-                    // NEU: Wir nutzen den React State!
                     const passed = grammarProgress[topic.id] === true;
                     if (module.id === 'a1') { a1Total++; if (passed) a1Done++; }
                     if (module.id === 'a2') { a2Total++; if (passed) a2Done++; }
@@ -5546,7 +5848,7 @@ function App() {
                 }
             }
 
-            if (a1Done < a1Total) return { level: "A1", color: "bg-blue-500", progress: a1Done, total: a1Total, desc: "Basics" };
+            if (a1Done < a1Total || a1Total === 0) return { level: "A1", color: "bg-blue-500", progress: a1Done, total: a1Total || 1, desc: "Basics" };
             if (a2Done < a2Total) return { level: "A2", color: "bg-sky-500", progress: a2Done, total: a2Total, desc: "Elementary" };
             if (b1Done < b1Total) return { level: "B1", color: "bg-emerald-500", progress: b1Done, total: b1Total, desc: "Intermediate" };
             if (b2Done < b2Total) return { level: "B2", color: "bg-purple-500", progress: b2Done, total: b2Total, desc: "Upper Intermediate" };
@@ -5579,18 +5881,15 @@ function App() {
         };
         const creativeTitle = getCreativeTitle();
 
-        // --- UI RETURN ---
         return (
-            <div className="max-w-2xl mx-auto space-y-8 pt-2 pb-24">
+            <div className="max-w-2xl mx-auto space-y-8 pt-2 pb-24 px-1">
                 
                 {/* HEADER MIT NICKNAME & LEVEL */}
                 <div className="flex items-center justify-between px-1">
                     <div>
                         <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Identity</div>
                         <div className="flex items-center gap-2">
-                            {/* Zeige Nickname oder "Guest" */}
                             <h2 className="text-3xl font-bold text-slate-800">{nickname || "Guest"}</h2>
-                            
                             {!session && (
                                 <span className="bg-slate-200 text-slate-500 text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wide">
                                     Guest
@@ -5598,135 +5897,157 @@ function App() {
                             )}
                         </div>
                     </div>
-                    <div className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold">
+                    <div className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold shadow-sm">
                         Level {Math.floor(learnedCount / 50) + 1}
                     </div>
                 </div>
 
                 {/* 1. IDENTITY CARD */}
-                <div className={`w-full p-6 rounded-[2rem] shadow-xl text-white bg-gradient-to-br ${creativeTitle.color} relative overflow-hidden group`}>
+                <div className={`w-full p-6 rounded-[2.5rem] shadow-xl text-white bg-gradient-to-br ${creativeTitle.color} relative overflow-hidden group`}>
                     <div className="relative z-10 flex items-center gap-5">
-                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 text-3xl shadow-inner">
+                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 text-3xl shadow-inner animate-pulse">
                             {creativeTitle.emoji}
                         </div>
                         <div>
-                            <div className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Current Title</div>
+                            <div className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Current Status</div>
                             <h3 className="text-2xl font-bold">{creativeTitle.title}</h3>
                         </div>
                     </div>
-                    <p className="mt-4 text-white/90 text-sm leading-relaxed bg-black/10 rounded-xl p-3 backdrop-blur-sm">
+                    <p className="mt-4 text-white/90 text-sm leading-relaxed bg-black/10 rounded-2xl p-4 backdrop-blur-sm">
                         {creativeTitle.desc}
                     </p>
-                    <User size={120} className="absolute -right-6 -bottom-8 text-white opacity-10 rotate-12"/>
+                    <div className="absolute -right-6 -bottom-8 text-white opacity-10 rotate-12 scale-150">
+                        <User size={100}/>
+                    </div>
                 </div>
 
-                {/* --- GAST WARNUNG / SIGN UP CALL-TO-ACTION (Nur wenn NICHT eingeloggt) --- */}
+                {/* --- GAST WARNUNG (Nur wenn NICHT eingeloggt) --- */}
                 {!session && (
-                    <div className="bg-amber-50 border border-amber-200 p-5 rounded-[2rem] relative overflow-hidden">
+                    <div className="bg-amber-50 border border-amber-200 p-5 rounded-[2.5rem] relative overflow-hidden">
                         <div className="flex items-start gap-4 relative z-10">
                             <div className="bg-amber-100 text-amber-600 p-3 rounded-2xl shrink-0">
                                 <Shield size={24} />
                             </div>
                             <div>
-                                <h3 className="font-bold text-amber-900 text-lg">Unsaved Progress</h3>
-                                <p className="text-amber-700/80 text-sm mb-4 leading-relaxed">
-                                    You are playing as a Guest. Create an account to backup your data.
+                                <h3 className="font-bold text-amber-900 text-lg leading-tight">Sync disabled</h3>
+                                <p className="text-amber-700/80 text-sm mb-4 leading-relaxed mt-1">
+                                    Your progress is only saved locally. Sign in to protect your data.
                                 </p>
                                 <button 
                                     onClick={() => setShowAuthModal(true)} 
                                     className="bg-amber-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-amber-200 hover:bg-amber-700 transition-all active:scale-95"
                                 >
-                                    Create Account / Login
+                                    Create Account
                                 </button>
                             </div>
                         </div>
                     </div>
                 )}
 
-                {/* 2. CURRENTLY LEARNING (STATS) */}
-                <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm">
-                    <div className="flex items-center gap-2 mb-4">
+                {/* 2. MISSION CARD COLLECTION (Die "Pokemon" Karten) */}
+                <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                    <div className="flex justify-between items-center mb-6">
+                        <div className="flex items-center gap-2">
+                            <Trophy size={20} className="text-amber-500" />
+                            <h3 className="font-bold text-slate-800">Mastery Collection</h3>
+                        </div>
+                        <span className="text-[10px] font-black text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase">
+                            {collectedCards?.length || 0} Cards
+                        </span>
+                    </div>
+
+                    {(!collectedCards || collectedCards.length === 0) ? (
+                        <div className="p-8 border-2 border-dashed border-slate-100 rounded-[2rem] text-center">
+                            <p className="text-slate-400 text-sm italic">Complete missions to earn unique collector cards!</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* Suche diesen Teil in renderProfile und passe das onClick an */}
+                            {collectedCards.map((card, idx) => (
+                                <button 
+                                    key={idx}
+                                    onClick={() => setViewedCard(card)} // HIER: Karte setzen
+                                    className="bg-slate-50 p-4 rounded-[2rem] border border-slate-200 flex flex-col items-center text-center group active:scale-95 transition-all shadow-sm hover:border-indigo-300"
+                                >
+                                    <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-3 shadow-sm text-2xl group-hover:rotate-12 transition-transform">
+                                        {card.id.includes('bakery') ? '🥐' : '🗺️'}
+                                    </div>
+                                    <div className="text-[9px] font-black text-indigo-500 uppercase tracking-widest mb-1">{card.rank}</div>
+                                    <div className="font-bold text-slate-800 text-sm leading-tight">{card.title}</div>
+                                    <div className="text-[10px] text-slate-400 mt-1 font-medium">{card.rarity}</div>
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* 3. CURRENTLY LEARNING (STATS) */}
+                <div className="bg-white p-5 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4 px-1">
                         <GraduationCap size={20} className="text-indigo-600" />
-                        <h3 className="font-bold text-slate-800">Currently Learning</h3>
+                        <h3 className="font-bold text-slate-800">Progress Stats</h3>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4">
-                        {/* Vocabulary Level */}
-                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
                             <div className="flex items-center justify-between mb-2">
-                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Vocabulary</span>
-                                <span className={`text-xs font-bold text-white px-2 py-0.5 rounded-lg ${vocabCEFR.color}`}>
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vocabulary</span>
+                                <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-lg ${vocabCEFR.color}`}>
                                     {vocabCEFR.level}
                                 </span>
                             </div>
                             <div className="text-lg font-bold text-slate-800 mb-1">{vocabCEFR.desc}</div>
-                            <div className="text-xs text-slate-500">
+                            <div className="text-[10px] text-slate-500 font-bold uppercase opacity-60">
                                 {learnedCount} / {vocabCEFR.next} words
                             </div>
-                            <div className="mt-2 bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                                <div className={`h-full rounded-full ${vocabCEFR.color}`} style={{ width: `${Math.min(100, (learnedCount / vocabCEFR.next) * 100)}%` }}></div>
+                            <div className="mt-3 bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                                <div className={`h-full rounded-full transition-all duration-1000 ${vocabCEFR.color}`} style={{ width: `${Math.min(100, (learnedCount / vocabCEFR.next) * 100)}%` }}></div>
                             </div>
                         </div>
 
-                        {/* Grammar Level */}
-                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
                             <div className="flex items-center justify-between mb-2">
-                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Grammar</span>
-                                <span className={`text-xs font-bold text-white px-2 py-0.5 rounded-lg ${grammarCEFR.color}`}>
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Grammar</span>
+                                <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-lg ${grammarCEFR.color}`}>
                                     {grammarCEFR.level}
                                 </span>
                             </div>
                             <div className="text-lg font-bold text-slate-800 mb-1">{grammarCEFR.desc}</div>
-                            <div className="text-xs text-slate-500">
+                            <div className="text-[10px] text-slate-500 font-bold uppercase opacity-60">
                                 {grammarCEFR.progress} / {grammarCEFR.total} lessons
                             </div>
-                            <div className="mt-2 bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                                <div className={`h-full rounded-full ${grammarCEFR.color}`} style={{ width: `${Math.min(100, (grammarCEFR.progress / grammarCEFR.total) * 100)}%` }}></div>
+                            <div className="mt-3 bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                                <div className={`h-full rounded-full transition-all duration-1000 ${grammarCEFR.color}`} style={{ width: `${Math.min(100, (grammarCEFR.progress / grammarCEFR.total) * 100)}%` }}></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* 3. MENU BUTTONS */}
-                <div>
-                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-1">Menu</h3>
-                    <div className="space-y-3">
-                        {/* Library Button */}
-                        <button onClick={() => setView('library')} className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
-                            <div className="flex items-center gap-4">
-                                <div className="bg-indigo-50 text-indigo-600 w-10 h-10 rounded-xl flex items-center justify-center"><BookOpen size={20}/></div>
-                                <div className="text-left">
-                                    <div className="font-bold text-slate-800">Word Library</div>
-                                    <div className="text-xs text-slate-400">View & Search Collection</div>
-                                </div>
+                {/* 4. MENU BUTTONS */}
+                <div className="space-y-3">
+                    <h3 className="font-bold text-slate-400 text-xs uppercase tracking-widest mb-4 px-2">Settings & Tools</h3>
+                    
+                    <button onClick={() => setView('library')} className="w-full bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
+                        <div className="flex items-center gap-4">
+                            <div className="bg-indigo-50 text-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner"><BookOpen size={22}/></div>
+                            <div className="text-left">
+                                <div className="font-bold text-slate-800">Word Library</div>
+                                <div className="text-xs text-slate-400">View and manage all learned words</div>
                             </div>
-                            <ChevronRight size={20} className="text-slate-300 group-hover:text-indigo-400"/>
-                        </button>
+                        </div>
+                        <ChevronRight size={20} className="text-slate-300 group-hover:text-indigo-400 transition-colors"/>
+                    </button>
 
-                        {/* Collections Button */}
-                        <button onClick={() => setView('collections')} className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
-                            <div className="flex items-center gap-4">
-                                <div className="bg-amber-50 text-amber-600 w-10 h-10 rounded-xl flex items-center justify-center"><Box size={20}/></div>
-                                <div className="text-left">
-                                    <div className="font-bold text-slate-800">Collections</div>
-                                    <div className="text-xs text-slate-400">Saved Jokes & More</div>
-                                </div>
+                    <button onClick={() => setView('data-mgmt')} className="w-full bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
+                        <div className="flex items-center gap-4">
+                            <div className="bg-slate-100 text-slate-500 w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner"><Settings size={22}/></div>
+                            <div className="text-left">
+                                <div className="font-bold text-slate-800">Preferences</div>
+                                <div className="text-xs text-slate-400">Audio, data export and account</div>
                             </div>
-                            <ChevronRight size={20} className="text-slate-300 group-hover:text-amber-400"/>
-                        </button>
-
-                        {/* Settings Button */}
-                        <button onClick={() => setView('data-mgmt')} className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
-                            <div className="flex items-center gap-4">
-                                <div className="bg-slate-100 text-slate-500 w-10 h-10 rounded-xl flex items-center justify-center"><Settings size={20}/></div>
-                                <div className="text-left">
-                                    <div className="font-bold text-slate-800">Settings</div>
-                                    <div className="text-xs text-slate-400">Account, Data & Audio</div>
-                                </div>
-                            </div>
-                            <ChevronRight size={20} className="text-slate-300"/>
-                        </button>
-                    </div>
+                        </div>
+                        <ChevronRight size={20} className="text-slate-300 group-hover:text-slate-600 transition-colors"/>
+                    </button>
                 </div>
             </div>
         );
