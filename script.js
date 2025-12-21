@@ -902,39 +902,30 @@ const BookReader = ({
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [savingId, setSavingId] = useState(null);
 
-    // Pagination-Logik
+    // 1. Pagination-Logik (Zeichenbasiert ca. 950 Zeichen pro Seite)
     const pages = React.useMemo(() => {
         if (!currentStory?.text) return [''];
 
         const fullText = currentStory.text;
         const pgs = [];
-        const TARGET_LIMIT = 950; // Deine gewünschte Zeichenanzahl
+        const TARGET_LIMIT = 950; 
         let currentIndex = 0;
 
         while (currentIndex < fullText.length) {
-            // 1. Wenn der Resttext kleiner als das Limit ist, nimm den Rest
             if (fullText.length - currentIndex <= TARGET_LIMIT) {
                 pgs.push(fullText.slice(currentIndex).trim());
                 break;
             }
 
-            // 2. Gehe zum Ziel-Limit
             let splitIndex = currentIndex + TARGET_LIMIT;
-
-            // 3. Suche ab dem Ziel-Limit nach dem nächsten natürlichen Umbruch (., ! ? ; oder Leerzeichen)
-            // Wir suchen im restlichen Text ab dem splitIndex
             const remainingText = fullText.slice(splitIndex);
             const nextBreak = remainingText.search(/[.,!?;]|\s/);
 
             if (nextBreak !== -1) {
-                // Wir haben einen Umbruch gefunden (Index ist relativ zum remainingText)
-                splitIndex += nextBreak + 1; // +1 um das Satzzeichen/Leerzeichen noch mitzunehmen
+                splitIndex += nextBreak + 1;
             }
 
-            // 4. Seite ausschneiden und zum Array hinzufügen
             pgs.push(fullText.slice(currentIndex, splitIndex).trim());
-            
-            // 5. Index für die nächste Seite aktualisieren
             currentIndex = splitIndex;
         }
 
@@ -943,7 +934,7 @@ const BookReader = ({
 
     const currentPageText = pages[pageIndex] || "";
 
-    // --- AUTOMATISCHES SPEICHERN BEI SEITENWECHSEL ---
+    // 2. Automatisches Speichern bei Seitenwechsel
     React.useEffect(() => {
         if (currentStory?.id) {
             saveProgress(currentStory.id, currentStory.chapterIndex, pageIndex);
@@ -952,7 +943,7 @@ const BookReader = ({
 
     const toggleAudio = (text) => {
         if (isSpeaking) { stopAudio(); setIsSpeaking(false); }
-        else { setIsSpeaking(true); speak(text.replace(/[*_#]/g, "")); }
+        else { setIsSpeaking(true); speak(text.replace(/[|*_#]/g, "")); }
     };
 
     const handleWordClick = async (e, wordRaw) => {
@@ -1011,24 +1002,52 @@ const BookReader = ({
 
     return (
         <div className="h-screen flex flex-col bg-slate-50 animate-in fade-in duration-300 overflow-hidden">
-            <div className="flex items-center justify-between pt-4 pb-2 px-3 shrink-0 bg-slate-50/90 backdrop-blur-md z-20">
+            {/* Nav Header */}
+            <div className="flex items-center justify-between pt-4 pb-2 px-3 shrink-0 bg-slate-50/90 backdrop-blur-md z-20 border-b border-slate-100">
                 <button onClick={() => setView('explore')} className="p-2 bg-white rounded-full shadow-sm text-slate-400 active:scale-90 transition-all"><X size={18} /></button>
                 <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Page {pageIndex + 1} / {pages.length}</div>
                 <button onClick={() => toggleAudio(currentPageText)} className={`p-2 bg-white rounded-full shadow-sm transition-all active:scale-90 ${isSpeaking ? 'text-red-500 animate-pulse' : 'text-slate-300'}`}><Volume2 size={18}/></button>
             </div>
 
+            {/* Scroll-Container */}
             <div className="flex-1 overflow-y-auto no-scrollbar">
-                <div className="px-3 pt-4 pb-12 w-full max-w-full">
-                    <div className="text-base md:text-lg text-slate-800 leading-[1.7] font-serif mb-12">
-                        {currentPageText.split(/(\s+)/).map((segment, i) => {
-                            if (segment.match(/\s+/)) return segment;
-                            const clean = segment.replace(/[*_]/g, "");
-                            return (
-                                <span key={i} onClick={(e) => handleWordClick(e, clean)} className="cursor-pointer hover:bg-indigo-100/50 hover:text-indigo-800 rounded px-0.5 transition-colors inline-block">{clean}</span>
-                            );
-                        })}
+                <div className="px-5 pt-4 pb-12 w-full max-w-xl mx-auto">
+                    
+                    {/* AUTOMATISCHER KAPITEL-HEADER: Nur auf Seite 1 */}
+                    {pageIndex === 0 && (
+                        <div className="mb-10 mt-6 animate-in fade-in slide-in-from-top-4 duration-1000">
+                            <div className="h-1 w-12 bg-indigo-600 rounded-full mb-4"></div>
+                            <h1 className="text-3xl font-black text-slate-900 leading-tight tracking-tight">
+                                {currentStory.title.split(' - ')[1] || currentStory.title}
+                            </h1>
+                            <p className="text-indigo-600 font-bold text-[10px] uppercase tracking-[0.2em] mt-2">
+                                {currentStory.title.split(' - ')[0]}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Text Area */}
+                    <div className="text-lg md:text-xl text-slate-800 leading-[1.8] font-serif mb-16">
+                        {currentPageText.split('\n').map((line, lineIdx) => (
+                            <p key={lineIdx} className="mb-4">
+                                {line.split(/(\s+)/).map((segment, i) => {
+                                    if (segment.match(/\s+/)) return segment;
+                                    const clean = segment.replace(/[*_]/g, "");
+                                    return (
+                                        <span 
+                                            key={i} 
+                                            onClick={(e) => handleWordClick(e, clean)} 
+                                            className="cursor-pointer hover:bg-indigo-50 hover:text-indigo-700 rounded px-0.5 transition-colors inline-block"
+                                        >
+                                            {clean}
+                                        </span>
+                                    );
+                                })}
+                            </p>
+                        ))}
                     </div>
 
+                    {/* Navigation Buttons */}
                     <div className="flex gap-2 max-w-md mx-auto mb-10">
                         <button 
                             onClick={() => { 
@@ -1054,6 +1073,7 @@ const BookReader = ({
                 </div>
             </div>
 
+            {/* Word Lookup Popup */}
             {clickedWord && (
                 <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-5 rounded-[2.5rem] shadow-2xl z-[60] border border-white/10 max-h-[70vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300">
                     <div className="flex justify-between items-center mb-4 shrink-0 px-2">
