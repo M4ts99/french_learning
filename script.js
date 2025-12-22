@@ -754,6 +754,16 @@ const MissionPlayer = ({ mission: initialMission, allMissions, unlockedMissions,
     const [completedGoalIds, setCompletedGoalIds] = useState([]);
     const [clickedWord, setClickedWord] = useState(null);
 
+    // --- AUTO-SCROLL LOGIK ---
+    const chatEndRef = React.useRef(null);
+    const scrollToBottom = () => {
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+    // Scrollen, wenn history oder isTyping sich ändert
+    useEffect(() => {
+        if (step === 'chat') scrollToBottom();
+    }, [history, isTyping, step]);
+
     const currentNode = activeMission.nodes[currentNodeId];
 
     const availableLevels = allMissions.filter(m => 
@@ -767,7 +777,6 @@ const MissionPlayer = ({ mission: initialMission, allMissions, unlockedMissions,
         setCompletedGoalIds([]);
     };
 
-    // --- INTERNE HELFER ---
     const handleWordClickInChat = async (e, wordRaw) => {
         e.stopPropagation();
         let cleanBase = wordRaw.replace(/[,]/g, "").replace(/[.!?;:"«»()]+/g, "").trim();
@@ -820,23 +829,35 @@ const MissionPlayer = ({ mission: initialMission, allMissions, unlockedMissions,
         }, 800);
     };
 
-    // --- SCREENS ---
-
     if (step === 'briefing') {
         return (
             <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
                 <div className="bg-white w-full max-w-md rounded-[2.5rem] overflow-hidden animate-in slide-in-from-bottom-8 duration-500 shadow-2xl">
-                    <div className={`p-8 ${activeMission.coverColor} ${activeMission.textColor} relative`}>
-                        <button onClick={onFinish} className="absolute top-6 right-6 p-2 bg-black/10 rounded-full hover:bg-black/20 transition-colors"><X size={20} /></button>
-                        <h2 className="text-3xl font-black mb-4">{activeMission.title}</h2>
+                    
+                    {/* Header: Hier stellen wir Textfarben ein */}
+                    <div className={`p-8 ${activeMission.coverColor} relative`}>
+                        <button onClick={onFinish} className="absolute top-6 right-6 p-2 bg-black/5 rounded-full hover:bg-black/10 transition-colors"><X size={20} className={activeMission.textColor}/></button>
+                        
+                        <h2 className={`text-3xl font-black mb-4 ${activeMission.textColor}`}>{activeMission.title}</h2>
+                        
+                        {/* Level Switcher: Kontrast-Fix */}
                         <div className="flex gap-2">
                             {availableLevels.map(l => (
-                                <button key={l.id} onClick={() => switchLevel(l)} className={`px-4 py-1.5 rounded-full text-xs font-black transition-all border-2 ${l.id === activeMission.id ? 'bg-white text-slate-900 border-white shadow-md' : 'bg-transparent text-white/60 border-white/20 hover:border-white/40'}`}>
+                                <button 
+                                    key={l.id} 
+                                    onClick={() => switchLevel(l)} 
+                                    className={`px-4 py-1.5 rounded-full text-xs font-black transition-all border-2 ${
+                                        l.id === activeMission.id 
+                                        ? 'bg-slate-900 text-white border-slate-900 shadow-md' // Aktives Level ist immer dunkel
+                                        : 'bg-white/40 text-slate-800 border-black/10 hover:bg-white/60' // Andere Level sind semi-transparent
+                                    }`}
+                                >
                                     {l.level}
                                 </button>
                             ))}
                         </div>
                     </div>
+
                     <div className="p-8 space-y-6">
                         <div className="space-y-2">
                             <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">The Mission</h4>
@@ -909,7 +930,8 @@ const MissionPlayer = ({ mission: initialMission, allMissions, unlockedMissions,
                 </div>
                 <div className="w-10"></div>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar pb-40">
+            
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar pb-60">
                 {history.map((msg, idx) => (
                     <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                         <div className={`max-w-[85%] p-4 rounded-[1.8rem] text-sm font-medium shadow-sm ${msg.type === 'user' ? 'bg-slate-900 text-white rounded-tr-none' : 'bg-slate-100 text-slate-800 rounded-tl-none'}`}>
@@ -918,7 +940,11 @@ const MissionPlayer = ({ mission: initialMission, allMissions, unlockedMissions,
                     </div>
                 ))}
                 {isTyping && <div className="flex gap-1 p-4 bg-slate-50 w-16 rounded-2xl justify-center"><div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce"></div><div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]"></div></div>}
+                
+                {/* UNSICHTBARES ELEMENT FÜR AUTO-SCROLL */}
+                <div ref={chatEndRef} />
             </div>
+
             {!currentNode.isEnd && (
                 <div className="p-6 bg-white/90 backdrop-blur-md border-t border-slate-100 space-y-3 absolute bottom-0 w-full">
                     {currentNode.options.map((opt, i) => (
@@ -928,6 +954,7 @@ const MissionPlayer = ({ mission: initialMission, allMissions, unlockedMissions,
                     ))}
                 </div>
             )}
+
             {clickedWord && (
                 <div className="fixed bottom-6 left-4 right-4 bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-2xl z-[150] animate-in slide-in-from-bottom-4 border border-white/10">
                     <div className="flex justify-between items-center mb-4">
