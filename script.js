@@ -745,73 +745,51 @@ const GRAMMAR_MODULES = [
     }
 ];
 // Merge grammar data: A1, A2, B1, B2 from separate files
-const MissionPlayer = ({ mission, onFinish, onSaveCard, vocabulary, speak }) => {
+const MissionPlayer = ({ mission: initialMission, allMissions, unlockedMissions, onFinish, onSaveCard, vocabulary, speak }) => {
+    const [activeMission, setActiveMission] = useState(initialMission);
     const [step, setStep] = useState('briefing');
     const [currentNodeId, setCurrentNodeId] = useState('start');
-    const [hearts, setHearts] = useState(3);
     const [history, setHistory] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
-    const [completedGoals, setCompletedGoals] = useState([]);
-    
-    // States für das Wörterbuch-Popup (identisch zum Reader)
+    const [completedGoalIds, setCompletedGoalIds] = useState([]);
     const [clickedWord, setClickedWord] = useState(null);
-    const [savingId, setSavingId] = useState(null);
 
-    const currentNode = mission.nodes[currentNodeId];
+    const currentNode = activeMission.nodes[currentNodeId];
 
-    useEffect(() => {
-        if (step === 'chat' && history.length === 0) {
-            processNPCResponse(mission.nodes.start.npc);
-        }
-    }, [step]);
+    const availableLevels = allMissions.filter(m => 
+        m.groupId === activeMission.groupId && unlockedMissions.includes(m.id)
+    ).sort((a, b) => a.level.localeCompare(b.level));
 
-    // --- WÖRTERBUCH LOGIK (Kopie aus BookReader) ---
+    const switchLevel = (newMission) => {
+        setActiveMission(newMission);
+        setCurrentNodeId('start');
+        setHistory([]);
+        setCompletedGoalIds([]);
+    };
+
+    // --- INTERNE HELFER ---
     const handleWordClickInChat = async (e, wordRaw) => {
         e.stopPropagation();
         let cleanBase = wordRaw.replace(/[,]/g, "").replace(/[.!?;:"«»()]+/g, "").trim();
         if (!cleanBase || /^\d+$/.test(cleanBase)) return;
-
         setClickedWord({ cleanFrench: cleanBase, isLoading: true });
-        
         try {
-            const matchesMap = new Map();
-            const addMatch = (newMatch) => {
-                const key = newMatch.rank || newMatch.id || newMatch.french;
-                matchesMap.set(key, newMatch);
-            };
-
             const term = cleanBase.toLowerCase();
-            vocabulary.filter(v => v.french.toLowerCase() === term).forEach(m => addMatch({ ...m, source: 'top10k' }));
-            vocabulary.filter(v => v.conjugation && v.conjugation.includes(term)).forEach(m => addMatch({ ...m, source: 'top10k_mapping', isConjugated: true }));
-
-            let finalResults = Array.from(matchesMap.values());
-            
-            if (finalResults.length === 0) {
-                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanBase)}&langpair=fr|en`);
-                const data = await res.json();
-                if (data?.responseData?.translatedText) {
-                    finalResults = [{ id: 'web_'+Date.now(), french: cleanBase, english: data.responseData.translatedText, rank: 'WEB', source: 'mymemory' }];
-                }
-            }
-            setClickedWord({ cleanFrench: cleanBase, allMatches: finalResults, isLoading: false });
+            const matches = vocabulary.filter(v => v.french.toLowerCase() === term || (v.conjugation && v.conjugation.includes(term)));
+            setClickedWord({ cleanFrench: cleanBase, allMatches: matches.slice(0,3), isLoading: false });
         } catch (err) { setClickedWord(null); }
     };
 
-    // --- HELFER: TEXT IN ANKLICKBARE SPANS UMWANDELN ---
     const renderClickableText = (text, isUser = false) => {
+        if (!text) return "";
         return text.split(/(\s+)/).map((segment, i) => {
             if (segment.match(/\s+/)) return segment;
             const clean = segment.replace(/[*_]/g, "");
             return (
-                <span 
-                    key={i} 
-                    onClick={(e) => handleWordClickInChat(e, clean)} 
-                    className={`cursor-pointer rounded px-0.5 transition-colors ${
-                        isUser 
-                        ? 'hover:bg-white/20 hover:text-white' 
-                        : 'hover:bg-indigo-100 hover:text-indigo-800'
-                    }`}
-                >
+                <span key={i} onClick={(e) => handleWordClickInChat(e, clean)} 
+                      className={`cursor-pointer rounded px-0.5 transition-colors ${
+                          isUser ? 'hover:bg-white/20 hover:text-white' : 'hover:bg-indigo-100 text-indigo-900'
+                      }`}>
                     {clean}
                 </span>
             );
@@ -823,46 +801,68 @@ const MissionPlayer = ({ mission, onFinish, onSaveCard, vocabulary, speak }) => 
         setTimeout(() => {
             setHistory(prev => [...prev, { type: 'npc', text }]);
             setIsTyping(false);
-        }, 1500);
+        }, 1000);
     };
 
     const handleOptionClick = (option) => {
         if (isTyping) return;
         setHistory(prev => [...prev, { type: 'user', text: option.text }]);
-        if (option.goal && !completedGoals.includes(option.goal)) {
-            setCompletedGoals(prev => [...prev, option.goal]);
+        if (option.goal && !completedGoalIds.includes(option.goal)) {
+            setCompletedGoalIds(prev => [...prev, option.goal]);
         }
-
         setIsTyping(true);
         setTimeout(() => {
             setIsTyping(false);
-            const nextNode = mission.nodes[option.next];
-            if (option.correct === false || nextNode.damage) {
-                setHearts(h => h - 1);
-                if (hearts <= 1) { setStep('result'); return; }
-            }
+            const nextNode = activeMission.nodes[option.next];
             setCurrentNodeId(option.next);
             setHistory(prev => [...prev, { type: 'npc', text: nextNode.npc }]);
-            if (nextNode.isEnd) setTimeout(() => setStep('result'), 1500);
-        }, 1200);
+            if (nextNode.isEnd) setTimeout(() => setStep('result'), 1200);
+        }, 800);
     };
 
-    // --- UI RENDERING ---
+    // --- SCREENS ---
+
     if (step === 'briefing') {
         return (
             <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
-                <div className="bg-white w-full max-w-md rounded-[2.5rem] overflow-hidden animate-in slide-in-from-bottom-8 duration-500">
-                    <div className={`p-8 ${mission.coverColor} ${mission.textColor}`}>
-                        <div className="flex justify-between items-start mb-4">
-                            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md"><MapIcon size={24} /></div>
-                            <button onClick={onFinish} className="p-2 bg-black/10 rounded-full"><X size={20}/></button>
+                <div className="bg-white w-full max-w-md rounded-[2.5rem] overflow-hidden animate-in slide-in-from-bottom-8 duration-500 shadow-2xl">
+                    <div className={`p-8 ${activeMission.coverColor} ${activeMission.textColor} relative`}>
+                        <button onClick={onFinish} className="absolute top-6 right-6 p-2 bg-black/10 rounded-full hover:bg-black/20 transition-colors"><X size={20} /></button>
+                        <h2 className="text-3xl font-black mb-4">{activeMission.title}</h2>
+                        <div className="flex gap-2">
+                            {availableLevels.map(l => (
+                                <button key={l.id} onClick={() => switchLevel(l)} className={`px-4 py-1.5 rounded-full text-xs font-black transition-all border-2 ${l.id === activeMission.id ? 'bg-white text-slate-900 border-white shadow-md' : 'bg-transparent text-white/60 border-white/20 hover:border-white/40'}`}>
+                                    {l.level}
+                                </button>
+                            ))}
                         </div>
-                        <h2 className="text-3xl font-black mb-1">{mission.title}</h2>
-                        <div className="text-xs font-bold uppercase tracking-widest opacity-70">Level {mission.level} • {mission.genre}</div>
                     </div>
                     <div className="p-8 space-y-6">
-                        <p className="text-slate-600 leading-relaxed">{mission.briefing.description}</p>
-                        <button onClick={() => setStep('chat')} className="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-bold shadow-xl active:scale-95 transition-all">Mission Starten</button>
+                        <div className="space-y-2">
+                            <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">The Mission</h4>
+                            <p className="text-slate-600 leading-relaxed font-medium">{activeMission.briefing.description}</p>
+                        </div>
+                        <div className="space-y-4">
+                            <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">Objectives</h4>
+                            <div className="flex items-center gap-4 bg-indigo-50 p-4 rounded-2xl border border-indigo-100 group">
+                                <div className="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center text-xl shadow-indigo-100 shadow-lg">🎯</div>
+                                <div>
+                                    <div className="text-[10px] font-black text-indigo-400 uppercase tracking-wider">Main Goal</div>
+                                    <div className="text-sm font-bold text-indigo-900">{activeMission.briefing.mainGoal.text}</div>
+                                </div>
+                            </div>
+                            <div className="grid gap-2">
+                                {activeMission.briefing.subGoals.map(g => (
+                                    <div key={g.id} className="flex items-center gap-3 pl-2 py-1">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
+                                        <div className="text-sm text-slate-500 font-bold">{g.text}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <button onClick={() => { setHistory([{ type: 'npc', text: activeMission.nodes.start.npc }]); setStep('chat'); }} className="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-bold shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <Play size={20} fill="currentColor"/> Start Level {activeMission.level}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -870,99 +870,76 @@ const MissionPlayer = ({ mission, onFinish, onSaveCard, vocabulary, speak }) => 
     }
 
     if (step === 'result') {
-        const isWin = hearts > 0 && mission.nodes[currentNodeId]?.success;
+        const mainGoalReached = completedGoalIds.includes(activeMission.briefing.mainGoal.id);
+        const allGoals = [activeMission.briefing.mainGoal, ...activeMission.briefing.subGoals];
         return (
-            <div className="fixed inset-0 z-[110] bg-indigo-950 flex items-center justify-center p-6 text-white text-center">
-               <div className="max-w-sm animate-in zoom-in-95 duration-500">
-                    <div className="text-6xl mb-6">{isWin ? '🎉' : '💔'}</div>
-                    <h2 className="text-4xl font-black mb-2">{isWin ? 'Gagné !' : 'Perdu...'}</h2>
-                    <p className="text-indigo-200 mb-12">{isWin ? `Du hast die Mission ${mission.title} gemeistert!` : 'Versuch es gleich noch einmal.'}</p>
-                    <button onClick={isWin ? () => { onSaveCard(mission.rewardCard); onFinish(); } : onFinish} className="w-full py-5 bg-white text-indigo-900 rounded-[2rem] font-black shadow-xl">
-                        {isWin ? 'Karte abholen' : 'Zurück'}
+            <div className="fixed inset-0 z-[110] bg-slate-50 flex items-center justify-center p-6 overflow-y-auto">
+                <div className="max-w-sm w-full bg-white rounded-[3rem] shadow-2xl p-8 text-center animate-in zoom-in-95 duration-500 border border-slate-100">
+                    <div className="text-6xl mb-4">{mainGoalReached ? '🎉' : '⚠️'}</div>
+                    <h2 className="text-3xl font-black text-slate-800 mb-2">{mainGoalReached ? 'Mission Clear!' : 'Objective Failed'}</h2>
+                    <p className="text-slate-400 text-sm mb-8 font-medium">Level {activeMission.level} Summary</p>
+                    <div className="space-y-3 mb-10 text-left">
+                        {allGoals.map(goal => {
+                            const isDone = completedGoalIds.includes(goal.id);
+                            return (
+                                <div key={goal.id} className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-500 ${isDone ? 'bg-green-50 border-green-200 scale-100' : 'bg-slate-50 border-slate-100 opacity-50'}`}>
+                                    <span className={`font-bold text-sm ${isDone ? 'text-green-700' : 'text-slate-400'}`}>{goal.text}</span>
+                                    <div className={`w-6 h-6 rounded-full flex items-center justify-center ${isDone ? 'bg-green-500 text-white' : 'bg-slate-200 text-slate-400'}`}>
+                                        {isDone ? <Check size={14} strokeWidth={4} /> : <X size={14} strokeWidth={4} />}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <button onClick={() => { if(mainGoalReached) onSaveCard(activeMission.rewardCard); onFinish(); }} className={`w-full py-5 rounded-[2.2rem] font-black shadow-xl transition-all active:scale-95 ${mainGoalReached ? 'bg-indigo-600 text-white shadow-indigo-200' : 'bg-slate-800 text-white'}`}>
+                        {mainGoalReached ? 'Claim Reward' : 'Try Again'}
                     </button>
-               </div>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="fixed inset-0 z-[100] bg-slate-50 flex flex-col overflow-hidden">
-            {/* Header */}
-            <div className="pt-8 pb-4 px-6 flex items-center justify-between bg-white border-b border-slate-100 shadow-sm">
-                <button onClick={onFinish} className="text-slate-400"><X size={24}/></button>
-                <div className="flex-1 px-4 text-center">
-                    <div className="flex gap-1 justify-center mb-1">
-                        {[...Array(3)].map((_, i) => (
-                            <HeartIcon key={i} size={16} fill={i < hearts ? "#ef4444" : "none"} className={i < hearts ? "text-red-500" : "text-slate-200"} />
-                        ))}
-                    </div>
-                    <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{mission.title}</div>
+        <div className="fixed inset-0 z-[100] bg-white flex flex-col overflow-hidden">
+            <div className="pt-8 pb-4 px-6 flex items-center justify-between border-b border-slate-100">
+                <button onClick={onFinish} className="text-slate-400 p-2"><X size={24}/></button>
+                <div className="flex flex-col items-center">
+                    <div className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">{activeMission.groupId}</div>
+                    <div className="text-xs font-bold text-indigo-600">Level {activeMission.level}</div>
                 </div>
-                <div className="w-6"></div>
+                <div className="w-10"></div>
             </div>
-
-            {/* Chat Area */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar pb-32">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar pb-40">
                 {history.map((msg, idx) => (
-                    <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
-                        <div className={`max-w-[85%] p-4 rounded-[1.8rem] font-medium text-sm leading-relaxed shadow-sm ${
-                            msg.type === 'user' 
-                            ? 'bg-slate-900 text-white rounded-tr-none' 
-                            : 'bg-white text-slate-800 border border-slate-100 rounded-tl-none'
-                        }`}>
+                    <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[85%] p-4 rounded-[1.8rem] text-sm font-medium shadow-sm ${msg.type === 'user' ? 'bg-slate-900 text-white rounded-tr-none' : 'bg-slate-100 text-slate-800 rounded-tl-none'}`}>
                             {renderClickableText(msg.text, msg.type === 'user')}
                         </div>
                     </div>
                 ))}
-                {isTyping && (
-                    <div className="flex justify-start">
-                        <div className="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-100 flex gap-1">
-                            <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce"></div>
-                            <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]"></div>
-                            <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.4s]"></div>
-                        </div>
-                    </div>
-                )}
+                {isTyping && <div className="flex gap-1 p-4 bg-slate-50 w-16 rounded-2xl justify-center"><div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce"></div><div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]"></div></div>}
             </div>
-
-            {/* Response Options */}
             {!currentNode.isEnd && (
-                <div className="p-6 bg-white border-t border-slate-100 space-y-3 absolute bottom-0 left-0 right-0">
+                <div className="p-6 bg-white/90 backdrop-blur-md border-t border-slate-100 space-y-3 absolute bottom-0 w-full">
                     {currentNode.options.map((opt, i) => (
-                        <button 
-                            key={i}
-                            disabled={isTyping}
-                            onClick={() => handleOptionClick(opt)}
-                            className="w-full p-4 bg-slate-50 border border-slate-100 hover:border-indigo-500 hover:bg-indigo-50 text-slate-700 rounded-2xl text-left text-sm font-bold transition-all active:scale-[0.98] disabled:opacity-50"
-                        >
+                        <button key={i} disabled={isTyping} onClick={() => handleOptionClick(opt)} className="w-full p-4 bg-slate-50 border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 rounded-2xl text-left text-sm font-bold transition-all active:scale-95 shadow-sm">
                             {opt.text}
                         </button>
                     ))}
                 </div>
             )}
-
-            {/* DICTIONARY POPUP (Identisch zum Reader) */}
             {clickedWord && (
-                <div className="fixed bottom-6 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white p-5 rounded-[2.5rem] shadow-2xl z-[150] border border-white/10 max-h-[60vh] flex flex-col animate-in slide-in-from-bottom-4">
-                    <div className="flex justify-between items-center mb-4 px-2">
+                <div className="fixed bottom-6 left-4 right-4 bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-2xl z-[150] animate-in slide-in-from-bottom-4 border border-white/10">
+                    <div className="flex justify-between items-center mb-4">
                         <h4 className="text-xl font-bold capitalize">{clickedWord.cleanFrench}</h4>
-                        <button onClick={() => setClickedWord(null)} className="p-2 text-slate-500 hover:text-white"><X size={24} /></button>
+                        <button onClick={() => setClickedWord(null)} className="p-2 text-white/40"><X size={20}/></button>
                     </div>
-                    <div className="space-y-3 overflow-y-auto no-scrollbar pb-2">
-                        {clickedWord.isLoading ? (
-                            <div className="flex justify-center py-8"><Loader2 className="animate-spin text-indigo-400" /></div>
-                        ) : (
-                            clickedWord.allMatches.map((match, idx) => (
-                                <div key={idx} className="bg-white/5 border border-white/10 rounded-3xl p-4">
-                                    <div className="text-lg font-bold text-white mb-2">{match.english}</div>
-                                    <div className="flex gap-2">
-                                        <button onClick={() => speak(match.french)} className="flex-1 bg-white/10 py-2 rounded-xl text-xs font-bold active:scale-95">Anhören</button>
-                                        <button className="flex-1 bg-indigo-600 py-2 rounded-xl text-xs font-bold active:scale-95">Speichern</button>
-                                    </div>
-                                </div>
-                            ))
-                        )}
-                    </div>
+                    {clickedWord.allMatches.length > 0 ? clickedWord.allMatches.map((m, i) => (
+                        <div key={i} className="bg-white/10 p-4 rounded-2xl mb-2">
+                            <div className="text-indigo-300 text-[10px] font-black uppercase mb-1">{m.type}</div>
+                            <div className="font-bold text-lg">{m.english}</div>
+                        </div>
+                    )) : <p className="text-white/50 italic text-sm">No exact match found.</p>}
                 </div>
             )}
         </div>
@@ -2435,7 +2412,19 @@ function App() {
     const [viewedCard, setViewedCard] = React.useState(null);
     // In App.js
     const [unlockedMissions, setUnlockedMissions] = useState(() => {
-        return JSON.parse(localStorage.getItem('vocabApp_unlockedMissions')) || ["bakery_a1"];
+        let saved = [];
+        try {
+            const local = localStorage.getItem('vocabApp_unlockedMissions');
+            saved = local ? JSON.parse(local) : [];
+        } catch (e) {
+            saved = [];
+        }
+
+        // WICHTIG: Falls das Array leer ist oder die Start-ID fehlt, füge sie hinzu
+        if (!Array.isArray(saved) || saved.length === 0 || !saved.includes("bakery_a1")) {
+            return ["bakery_a1"];
+        }
+        return saved;
     });
 
     const [collectedCards, setCollectedCards] = useState(() => {
@@ -2634,7 +2623,7 @@ function App() {
 
                             return {
                                 id: item.id,
-                                rank: item.frequency,
+                                rank: item.rank || item.frequency, // Nutze 'rank', Fallback auf 'frequency'
                                 french: item.lemma,
                                 english: item.translation_en,
                                 type: item.pos_type,
@@ -3972,59 +3961,58 @@ function App() {
         const SESSION_SIZE = 20; 
         const now = Date.now();
 
+        // 1. Gelernten Pool vorbereiten
         const progressKeys = Object.keys(userProgress);
         const learnedPool = progressKeys.map(key => {
             const prog = userProgress[key];
             if (!prog || prog.box === 0) return null;
 
             let wordData = null;
-            if (!isNaN(key)) {
-                wordData = vocabulary.find(v => v.rank === parseInt(key));
+            const numericRank = parseInt(key);
+            if (!isNaN(numericRank)) {
+                wordData = vocabulary.find(v => v.rank === numericRank);
             } else if (key.startsWith('str:')) {
                 const frenchText = key.replace('str:', '');
-                // Wir erstellen ein vorläufiges Objekt
-                wordData = { rank: 99999, french: frenchText, english: "Loading...", isCustom: true, examples: [] };
+                wordData = { rank: 99999, french: frenchText, english: "Custom Word", isCustom: true };
             }
 
             if (wordData) return { ...wordData, stats: prog, originalKey: key };
             return null;
         }).filter(Boolean);
 
+        // 2. Kategorien sortieren
         const badWords = learnedPool.filter(w => (w.stats.consecutiveWrong || 0) >= 1);
         const dueWords = learnedPool.filter(w => w.stats.box > 1 && w.stats.nextReview <= now);
-        const learningWords = learnedPool.filter(w => w.stats.box === 1 && (w.stats.consecutiveWrong || 0) === 0);
+        const learningWords = learnedPool.filter(w => w.stats.box === 1);
 
-        const newWords = vocabulary
-            .filter(w => !userProgress[w.rank])
+        // 3. NEUE WÖRTER (Hier ist die wichtigste Änderung!)
+        // Wir nehmen die nächsten 100 verfügbaren Wörter und mischen sie
+        const newWordsPool = vocabulary
+            .filter(w => !userProgress[w.rank] && !userProgress[`str:${w.french.toLowerCase()}`])
             .sort((a, b) => a.rank - b.rank)
-            .slice(0, 50);
+            .slice(0, 100); // Nimm die nächsten 100 potenziellen Wörter
 
         const pickRandom = (arr, count) => [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
+
         let finalSelection = [];
+        
+        // Prio 1: Fehlerhafte Wörter reparieren (max 8)
         finalSelection.push(...pickRandom(badWords, 8));
+        
+        // Prio 2: Fällige Wiederholungen (max 6)
         finalSelection.push(...pickRandom(dueWords, 6));
-        const slotsForFresh = Math.max(4, 15 - finalSelection.length);
-        finalSelection.push(...pickRandom(learningWords, slotsForFresh));
+        
+        // Prio 3: Laufende Lernwörter auffüllen
+        const currentSlots = finalSelection.length;
+        finalSelection.push(...pickRandom(learningWords, Math.min(learningWords.length, 15 - currentSlots)));
+
+        // Prio 4: Mit komplett neuen Wörtern auf SESSION_SIZE auffüllen
         const remaining = SESSION_SIZE - finalSelection.length;
-        if (remaining > 0) finalSelection.push(...newWords.slice(0, remaining));
-
-        if (finalSelection.length === 0) return alert("Add words from Library or Reader first!");
-
-        // --- NEU: ECHTE ÜBERSETZUNGEN FÜR CUSTOM WORDS LADEN ---
-        const customWords = finalSelection.filter(w => w.isCustom);
-        if (customWords.length > 0) {
-            const { data: translations } = await supabase
-                .from('generated_translations')
-                .select('french, english')
-                .in('french', customWords.map(w => w.french.toLowerCase()));
-            
-            if (translations) {
-                finalSelection = finalSelection.map(word => {
-                    const found = translations.find(t => t.french === word.french.toLowerCase());
-                    return found ? { ...word, english: found.english } : word;
-                });
-            }
+        if (remaining > 0) {
+            finalSelection.push(...pickRandom(newWordsPool, remaining));
         }
+
+        if (finalSelection.length === 0) return alert("No words found! Try adjusting your range or adding words.");
 
         setSessionQueue(finalSelection.sort(() => 0.5 - Math.random()));
         setCurrentIndex(0);
@@ -4513,37 +4501,55 @@ function App() {
         );
     };
     const renderExplore = () => {
-        // 1. Datenquellen sicher abgreifen
-        const libData = window.LIBRARY_CONTENT || {};
-        const missionData = window.MISSION_DATA || {};
+        const missionData = window.MISSION_DATA || { daily_life: [] };
+        const libData = window.LIBRARY_CONTENT || { books: [], culture: [] };
+        
+        if (selectedBook) return renderBookChapters();
 
-        // Falls ein Buch offen ist, Kapitel-Ansicht zeigen
-        if (selectedBook) {
-            return renderBookChapters();
-        }
-
-        // 2. Tab-Definition
         const tabs = [
             { id: 'books', label: 'Books', icon: BookIcon },
             { id: 'missions', label: 'Missions', icon: TargetIcon },
             { id: 'culture', label: 'Culture', icon: CultureIcon }
         ];
 
-        // 3. Daten für den aktiven Tab sammeln
         let activeCollection = [];
-        
         if (libraryTab === 'missions') {
-            // Wir nehmen alle Listen aus MISSION_DATA (egal wie sie heißen: daily_life, vie_quotidienne, etc.)
-            // und führen sie in einem großen Array zusammen.
-            activeCollection = Object.values(missionData).flat().filter(item => item && item.id);
+            const allMissions = Object.values(missionData).flat();
+            
+            // --- LOGIK: MISSIONEN TRANSFORMIEREN ---
+            const levelPower = { 'A1': 1, 'A2': 2, 'B1': 3, 'B2': 4, 'C1': 5 };
+            const grouped = {};
+
+            // 1. Alle Missionen nach groupId sammeln
+            allMissions.forEach(m => {
+                const gid = m.groupId || m.id;
+                if (!grouped[gid]) grouped[gid] = [];
+                grouped[gid].push(m);
+            });
+
+            // 2. Für jede Gruppe nur die beste verfügbare Mission wählen
+            Object.values(grouped).forEach(group => {
+                // Finde alle in dieser Gruppe, die der User bereits freigeschaltet hat
+                const unlockedInGroup = group.filter(m => unlockedMissions.includes(m.id));
+                
+                if (unlockedInGroup.length > 0) {
+                    // Zeige die mit dem höchsten Level
+                    const highest = unlockedInGroup.sort((a, b) => levelPower[b.level] - levelPower[a.level])[0];
+                    activeCollection.push(highest);
+                } else {
+                    // Wenn noch gar keine Mission der Gruppe frei ist, zeige die kleinste (A1) als gesperrt
+                    const lowest = group.sort((a, b) => levelPower[a.level] - levelPower[b.level])[0];
+                    activeCollection.push(lowest);
+                }
+            });
+            // Sortierung der Liste nach Level, damit A1 oben steht
+            activeCollection.sort((a, b) => levelPower[a.level] - levelPower[b.level]);
         } else {
-            // Normaler Abgleich für Books und Culture
             activeCollection = libData[libraryTab] || [];
         }
 
         return (
-            <div className="w-full pt-6 pb-24 relative">
-                {/* Glass Island Navigation */}
+            <div className="w-full pt-6 pb-24 relative animate-in fade-in duration-500">
                 <div className="sticky top-4 z-40 px-4 mb-8">
                     <div className="bg-white/70 backdrop-blur-xl border border-white/40 p-1.5 rounded-[2rem] shadow-lg flex items-center w-full max-w-sm mx-auto">
                         {tabs.map((tab) => {
@@ -4564,67 +4570,73 @@ function App() {
                     </div>
                 </div>
 
-                {/* Content Liste */}
                 <div className="px-5">
                     {activeCollection.length === 0 ? (
                         <div className="text-center py-20 bg-white rounded-[2.5rem] border border-dashed border-slate-200">
-                            <div className="text-4xl mb-3 opacity-20">📂</div>
-                            <p className="text-slate-400 text-sm font-medium">
-                                No {libraryTab} items available yet.
-                            </p>
+                            <p className="text-slate-400">No content available.</p>
                         </div>
                     ) : (
-                        <div className="grid gap-4">
-                            {activeCollection.map(item => (
+                        activeCollection.map(item => {
+                            const isUnlocked = libraryTab === 'missions' ? unlockedMissions.includes(item.id) : true;
+
+                            return (
                                 <button 
                                     key={item.id} 
+                                    disabled={!isUnlocked}
                                     onClick={() => {
                                         if (libraryTab === 'missions') setSelectedMission(item);
                                         else setSelectedBook(item);
                                     }} 
-                                    className={`w-full ${item.coverColor || 'bg-white'} p-5 rounded-[2.5rem] shadow-md text-left relative overflow-hidden active:scale-[0.98] transition-all group border border-black/5`}
+                                    className={`w-full ${item.coverColor || 'bg-white'} p-5 rounded-[2.5rem] shadow-md text-left relative overflow-hidden active:scale-[0.98] transition-all group border border-black/5 mb-4 
+                                        ${!isUnlocked ? 'opacity-60 grayscale contrast-75 cursor-not-allowed' : ''}`}
                                 >
                                     <div className="relative z-10 flex gap-4 items-center">
-                                        <div className="bg-white/30 backdrop-blur-md w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 text-2xl shadow-sm">
-                                            {/* Icon Fallback Logik */}
-                                            {item.icon === 'Croissant' ? '🥐' : (item.type === 'mission' ? '🎯' : '📚')}
+                                        <div className={`${isUnlocked ? 'bg-slate-900' : 'bg-slate-300'} text-white w-12 h-12 rounded-full flex items-center justify-center shrink-0 text-lg font-black shadow-lg transition-colors`}>
+                                            {isUnlocked ? item.level : '🔒'}
                                         </div>
+
                                         <div className="min-w-0 flex-1">
                                             <div className={`text-[9px] font-black uppercase tracking-widest opacity-60 ${item.textColor || 'text-slate-500'}`}>
-                                                Level {item.level}
+                                                {item.genre}
                                             </div>
                                             <h3 className={`text-lg font-bold leading-tight ${item.textColor || 'text-slate-800'}`}>
-                                                {item.title}
+                                                {isUnlocked ? item.title : 'Mission Verrouillée'}
                                             </h3>
                                         </div>
-                                        {ChevronIcon && <ChevronIcon size={20} className="opacity-30" />}
+                                        {isUnlocked && <ChevronIcon size={20} className="opacity-30" />}
                                     </div>
-                                    
-                                    {/* Kleiner Glanz-Effekt für Missions */}
-                                    {libraryTab === 'missions' && (
-                                        <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
-                                    )}
+                                    {isUnlocked && <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>}
                                 </button>
-                            ))}
-                        </div>
+                            );
+                        })
                     )}
                 </div>
 
-                {/* MISSION PLAYER OVERLAY */}
-                {/* In renderExplore (innerhalb von App) */}
-                {selectedMission && (
-                    <MissionPlayer 
-                        mission={selectedMission} 
-                        vocabulary={vocabulary} // <--- Hinzugefügt
-                        speak={speak}           // <--- Hinzugefügt
-                        onFinish={() => setSelectedMission(null)}
-                        onSaveCard={(card) => {
-                            if (!collectedCards.some(c => c.id === card.id)) {
-                                setCollectedCards(prev => [...prev, card]);
-                            }
-                        }}
-                    />
-                )}
+
+
+                    {selectedMission && (
+                        <MissionPlayer 
+                            mission={selectedMission} 
+                            // WICHTIG: Wir geben alle Missionen mit, damit der Player filtern kann
+                            allMissions={Object.values(window.MISSION_DATA || {}).flat()}
+                            unlockedMissions={unlockedMissions}
+                            vocabulary={vocabulary}
+                            speak={speak}
+                            onFinish={() => setSelectedMission(null)}
+                            onSaveCard={(card) => {
+                                if (!collectedCards.some(c => c.id === card.id)) {
+                                    setCollectedCards(prev => [...prev, card]);
+                                }
+                                if (selectedMission.unlocks) {
+                                    setUnlockedMissions(prev => {
+                                        const updated = [...new Set([...prev, ...selectedMission.unlocks])];
+                                        localStorage.setItem('vocabApp_unlockedMissions', JSON.stringify(updated));
+                                        return updated;
+                                    });
+                                }
+                            }}
+                        />
+                    )}
             </div>
         );
     };
