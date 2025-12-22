@@ -2436,7 +2436,7 @@ function App() {
     const [typingResult, setTypingResult] = useState(null); // 'correct' | 'wrong' | null
     const [showConjugation, setShowConjugation] = useState(false);
     // ...
-    const [viewedCard, setViewedCard] = React.useState(null);
+    const [viewedCard, setViewedCard] = useState(null);
     // In App.js
     const [unlockedMissions, setUnlockedMissions] = useState(() => {
         let saved = [];
@@ -2906,6 +2906,96 @@ function App() {
     // --- SYNC LOGIC (Optimiert für Realtime) ---
     /* script.js - Innerhalb von function App() */
 
+    /* In script.js */
+
+// --- DIE GROSSE KARTEN-ANSICHT (POPUP) ---
+    const CardModal = ({ card, onClose }) => {
+        if (!card) return null;
+
+        // Farben basierend auf Seltenheit
+        const rarityStyles = {
+            'Common': 'from-slate-400 to-slate-600 border-slate-200',
+            'Rare': 'from-indigo-500 to-blue-700 border-indigo-300 shadow-indigo-200',
+            'Epic': 'from-purple-600 to-fuchsia-700 border-purple-300 shadow-purple-200',
+            'Legendary': 'from-amber-400 to-orange-600 border-amber-200 shadow-amber-200'
+        };
+
+        return (
+            <div className="fixed inset-0 z-[200] bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-6 animate-in fade-in duration-300">
+                <div className="relative w-full max-w-sm aspect-[2.5/3.5] bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500 flex flex-col">
+                    
+                    {/* Close Button */}
+                    <button onClick={onClose} className="absolute top-4 right-4 z-30 p-2 bg-black/10 rounded-full text-white/80 hover:bg-black/20">
+                        <X size={20} />
+                    </button>
+
+                    {/* Card Header (Image Area) */}
+                    <div className={`h-1/2 bg-gradient-to-br ${rarityStyles[card.rarity] || rarityStyles.Common} relative flex items-center justify-center overflow-hidden`}>
+                        {/* Placeholder für zukünftige Bilder */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                            <Trophy size={200} className="text-white" />
+                        </div>
+                        <div className="relative z-10 text-6xl drop-shadow-lg">🎴</div>
+                        
+                        {/* Rank Tag */}
+                        <div className="absolute bottom-4 left-4 bg-white/20 backdrop-blur-md border border-white/30 px-3 py-1 rounded-full text-[10px] font-black text-white uppercase tracking-widest">
+                            {card.rank}
+                        </div>
+                    </div>
+
+                    {/* Card Info */}
+                    <div className="flex-1 p-8 flex flex-col text-center">
+                        <div className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-2">{card.rarity}</div>
+                        <h3 className="text-2xl font-black text-slate-800 mb-4 leading-tight">{card.title}</h3>
+                        <p className="text-slate-500 text-sm leading-relaxed mb-6 italic">"{card.description}"</p>
+                        
+                        {card.keyPhrases && (
+                            <div className="mt-auto space-y-2">
+                                <div className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Key Learning</div>
+                                {card.keyPhrases.slice(0, 2).map((p, i) => (
+                                    <div key={i} className="text-xs font-bold text-slate-700 bg-slate-50 py-2 px-3 rounded-xl border border-slate-100">
+                                        {typeof p === 'string' ? p : p.fr}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+// --- DIE ÜBERSICHTS-SEITE (GALLERY) ---
+    const renderCardGallery = () => (
+        <div className="w-full pt-6 pb-24 px-1 animate-in fade-in duration-500">
+            <div className="flex items-center gap-3 mb-8 px-2">
+                <button onClick={() => setView('profile')} className="p-2 -ml-2 bg-white rounded-full shadow-sm text-slate-500">
+                    <ArrowLeft size={24} />
+                </button>
+                <div>
+                    <h2 className="text-2xl font-bold text-slate-800">My Collection</h2>
+                    <p className="text-slate-400 text-sm font-medium">Achievements from your journey</p>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+                {collectedCards.map((card, idx) => (
+                    <button 
+                        key={idx}
+                        onClick={() => setViewedCard(card)}
+                        className="bg-white p-4 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center group active:scale-95 transition-all hover:border-indigo-300"
+                    >
+                        <div className="w-20 h-24 bg-slate-50 rounded-2xl flex items-center justify-center mb-3 shadow-inner text-3xl group-hover:rotate-6 transition-transform">
+                            🎴
+                        </div>
+                        <div className="text-[9px] font-black text-indigo-500 uppercase tracking-widest mb-1">{card.rank}</div>
+                        <div className="font-bold text-slate-800 text-sm leading-tight line-clamp-1">{card.title}</div>
+                        <div className="text-[10px] text-slate-300 mt-1 font-medium">{card.rarity}</div>
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
     const syncWithCloud = async (localData, silent = false) => {
         if (!session) return;
         const userId = session.user.id;
@@ -5864,12 +5954,9 @@ function App() {
             </div>
         );
     };
-    
     const renderProfile = () => {
         // --- 1. DATEN BERECHNEN ---
         const safeVocab = vocabulary || [];
-        
-        // Gelernte Wörter (Box > 0)
         const learnedCount = safeVocab.filter(w => userProgress[w.rank]?.box > 0).length;
 
         // --- CEFR VOCABULARY LEVEL ---
@@ -5908,26 +5995,21 @@ function App() {
         const grammarCEFR = getGrammarCEFR();
 
         // --- CREATIVE TITLE SYSTEM ---
-        const vocabLevel = vocabCEFR.level;
-        const grammarLevel = grammarCEFR.level;
-        
         const levelToNum = (lvl) => ({ 'A1': 1, 'A2': 2, 'B1': 3, 'B2': 4, 'C1+': 5 }[lvl] || 0);
-        const vocabNum = levelToNum(vocabLevel);
-        const grammarNum = levelToNum(grammarLevel);
-        
+        const vocabNum = levelToNum(vocabCEFR.level);
+        const grammarNum = levelToNum(grammarCEFR.level);
+
         const getCreativeTitle = () => {
             const diff = vocabNum - grammarNum;
             if (vocabNum <= 1 && grammarNum <= 1) {
                 if (learnedCount === 0) return { title: "Fresh Start", emoji: "🌱", desc: "Your French journey begins here.", color: "from-slate-400 to-slate-600" };
                 return { title: "Curious Tourist", emoji: "📷", desc: "Collecting first impressions.", color: "from-slate-400 to-slate-600" };
             }
-            if (diff >= 2) { 
+            if (diff >= 2) {
                 if (vocabNum >= 4) return { title: "Yoda", emoji: "🧙‍♂️", desc: "Words you have, but grammar you must learn!", color: "from-green-500 to-emerald-700" };
                 return { title: "Word Hoarder", emoji: "📚", desc: "Great vocabulary! Now focus on grammar.", color: "from-amber-400 to-orange-600" };
             }
-            if (diff <= -2) { 
-                return { title: "The Professor", emoji: "🎓", desc: "Great rules knowledge, but you need more words!", color: "from-indigo-500 to-purple-700" };
-            }
+            if (diff <= -2) return { title: "The Professor", emoji: "🎓", desc: "Great rules knowledge, but you need more words!", color: "from-indigo-500 to-purple-700" };
             return { title: "Adventurer", emoji: "🧭", desc: "You're on your way! Keep going.", color: "from-blue-400 to-indigo-600" };
         };
         const creativeTitle = getCreativeTitle();
@@ -5935,17 +6017,13 @@ function App() {
         return (
             <div className="max-w-2xl mx-auto space-y-8 pt-2 pb-24 px-1">
                 
-                {/* HEADER MIT NICKNAME & LEVEL */}
+                {/* HEADER */}
                 <div className="flex items-center justify-between px-1">
                     <div>
                         <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Identity</div>
                         <div className="flex items-center gap-2">
                             <h2 className="text-3xl font-bold text-slate-800">{nickname || "Guest"}</h2>
-                            {!session && (
-                                <span className="bg-slate-200 text-slate-500 text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wide">
-                                    Guest
-                                </span>
-                            )}
+                            {!session && <span className="bg-slate-200 text-slate-500 text-[10px] px-2 py-1 rounded-full font-bold uppercase">Guest</span>}
                         </div>
                     </div>
                     <div className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold shadow-sm">
@@ -5967,44 +6045,19 @@ function App() {
                     <p className="mt-4 text-white/90 text-sm leading-relaxed bg-black/10 rounded-2xl p-4 backdrop-blur-sm">
                         {creativeTitle.desc}
                     </p>
-                    <div className="absolute -right-6 -bottom-8 text-white opacity-10 rotate-12 scale-150">
-                        <User size={100}/>
-                    </div>
+                    <div className="absolute -right-6 -bottom-8 text-white opacity-10 rotate-12 scale-150"><User size={100}/></div>
                 </div>
 
-                {/* --- GAST WARNUNG (Nur wenn NICHT eingeloggt) --- */}
-                {!session && (
-                    <div className="bg-amber-50 border border-amber-200 p-5 rounded-[2.5rem] relative overflow-hidden">
-                        <div className="flex items-start gap-4 relative z-10">
-                            <div className="bg-amber-100 text-amber-600 p-3 rounded-2xl shrink-0">
-                                <Shield size={24} />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-amber-900 text-lg leading-tight">Sync disabled</h3>
-                                <p className="text-amber-700/80 text-sm mb-4 leading-relaxed mt-1">
-                                    Your progress is only saved locally. Sign in to protect your data.
-                                </p>
-                                <button 
-                                    onClick={() => setShowAuthModal(true)} 
-                                    className="bg-amber-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-amber-200 hover:bg-amber-700 transition-all active:scale-95"
-                                >
-                                    Create Account
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* 2. MISSION CARD COLLECTION (Die "Pokemon" Karten) */}
-                <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                {/* 2. MASTERY COLLECTION (Der neue Album-Look) */}
+                <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
                     <div className="flex justify-between items-center mb-6">
                         <div className="flex items-center gap-2">
-                            <Trophy size={20} className="text-amber-500" />
+                            <div className="bg-amber-100 p-2 rounded-xl text-amber-600"><Trophy size={18} /></div>
                             <h3 className="font-bold text-slate-800">Mastery Collection</h3>
                         </div>
-                        <span className="text-[10px] font-black text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase">
-                            {collectedCards?.length || 0} Cards
-                        </span>
+                        <button onClick={() => setView('card-gallery')} className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full uppercase tracking-wider hover:bg-indigo-100 transition-colors">
+                            Open Album
+                        </button>
                     </div>
 
                     {(!collectedCards || collectedCards.length === 0) ? (
@@ -6012,61 +6065,53 @@ function App() {
                             <p className="text-slate-400 text-sm italic">Complete missions to earn unique collector cards!</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-2 gap-4">
-                            {/* Suche diesen Teil in renderProfile und passe das onClick an */}
-                            {collectedCards.map((card, idx) => (
+                        <div className="grid grid-cols-3 gap-3">
+                            {collectedCards.slice(0, 3).map((card, idx) => (
                                 <button 
                                     key={idx}
-                                    onClick={() => setViewedCard(card)} // HIER: Karte setzen
-                                    className="bg-slate-50 p-4 rounded-[2rem] border border-slate-200 flex flex-col items-center text-center group active:scale-95 transition-all shadow-sm hover:border-indigo-300"
+                                    onClick={() => setViewedCard(card)}
+                                    className="aspect-[3/4] bg-slate-50 rounded-2xl border border-slate-200 flex flex-col items-center justify-center p-2 relative overflow-hidden group active:scale-95 transition-all shadow-sm hover:border-indigo-300"
                                 >
-                                    <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-3 shadow-sm text-2xl group-hover:rotate-12 transition-transform">
-                                        {card.id.includes('bakery') ? '🥐' : '🗺️'}
-                                    </div>
-                                    <div className="text-[9px] font-black text-indigo-500 uppercase tracking-widest mb-1">{card.rank}</div>
-                                    <div className="font-bold text-slate-800 text-sm leading-tight">{card.title}</div>
-                                    <div className="text-[10px] text-slate-400 mt-1 font-medium">{card.rarity}</div>
+                                    <div className="text-3xl mb-1 group-hover:scale-110 transition-transform duration-300">🎴</div>
+                                    <div className="text-[8px] font-black text-slate-400 uppercase truncate w-full text-center px-1">{card.title}</div>
+                                    {idx === 0 && <div className="absolute top-1 right-1 w-2 h-2 bg-indigo-500 rounded-full animate-ping"></div>}
                                 </button>
                             ))}
+                            {collectedCards.length > 3 && (
+                                <button onClick={() => setView('card-gallery')} className="aspect-[3/4] bg-slate-900 rounded-2xl flex flex-col items-center justify-center text-white active:scale-95 transition-all">
+                                    <div className="font-black text-lg">+{collectedCards.length - 3}</div>
+                                    <div className="text-[8px] font-bold uppercase opacity-60">Cards</div>
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
 
-                {/* 3. CURRENTLY LEARNING (STATS) */}
+                {/* 3. PROGRESS STATS */}
                 <div className="bg-white p-5 rounded-[2.5rem] border border-slate-100 shadow-sm">
                     <div className="flex items-center gap-2 mb-4 px-1">
                         <GraduationCap size={20} className="text-indigo-600" />
                         <h3 className="font-bold text-slate-800">Progress Stats</h3>
                     </div>
-                    
                     <div className="grid grid-cols-2 gap-4">
                         <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
                             <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vocabulary</span>
-                                <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-lg ${vocabCEFR.color}`}>
-                                    {vocabCEFR.level}
-                                </span>
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vocab</span>
+                                <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-lg ${vocabCEFR.color}`}>{vocabCEFR.level}</span>
                             </div>
                             <div className="text-lg font-bold text-slate-800 mb-1">{vocabCEFR.desc}</div>
-                            <div className="text-[10px] text-slate-500 font-bold uppercase opacity-60">
-                                {learnedCount} / {vocabCEFR.next} words
-                            </div>
+                            <div className="text-[10px] text-slate-500 font-bold uppercase opacity-60">{learnedCount} / {vocabCEFR.next}</div>
                             <div className="mt-3 bg-slate-200 h-1.5 rounded-full overflow-hidden">
                                 <div className={`h-full rounded-full transition-all duration-1000 ${vocabCEFR.color}`} style={{ width: `${Math.min(100, (learnedCount / vocabCEFR.next) * 100)}%` }}></div>
                             </div>
                         </div>
-
                         <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Grammar</span>
-                                <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-lg ${grammarCEFR.color}`}>
-                                    {grammarCEFR.level}
-                                </span>
+                                <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-lg ${grammarCEFR.color}`}>{grammarCEFR.level}</span>
                             </div>
                             <div className="text-lg font-bold text-slate-800 mb-1">{grammarCEFR.desc}</div>
-                            <div className="text-[10px] text-slate-500 font-bold uppercase opacity-60">
-                                {grammarCEFR.progress} / {grammarCEFR.total} lessons
-                            </div>
+                            <div className="text-[10px] text-slate-500 font-bold uppercase opacity-60">{grammarCEFR.progress} / {grammarCEFR.total}</div>
                             <div className="mt-3 bg-slate-200 h-1.5 rounded-full overflow-hidden">
                                 <div className={`h-full rounded-full transition-all duration-1000 ${grammarCEFR.color}`} style={{ width: `${Math.min(100, (grammarCEFR.progress / grammarCEFR.total) * 100)}%` }}></div>
                             </div>
@@ -6077,7 +6122,6 @@ function App() {
                 {/* 4. MENU BUTTONS */}
                 <div className="space-y-3">
                     <h3 className="font-bold text-slate-400 text-xs uppercase tracking-widest mb-4 px-2">Settings & Tools</h3>
-                    
                     <button onClick={() => setView('library')} className="w-full bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
                         <div className="flex items-center gap-4">
                             <div className="bg-indigo-50 text-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner"><BookOpen size={22}/></div>
@@ -6088,7 +6132,6 @@ function App() {
                         </div>
                         <ChevronRight size={20} className="text-slate-300 group-hover:text-indigo-400 transition-colors"/>
                     </button>
-
                     <button onClick={() => setView('data-mgmt')} className="w-full bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-between group active:scale-[0.98] transition-all">
                         <div className="flex items-center gap-4">
                             <div className="bg-slate-100 text-slate-500 w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner"><Settings size={22}/></div>
@@ -6354,6 +6397,8 @@ function App() {
                         setReportingWord={setReportingWord} // <--- Hinzufügen!
                     />
                 );
+            /* In script.js -> renderTabContent() */
+            case 'card-gallery': return renderCardGallery();
             case 'culture': return renderExplore();
             case 'skills': return renderSkills();
             case 'daily-writer': return renderDailyWriterEditor();
@@ -6594,6 +6639,7 @@ function App() {
                     onClose={() => setReportingWord(null)} 
                 />
             )}
+            {viewedCard && <CardModal card={viewedCard} onClose={() => setViewedCard(null)} />}    
         </div>
     );
 }
