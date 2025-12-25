@@ -1190,56 +1190,88 @@ const BookReader = ({
 
     const handleWordClick = async (e, wordRaw) => {
         e.stopPropagation();
-        let cleanBase = wordRaw.replace(/[,]/g, "").replace(/[.!?;:"«»()]+/g, "").trim();
+        
+        let cleanBase = wordRaw.replace(/[,]/g, "").replace(/[.!?;:"«»()]+/g, "").trim().toLowerCase();
         if (!cleanBase || /^\d+$/.test(cleanBase)) return;
+
         setClickedWord({ cleanFrench: cleanBase, isLoading: true });
+
         try {
-            const matchesMap = new Map();
-            const addMatch = (newMatch) => {
-                const key = newMatch.rank || newMatch.id || newMatch.french;
-                const existing = matchesMap.get(key);
-                if (!existing || (newMatch.source === 'db_verb' && !existing.specificTense)) {
-                    matchesMap.set(key, newMatch);
-                }
-            };
-            const searchTerms = [cleanBase.toLowerCase()];
-            for (let term of searchTerms) {
-                vocabulary.filter(v => v.french.toLowerCase() === term).forEach(m => addMatch({ ...m, source: 'top10k' }));
-                vocabulary.filter(v => v.conjugation && v.conjugation.includes(term)).forEach(m => addMatch({ ...m, source: 'top10k_mapping', isConjugated: true }));
-                const { data: vfData } = await supabase.from('verb_forms').select('lemma, tense').eq('form', term);
-                if (vfData) vfData.forEach(vf => {
-                    const enriched = vocabulary.find(v => v.french.toLowerCase() === vf.lemma.toLowerCase());
-                    if (enriched) addMatch({ ...enriched, source: 'db_verb', isConjugated: true, specificTense: vf.tense });
+            let finalMatches = [];
+
+            // --- LEVEL 1: STRENGER LEMMA-VERGLEICH ---
+            // Wir suchen zuerst NUR nach Wörtern, deren Grundform (Lemma) exakt so heißt.
+            const lemmaMatches = vocabulary.filter(v => v.french.toLowerCase() === cleanBase);
+
+            if (lemmaMatches.length > 0) {
+                // Wenn wir Lemma-Treffer haben (z.B. bei "un" oder "de"), nehmen wir NUR diese.
+                // Wir sortieren sie nach Rank, falls es mehrere gibt (z.B. Artikel vs. Pronomen).
+                finalMatches = lemmaMatches.sort((a, b) => a.rank - b.rank);
+                console.log("Tier 1 Match (Lemma):", cleanBase);
+            } 
+            
+            // --- LEVEL 2: FORMEN-VERGLEICH (Nur wenn Level 1 leer war) ---
+            if (finalMatches.length === 0) {
+                const formMatches = vocabulary.filter(v => {
+                    if (!v.conjugation) return false;
+                    // Wir wandeln den String in ein Array um und prüfen auf exakte Übereinstimmung
+                    const forms = v.conjugation.split(',').map(f => f.trim().toLowerCase());
+                    return forms.includes(cleanBase);
                 });
+
+                if (formMatches.length > 0) {
+                    // Auch hier nach Häufigkeit sortieren, falls mehrere Verben die gleiche Form haben
+                    finalMatches = formMatches.sort((a, b) => a.rank - b.rank);
+                    console.log("Tier 2 Match (Form):", cleanBase);
+                }
             }
-            let finalResults = Array.from(matchesMap.values());
-            if (finalResults.length === 0) {
-                const { data: fbData } = await supabase.from('dictionary_fallback').select('id, lemma, translation_en, pos').eq('lemma', cleanBase.toLowerCase());
-                if (fbData && fbData.length > 0) fbData.forEach(item => addMatch({ id: 'fb_'+item.id, french: item.lemma, english: item.translation_en, type: item.pos, rank: '>10000', source: 'fallback_db' }));
-                finalResults = Array.from(matchesMap.values());
+
+            // --- LEVEL 3: EXTERNE DATENBANK (Nur wenn Level 1 & 2 leer waren) ---
+            if (finalMatches.length === 0) {
+                const { data: vfData } = await supabase
+                    .from('verb_forms')
+                    .select('lemma')
+                    .eq('form', cleanBase)
+                    .limit(1);
+
+                if (vfData && vfData.length > 0) {
+                    const foundLemma = vfData[0].lemma;
+                    const mainEntry = vocabulary.find(v => v.french.toLowerCase() === foundLemma.toLowerCase());
+                    if (mainEntry) {
+                        finalMatches = [{ ...mainEntry, source: 'verb_db' }];
+                        console.log("Tier 3 Match (DB):", foundLemma);
+                    }
+                }
             }
-            if (finalResults.length === 0) {
-                const { data: genData } = await supabase.from('generated_translations').select('*').eq('french', cleanBase.toLowerCase());
-                if (genData && genData.length > 0) genData.forEach(item => addMatch({ id: 'gen_'+item.id, french: item.french, english: item.english, rank: 'ARCHIVE', source: 'generated_db' }));
-                finalResults = Array.from(matchesMap.values());
-            }
-            if (finalResults.length === 0) {
+
+            // --- LEVEL 4: WEB-FALLBACK ---
+            if (finalMatches.length === 0) {
                 const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanBase)}&langpair=fr|en`);
                 const data = await res.json();
                 if (data?.responseData?.translatedText) {
-                    const translation = data.responseData.translatedText;
-                    finalResults = [{ id: 'web_'+Date.now(), french: cleanBase, english: translation, rank: 'WEB', source: 'mymemory' }];
-                    supabase.from('generated_translations').select('id').eq('french', cleanBase.toLowerCase()).maybeSingle().then(({data: ex}) => {
-                        if(!ex) supabase.from('generated_translations').insert({ french: cleanBase.toLowerCase(), english: translation }).then(()=>{});
-                    });
+                    finalMatches = [{
+                        id: 'web', french: cleanBase, english: data.responseData.translatedText,
+                        rank: 'WEB', source: 'api'
+                    }];
+                    console.log("Tier 4 Match (API)");
                 }
             }
-            finalResults.sort((a, b) => {
-                const score = (r) => typeof r === 'number' ? r : (r === '>10000' ? 15000 : (r === 'ARCHIVE' ? 20000 : 30000));
-                return score(a.rank) - score(b.rank);
+
+            // Wenn wir mehrere Lemma-Treffer haben (z.B. Rank 4 und Rank 150 für "un"),
+            // kannst du entscheiden: Willst du alle zeigen oder nur den Top-Treffer?
+            // Vorschlag: Zeige maximal die Top 2 Treffer, um das Popup sauber zu halten.
+            const resultToShow = finalMatches.slice(0, 2);
+
+            setClickedWord({ 
+                cleanFrench: cleanBase, 
+                allMatches: resultToShow, 
+                isLoading: false 
             });
-            setClickedWord({ cleanFrench: cleanBase, allMatches: finalResults, isLoading: false });
-        } catch (err) { setClickedWord(null); }
+
+        } catch (err) {
+            console.error("Lookup error:", err);
+            setClickedWord(null);
+        }
     };
 
     return (
@@ -2620,68 +2652,69 @@ function App() {
 
     React.useEffect(() => {
         async function loadVocabulary() {
-            console.log("🛠️ DEBUG: Starte Cloud-Sync von Tabelle 'database'...");
-            setIsLoadingVocab(true);
+        console.log("🛠️ DEBUG: Starte Cloud-Sync von Tabelle 'database'...");
+        setIsLoadingVocab(true);
 
-            try {
-                let allFormattedData = [];
-                let from = 0;
-                const step = 1000; // Wir laden immer 1000er Blöcke
-                let finished = false;
+        try {
+            let allFormattedData = [];
+            let from = 0;
+            const step = 1000; 
+            let finished = false;
 
-                // Loop, bis wir weniger als 1000 Zeilen zurückbekommen (dann sind wir am Ende)
-                while (!finished) {
-                    console.log(`📡 Lade Batch: ${from} bis ${from + step}...`);
-                    const { data, error } = await supabase
-                        .from('database')
-                        .select('*')
-                        .order('frequency', { ascending: true })
-                        .range(from, from + step - 1); // Hier setzen wir den Bereich
+            while (!finished) {
+                console.log(`📡 Lade Batch: ${from} bis ${from + step}...`);
+                const { data, error } = await supabase
+                    .from('database')
+                    .select('*')
+                    .order('rank', { ascending: true }) // GEÄNDERT: 'rank' statt 'frequency'
+                    .range(from, from + step - 1);
 
-                    if (error) throw error;
+                if (error) throw error;
 
-                    if (data && data.length > 0) {
-                        const formattedBatch = data.map(item => {
-                            const safeParse = (val) => {
-                                if (!val) return null;
-                                if (typeof val === 'object') return val;
-                                try { return JSON.parse(val); } catch (e) { return null; }
-                            };
+                if (data && data.length > 0) {
+                    const formattedBatch = data.map(item => {
+                        const safeParse = (val) => {
+                            if (!val) return null;
+                            if (typeof val === 'object') return val;
+                            try { return JSON.parse(val); } catch (e) { return null; }
+                        };
 
-                            return {
-                                id: item.id,
-                                rank: item.rank || item.frequency, // Nutze 'rank', Fallback auf 'frequency'
-                                french: item.lemma,
-                                english: item.translation_en,
-                                type: item.pos_type,
-                                explanation: item.explanation,
-                                conjugationTable: safeParse(item.conjugation),
-                                examples: safeParse(item.examples) || [],
-                                conjugation: safeParse(item.mapping_forms) || [] 
-                            };
-                        });
+                        // Innerhalb der loadVocabulary Funktion beim .map(item => { ... })
+                        return {
+                            id: item.rank,
+                            rank: item.rank,
+                            french: item.lemma,
+                            english: item.translation_en,
+                            type: item.pos_typ,
+                            explanation: item.explanation,
+                            conjugationTable: safeParse(item.conjugation),
+                            examples: safeParse(item.examples) || [],
+                            conjugation: item.mapping_forms || "",
+                            tags: item.tags // <--- DIESE ZEILE HINZUFÜGEN
+                        };
+                    });
 
-                        allFormattedData = [...allFormattedData, ...formattedBatch];
-                        
-                        if (data.length < step) {
-                            finished = true; // Wir haben den letzten Rest geladen
-                        } else {
-                            from += step; // Nächsten Block vorbereiten
-                        }
+                    allFormattedData = [...allFormattedData, ...formattedBatch];
+                    
+                    if (data.length < step) {
+                        finished = true; 
                     } else {
-                        finished = true;
+                        from += step; 
                     }
+                } else {
+                    finished = true;
                 }
-
-                console.log("✨ Gesamtes Vokabular geladen. Zeilen:", allFormattedData.length);
-                setVocabulary(allFormattedData); 
-
-            } catch (err) {
-                console.error("❌ Kritischer Datenbankfehler:", err.message);
-            } finally {
-                setIsLoadingVocab(false);
             }
+
+            console.log("✨ Gesamtes Vokabular geladen. Zeilen:", allFormattedData.length);
+            setVocabulary(allFormattedData); 
+
+        } catch (err) {
+            console.error("❌ Kritischer Datenbankfehler:", err.message);
+        } finally {
+            setIsLoadingVocab(false);
         }
+    }
 
         loadVocabulary();
     }, []);
@@ -5511,7 +5544,10 @@ function App() {
     };
     
     /* script.js - Innerhalb von function App() */
-
+    /* In App() ganz oben bei den anderen States */
+    const [explVisible, setExplVisible] = useState(false); // NEU
+    const [conjVisible, setConjVisible] = useState(false); // NEU
+    
     const renderFlashcard = () => {
         const SESSION_CONTAINER_HEIGHT = "h-[calc(100dvh-20px)]"; 
         const isSmartMode = view === 'smart-session';
@@ -5521,13 +5557,26 @@ function App() {
 
         let progressText = isSmartMode ? `${sessionQueue.length} remaining` : `${currentIndex + 1} / ${activeSession.length}`;
         
-        // Key-Bestimmung für die Stats-Anzeige
         const isRare = word.isCustom || word.rank >= 99999;
         const rankKey = isRare ? `str:${word.french.toLowerCase()}` : word.rank;
-        const currentProgress = userProgress[rankKey];
+        const currentProgress = userProgress[rankKey] || { box: 1, interval: 0 };
         
         const isNewCard = !currentProgress || currentProgress.interval === 0;
         const isMasteryCard = currentProgress && currentProgress.box === 5;
+
+        // Hilfsfunktion zum Rendern der Kategorien/Tags
+        const renderTags = () => {
+            if (!word.tags || word.tags === 'Basics') return null;
+            return (
+                <div className="flex flex-wrap gap-1.5 justify-center mt-2">
+                    {word.tags.split(',').map((tag, i) => (
+                        <span key={i} className="bg-indigo-50 text-indigo-500 text-[9px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-tighter border border-indigo-100/50 shadow-sm">
+                            {tag.trim()}
+                        </span>
+                    ))}
+                </div>
+            );
+        };
 
         const checkTyping = () => {
             const cleanInput = typedInput.trim().toLowerCase();
@@ -5543,6 +5592,7 @@ function App() {
 
         return (
             <div className={`flex flex-col w-full max-w-xl mx-auto pt-2 ${SESSION_CONTAINER_HEIGHT}`}>
+                {/* --- HEADER --- */}
                 <div className="flex items-center justify-between mb-1 pl-1 shrink-0">
                     <button onClick={() => setView('home')} className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
                         <X size={24} />
@@ -5551,31 +5601,44 @@ function App() {
                     <div className="w-6"></div> 
                 </div>
                 
+                {/* --- MAIN CARD --- */}
                 <div className={`bg-white border-2 rounded-[2.5rem] shadow-xl p-6 flex flex-col relative transition-all flex-1 mb-4 overflow-hidden
                     ${typingResult === 'correct' ? 'border-green-400 shadow-green-100' : typingResult === 'wrong' ? 'border-red-400 shadow-red-100' : 'border-slate-100'}
                 `}>
                     
-                    <div className="absolute top-6 right-6 bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest z-10">
-                        {word.isCustom ? '⭐ Custom' : `#${word.rank}`}
+                    {/* Top Corner: Rank & Report */}
+                    <div className="absolute top-6 right-6 flex items-center gap-2 z-20">
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); setReportingWord(word); }}
+                            className="w-8 h-8 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all font-bold text-lg border border-slate-100"
+                            title="Report an issue"
+                        >
+                            ?
+                        </button>
+                        <div className="bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest">
+                            {word.isCustom ? '⭐ Custom' : `#${word.rank}`}
+                        </div>
                     </div>
                     
                     {!isFlipped ? (
+                        /* --- VORDERSEITE --- */
                         <div className="flex-1 flex flex-col justify-center items-center w-full text-center space-y-8">
                             <div className="space-y-4">
                                 <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.2em]">French</span>
                                 <h2 className="text-5xl md:text-6xl font-bold text-slate-800 break-words leading-tight">{word.french}</h2>
-                                <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all">
+                                
+                                {/* TAGS AUF DER VORDERSEITE */}
+                                {renderTags()}
+                                
+                                <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-4 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all shadow-sm">
                                     <Volume2 size={28} />
                                 </button>
                             </div>
-
-                            {/* Sicherer Map-Aufruf mit ?. */}
+                            
                             {word.examples?.length > 0 && (
                                 <div className="space-y-3 px-4 max-w-sm animate-in fade-in duration-700">
                                     <div className="h-px w-12 bg-slate-100 mx-auto mb-2"></div>
-                                    {word.examples.map((ex, i) => (
-                                        <p key={i} className="text-slate-500 italic text-base leading-relaxed">"{ex.fr}"</p>
-                                    ))}
+                                    <p className="text-slate-400 italic text-base leading-relaxed">"{word.examples[0].fr}"</p>
                                 </div>
                             )}
 
@@ -5586,65 +5649,177 @@ function App() {
                                         onChange={(e) => setTypedInput(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && checkTyping()}
                                         autoComplete="off" placeholder="Type answer..."
-                                        className="w-full p-4 text-center text-xl font-bold text-slate-800 bg-slate-50 border-2 border-slate-200 rounded-2xl outline-none focus:border-indigo-500 transition-all"
+                                        className="w-full p-4 text-center text-xl font-bold text-slate-800 bg-slate-50 border-2 border-slate-200 rounded-2xl outline-none focus:border-indigo-500 transition-all shadow-inner"
                                         autoFocus
                                     />
                                 </div>
                             )}
                         </div>
                     ) : (
+                        /* --- RÜCKSEITE --- */
                         <div className="w-full h-full overflow-y-auto no-scrollbar pt-6 pb-4 animate-in fade-in zoom-in-95 duration-300">
+                            
+                            {/* Word & Tags Header */}
                             <div className="text-center mb-6">
-                                <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Meaning</span>
-                                <h3 className="text-3xl font-bold text-indigo-900 mt-1">{word.english}</h3>
-                                <button onClick={() => speak(word.french)} className="mt-2 p-2 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100">
-                                    <Volume2 size={20} />
-                                </button>
+                                <h2 className="text-2xl font-bold text-slate-600">{word.french}</h2>
+                                <div className="mt-1">{renderTags()}</div>
+                                <div className="h-px w-10 bg-slate-100 mx-auto mt-4"></div>
                             </div>
 
+                            {/* Translation */}
+                            <div className="text-center mb-8">
+                                <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Meaning</span>
+                                <h3 className="text-4xl font-bold text-indigo-900 mt-1 leading-tight">{word.english}</h3>
+                                <div className="flex justify-center gap-2 mt-3">
+                                    <button onClick={() => speak(word.french)} className="p-2 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100">
+                                        <Volume2 size={20} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* EXPLANATION (Collapsible) */}
                             {word.explanation && (
-                                <div className="bg-slate-50 rounded-2xl p-4 mb-4 border border-slate-100 text-sm text-slate-700 italic">
-                                    {word.explanation}
+                                <div className="mb-3">
+                                    <button 
+                                        onClick={() => setExplVisible(!explVisible)}
+                                        className="w-full flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-100 transition-colors"
+                                    >
+                                        <div className="flex items-center gap-2"><span>💡</span> Pedagogical Note</div>
+                                        <ChevronRight size={18} className={`transition-transform duration-300 ${explVisible ? 'rotate-90' : ''}`} />
+                                    </button>
+                                    {explVisible && (
+                                        <div className="p-5 bg-white border-x border-b border-slate-100 rounded-b-2xl text-sm text-slate-600 italic leading-relaxed animate-in slide-in-from-top-2">
+                                            {word.explanation}
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
-                            {/* Beispiele Rückseite (Sicherer Map-Aufruf) */}
-                            <div className="space-y-4">
-                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Usage</div>
+                            {/* CONJUGATION (Collapsible) */}
+                            {/* CONJUGATION (Collapsible) */}
+                            {/* CONJUGATION / FORMS (Collapsible) */}
+                            {word.conjugationTable && (
+                                <div className="mb-3">
+                                    <button 
+                                        onClick={() => setConjVisible(!conjVisible)}
+                                        className="w-full flex items-center justify-between p-4 bg-indigo-50 rounded-2xl border border-indigo-100 text-indigo-700 font-bold text-sm hover:bg-indigo-100 transition-colors"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <span>🔄</span> 
+                                            {/* Dynamischer Titel je nach Wortart */}
+                                            {word.type?.includes('VERB') ? 'Conjugation (Présent)' : 'Word Forms'}
+                                        </div>
+                                        <ChevronRight size={18} className={`transition-transform duration-300 ${conjVisible ? 'rotate-90' : ''}`} />
+                                    </button>
+                                    
+                                    {conjVisible && (
+                                        <div className="p-5 bg-white border-x border-b border-indigo-100 rounded-b-2xl animate-in slide-in-from-top-2">
+                                            <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                                                {(() => {
+                                                    const table = word.conjugationTable;
+
+                                                    // FALL 1: VERBEN (Klassisches Schema)
+                                                    if (table.present || table.je || table.tu) {
+                                                        const forms = table.present || table;
+                                                        const order = ["je", "tu", "il/elle/on", "nous", "vous", "ils/elles"];
+                                                        return order.map(p => forms[p] ? (
+                                                            <div key={p} className="flex justify-between border-b border-slate-50 pb-1">
+                                                                <span className="text-[10px] font-black text-slate-300 uppercase">{p}</span>
+                                                                <span className="text-sm font-bold text-slate-700">{forms[p]}</span>
+                                                            </div>
+                                                        ) : null);
+                                                    }
+
+                                                    // FALL 2: ADJEKTIVE (M/F + S/P)
+                                                    // Erwartet Keys wie: masc_sing, fem_sing, masc_plur, fem_plur
+                                                    if (table.masc_sing || table.ms || table.fs) {
+                                                        // Map für schönere Labels
+                                                        const adjLabels = {
+                                                            masc_sing: "M. Sing.", ms: "M. Sing.",
+                                                            fem_sing: "F. Sing.", fs: "F. Sing.",
+                                                            masc_plur: "M. Plur.", mp: "M. Plur.",
+                                                            fem_plur: "F. Plur.", fp: "F. Plur."
+                                                        };
+                                                        return Object.entries(table).map(([key, val]) => (
+                                                            <div key={key} className="flex justify-between border-b border-slate-50 pb-1">
+                                                                <span className="text-[10px] font-black text-slate-300 uppercase">{adjLabels[key] || key}</span>
+                                                                <span className="text-sm font-bold text-slate-700">{val}</span>
+                                                            </div>
+                                                        ));
+                                                    }
+
+                                                    // FALL 3: NOMEN (Singular/Plural)
+                                                    if (table.singular || table.plural || table.sing) {
+                                                        return Object.entries(table).map(([key, val]) => (
+                                                            <div key={key} className="flex justify-between border-b border-slate-50 pb-1">
+                                                                <span className="text-[10px] font-black text-slate-300 uppercase">{key}</span>
+                                                                <span className="text-sm font-bold text-slate-700">{val}</span>
+                                                            </div>
+                                                        ));
+                                                    }
+
+                                                    // FALLBACK: Falls wir das Format nicht kennen, einfach alles anzeigen
+                                                    return Object.entries(table).map(([key, val]) => (
+                                                        <div key={key} className="flex justify-between border-b border-slate-50 pb-1">
+                                                            <span className="text-[10px] font-black text-slate-300 uppercase">{key}</span>
+                                                            <span className="text-sm font-bold text-slate-700">{typeof val === 'string' ? val : JSON.stringify(val)}</span>
+                                                        </div>
+                                                    ));
+                                                })()}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* USAGE EXAMPLES */}
+                            <div className="space-y-4 mt-8">
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Usage Examples</div>
                                 {word.examples?.length > 0 ? word.examples.map((ex, i) => (
-                                    <div key={i} className="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm flex justify-between items-start gap-3">
+                                    <div key={i} className="bg-slate-50/50 border border-slate-100 p-4 rounded-2xl flex justify-between items-start gap-3 group">
                                         <div className="flex-1">
-                                            <p className="text-slate-800 font-bold text-sm mb-1">{ex.fr}</p>
+                                            <p className="text-slate-800 font-bold text-sm mb-1 leading-snug">{ex.fr}</p>
                                             <p className="text-slate-400 text-xs italic">{ex.en}</p>
                                         </div>
-                                        <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 hover:text-indigo-600"><Volume2 size={16} /></button>
+                                        <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 group-hover:text-indigo-600 transition-colors">
+                                            <Volume2 size={16} />
+                                        </button>
                                     </div>
                                 )) : (
-                                    <div className="text-xs text-slate-300 italic p-4 border border-dashed rounded-2xl text-center">No examples available</div>
+                                    <div className="text-xs text-slate-300 italic p-6 border border-dashed rounded-3xl text-center">No context sentences found</div>
                                 )}
                             </div>
                         </div>
                     )}
                 </div>
 
+                {/* --- BOTTOM ACTION AREA --- */}
                 <div className="w-full mt-auto pt-2 pb-6 shrink-0">
                     {!isFlipped ? (
-                        <button onClick={isMasteryCard ? checkTyping : () => setIsFlipped(true)} disabled={isMasteryCard && !typedInput.trim()} className="w-full bg-indigo-600 text-white px-8 py-5 rounded-[2rem] font-bold text-xl shadow-xl active:scale-[0.98]">
+                        <button onClick={isMasteryCard ? checkTyping : () => setIsFlipped(true)} disabled={isMasteryCard && !typedInput.trim()} className="w-full bg-indigo-600 text-white px-8 py-5 rounded-[2rem] font-bold text-xl shadow-xl active:scale-[0.98] transition-all">
                             {isMasteryCard ? "Check Answer" : "Reveal Answer"}
                         </button>
                     ) : (
-                        <div className="grid grid-cols-4 gap-2 w-full">
+                        <div className="grid grid-cols-4 gap-2 w-full animate-in fade-in slide-in-from-bottom-2">
                             {[
                                 { q: 0, label: "Again", color: "bg-red-50 text-red-600 border-red-200" },
-                                { q: 1, label: "Hard", color: "bg-amber-50 text-amber-600 border-amber-200" },
+                                { q: 1, label: "Hard", color: "bg-orange-50 text-orange-600 border-orange-200" },
                                 { q: 2, label: "Good", color: "bg-green-50 text-green-600 border-green-200" },
                                 { q: 3, label: "Easy", color: "bg-blue-50 text-blue-600 border-blue-200" }
                             ].map((btn) => {
                                 const stats = calculateAnkiStats(currentProgress, btn.q);
                                 const intervalLabel = isNewCard ? (btn.q === 0 ? "<1m" : btn.q === 1 ? "10m" : btn.q === 2 ? "1d" : "4d") : formatInterval(stats.interval);
                                 return (
-                                    <button key={btn.label} onClick={() => handleResult(btn.q)} className={`${btn.color} border-2 p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-95 h-16`}>
-                                        <span className="text-[9px] font-bold uppercase tracking-tighter opacity-60 mb-0.5">{intervalLabel}</span>
+                                    <button 
+                                        key={btn.label} 
+                                        onClick={() => { 
+                                            setExplVisible(false); 
+                                            setConjVisible(false); 
+                                            handleResult(btn.q); 
+                                        }} 
+                                        className={`${btn.color} border-2 p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-90 h-16 shadow-sm`}
+                                    >
+                                        <span className="text-[9px] font-black uppercase tracking-tighter opacity-60 mb-0.5">{intervalLabel}</span>
                                         <span className="font-bold text-xs leading-none">{btn.label}</span>
                                     </button>
                                 );
@@ -5655,7 +5830,7 @@ function App() {
             </div>
         );
     };
-    
+        
     const renderResults = () => (
         <div className="text-center max-w-md mx-auto py-10">
             <div className="inline-block p-6 bg-green-100 rounded-full mb-6"><BarChart3 size={48} className="text-green-600" /></div>
