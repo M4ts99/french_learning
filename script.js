@@ -999,139 +999,165 @@ const getMergedGrammarData = () => {
 // --- READER COMPONENT (Ausgelagert) ---
 /* script.js - BookReader Component (Komplett) */
 /* --- DIESE KOMPONENTE MUSS AUSSERHALB VON APP() STEHEN --- */
-const ReaderWordDetail = ({ word, setView, setUserProgress, session, speak, setReportingWord }) => {
+const ReaderWordDetail = (props) => {
+    const { 
+        word = null, setView = () => {}, setUserProgress = () => {}, 
+        userProgress = {}, session = null, speak = () => {}, 
+        setReportingWord = () => {}, calculateAnkiStats = () => ({box: 1}), 
+        formatInterval = () => "" 
+    } = props;
+
+    const [explVisible, setExplVisible] = React.useState(false);
+    const [conjVisible, setConjVisible] = React.useState(false);
     const [saveStatus, setSaveStatus] = React.useState(null);
 
-    if (!word) return <div className="p-10 text-center">No word selected.</div>;
+    React.useEffect(() => {
+        const originalStyle = window.getComputedStyle(document.body).overflow;
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = originalStyle; };
+    }, []);
 
-    /* In ReaderWordDetail die handleQuickSave Funktion ersetzen */
+    if (!word) return null;
+
+    const safeProgress = userProgress || {};
+    const isRare = word.isCustom || (word.rank && word.rank >= 99999);
+    const rankKey = isRare ? `str:${word.french?.toLowerCase()}` : word.rank;
+    const currentProgress = (rankKey && safeProgress[rankKey]) ? safeProgress[rankKey] : { box: 1, interval: 0 };
+
     const handleQuickSave = async (boxLevel) => {
-        setSaveStatus(boxLevel); 
-        
-        // WICHTIG: rankKey muss für seltene Wörter der Text sein, sonst überschreiben sie sich gegenseitig auf Rank 99999
-        const isRare = typeof word.rank !== 'number';
-        const rankKey = isRare ? word.french.toLowerCase() : word.rank;
-        
-        const newEntry = { 
-            box: boxLevel, 
-            nextReview: boxLevel === 5 ? Date.now() + 30*24*60*60*1000 : Date.now(), 
-            interval: boxLevel === 5 ? 30 : 0, 
-            ease: 2.5 
-        };
-
+        setSaveStatus(boxLevel);
+        const nextReview = boxLevel === 5 ? Date.now() + 30*24*60*60*1000 : Date.now();
+        const newEntry = { box: boxLevel, nextReview, interval: boxLevel === 5 ? 30 : 0, ease: 2.5, consecutiveWrong: 0 };
         try {
-            // 1. Lokal (State) - nutzt Text als Key bei seltenen Wörtern
             setUserProgress(prev => ({ ...prev, [rankKey]: newEntry }));
-            
-            // 2. Cloud (DB)
             if (session) {
                 await supabase.from('user_progress').upsert({
-                    user_id: session.user.id,
-                    word_rank: typeof word.rank === 'number' ? word.rank : 99999,
-                    // Hinweis: Wenn deine DB nur word_rank (Int) hat, speichern alle seltenen Wörter auf 99999.
-                    // Das ist ein DB-Limit. Lokal funktioniert es aber jetzt pro Wort getrennt!
-                    box: boxLevel,
-                    next_review: newEntry.nextReview
-                }, { onConflict: 'user_id, word_rank' });
+                    user_id: session.user.id, word_rank: isRare ? 99999 : word.rank,
+                    word_string: isRare ? word.french.toLowerCase() : null,
+                    box: boxLevel, next_review: nextReview, interval: newEntry.interval, ease_factor: 2.5
+                }, { onConflict: 'user_id, word_rank, word_string' });
             }
-            
-            setTimeout(() => { 
-                setView('reader'); 
-                setSaveStatus(null); 
-            }, 1000);
-        } catch (err) { 
-            console.error(err); 
-            setSaveStatus(null); 
-        }
+            setTimeout(() => setView('reader'), 600);
+        } catch (err) { setSaveStatus(null); }
     };
 
-    return (
-        <div className="flex flex-col w-full max-w-xl mx-auto h-[100dvh] bg-slate-50 overflow-hidden">
-            <div className="flex items-center justify-between p-4 bg-slate-50 shrink-0">
-                <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500 hover:text-indigo-600">
-                    <ArrowLeft size={24} />
-                </button>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Word Discovery</span>
-                {/* Melde Button */}
-                <button onClick={() => setReportingWord(word)} className="p-2 bg-white rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
-                    <AlertCircle size={20} />
-                </button>
-            </div>
+    // --- NEU: BEISPIEL-NORMALISIERUNG ---
+    const getNormalizedExamples = () => {
+        if (!word.examples || !Array.isArray(word.examples)) return [];
+        
+        // Fall 1: Schon das richtige Format [{fr: "", en: ""}]
+        if (typeof word.examples[0] === 'object' && word.examples[0] !== null) {
+            return word.examples;
+        }
 
-            <div className="flex-1 overflow-y-auto px-2 pb-4 no-scrollbar">
-                <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl p-8 min-h-full">
+        // Fall 2: Flaches Array ["fr1", "en1", "fr2", "en2"]
+        // Wir fassen immer zwei aufeinanderfolgende Strings zusammen
+        const paired = [];
+        for (let i = 0; i < word.examples.length; i += 2) {
+            paired.push({
+                fr: word.examples[i],
+                en: word.examples[i + 1] || "" // Falls die Liste ungerade ist
+            });
+        }
+        return paired;
+    };
+
+    const finalExamples = getNormalizedExamples();
+
+    return ReactDOM.createPortal(
+        <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            width: '100vw', height: '100vh', zIndex: 9999,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            backgroundColor: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(8px)', padding: '16px'
+        }} onClick={() => setView('reader')}>
+            
+            <div className="bg-slate-50 w-full max-w-lg h-[85dvh] rounded-[3rem] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
+                
+                <div className="p-5 bg-white border-b flex justify-between items-center shrink-0">
+                    <button onClick={() => setView('reader')} className="p-2 bg-slate-50 rounded-full text-slate-500"><ArrowLeft size={24} /></button>
+                    <span className="font-black text-[10px] uppercase text-slate-400 tracking-widest">Dictionary Detail</span>
+                    <button onClick={() => setReportingWord(word)} className="p-2 bg-slate-50 rounded-full text-slate-300 hover:text-red-500"><AlertCircle size={20} /></button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-6 pb-32 no-scrollbar">
                     <div className="text-center mb-8">
-                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">French</span>
-                        <h2 className="text-5xl font-bold text-slate-800 my-2">{word.french}</h2>
-                        <button onClick={() => speak(word.french)} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 active:scale-90 transition-all">
-                            <Volume2 size={24} />
-                        </button>
-                    </div>
-
-                    <div className="text-center mb-8 border-t border-slate-50 pt-6">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meaning</span>
-                        <h3 className="text-3xl font-bold text-indigo-900 mt-1">{word.english}</h3>
-                    </div>
-
-                    {word.explanation && (
-                        <div className="bg-slate-50 rounded-2xl p-5 mb-6 border border-slate-100 text-sm text-slate-600 italic leading-relaxed">
-                            {word.explanation}
-                        </div>
-                    )}
-
-                    {word.type === 'VERB' && word.conjugationTable && (
-                        <div className="bg-indigo-50/50 rounded-3xl p-5 mb-8 border border-indigo-100">
-                             <div className="flex gap-4">
-                                <div className="flex-1 space-y-2">
-                                    {['je','tu','il/elle'].map(p => (
-                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
-                                            <span className="text-indigo-300 font-bold">{p}</span>
-                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="flex-1 space-y-2">
-                                    {['nous','vous','ils/elles'].map(p => (
-                                        <div key={p} className="flex justify-between border-b border-indigo-100/30 pb-1 text-sm">
-                                            <span className="text-indigo-300 font-bold">{p}</span>
-                                            <span className="text-indigo-900 font-bold">{word.conjugationTable[p] || word.conjugationTable[p.split('/')[0]]}</span>
-                                        </div>
-                                    ))}
-                                </div>
+                        <h2 className="text-4xl font-black text-slate-700 leading-tight">{word.french}</h2>
+                        {word.tags && (
+                            <div className="flex flex-wrap gap-1 justify-center mt-3">
+                                {word.tags.split(',').map((t, i) => (
+                                    <span key={i} className="bg-indigo-50 text-indigo-500 text-[9px] font-black px-3 py-1 rounded-full border border-indigo-100 uppercase">{t.trim()}</span>
+                                ))}
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
 
-                    {word.examples && word.examples.length > 0 && (
-                        <div className="space-y-4">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-2">Usage</span>
-                            {word.examples.map((ex, i) => (
-                                <div key={i} className="p-4 bg-slate-50 rounded-2xl flex justify-between items-start gap-3 border border-slate-100">
-                                    <div className="flex-1">
-                                        <p className="text-slate-800 font-bold text-sm leading-snug">{ex.fr}</p>
-                                        <p className="text-slate-400 text-xs italic mt-1">{ex.en}</p>
+                    <div className="text-center mb-10">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest opacity-60">Meaning</span>
+                        <h3 className="text-4xl font-bold text-indigo-900 leading-tight">{word.english}</h3>
+                        <button onClick={() => speak(word.french)} className="mt-5 p-4 bg-indigo-50 text-indigo-600 rounded-full shadow-sm active:scale-90"><Volume2 size={28} /></button>
+                    </div>
+
+                    <div className="space-y-4">
+                        {word.explanation && (
+                            <div className="border border-slate-200 rounded-3xl bg-white overflow-hidden shadow-sm">
+                                <button onClick={() => setExplVisible(!explVisible)} className="w-full p-5 flex justify-between items-center hover:bg-slate-50 transition-colors">
+                                    <span className="font-bold text-sm text-slate-700 flex items-center gap-2"><span>💡</span> Explanation</span>
+                                    <ChevronRight className={`transition-transform duration-300 ${explVisible ? 'rotate-90' : ''}`} />
+                                </button>
+                                {explVisible && <div className="p-5 text-sm text-slate-600 italic border-t bg-slate-50/30 leading-relaxed">{word.explanation}</div>}
+                            </div>
+                        )}
+
+                        {word.conjugationTable && (
+                            <div className="border border-slate-200 rounded-3xl bg-white overflow-hidden shadow-sm">
+                                <button onClick={() => setConjVisible(!conjVisible)} className="w-full p-5 flex justify-between items-center hover:bg-indigo-50/30 transition-colors">
+                                    <span className="font-bold text-sm text-indigo-700 flex items-center gap-2"><span>🔄</span> Conjugation</span>
+                                    <ChevronRight className={`transition-transform duration-300 ${conjVisible ? 'rotate-90' : ''}`} />
+                                </button>
+                                {conjVisible && (
+                                    <div className="p-5 border-t bg-white">
+                                        <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                                            {(() => {
+                                                const forms = word.conjugationTable.present || word.conjugationTable;
+                                                const order = ["je", "tu", "il/elle/on", "nous", "vous", "ils/elles"];
+                                                return order.map(p => forms[p] ? (
+                                                    <div key={p} className="flex justify-between border-b border-slate-50 pb-1.5">
+                                                        <span className="text-[10px] font-black text-slate-300 uppercase">{p}</span>
+                                                        <span className="text-sm font-bold text-slate-700">{forms[p]}</span>
+                                                    </div>
+                                                ) : null);
+                                            })()}
+                                        </div>
                                     </div>
-                                    <button onClick={() => speak(ex.fr)} className="p-1 text-slate-300 hover:text-indigo-600 transition-colors">
-                                        <Volume2 size={16} />
-                                    </button>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="mt-10 space-y-4 px-1">
+                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Usage Context</div>
+                        {finalExamples.length > 0 ? finalExamples.map((ex, i) => (
+                            <div key={i} className="bg-white border border-slate-100 p-4 rounded-2xl flex justify-between gap-3 shadow-sm border-l-4 border-l-indigo-400">
+                                <div className="flex-1">
+                                    <p className="text-slate-800 font-bold text-sm mb-1">{ex.fr}</p>
+                                    <p className="text-slate-400 text-xs italic">{ex.en}</p>
                                 </div>
-                            ))}
-                        </div>
-                    )}
+                                <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 hover:text-indigo-600 transition-colors"><Volume2 size={16} /></button>
+                            </div>
+                        )) : (
+                            <p className="text-slate-300 text-xs italic text-center py-4">No examples available.</p>
+                        )}
+                    </div>
+                </div>
+
+                <div className="p-5 pb-10 bg-white border-t flex gap-3 shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
+                    <button onClick={() => handleQuickSave(1)} className="flex-1 py-4 bg-slate-50 text-slate-600 rounded-2xl font-bold border border-slate-200 active:scale-95 transition-all">Train Later</button>
+                    <button onClick={() => handleQuickSave(5)} className="flex-1 py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all">I know this</button>
                 </div>
             </div>
-
-            <div className="p-4 pb-10 bg-slate-50 flex gap-3 shrink-0 border-t border-slate-100">
-                <button onClick={() => handleQuickSave(1)} disabled={saveStatus !== null} className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center border-2 ${saveStatus === 1 ? 'bg-green-400 border-green-400 text-black shadow-inner scale-95' : 'bg-white border-slate-200 text-slate-600 active:scale-95 shadow-sm'}`}>
-                    {saveStatus === 1 ? <Check size={24} className="text-black" /> : <span className="text-xl">🏋️</span>}
-                    <span className="text-[10px] font-black uppercase mt-1">{saveStatus === 1 ? 'Added!' : 'Train later'}</span>
-                </button>
-                <button onClick={() => handleQuickSave(5)} disabled={saveStatus !== null} className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center border-2 shadow-lg ${saveStatus === 5 ? 'bg-green-400 border-green-400 text-black shadow-inner scale-95' : 'bg-indigo-600 border-indigo-600 text-white active:scale-95 shadow-indigo-100'}`}>
-                    {saveStatus === 5 ? <Check size={24} className="text-black" /> : <span className="text-xl">✅</span>}
-                    <span className="text-[10px] font-black uppercase mt-1">{saveStatus === 5 ? 'Learned!' : 'I know this'}</span>
-                </button>
-            </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 const BookReader = ({ 
@@ -2447,6 +2473,8 @@ const OnboardingWizard = ({ onComplete, session }) => {
 };
 
 function App() {
+    const [explVisible, setExplVisible] = useState(false);
+    const [conjVisible, setConjVisible] = useState(false);
     // --- STATE MANAGEMENT ---
     // --- HACK: Doppelten Hash fixen (Google Login Bug) ---
     if (window.location.hash && window.location.hash.startsWith('##')) {
@@ -3804,131 +3832,178 @@ function App() {
         };
     };
     // --- RENDER TOPIC HUB (Die Detailseite für Themen) ---
-    const ReaderWordDetail = ({ word, setView, setUserProgress, session, speak, setReportingWord }) => {
-        // Lokaler State für das Grün-Feedback
-        const [saveStatus, setSaveStatus] = React.useState(null); // null | 1 | 5
+    const ReaderWordDetail = ({ 
+        word, setView, setUserProgress, session, speak, 
+        setReportingWord, calculateAnkiStats, formatInterval, userProgress 
+    }) => {
+        // Lokale States für die Akkordeons
+        const [explVisible, setExplVisible] = React.useState(false);
+        const [conjVisible, setConjVisible] = React.useState(false);
+        const [saveStatus, setSaveStatus] = React.useState(null);
 
-        if (!word) return <div className="p-10 text-center">No word selected.</div>;
+        if (!word) return <div className="p-10 text-center">Loading word...</div>;
+
+        // Fortschritts-Daten für dieses Wort holen
+        const isRare = word.isCustom || word.rank >= 99999;
+        const rankKey = isRare ? `str:${word.french.toLowerCase()}` : word.rank;
+        const currentProgress = userProgress[rankKey] || { box: 1, interval: 0 };
 
         const handleQuickSave = async (boxLevel) => {
-            console.log("Button clicked, level:", boxLevel); // Debug
-            
-            // 1. SOFORT das Feedback anzeigen (noch vor der Datenbank-Logik)
-            setSaveStatus(boxLevel); 
-            
-            // Key-Logik für seltene Wörter
-            const isRare = typeof word.rank !== 'number' || word.rank >= 99999;
-            const cleanFrench = word.french.toLowerCase().trim();
-            const rankKey = isRare ? `str:${cleanFrench}` : word.rank;
+            setSaveStatus(boxLevel);
+            const nextReview = boxLevel === 5 ? Date.now() + 30*24*60*60*1000 : Date.now();
             
             const newEntry = { 
                 box: boxLevel, 
-                nextReview: boxLevel === 5 ? Date.now() + 30*24*60*60*1000 : Date.now(), 
+                nextReview: nextReview, 
                 interval: boxLevel === 5 ? 30 : 0, 
                 ease: 2.5,
                 consecutiveWrong: 0
             };
 
-            // 2. Datenbank-Aktionen im Hintergrund
             try {
-                // Lokal speichern
+                // Lokal
                 setUserProgress(prev => ({ ...prev, [rankKey]: newEntry }));
-
-                // Cloud speichern
+                
+                // Cloud
                 if (session) {
                     await supabase.from('user_progress').upsert({
                         user_id: session.user.id,
                         word_rank: isRare ? 99999 : word.rank,
-                        word_string: isRare ? cleanFrench : null,
+                        word_string: isRare ? word.french.toLowerCase() : null,
                         box: boxLevel,
-                        next_review: newEntry.nextReview,
+                        next_review: nextReview,
                         interval: newEntry.interval,
                         ease_factor: 2.5
                     }, { onConflict: 'user_id, word_rank, word_string' });
                 }
                 
-                // 3. Nach einer Sekunde zurück zum Reader
-                setTimeout(() => { 
-                    setView('reader'); 
-                }, 1000);
-
-            } catch (err) { 
-                console.error("Save Error:", err); 
-                setSaveStatus(null); // Reset bei Fehler
+                setTimeout(() => { setView('reader'); }, 800);
+            } catch (err) {
+                console.error(err);
+                setSaveStatus(null);
             }
         };
 
         return (
-            <div className="flex flex-col w-full max-w-xl mx-auto h-[100dvh] bg-slate-50 overflow-hidden animate-in fade-in duration-300">
+            <div className="flex flex-col w-full max-w-xl mx-auto h-screen bg-slate-50 overflow-hidden">
                 {/* Top Bar */}
-                <div className="flex items-center justify-between p-4 bg-slate-50 shrink-0">
+                <div className="flex items-center justify-between p-4 bg-slate-50 shrink-0 z-10">
                     <button onClick={() => setView('reader')} className="p-2 bg-white rounded-full shadow-sm text-slate-500">
                         <ArrowLeft size={24} />
                     </button>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dictionary</span>
-                    <button onClick={() => setReportingWord(word)} className="p-2 bg-white rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Word Details</span>
+                    <button onClick={() => setReportingWord(word)} className="p-2 bg-white rounded-full shadow-sm text-slate-300 hover:text-red-500">
                         <AlertCircle size={20} />
                     </button>
                 </div>
 
-                {/* Main Card */}
-                <div className="flex-1 overflow-y-auto px-4 pb-4 no-scrollbar">
-                    <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl p-8 min-h-full flex flex-col items-center">
-                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">French</span>
-                        <h2 className="text-5xl font-bold text-slate-800 my-4 text-center leading-tight">{word.french}</h2>
+                {/* Scrollbarer Bereich (Die "Karte") */}
+                <div className="flex-1 overflow-y-auto px-4 pb-32 no-scrollbar">
+                    <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-xl p-6 min-h-full">
                         
-                        <button onClick={() => speak(word.french)} className="p-4 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 mb-8 active:scale-90 transition-all">
-                            <Volume2 size={32} />
-                        </button>
-
-                        <div className="w-full border-t border-slate-50 pt-6 text-center mb-8">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Meaning</span>
-                            <h3 className="text-3xl font-bold text-indigo-900 mt-2">{word.english}</h3>
+                        {/* French Header (Wie auf Flashcard Rückseite) */}
+                        <div className="text-center mb-6">
+                            <h2 className="text-3xl font-bold text-slate-600">{word.french}</h2>
+                            {word.tags && (
+                                <div className="flex flex-wrap gap-1.5 justify-center mt-2">
+                                    {word.tags.split(',').map((tag, i) => (
+                                        <span key={i} className="bg-indigo-50 text-indigo-500 text-[9px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-tighter border border-indigo-100/50">
+                                            {tag.trim()}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+                            <div className="h-px w-10 bg-slate-100 mx-auto mt-4"></div>
                         </div>
 
+                        {/* Translation */}
+                        <div className="text-center mb-8">
+                            <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Meaning</span>
+                            <h3 className="text-4xl font-bold text-indigo-900 mt-1 leading-tight">{word.english}</h3>
+                            <div className="flex justify-center mt-3">
+                                <button onClick={() => speak(word.french)} className="p-3 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 shadow-sm transition-all active:scale-90">
+                                    <Volume2 size={24} />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* EXPLANATION (Collapsible) */}
                         {word.explanation && (
-                            <div className="bg-slate-50 rounded-2xl p-5 w-full text-sm text-slate-600 italic leading-relaxed border border-slate-100">
-                                {word.explanation}
+                            <div className="mb-3">
+                                <button onClick={() => setExplVisible(!explVisible)} className="w-full flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 text-slate-700 font-bold text-sm">
+                                    <div className="flex items-center gap-2"><span>💡</span> Pedagogical Note</div>
+                                    <ChevronRight size={18} className={`transition-transform duration-300 ${explVisible ? 'rotate-90' : ''}`} />
+                                </button>
+                                {explVisible && (
+                                    <div className="p-5 bg-white border-x border-b border-slate-100 rounded-b-2xl text-sm text-slate-600 italic leading-relaxed animate-in slide-in-from-top-2">
+                                        {word.explanation}
+                                    </div>
+                                )}
                             </div>
                         )}
+
+                        {/* CONJUGATION (Collapsible mit festem Order) */}
+                        {word.conjugationTable && (
+                            <div className="mb-3">
+                                <button onClick={() => setConjVisible(!conjVisible)} className="w-full flex items-center justify-between p-4 bg-indigo-50 rounded-2xl border border-indigo-100 text-indigo-700 font-bold text-sm">
+                                    <div className="flex items-center gap-2"><span>🔄</span> Conjugation</div>
+                                    <ChevronRight size={18} className={`transition-transform duration-300 ${conjVisible ? 'rotate-90' : ''}`} />
+                                </button>
+                                {conjVisible && (
+                                    <div className="p-5 bg-white border-x border-b border-indigo-100 rounded-b-2xl animate-in slide-in-from-top-2">
+                                        <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                                            {(() => {
+                                                const forms = word.conjugationTable.present || word.conjugationTable;
+                                                const order = ["je", "tu", "il/elle/on", "nous", "vous", "ils/elles"];
+                                                return order.map(p => forms[p] ? (
+                                                    <div key={p} className="flex justify-between border-b border-slate-50 pb-1">
+                                                        <span className="text-[10px] font-black text-slate-300 uppercase">{p}</span>
+                                                        <span className="text-sm font-bold text-slate-700">{forms[p]}</span>
+                                                    </div>
+                                                ) : null);
+                                            })()}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* EXAMPLES */}
+                        <div className="space-y-4 mt-8">
+                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Examples</div>
+                            {word.examples?.map((ex, i) => (
+                                <div key={i} className="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex justify-between items-start gap-3">
+                                    <div className="flex-1">
+                                        <p className="text-slate-800 font-bold text-sm mb-1 leading-snug">{ex.fr}</p>
+                                        <p className="text-slate-400 text-xs italic">{ex.en}</p>
+                                    </div>
+                                    <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 hover:text-indigo-600 transition-colors">
+                                        <Volume2 size={16} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* Bottom Buttons - Hier ist das erzwungene Grün */}
-                <div className="p-4 pb-10 bg-slate-50 flex gap-3 shrink-0 border-t border-slate-100">
-                    
-                    {/* Button 1: Train later */}
+                {/* Bottom Action Bar */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 pb-10 bg-slate-50/90 backdrop-blur-md border-t border-slate-100 flex gap-3 z-20">
                     <button 
                         onClick={() => handleQuickSave(1)} 
                         disabled={saveStatus !== null}
-                        className={`flex-1 py-5 rounded-2xl font-bold transition-all duration-300 flex flex-col items-center border-2 shadow-sm
-                            ${saveStatus === 1 
-                                ? '!bg-green-500 !border-green-500 !text-white scale-95 shadow-inner' 
-                                : 'bg-white border-slate-200 text-slate-600 active:scale-95'
-                            }`}
+                        className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center border-2 ${saveStatus === 1 ? 'bg-green-500 border-green-500 text-white' : 'bg-white border-slate-200 text-slate-600'}`}
                     >
-                        {saveStatus === 1 ? <Check size={28} className="animate-in zoom-in" /> : <span className="text-2xl mb-1">🏋️</span>}
-                        <span className="text-[10px] font-black uppercase tracking-wider">
-                            {saveStatus === 1 ? 'Added!' : 'Train later'}
-                        </span>
+                        {saveStatus === 1 ? <Check size={24} /> : <span className="text-xl">🏋️</span>}
+                        <span className="text-[10px] font-black uppercase mt-1">{saveStatus === 1 ? 'Added!' : 'Train later'}</span>
                     </button>
-
-                    {/* Button 2: I know this */}
                     <button 
                         onClick={() => handleQuickSave(5)} 
                         disabled={saveStatus !== null}
-                        className={`flex-1 py-5 rounded-2xl font-bold transition-all duration-300 flex flex-col items-center border-2 shadow-lg
-                            ${saveStatus === 5 
-                                ? '!bg-green-500 !border-green-500 !text-white scale-95 shadow-none' 
-                                : 'bg-indigo-600 border-indigo-600 text-white active:scale-95 shadow-indigo-100'
-                            }`}
+                        className={`flex-1 py-4 rounded-2xl font-bold transition-all flex flex-col items-center border-2 shadow-lg ${saveStatus === 5 ? 'bg-green-500 border-green-500 text-white' : 'bg-indigo-600 border-indigo-600 text-white'}`}
                     >
-                        {saveStatus === 5 ? <Check size={28} className="animate-in zoom-in" /> : <span className="text-2xl mb-1">✅</span>}
-                        <span className="text-[10px] font-black uppercase tracking-wider">
-                            {saveStatus === 5 ? 'Mastered!' : 'I know this'}
-                        </span>
+                        {saveStatus === 5 ? <Check size={24} /> : <span className="text-xl">✅</span>}
+                        <span className="text-[10px] font-black uppercase mt-1">{saveStatus === 5 ? 'Mastered!' : 'I know this'}</span>
                     </button>
-
                 </div>
             </div>
         );
@@ -5545,8 +5620,8 @@ function App() {
     
     /* script.js - Innerhalb von function App() */
     /* In App() ganz oben bei den anderen States */
-    const [explVisible, setExplVisible] = useState(false); // NEU
-    const [conjVisible, setConjVisible] = useState(false); // NEU
+    //const [explVisible, setExplVisible] = useState(false); // NEU
+    //const [conjVisible, setConjVisible] = useState(false); // NEU
     
     const renderFlashcard = () => {
         const SESSION_CONTAINER_HEIGHT = "h-[calc(100dvh-20px)]"; 
@@ -5564,19 +5639,18 @@ function App() {
         const isNewCard = !currentProgress || currentProgress.interval === 0;
         const isMasteryCard = currentProgress && currentProgress.box === 5;
 
-        // Hilfsfunktion zum Rendern der Kategorien/Tags
-        const renderTags = () => {
-            if (!word.tags || word.tags === 'Basics') return null;
-            return (
-                <div className="flex flex-wrap gap-1.5 justify-center mt-2">
-                    {word.tags.split(',').map((tag, i) => (
-                        <span key={i} className="bg-indigo-50 text-indigo-500 text-[9px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-tighter border border-indigo-100/50 shadow-sm">
-                            {tag.trim()}
-                        </span>
-                    ))}
-                </div>
-            );
+        // --- HILFSFUNKTION: BEISPIELE NORMALISIEREN ---
+        const getNormalizedExamples = () => {
+            if (!word.examples || !Array.isArray(word.examples)) return [];
+            if (typeof word.examples[0] === 'object' && word.examples[0] !== null) return word.examples;
+            
+            const paired = [];
+            for (let i = 0; i < word.examples.length; i += 2) {
+                paired.push({ fr: word.examples[i], en: word.examples[i + 1] || "" });
+            }
+            return paired;
         };
+        const finalExamples = getNormalizedExamples();
 
         const checkTyping = () => {
             const cleanInput = typedInput.trim().toLowerCase();
@@ -5592,7 +5666,7 @@ function App() {
 
         return (
             <div className={`flex flex-col w-full max-w-xl mx-auto pt-2 ${SESSION_CONTAINER_HEIGHT}`}>
-                {/* --- HEADER --- */}
+                {/* HEADER */}
                 <div className="flex items-center justify-between mb-1 pl-1 shrink-0">
                     <button onClick={() => setView('home')} className="p-2 -ml-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
                         <X size={24} />
@@ -5601,20 +5675,14 @@ function App() {
                     <div className="w-6"></div> 
                 </div>
                 
-                {/* --- MAIN CARD --- */}
+                {/* MAIN CARD */}
                 <div className={`bg-white border-2 rounded-[2.5rem] shadow-xl p-6 flex flex-col relative transition-all flex-1 mb-4 overflow-hidden
                     ${typingResult === 'correct' ? 'border-green-400 shadow-green-100' : typingResult === 'wrong' ? 'border-red-400 shadow-red-100' : 'border-slate-100'}
                 `}>
                     
                     {/* Top Corner: Rank & Report */}
                     <div className="absolute top-6 right-6 flex items-center gap-2 z-20">
-                        <button 
-                            onClick={(e) => { e.stopPropagation(); setReportingWord(word); }}
-                            className="w-8 h-8 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all font-bold text-lg border border-slate-100"
-                            title="Report an issue"
-                        >
-                            ?
-                        </button>
+                        <button onClick={(e) => { e.stopPropagation(); setReportingWord(word); }} className="w-8 h-8 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all font-bold text-lg border border-slate-100">?</button>
                         <div className="bg-slate-100 text-slate-400 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest">
                             {word.isCustom ? '⭐ Custom' : `#${word.rank}`}
                         </div>
@@ -5627,18 +5695,23 @@ function App() {
                                 <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.2em]">French</span>
                                 <h2 className="text-5xl md:text-6xl font-bold text-slate-800 break-words leading-tight">{word.french}</h2>
                                 
-                                {/* TAGS AUF DER VORDERSEITE */}
-                                {renderTags()}
+                                {word.tags && (
+                                    <div className="flex flex-wrap gap-1.5 justify-center mt-2">
+                                        {word.tags.split(',').map((tag, i) => (
+                                            <span key={i} className="bg-indigo-50 text-indigo-500 text-[9px] font-black px-2.5 py-0.5 rounded-full uppercase border border-indigo-100/50 shadow-sm">{tag.trim()}</span>
+                                        ))}
+                                    </div>
+                                )}
                                 
-                                <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-4 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all shadow-sm">
+                                <button onClick={(e) => { e.stopPropagation(); speak(word.french); }} className="p-4 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100 transition-all">
                                     <Volume2 size={28} />
                                 </button>
                             </div>
                             
-                            {word.examples?.length > 0 && (
+                            {finalExamples.length > 0 && (
                                 <div className="space-y-3 px-4 max-w-sm animate-in fade-in duration-700">
                                     <div className="h-px w-12 bg-slate-100 mx-auto mb-2"></div>
-                                    <p className="text-slate-400 italic text-base leading-relaxed">"{word.examples[0].fr}"</p>
+                                    <p className="text-slate-400 italic text-base leading-relaxed">"{finalExamples[0].fr}"</p>
                                 </div>
                             )}
 
@@ -5658,113 +5731,47 @@ function App() {
                     ) : (
                         /* --- RÜCKSEITE --- */
                         <div className="w-full h-full overflow-y-auto no-scrollbar pt-6 pb-4 animate-in fade-in zoom-in-95 duration-300">
-                            
-                            {/* Word & Tags Header */}
                             <div className="text-center mb-6">
                                 <h2 className="text-2xl font-bold text-slate-600">{word.french}</h2>
-                                <div className="mt-1">{renderTags()}</div>
                                 <div className="h-px w-10 bg-slate-100 mx-auto mt-4"></div>
                             </div>
 
-                            {/* Translation */}
                             <div className="text-center mb-8">
                                 <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Meaning</span>
                                 <h3 className="text-4xl font-bold text-indigo-900 mt-1 leading-tight">{word.english}</h3>
-                                <div className="flex justify-center gap-2 mt-3">
-                                    <button onClick={() => speak(word.french)} className="p-2 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100">
-                                        <Volume2 size={20} />
-                                    </button>
-                                </div>
+                                <button onClick={() => speak(word.french)} className="mt-3 p-2 bg-indigo-50 text-indigo-600 rounded-full hover:bg-indigo-100"><Volume2 size={20} /></button>
                             </div>
 
-                            {/* EXPLANATION (Collapsible) */}
+                            {/* EXPLANATION */}
                             {word.explanation && (
                                 <div className="mb-3">
-                                    <button 
-                                        onClick={() => setExplVisible(!explVisible)}
-                                        className="w-full flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-100 transition-colors"
-                                    >
+                                    <button onClick={() => setExplVisible(!explVisible)} className="w-full flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 text-slate-700 font-bold text-sm">
                                         <div className="flex items-center gap-2"><span>💡</span> Pedagogical Note</div>
                                         <ChevronRight size={18} className={`transition-transform duration-300 ${explVisible ? 'rotate-90' : ''}`} />
                                     </button>
-                                    {explVisible && (
-                                        <div className="p-5 bg-white border-x border-b border-slate-100 rounded-b-2xl text-sm text-slate-600 italic leading-relaxed animate-in slide-in-from-top-2">
-                                            {word.explanation}
-                                        </div>
-                                    )}
+                                    {explVisible && <div className="p-5 bg-white border-x border-b border-slate-100 rounded-b-2xl text-sm text-slate-600 italic leading-relaxed animate-in slide-in-from-top-2">{word.explanation}</div>}
                                 </div>
                             )}
 
-                            {/* CONJUGATION (Collapsible) */}
-                            {/* CONJUGATION (Collapsible) */}
-                            {/* CONJUGATION / FORMS (Collapsible) */}
+                            {/* CONJUGATION */}
                             {word.conjugationTable && (
                                 <div className="mb-3">
-                                    <button 
-                                        onClick={() => setConjVisible(!conjVisible)}
-                                        className="w-full flex items-center justify-between p-4 bg-indigo-50 rounded-2xl border border-indigo-100 text-indigo-700 font-bold text-sm hover:bg-indigo-100 transition-colors"
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <span>🔄</span> 
-                                            {/* Dynamischer Titel je nach Wortart */}
-                                            {word.type?.includes('VERB') ? 'Conjugation (Présent)' : 'Word Forms'}
-                                        </div>
+                                    <button onClick={() => setConjVisible(!conjVisible)} className="w-full flex items-center justify-between p-4 bg-indigo-50 rounded-2xl border border-indigo-100 text-indigo-700 font-bold text-sm">
+                                        <div className="flex items-center gap-2"><span>🔄</span> Conjugation</div>
                                         <ChevronRight size={18} className={`transition-transform duration-300 ${conjVisible ? 'rotate-90' : ''}`} />
                                     </button>
-                                    
                                     {conjVisible && (
                                         <div className="p-5 bg-white border-x border-b border-indigo-100 rounded-b-2xl animate-in slide-in-from-top-2">
                                             <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                                                 {(() => {
-                                                    const table = word.conjugationTable;
-
-                                                    // FALL 1: VERBEN (Klassisches Schema)
-                                                    if (table.present || table.je || table.tu) {
-                                                        const forms = table.present || table;
-                                                        const order = ["je", "tu", "il/elle/on", "nous", "vous", "ils/elles"];
-                                                        return order.map(p => forms[p] ? (
-                                                            <div key={p} className="flex justify-between border-b border-slate-50 pb-1">
-                                                                <span className="text-[10px] font-black text-slate-300 uppercase">{p}</span>
-                                                                <span className="text-sm font-bold text-slate-700">{forms[p]}</span>
-                                                            </div>
-                                                        ) : null);
-                                                    }
-
-                                                    // FALL 2: ADJEKTIVE (M/F + S/P)
-                                                    // Erwartet Keys wie: masc_sing, fem_sing, masc_plur, fem_plur
-                                                    if (table.masc_sing || table.ms || table.fs) {
-                                                        // Map für schönere Labels
-                                                        const adjLabels = {
-                                                            masc_sing: "M. Sing.", ms: "M. Sing.",
-                                                            fem_sing: "F. Sing.", fs: "F. Sing.",
-                                                            masc_plur: "M. Plur.", mp: "M. Plur.",
-                                                            fem_plur: "F. Plur.", fp: "F. Plur."
-                                                        };
-                                                        return Object.entries(table).map(([key, val]) => (
-                                                            <div key={key} className="flex justify-between border-b border-slate-50 pb-1">
-                                                                <span className="text-[10px] font-black text-slate-300 uppercase">{adjLabels[key] || key}</span>
-                                                                <span className="text-sm font-bold text-slate-700">{val}</span>
-                                                            </div>
-                                                        ));
-                                                    }
-
-                                                    // FALL 3: NOMEN (Singular/Plural)
-                                                    if (table.singular || table.plural || table.sing) {
-                                                        return Object.entries(table).map(([key, val]) => (
-                                                            <div key={key} className="flex justify-between border-b border-slate-50 pb-1">
-                                                                <span className="text-[10px] font-black text-slate-300 uppercase">{key}</span>
-                                                                <span className="text-sm font-bold text-slate-700">{val}</span>
-                                                            </div>
-                                                        ));
-                                                    }
-
-                                                    // FALLBACK: Falls wir das Format nicht kennen, einfach alles anzeigen
-                                                    return Object.entries(table).map(([key, val]) => (
-                                                        <div key={key} className="flex justify-between border-b border-slate-50 pb-1">
-                                                            <span className="text-[10px] font-black text-slate-300 uppercase">{key}</span>
-                                                            <span className="text-sm font-bold text-slate-700">{typeof val === 'string' ? val : JSON.stringify(val)}</span>
+                                                    const forms = word.conjugationTable.present || word.conjugationTable;
+                                                    const order = ["je", "tu", "il/elle/on", "nous", "vous", "ils/elles"];
+                                                    return order.map(p => forms[p] ? (
+                                                        <div key={p} className="flex justify-between border-b border-slate-50 pb-1">
+                                                            <span className="text-[10px] font-black text-slate-300 uppercase">{p}</span>
+                                                            <span className="text-sm font-bold text-slate-700">{forms[p]}</span>
                                                         </div>
-                                                    ));
+                                                    ) : null);
                                                 })()}
                                             </div>
                                         </div>
@@ -5772,28 +5779,24 @@ function App() {
                                 </div>
                             )}
 
-                            {/* USAGE EXAMPLES */}
+                            {/* EXAMPLES */}
                             <div className="space-y-4 mt-8">
                                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Usage Examples</div>
-                                {word.examples?.length > 0 ? word.examples.map((ex, i) => (
-                                    <div key={i} className="bg-slate-50/50 border border-slate-100 p-4 rounded-2xl flex justify-between items-start gap-3 group">
+                                {finalExamples.map((ex, i) => (
+                                    <div key={i} className="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex justify-between items-start gap-3 group">
                                         <div className="flex-1">
-                                            <p className="text-slate-800 font-bold text-sm mb-1 leading-snug">{ex.fr}</p>
+                                            <p className="text-slate-800 font-bold text-sm mb-1">{ex.fr}</p>
                                             <p className="text-slate-400 text-xs italic">{ex.en}</p>
                                         </div>
-                                        <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 group-hover:text-indigo-600 transition-colors">
-                                            <Volume2 size={16} />
-                                        </button>
+                                        <button onClick={() => speak(ex.fr)} className="p-2 text-slate-300 group-hover:text-indigo-600 transition-colors"><Volume2 size={16} /></button>
                                     </div>
-                                )) : (
-                                    <div className="text-xs text-slate-300 italic p-6 border border-dashed rounded-3xl text-center">No context sentences found</div>
-                                )}
+                                ))}
                             </div>
                         </div>
                     )}
                 </div>
 
-                {/* --- BOTTOM ACTION AREA --- */}
+                {/* ACTION BUTTONS */}
                 <div className="w-full mt-auto pt-2 pb-6 shrink-0">
                     {!isFlipped ? (
                         <button onClick={isMasteryCard ? checkTyping : () => setIsFlipped(true)} disabled={isMasteryCard && !typedInput.trim()} className="w-full bg-indigo-600 text-white px-8 py-5 rounded-[2rem] font-bold text-xl shadow-xl active:scale-[0.98] transition-all">
@@ -5810,15 +5813,7 @@ function App() {
                                 const stats = calculateAnkiStats(currentProgress, btn.q);
                                 const intervalLabel = isNewCard ? (btn.q === 0 ? "<1m" : btn.q === 1 ? "10m" : btn.q === 2 ? "1d" : "4d") : formatInterval(stats.interval);
                                 return (
-                                    <button 
-                                        key={btn.label} 
-                                        onClick={() => { 
-                                            setExplVisible(false); 
-                                            setConjVisible(false); 
-                                            handleResult(btn.q); 
-                                        }} 
-                                        className={`${btn.color} border-2 p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-90 h-16 shadow-sm`}
-                                    >
+                                    <button key={btn.label} onClick={() => { setExplVisible(false); setConjVisible(false); handleResult(btn.q); }} className={`${btn.color} border-2 p-1 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-90 h-16 shadow-sm`}>
                                         <span className="text-[9px] font-black uppercase tracking-tighter opacity-60 mb-0.5">{intervalLabel}</span>
                                         <span className="font-bold text-xs leading-none">{btn.label}</span>
                                     </button>
@@ -6511,88 +6506,51 @@ function App() {
 
     // Helper: Content basierend auf dem Tab rendern (wenn wir nicht in einer Session sind)
     const renderTabContent = () => {
-        switch (view) {
-            // ... Home, Explore, Skills Cases bleiben gleich ...
-            case 'home': case 'smart-config': case 'test-config': return renderHome();
-            case 'explore': 
-                return renderExplore();
-            
-            case 'reader':
-                if (readerMode === 'select') {
-                    return renderExplore(); 
-                }
-                if (readerMode === 'reading' && currentStory) {
-                    return (
-                        <BookReader 
-                        
-                            currentStory={currentStory}
-                            pageIndex={pageIndex}
-                            setPageIndex={setPageIndex}
-                            saveProgress={saveProgress}
-                            setView={setView}
-                            setReaderMode={setReaderMode}
-                            speak={speak}
-                            stopAudio={stopAudio}
-                            vocabulary={vocabulary}
-                            clickedWord={clickedWord}
-                            setClickedWord={setClickedWord}
-                            userProgress={userProgress}
-                            setUserProgress={setUserProgress}
-                            session={session}
-                            setSelectedWord={setSelectedWord} // <--- WICHTIG
-                            setIsFlipped={setIsFlipped}       // <--- WICHTIG
-                            setShowConjugation={setShowConjugation} // <--- WICHTIGugation beim Start zu ist
-                            setReportingWord={setReportingWord} // <--- Diese Zeile muss rein!
-                            reportedWords={reportedWords}
-                            // ----------------------------------------
-                        />
-                    );
-                }
-                if (readerMode === 'finish') {
-                    return (
-                        <div className="h-screen flex flex-col items-center justify-center text-center px-6 pb-20">
-                            <div className="text-6xl mb-6">🏆</div>
-                            <h2 className="text-3xl font-bold text-slate-800 mb-2">Chapter Complete!</h2>
-                            <p className="text-slate-500 mb-8">You finished "{currentStory?.title}".</p>
-                            <button onClick={() => { setView('explore'); setSelectedBook(null); }} className="bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold shadow-lg w-full max-w-sm">Back to Library</button>
-                        </div>
-                    );
-                }
-                return null;
+            // WICHTIG: Wenn wir im Detail-Modus sind, soll der Hintergrund bei 'reader' bleiben.
+            const effectiveView = view === 'reader-word-detail' ? 'reader' : view;
 
-            // Innerhalb von renderTabContent switch(view):
-            case 'reader-word-detail':
-                return (
-                    <ReaderWordDetail 
-                        word={selectedWord} 
-                        setView={setView} 
-                        setUserProgress={setUserProgress} 
-                        session={session} 
-                        speak={speak} 
-                        setReportingWord={setReportingWord} // <--- Hinzufügen!
-                    />
-                );
-            /* In script.js -> renderTabContent() */
-            case 'card-gallery': return renderCardGallery();
-            case 'culture': return renderExplore();
-            case 'skills': return renderSkills();
-            case 'daily-writer': return renderDailyWriterEditor();
-            case 'translator': return renderTranslator();
-            case 'grammar': return renderSkills();
-            case 'update-password': return <UpdatePasswordScreen onComplete={() => setView('home')} />;
-            case 'profile': return renderProfile();
-            case 'library':
-            case 'learned-section': return renderLibrary();
-            case 'collections': return renderCollections();
-            case 'joke-detail': return renderJokeDetail();
-            case 'data-mgmt': return renderDataMgmt();
-            case 'word-detail': return renderWordDetail();
-            case 'topic-hub': return renderTopicHub();
-            case 'chat': return renderChat();
-            case 'grammar-detail': return <GrammarDetail topicId={selectedGrammarId} onBack={() => setView('skills')} />;
-            default: return renderHome();
-        }
-    };
+            switch (effectiveView) {
+                case 'home': case 'smart-config': case 'test-config': return renderHome();
+                case 'explore': return renderExplore();
+                case 'reader':
+                    if (readerMode === 'select') return renderExplore();
+                    if (readerMode === 'reading' && currentStory) {
+                        return (
+                            <BookReader 
+                                currentStory={currentStory}
+                                pageIndex={pageIndex}
+                                setPageIndex={setPageIndex}
+                                saveProgress={saveProgress}
+                                setView={setView}
+                                setReaderMode={setReaderMode}
+                                speak={speak}
+                                stopAudio={stopAudio}
+                                vocabulary={vocabulary}
+                                clickedWord={clickedWord}
+                                setClickedWord={setClickedWord}
+                                userProgress={userProgress}
+                                setUserProgress={setUserProgress}
+                                session={session}
+                                setSelectedWord={setSelectedWord}
+                                setIsFlipped={setIsFlipped}
+                                setShowConjugation={setShowConjugation}
+                                setReportingWord={setReportingWord}
+                                reportedWords={reportedWords}
+                            />
+                        );
+                    }
+                    return null;
+                case 'learned-section': return renderLibrary();
+                case 'collections': return renderCollections();
+                case 'joke-detail': return renderJokeDetail();
+                case 'profile': return renderProfile();
+                case 'data-mgmt': return renderDataMgmt();
+                case 'skills': return renderSkills();
+                case 'daily-writer': return renderDailyWriterEditor();
+                case 'grammar-detail': return <GrammarDetail topicId={selectedGrammarId} onBack={() => setView('skills')} />;
+                default: return renderHome();
+            }
+        };
     // --- In deinem return (...) Block, ganz am Anfang ---
 
     if (isLoadingVocab) {
@@ -6605,218 +6563,91 @@ function App() {
             </div>
         );
     }
-
+    
 // ... Hier geht dann dein normaler Code weiter: return <div className="min-h-screen ...">
     return (
-        
-        <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col items-center">
-            
-            {/* 1. HIER WAR DER ALTE HEADER - DIESE ZEILE HABE ICH GELÖSCHT: */}
-            {/* {view === 'home' && !isSessionActive && renderHomeHeader()} */}
-            
-            {/* 2. Main Content Area */}
-            {/* WICHTIG: pb-28 lassen wir für die Navigation unten */}
-            <div className={`w-full max-w-lg md:max-w-2xl px-5 ${!isSessionActive ? 'pb-28' : ''}`}>
+            <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col items-center">
                 
-                {/* Wenn Session aktiv -> Session Views zeigen */}
-                {isSessionActive ? (
-                    <>
-                        {(view === 'smart-session' || view === 'test-session') && renderFlashcard()}
-                        {view === 'results' && renderResults()}
-                    </>
-                ) : (
-                    /* Sonst -> Tab Content zeigen */
-                    <>
-                        {/* Sonderfall: Config Screens sind "Full Screen" overlays im Home Tab */}
-                        {view === 'smart-config' ? renderSmartConfig() : 
-                         view === 'test-config' ? renderTestConfig() :
-                         renderTabContent()}
-                    </>
+                {/* --- GLOBALE MODALS (DIESE SCHWEBEN ÜBER ALLEM) --- */}
+
+                {/* DEBUG TAG (wie in deinem Bild) */}
+                {view === 'reader-word-detail' && (
+                    <div className="fixed top-0 left-0 bg-red-600 text-white text-[10px] p-1 z-[100000] font-mono">
+                        DEBUG: State is Reader-Detail
+                    </div>
                 )}
-            </div>
 
-            {/* 3. Navigation Bar - Nur anzeigen wenn KEINE Session aktiv ist */}
-            {!isSessionActive && (
-                <BottomNav 
-                    activeTab={['home', 'smart-config', 'test-config'].includes(view) ? 'home' : 
-                               ['library', 'learned-section'].includes(view) ? 'library' : 
-                               ['settings', 'data-mgmt'].includes(view) ? 'settings' : view}
-                    onTabChange={(tabId) => {
-                        // Reset auf die Hauptansicht des Tabs
-                        if(tabId === 'library') setView('learned-section');
-                        else if(tabId === 'settings') setView('data-mgmt');
-                        else setView(tabId);
-                    }} 
-                />
-            )}
-            {/* --- ONBOARDING WIZARD --- */}
-            {showWizard && (
-                <OnboardingWizard 
-                    session={session} // <--- WICHTIG: Session übergeben!
-                    onComplete={(name, level) => {
-                        setNickname(name);
-                        setShowWizard(false);
-                        // Optional: Wenn ein Level gewählt wurde, könnte man hier den userProgress anpassen
-                        // Aber das passiert schon durch den Sync beim Login
-                    }} 
-                />
-            )}
-            {/* --- DELETE ACCOUNT MODAL --- */}
-            {showDeleteModal && (
-                <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-                    <div className="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl scale-100">
-                        <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4 mx-auto">
-                            <AlertCircle size={24} />
-                        </div>
-                        <h3 className="text-xl font-bold text-slate-900 text-center mb-2">Delete Everything?</h3>
-                        <p className="text-slate-500 text-center text-sm mb-6">
-                            This action cannot be undone. All your progress, vocabulary, and stats will be lost forever.
-                        </p>
-                        
-                        <div className="bg-slate-50 p-4 rounded-xl mb-6">
-                            <label className="block text-xs font-bold text-slate-400 uppercase mb-2">
-                                Type <span className="text-slate-800 select-none">DELETE</span> to confirm
-                            </label>
-                            <input 
-                                type="text" 
-                                value={deleteInput}
-                                onChange={(e) => setDeleteInput(e.target.value)}
-                                placeholder="DELETE"
-                                className="w-full bg-white border border-slate-200 rounded-lg p-3 font-mono text-center font-bold text-red-600 outline-none focus:border-red-500 transition-colors"
-                            />
-                        </div>
+                {/* WORD DETAIL POPUP - Die Portal-Version */}
+                {view === 'reader-word-detail' && selectedWord && (
+                    <ReaderWordDetail 
+                        word={selectedWord} 
+                        setView={setView} 
+                        setUserProgress={setUserProgress} 
+                        userProgress={userProgress} 
+                        session={session} 
+                        speak={speak} 
+                        setReportingWord={setReportingWord}
+                    />
+                )}
 
-                        <div className="flex gap-3">
-                            <button 
-                                onClick={() => {
-                                    setShowDeleteModal(false);
-                                    setDeleteInput(""); // Input zurücksetzen beim Schließen
-                                }}
-                                className="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors"
-                            >
-                                Cancel
-                            </button>
-                            <button 
-                                disabled={deleteInput !== "DELETE"}
-                                onClick={async () => {
-                                    // 1. Prüfen ob User eingeloggt ist
-                                    if (session) {
-                                        // LOGIK FÜR EINGELOGGTE USER (Cloud)
-                                        const { error } = await supabase.rpc('delete_user');
-                                        if (error) {
-                                            alert("Cloud deletion failed: " + error.message);
-                                            return; // Abbrechen, nichts lokal löschen
-                                        }
-                                        await supabase.auth.signOut();
-                                    }
-
-                                    // 2. LOGIK FÜR ALLE (Lokal aufräumen)
-                                    // Hier wird alles platt gemacht: Fortschritt, Nickname, Onboarding-Status
-                                    localStorage.clear(); 
-                                    
-                                    // State Reset (für sauberen Übergang)
-                                    setSession(null);
-                                    setShowDeleteModal(false);
-                                    
-                                    // App neu laden -> Da localStorage leer ist, startet der OnboardingWizard
-                                    window.location.reload(); 
-                                }}
-                                className="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-red-200"
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    </div>
+                {/* 1. Main Content Area */}
+                <div className={`w-full max-w-lg md:max-w-2xl px-5 ${!isSessionActive ? 'pb-28' : ''}`}>
+                    
+                    {isSessionActive ? (
+                        <>
+                            {(view === 'smart-session' || view === 'test-session') && renderFlashcard()}
+                            {view === 'results' && renderResults()}
+                        </>
+                    ) : (
+                        <>
+                            {view === 'smart-config' ? renderSmartConfig() : 
+                            view === 'test-config' ? renderTestConfig() :
+                            renderTabContent()}
+                        </>
+                    )}
                 </div>
-            )}
-            {/* --- AUTH MODAL FOR GUESTS --- */}
-            {showAuthModal && (
-                <div className="fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-                    <div className="bg-white w-full max-w-sm rounded-[2.5rem] overflow-hidden shadow-2xl relative">
-                        {/* Close Button */}
-                        <button 
-                            onClick={() => setShowAuthModal(false)}
-                            className="absolute top-4 right-4 p-2 bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 z-10"
-                        >
-                            <X size={20}/>
-                        </button>
 
-                        {/* Wir nutzen wieder AuthScreen, aber sagen ihm, dass er "embedded" ist */}
-                        <div className="py-6">
-                            <AuthScreen 
-                                isEmbedded={true} 
-                                onLoginSuccess={() => {
-                                    setShowAuthModal(false);
-                                    // HIER SPÄTER: Sync Logic aufrufen!
-                                    alert("Account linked successfully!");
-                                }} 
-                            />
-                        </div>
-                    </div>
-                </div>
-            )}
-            {/* --- SYNC CONFLICT MODAL --- */}
-            {syncConflict && (
-                <div className="fixed inset-0 z-[80] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in zoom-in duration-200">
-                    <div className="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl">
-                        <div className="text-center mb-6">
+                {/* 2. Navigation Bar */}
+                {!isSessionActive && (
+                    <BottomNav 
+                        activeTab={['home', 'smart-config', 'test-config'].includes(view) ? 'home' : 
+                                ['library', 'learned-section'].includes(view) ? 'library' : 
+                                ['settings', 'data-mgmt'].includes(view) ? 'settings' : 
+                                (view === 'reader-word-detail' || view === 'reader') ? 'explore' : view}
+                        onTabChange={(tabId) => {
+                            if(tabId === 'library') setView('learned-section');
+                            else if(tabId === 'settings') setView('data-mgmt');
+                            else setView(tabId);
+                        }} 
+                    />
+                )}
+
+                {/* WEITERE MODALS */}
+                {showWizard && <OnboardingWizard session={session} onComplete={(n) => {setNickname(n); setShowWizard(false);}} />}
+                {reportingWord && <ReportModal word={reportingWord} onClose={() => setReportingWord(null)} />}
+                {viewedCard && <CardModal card={viewedCard} onClose={() => setViewedCard(null)} />} 
+                
+                {/* SYNC CONFLICT MODAL */}
+                {syncConflict && (
+                    <div className="fixed inset-0 z-[600] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+                        <div className="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center">
                             <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-amber-600 text-3xl mb-4">⇄</div>
                             <h3 className="text-xl font-bold text-slate-800">Sync Conflict</h3>
-                            <p className="text-slate-500 text-sm mt-2">
-                                We found different data on this device and in your account. Which one should we keep?
-                            </p>
-                        </div>
-
-                        <div className="space-y-3">
-                            {/* Option 1: Keep Cloud (Download) */}
-                            <button 
-                                onClick={() => {
-                                    setUserProgress(syncConflict.cloud); // Lokal überschreiben
-                                    localStorage.setItem('vocabApp_progress', JSON.stringify(syncConflict.cloud));
-                                    setSyncConflict(null);
-                                    window.location.reload(); // Reload für sauberen Start
-                                }}
-                                className="w-full bg-indigo-50 border-2 border-indigo-100 p-4 rounded-2xl flex items-center justify-between hover:bg-indigo-100 transition-all group text-left"
-                            >
-                                <div>
-                                    <div className="font-bold text-indigo-900">Keep Cloud Save</div>
-                                    <div className="text-xs text-indigo-500">Overwrite this device</div>
-                                </div>
-                                <div className="bg-white p-2 rounded-full text-indigo-600 font-bold text-xs shadow-sm">
-                                    {Object.keys(syncConflict.cloud).length} words
-                                </div>
-                            </button>
-
-                            {/* Option 2: Keep Local (Upload) */}
-                            <button 
-                                onClick={async () => {
-                                    await overwriteCloud(syncConflict.local); // Cloud überschreiben
-                                    setSyncConflict(null);
-                                    alert("Cloud updated with local data.");
-                                }}
-                                className="w-full bg-white border-2 border-slate-100 p-4 rounded-2xl flex items-center justify-between hover:border-slate-300 transition-all group text-left"
-                            >
-                                <div>
-                                    <div className="font-bold text-slate-700">Keep Device Save</div>
-                                    <div className="text-xs text-slate-400">Overwrite cloud data</div>
-                                </div>
-                                <div className="bg-slate-100 p-2 rounded-full text-slate-600 font-bold text-xs">
-                                    {Object.keys(syncConflict.local).length} words
-                                </div>
-                            </button>
+                            <div className="space-y-3 mt-4">
+                                <button onClick={() => { setUserProgress(syncConflict.cloud); setSyncConflict(null); window.location.reload(); }} className="w-full bg-indigo-50 border-2 border-indigo-100 p-4 rounded-2xl flex items-center justify-between text-left">
+                                    <div><div className="font-bold text-indigo-900">Keep Cloud</div><div className="text-xs text-indigo-500">Restore from account</div></div>
+                                    <div className="bg-white px-2 py-1 rounded-full text-indigo-600 font-bold text-xs">{Object.keys(syncConflict.cloud).length} words</div>
+                                </button>
+                                <button onClick={async () => { await overwriteCloud(syncConflict.local); setSyncConflict(null); alert("Cloud updated."); }} className="w-full bg-white border-2 border-slate-100 p-4 rounded-2xl flex items-center justify-between text-left">
+                                    <div><div className="font-bold text-slate-700">Keep Device</div><div className="text-xs text-slate-400">Overwrite cloud</div></div>
+                                    <div className="bg-slate-100 px-2 py-1 rounded-full text-slate-600 font-bold text-xs">{Object.keys(syncConflict.local).length} words</div>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-            {reportingWord && (
-                <ReportModal 
-                    word={reportingWord} 
-                    onClose={() => setReportingWord(null)} 
-                />
-            )}
-            {viewedCard && <CardModal card={viewedCard} onClose={() => setViewedCard(null)} />}    
-        </div>
-    );
+                )}
+            </div>
+        );
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
